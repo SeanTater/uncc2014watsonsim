@@ -1,0 +1,13 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+mainClassName = "watsonml.WatsonML"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: "org.apache.mahout", name: "mahout-core", version: "0.8"
+}
