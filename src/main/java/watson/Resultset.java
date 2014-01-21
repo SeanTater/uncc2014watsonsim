@@ -38,6 +38,17 @@ class Result {
 		this.text = text;
 		this.score = score;
 	}
+	
+	/** Copy constructor */
+	public Result(Result result) {
+		this.docid = result.docid;
+		this.title = result.title;
+		this.text = result.text;
+		this.score = result.score;
+		this.best_score = result.best_score;
+		this.worst_score = result.worst_score;
+	}
+	
 	/** Return normalized score.
 	 * This may not be same number you put into setScore.
 	 */
@@ -46,8 +57,8 @@ class Result {
 	}
 	
 	/** Normalize scores to be from 0 to 1, less is better. */
-	public double setScore(double raw) {
+	public Result setScore(double raw) {
 		score = raw / (worst_score - best_score);
-		return score;
+		return this;
 	}
 }
