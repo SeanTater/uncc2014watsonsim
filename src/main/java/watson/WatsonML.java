@@ -31,6 +31,8 @@ public class WatsonML {
 					)
 				);
     	}
+    	
+    	Collections.sort(output_results);
     	return output_results;
     }
 }

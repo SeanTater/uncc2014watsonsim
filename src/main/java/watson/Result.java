@@ -8,7 +8,7 @@ package watson;
  * Scores are later scaled according to ( 
  * 
  * */ 
-public class Result {
+public class Result implements Comparable {
 	// Inherent
 	public String docid;
 	public String text;
@@ -81,5 +81,10 @@ public class Result {
 	public Result setScore(double raw) {
 		score = (raw - best_score) / (worst_score - best_score);
 		return this;
+	}
+
+	@Override
+	public int compareTo(Object other) {
+		return new Double(score).compareTo( ((Result) other).getScore());
 	}
 }
