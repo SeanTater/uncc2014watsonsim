@@ -20,6 +20,12 @@ public class WatsonMLTest {
 		WatsonML ml = new WatsonML();
 		output_set = ml.aggregate(yahoo);
 		assertEquals(output_set.get(0), yahoo.get(0));
+		assertEquals(output_set.get(0).getScore(), yahoo.get(0).getScore(), 0.001);
+		
+		output_set = ml.aggregate(yahoo, bing);
+		assertEquals(output_set.get(0), yahoo.get(0));
+		assertEquals(0.5, output_set.get(0).getScore(), 0.001);
+		
 	}
 
 }
