@@ -6,7 +6,7 @@ public class WatsonML {
     /** Correlates search results for improved accuracy
      * TODO: handle inexact duplicates */
 	
-    public Resultset aggregate(Resultset... resultsets) {
+    public Resultset push(Resultset... resultsets) {
     	HashMap<Result, Double> new_score = new HashMap<Result, Double>();
     	HashMap<Result, Integer> new_entries = new HashMap<Result, Integer>();
     	for (Resultset resultset : resultsets) {

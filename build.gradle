@@ -10,4 +10,5 @@ repositories {
 
 dependencies {
     compile group: "org.apache.mahout", name: "mahout-core", version: "0.8"
+    compile group: "com.googlecode.jcsv", name: "jcsv", version: "1.4.0"
 }
