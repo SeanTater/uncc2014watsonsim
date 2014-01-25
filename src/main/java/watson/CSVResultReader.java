@@ -14,7 +14,6 @@ import com.googlecode.jcsv.reader.internal.*;
  * Note that the titles and texts, and score ranges are not available.
  */
 public class CSVResultReader {
-	WatsonML next;
 	CSVReader<String[]> reader;
 	List<String> columns;
 	
