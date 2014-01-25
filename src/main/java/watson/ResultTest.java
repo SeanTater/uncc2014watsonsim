@@ -17,7 +17,7 @@ public class ResultTest {
 	public void testEqualsObject() {
 		// Results are equal if their titles are equal.
 		assertEquals(result, new Result(result));
-		assertEquals(result, new Result("", "title", "", 0));
+		assertEquals(result, new Result("docid", "", "", 0));
 	}
 
 	@Test
