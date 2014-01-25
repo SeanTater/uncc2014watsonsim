@@ -7,11 +7,13 @@ import java.util.List;
 
 import com.sampullara.cli.*;
 
+
+
 public class ScoreCSVDriver {
-	@Argument
+	@Argument(alias="--train")
 	static String[] train_filenames;
 	
-	@Argument
+	@Argument(alias="--test")
 	static String[] test_filenames;
 
 	public static void main(String[] args) throws IOException {
