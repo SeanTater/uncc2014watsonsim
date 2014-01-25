@@ -5,7 +5,19 @@ import org.apache.mahout.*;
 public class Scorer {
     /** Correlates search results for improved accuracy */
 	
-    public Resultset test(Resultset... resultsets) {
+	public void train(Resultset... resultsets) {
+		train(Arrays.asList(resultsets));
+	}
+	
+	public void train(List<Resultset> resultsets) {
+		// No-op until ML code is added
+	}
+	
+	public Resultset test(Resultset... resultsets) {
+		return test(Arrays.asList(resultsets));
+	}
+	
+    public Resultset test(List<Resultset> resultsets) {
     	HashMap<Result, Double> new_score = new HashMap<Result, Double>();
     	HashMap<Result, Integer> new_entries = new HashMap<Result, Integer>();
     	for (Resultset resultset : resultsets) {

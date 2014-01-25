@@ -1,5 +1,6 @@
 package watson;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -44,6 +45,12 @@ public class CSVResultReader {
 			if (!columns.contains(required_name))
 				throw new IOException("Missing required field " + required_name);
 		}		
+	}
+	
+	static List<Resultset> read(String filename) throws FileNotFoundException, IOException {
+		try (FileReader file = new FileReader(filename)) {
+			return new CSVResultReader(file).fetch();
+		}
 	}
 	
 	String select_column(String[] row, String column_name) {
