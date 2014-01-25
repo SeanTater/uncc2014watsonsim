@@ -2,11 +2,10 @@ package watson;
 import java.util.*;
 import org.apache.mahout.*;
 
-public class WatsonML {
-    /** Correlates search results for improved accuracy
-     * TODO: handle inexact duplicates */
+public class Scorer {
+    /** Correlates search results for improved accuracy */
 	
-    public Resultset push(Resultset... resultsets) {
+    public Resultset test(Resultset... resultsets) {
     	HashMap<Result, Double> new_score = new HashMap<Result, Double>();
     	HashMap<Result, Integer> new_entries = new HashMap<Result, Integer>();
     	for (Resultset resultset : resultsets) {
