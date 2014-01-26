@@ -70,10 +70,10 @@ public class CSVResultReader {
 			double iscore = Double.parseDouble(select_column(row, "indri"));
 			Result.Oracle correct;
 			switch (select_column(row, "correct")) {
-			case "true":
+			case "Y":
 				correct = Result.Oracle.Correct;
 				break;
-			case "false":
+			case "N":
 				correct = Result.Oracle.Incorrect;
 				break;
 			default:
