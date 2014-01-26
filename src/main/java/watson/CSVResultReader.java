@@ -47,7 +47,7 @@ public class CSVResultReader {
 		}		
 	}
 	
-	static List<Resultset> read(String filename) throws FileNotFoundException, IOException {
+	static List<AnswerList> read(String filename) throws FileNotFoundException, IOException {
 		try (FileReader file = new FileReader(filename)) {
 			return new CSVResultReader(file).fetch();
 		}
@@ -58,36 +58,25 @@ public class CSVResultReader {
 	}
 
 	
-	public List<Resultset> fetch() throws IOException {
+	public List<AnswerList> fetch() throws IOException {
 		List<String[]> table = reader.readAll();
-		Resultset lucene = new Resultset("lucene");
-		Resultset indri = new Resultset("indri");
+		AnswerList lucene = new AnswerList("lucene");
+		AnswerList indri = new AnswerList("indri");
 		//TODO: This should be legitimate information
 		int rowid = 0;
 		
 		for (String[] row : table) {
 			double lscore = Double.parseDouble(select_column(row, "lucene"));
 			double iscore = Double.parseDouble(select_column(row, "indri"));
-			Result.Oracle correct;
-			switch (select_column(row, "correct")) {
-			case "Y":
-				correct = Result.Oracle.Correct;
-				break;
-			case "N":
-				correct = Result.Oracle.Incorrect;
-				break;
-			default:
-				correct = Result.Oracle.Unknown;
-				break;
-			}
+			boolean correct = select_column(row, "correct").startsWith("Y"); 
 			String rowid_string = String.valueOf(rowid);
 			
-			//TODO: These should include real titles and text
-			lucene.add(new Result(rowid_string, rowid_string, "example text", lscore, correct));
-			indri.add( new Result(rowid_string, rowid_string, "example text", iscore, correct));
+			// Titles are missing in CSV so rowid_string serves as a stopgap
+			lucene.add(new ResultSet(rowid_string, lscore, correct, rowid));
+			indri.add( new ResultSet(rowid_string, iscore, correct, rowid));
 		}
 		
-		List<Resultset> sets = new ArrayList<Resultset>();
+		List<AnswerList> sets = new ArrayList<AnswerList>();
 		sets.add(lucene);
 		sets.add(indri);
 		return sets;

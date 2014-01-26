@@ -1,27 +1,35 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package watson;
 
 import java.util.Objects;
 
 /**
- *
  * @author Phani Rahul
+ * @author Sean Gallagher
  */
-public class ResultSet {
+public class ResultSet implements Comparable<ResultSet> {
 
     private String title;
     private double score;
     private boolean correct;
     private int rank;
+    
+    // These are intended to be overridden in subclasses
+	double best_score = 0;
+	double worst_score = 1;
 
     public ResultSet(String title, double score, boolean correct, int rank) {
         this.title = title;
         this.score = score;
         this.correct = correct;
         this.rank = rank;
+    }
+    
+    /** Copy constructor */
+    public ResultSet(ResultSet resultset) {
+    	title = resultset.title;
+    	score = resultset.score;
+    	correct = resultset.correct;
+    	rank = resultset.rank;
     }
 
     public ResultSet() {
@@ -39,9 +47,11 @@ public class ResultSet {
         return score;
     }
 
-    public void setScore(double score) {
-        this.score = score;
-    }
+
+	/** Normalize scores to be from 0 to 1, less is better. */
+	public void setScore(double raw) {
+		score = (raw - best_score) / (worst_score - best_score);
+	}
 
     public boolean isCorrect() {
         return correct;
@@ -86,5 +96,8 @@ public class ResultSet {
         return "ResultSet{" + "title=" + title + ", score=" + score + ", correct=" + correct + ", rank=" + rank + '}';
     }
     
-    
+    @Override
+	public int compareTo(ResultSet other) {
+		return new Double(score).compareTo(other.getScore());
+	}
 }

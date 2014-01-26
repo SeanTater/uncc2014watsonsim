@@ -9,12 +9,12 @@ public class ScorerTest {
 	@Test
 	public void testPush() {
 		// Setup possible inputs
-		Resultset yahoo = new Resultset("Yahoo");
-		yahoo.add(new Result("Alligators", "title", "They're Aunt Annie's", 0.25));
-		Resultset bing = new Resultset("Bing");
-		bing.add(new Result("Alligators", "title", "They're Aunt Annie's", 0.75));
+		AnswerList yahoo = new AnswerList("Yahoo");
+		yahoo.add(new ResultSet("Alligators", 0.5, true, 1));
+		AnswerList bing = new AnswerList("Bing");
+		bing.add(new ResultSet("Alligators", 0.5, true, 1));
 		
-		Resultset output_set;
+		AnswerList output_set;
 		Scorer ml = new Scorer();
 		
 		// Make an exact copy when there is 1 result
@@ -28,12 +28,12 @@ public class ScorerTest {
 		assertEquals(0.5, output_set.get(0).getScore(), 0.001);
 		
 		// Sort unique results
-		yahoo.add(new Result("Eels", "title", "Electric", 0.88));
-		bing.add(new Result("Elk", "title", "Moose", 0.99));
+		yahoo.add(new ResultSet("Eels", 0.88, false, 2));
+		bing.add(new ResultSet("Elk", 0.99, false, 2));
 		output_set = ml.test(yahoo, bing);
-		assertEquals("Alligators", output_set.get(0).docid);
-		assertEquals("Eels", output_set.get(1).docid);
-		assertEquals("Elk", output_set.get(2).docid);
+		assertEquals("Alligators", output_set.get(0).getTitle());
+		assertEquals("Eels", output_set.get(1).getTitle());
+		assertEquals("Elk", output_set.get(2).getTitle());
 	}
 
 }

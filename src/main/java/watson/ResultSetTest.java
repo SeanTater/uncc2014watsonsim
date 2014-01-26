@@ -5,19 +5,19 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class ResultTest {
-	static Result result;
+public class ResultSetTest {
+	static ResultSet result;
 	
 	@BeforeClass
 	public static void setUp() {
-		 result = new Result("docid", "title", "text", 0.5);
+		 result = new ResultSet("title", 0.5, true, 1);
 	}
 
 	@Test
 	public void testEqualsObject() {
 		// Results are equal if their titles are equal.
-		assertEquals(result, new Result(result));
-		assertEquals(result, new Result("docid", "", "", 0));
+		assertEquals(result, new ResultSet(result));
+		assertEquals(result, new ResultSet("title", 0.5, true, 1));
 	}
 
 	@Test

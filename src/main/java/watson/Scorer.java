@@ -5,42 +5,42 @@ import org.apache.mahout.*;
 public class Scorer {
     /** Correlates search results for improved accuracy */
 	
-	public void train(Resultset... resultsets) {
+	public void train(AnswerList... resultsets) {
 		train(Arrays.asList(resultsets));
 	}
 	
-	public void train(List<Resultset> resultsets) {
+	public void train(List<AnswerList> resultsets) {
 		// No-op until ML code is added
 	}
 	
-	public Resultset test(Resultset... resultsets) {
+	public AnswerList test(AnswerList... resultsets) {
 		return test(Arrays.asList(resultsets));
 	}
 	
-    public Resultset test(List<Resultset> resultsets) {
-    	HashMap<Result, Double> new_score = new HashMap<Result, Double>();
-    	HashMap<Result, Integer> new_entries = new HashMap<Result, Integer>();
-    	for (Resultset resultset : resultsets) {
-    		for (Result result : resultset) {
+    public AnswerList test(List<AnswerList> engines) {
+    	Map<ResultSet, Double> new_score = new HashMap<ResultSet, Double>();
+    	Map<ResultSet, Integer> new_entries = new HashMap<ResultSet, Integer>();
+    	for (AnswerList resultlist : engines) {
+    		for (ResultSet resultset : resultlist) {
     			// This just adds the (normalized) scores.
-    			double score = result.getScore();
+    			double score = resultset.getScore();
     			int entries = 1;
-    			if (new_score.containsKey(result)) {
-    				score += new_score.get(result);
-    				entries += new_entries.get(result);
+    			if (new_score.containsKey(resultset)) {
+    				score += new_score.get(resultset);
+    				entries += new_entries.get(resultset);
     			}
-    			new_score.put(result, score);
-    			new_entries.put(result, entries);
+    			new_score.put(resultset, score);
+    			new_entries.put(resultset, entries);
     		}
     	}
-    	Resultset output_results = new Resultset("Combined");
-    	for (Result input_result : new_score.keySet()) {
-    		output_results.add(
-				new Result(input_result).setScore(
+    	AnswerList output_results = new AnswerList("Combined");
+    	for (ResultSet input_result : new_score.keySet()) {
+    		ResultSet rs = new ResultSet(input_result);
+    		rs.setScore(
     				new_score.get(input_result) /
     				new_entries.get(input_result)
-					)
-				);
+					);
+    		output_results.add(rs);
     	}
     	
     	Collections.sort(output_results);
