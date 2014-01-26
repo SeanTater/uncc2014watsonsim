@@ -5,22 +5,18 @@ import org.apache.mahout.*;
 public class Scorer {
     /** Correlates search results for improved accuracy */
 	
-	public void train(AnswerList... resultsets) {
+	public void train(Engine... resultsets) {
 		train(Arrays.asList(resultsets));
 	}
 	
-	public void train(List<AnswerList> resultsets) {
+	public void train(List<Engine> resultsets) {
 		// No-op until ML code is added
 	}
 	
-	public AnswerList test(AnswerList... resultsets) {
-		return test(Arrays.asList(resultsets));
-	}
-	
-    public AnswerList test(List<AnswerList> engines) {
+    public Engine test(Question question) {
     	Map<ResultSet, Double> new_score = new HashMap<ResultSet, Double>();
     	Map<ResultSet, Integer> new_entries = new HashMap<ResultSet, Integer>();
-    	for (AnswerList resultlist : engines) {
+    	for (Engine resultlist : question) {
     		for (ResultSet resultset : resultlist) {
     			// This just adds the (normalized) scores.
     			double score = resultset.getScore();
@@ -33,7 +29,8 @@ public class Scorer {
     			new_entries.put(resultset, entries);
     		}
     	}
-    	AnswerList output_results = new AnswerList("Combined");
+    	
+    	Engine output_results = new Engine("Combined");
     	for (ResultSet input_result : new_score.keySet()) {
     		ResultSet rs = new ResultSet(input_result);
     		rs.setScore(

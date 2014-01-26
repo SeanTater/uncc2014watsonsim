@@ -31,10 +31,10 @@ public class CSVResultReaderTest {
 				+ "0.1, 0.2, Y\n"
 				+ "0.4, 0.7, N\n"
 		));
-		List<AnswerList> engines = reader.fetch();
+		List<Engine> engines = reader.fetch();
 		List<String> engine_names = new ArrayList<String>();
-		for (AnswerList engine: engines)
-			engine_names.add(engine.engine);
+		for (Engine engine: engines)
+			engine_names.add(engine.name);
 		
 		// Actually order shouldn't matter. 
 		assertThat(engine_names, hasItems("lucene", "indri"));

@@ -2,6 +2,8 @@ package watson;
 
 import java.util.Objects;
 
+import org.json.simple.JSONObject;
+
 /**
  * @author Phani Rahul
  * @author Sean Gallagher
@@ -23,6 +25,14 @@ public class ResultSet implements Comparable<ResultSet> {
         this.correct = correct;
         this.rank = rank;
     }
+	
+	public ResultSet(String engine_name, JSONObject attr) {
+		// There is a bit of redundancy: the engine name is in every attribute
+        title = (String) attr.get(String.format("%s_title", engine_name));
+        rank = (int) attr.get(String.format("%s_rank", engine_name));
+        score = (double) attr.get(String.format("%s_score", engine_name));
+        correct = ((String) attr.get(String.format("%s_score", engine_name))).equalsIgnoreCase("yes");
+	}
     
     /** Copy constructor */
     public ResultSet(ResultSet resultset) {
@@ -100,4 +110,5 @@ public class ResultSet implements Comparable<ResultSet> {
 	public int compareTo(ResultSet other) {
 		return new Double(score).compareTo(other.getScore());
 	}
+
 }

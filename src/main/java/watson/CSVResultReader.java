@@ -47,7 +47,7 @@ public class CSVResultReader {
 		}		
 	}
 	
-	static List<AnswerList> read(String filename) throws FileNotFoundException, IOException {
+	static List<Engine> read(String filename) throws FileNotFoundException, IOException {
 		try (FileReader file = new FileReader(filename)) {
 			return new CSVResultReader(file).fetch();
 		}
@@ -58,10 +58,10 @@ public class CSVResultReader {
 	}
 
 	
-	public List<AnswerList> fetch() throws IOException {
+	public List<Engine> fetch() throws IOException {
 		List<String[]> table = reader.readAll();
-		AnswerList lucene = new AnswerList("lucene");
-		AnswerList indri = new AnswerList("indri");
+		Engine lucene = new Engine("lucene");
+		Engine indri = new Engine("indri");
 		//TODO: This should be legitimate information
 		int rowid = 0;
 		
@@ -76,7 +76,7 @@ public class CSVResultReader {
 			indri.add( new ResultSet(rowid_string, iscore, correct, rowid));
 		}
 		
-		List<AnswerList> sets = new ArrayList<AnswerList>();
+		List<Engine> sets = new ArrayList<Engine>();
 		sets.add(lucene);
 		sets.add(indri);
 		return sets;

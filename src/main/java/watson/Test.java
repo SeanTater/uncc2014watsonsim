@@ -21,7 +21,7 @@ public class Test {
      */
     public static void main(String[] args) {
         try {
-            ParseJSON p = new ParseJSON("C:\\Users\\PhaniRahul\\Desktop\\watson\\comb.json");
+            QuestionList p = new QuestionList("C:\\Users\\PhaniRahul\\Desktop\\watson\\comb.json");
             System.out.println("the answer: "+ p.getResults("This London borough is the G in GMT, squire"));
         } catch (ParseException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
