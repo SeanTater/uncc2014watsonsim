@@ -1,23 +1,28 @@
 package watson;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
+
 import org.apache.mahout.*;
+import org.json.simple.parser.ParseException;
 
 public class Scorer {
     /** Correlates search results for improved accuracy */
-	
-	public void train(Engine... resultsets) {
-		train(Arrays.asList(resultsets));
+	public Scorer() {}
+	public Scorer(String filename) throws FileNotFoundException, ParseException, IOException {
+		train(new QuestionMap(filename));
 	}
 	
-	public void train(List<Engine> resultsets) {
+	public void train(QuestionMap dataset) {
 		// No-op until ML code is added
 	}
 	
     public Engine test(Question question) {
+    	// Look for identical results from multiple engines
     	Map<ResultSet, Double> new_score = new HashMap<ResultSet, Double>();
     	Map<ResultSet, Integer> new_entries = new HashMap<ResultSet, Integer>();
-    	for (Engine resultlist : question) {
-    		for (ResultSet resultset : resultlist) {
+    	for (Engine engine : question) {
+    		for (ResultSet resultset : engine) {
     			// This just adds the (normalized) scores.
     			double score = resultset.getScore();
     			int entries = 1;

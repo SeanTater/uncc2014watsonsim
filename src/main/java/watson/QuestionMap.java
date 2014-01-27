@@ -24,25 +24,8 @@ import org.json.simple.parser.ParseException;
 public class QuestionMap extends HashMap<String, Question> {
 	private static final long serialVersionUID = 1L;
 	
-	// Can't this be a new QuestionMap??
-    private HashMap<String, HashSet<CombinedResult>> learningMap=null;
-
-    public HashMap<String, HashSet<CombinedResult>> getLearningMap() {
-        return learningMap;
-    }
-    public HashSet<CombinedResult> getResults(String question){
-        return learningMap.get(question);
-    }
-
-    public void QuestionList(String jsonPath) throws ParseException, FileNotFoundException,
-            IOException {
-        learningMap = new HashMap<>();
-        parse(jsonPath);
-    }
-
-    private void parse(String path) throws ParseException, FileNotFoundException, IOException {
+    public QuestionMap(String path) throws ParseException, FileNotFoundException, IOException {
         BufferedReader br = new BufferedReader(new FileReader(new File(path)));
-        StringBuilder sb = new StringBuilder();
         JSONParser parser = new JSONParser();
         JSONArray root = (JSONArray) ((JSONObject) parser.parse(br)).get("root");
         
@@ -62,7 +45,7 @@ public class QuestionMap extends HashMap<String, Question> {
             List<String> reserved_keys = Arrays.asList(new String[]{"question", "answer"});
             
             // For every attribute of the JSON question...
-            for (String engine_s : (HashSet<String>) question_json.keySet()) {
+            for (String engine_s : (Iterable<String>) question_json.keySet()) {
             	if (!reserved_keys.contains(engine_s)) {
             		// If it is not the question text or answer text, then it's an engine...
             		Engine engine = new Engine(engine_s);
@@ -84,79 +67,6 @@ public class QuestionMap extends HashMap<String, Question> {
             }
 
             put(question.question, question);
-            learningMap.put(question.question, json.getAll());
         }
     }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String[] args) throws ParseException {
-//        BufferedReader br = null;
-//        try {
-//            String path = "C:\\Users\\PhaniRahul\\Desktop\\watson\\comb.json";
-//            br = new BufferedReader(new FileReader(new File(path)));
-//            StringBuilder sb = new StringBuilder();
-//            JSONParser parser = new JSONParser();
-//            String line = "";
-////            while((line = br.readLine())!=null){
-////                sb.append(line);
-////            }
-//            JSONArray root = (JSONArray) ((JSONObject) parser.parse(br)).get("root");
-//            Iterator<JSONObject> questions = root.iterator();
-//            while (questions.hasNext()) {
-//                JSONObject question = questions.next();
-//                String ques = (String) question.get("question");
-//                String ans = (String) question.get("answer");
-//
-//                JSON json = new JSON();
-//                json.setQuestion(ques);
-//                json.setAnswer(ans);
-//
-//                Iterator<JSONObject> iitr = ((JSONArray) question.get("indri")).iterator();
-//                while (iitr.hasNext()) {
-//                    JSONObject res = iitr.next();
-//                    String title = (String) res.get("indri_title");
-//                    long rank = (long) res.get("indri_rank");
-//                    double score = (double) res.get("indri_score");
-//                    boolean correct = false;
-//                    if (((String) res.get("indri_answer")).equalsIgnoreCase("yes")) {
-//                        correct = true;
-//                    }
-//                    json.getIndri().add(new ResultSet(title, score, correct, (int) rank));
-//                }
-//
-//                Iterator<JSONObject> litr = ((JSONArray) question.get("lucene")).iterator();
-//                while (litr.hasNext()) {
-//                    JSONObject res = litr.next();
-//                    String title = (String) res.get("lucene_title");
-//                    long rank = (long) res.get("lucene_rank");
-//                    double score = (double) res.get("lucene_score");
-//                    boolean correct = false;
-//                    if (((String) res.get("lucene_answer")).equalsIgnoreCase("yes")) {
-//                        correct = true;
-//                    }
-//                    json.getLucene().add(new ResultSet(title, score, correct, (int) rank));
-//                }
-////                json.getAll()
-//                System.out.println("json: ... . " + json.getAll());
-//                break;
-////                System.out.println("one: " + question);
-//            }
-////            System.out.println("root: " + root);
-//
-//        } catch (FileNotFoundException ex) {
-//            Logger.getLogger(ParseJSON.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(ParseJSON.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            try {
-//                br.close();
-//            } catch (IOException ex) {
-//                Logger.getLogger(ParseJSON.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//
-//    }
 }

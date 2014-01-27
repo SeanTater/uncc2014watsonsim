@@ -13,7 +13,7 @@ public class ResultSet implements Comparable<ResultSet> {
     private String title;
     private double score;
     private boolean correct;
-    private int rank;
+    private long rank;
     
     // These are intended to be overridden in subclasses
 	double best_score = 0;
@@ -29,9 +29,10 @@ public class ResultSet implements Comparable<ResultSet> {
 	public ResultSet(String engine_name, JSONObject attr) {
 		// There is a bit of redundancy: the engine name is in every attribute
         title = (String) attr.get(String.format("%s_title", engine_name));
-        rank = (int) attr.get(String.format("%s_rank", engine_name));
+        rank = (long) attr.get(String.format("%s_rank", engine_name));
         score = (double) attr.get(String.format("%s_score", engine_name));
-        correct = ((String) attr.get(String.format("%s_score", engine_name))).equalsIgnoreCase("yes");
+        String a = (String) attr.get(String.format("%s_answer", engine_name));
+        correct = a.equalsIgnoreCase("yes");
 	}
     
     /** Copy constructor */
