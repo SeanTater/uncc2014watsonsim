@@ -1,4 +1,4 @@
-watson
+watson [![Build Status](https://travis-ci.org/SeanTater/watson.png?branch=master)](https://travis-ci.org/SeanTater/watson)
 ======
 
 Watson clone Deep Question Answering System
