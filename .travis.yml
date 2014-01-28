@@ -3,3 +3,9 @@ jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
+
+install:
+  - TERM=dumb ./gradlew assemble
+
+script:
+  - TERM=dumb ./gradlew check
