@@ -47,7 +47,7 @@ public class CSVResultReader {
 		}		
 	}
 	
-	static List<Engine> read(String filename) throws FileNotFoundException, IOException {
+	static Question read(String filename) throws FileNotFoundException, IOException {
 		try (FileReader file = new FileReader(filename)) {
 			return new CSVResultReader(file).fetch();
 		}
@@ -58,7 +58,7 @@ public class CSVResultReader {
 	}
 
 	
-	public List<Engine> fetch() throws IOException {
+	public Question fetch() throws IOException {
 		List<String[]> table = reader.readAll();
 		Engine lucene = new Engine("lucene");
 		Engine indri = new Engine("indri");
@@ -75,8 +75,8 @@ public class CSVResultReader {
 			lucene.add(new ResultSet(rowid_string, lscore, correct, rowid));
 			indri.add( new ResultSet(rowid_string, iscore, correct, rowid));
 		}
-		
-		List<Engine> sets = new ArrayList<Engine>();
+		// Need to fill in question text if we keep using csv
+		Question sets = new Question("Q", "A");
 		sets.add(lucene);
 		sets.add(indri);
 		return sets;

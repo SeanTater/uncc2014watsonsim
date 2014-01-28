@@ -15,7 +15,7 @@ public class ScorerTest {
 		bing.add(new ResultSet("Alligators", 0.5, true, 1));
 		
 		Engine output_set;
-		Scorer ml = new Scorer();
+		AverageScorer ml = new AverageScorer();
 		
 		// Make an exact copy when there is 1 result
 		output_set = ml.test(new Question("Animals", "Alligators", yahoo));

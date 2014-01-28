@@ -55,7 +55,7 @@ public class QuestionMap extends HashMap<String, Question> {
             		Iterator<JSONObject> iitr = ((JSONArray) question_json.get(engine.name)).iterator();
                     while (iitr.hasNext()) {
                         JSONObject res = iitr.next();
-                        ResultSet rs =new ResultSet(engine_s, res); 
+                        ResultSet rs = new ResultSet(engine_s, res); 
                         engine.add(rs);
                         
                         /*TODO: This limits support to lucene and indri

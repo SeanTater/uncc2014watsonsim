@@ -17,7 +17,7 @@ public class ScoreCSVDriver {
 	static String[] test_filenames;
 
 	public static void main(String[] args) throws IOException {
-		Scorer scorer = new Scorer();
+		AverageScorer scorer = new AverageScorer();
 		
 		for (String train_filename : train_filenames)
 			scorer.train(CSVResultReader.read(train_filename));

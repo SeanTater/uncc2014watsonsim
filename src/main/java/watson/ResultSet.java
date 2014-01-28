@@ -1,5 +1,7 @@
 package watson;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.json.simple.JSONObject;
@@ -15,9 +17,15 @@ public class ResultSet implements Comparable<ResultSet> {
     private boolean correct;
     private long rank;
     
+    static Map<String, ScoreRange> predefined_engines;
+    static {
+    	predefined_engines = new HashMap<String, ScoreRange>();
+    	predefined_engines.put("lucene", new ScoreRange(1.2, 0));
+    	predefined_engines.put("indri", new ScoreRange(-10, -4));
+    }
+    
     // These are intended to be overridden in subclasses
-	double best_score = 0;
-	double worst_score = 1;
+	ScoreRange range = new ScoreRange(0, 1);
 
     public ResultSet(String title, double score, boolean correct, int rank) {
         this.title = title;
@@ -27,10 +35,12 @@ public class ResultSet implements Comparable<ResultSet> {
     }
 	
 	public ResultSet(String engine_name, JSONObject attr) {
-		// There is a bit of redundancy: the engine name is in every attribute
+		// There is a bit of redundancy: the engine name is in every attribute 
+		if (predefined_engines.containsKey(engine_name))
+			range = predefined_engines.get(engine_name);
         title = (String) attr.get(String.format("%s_title", engine_name));
         rank = (long) attr.get(String.format("%s_rank", engine_name));
-        score = (double) attr.get(String.format("%s_score", engine_name));
+        setScore((double) attr.get(String.format("%s_score", engine_name)));
         String a = (String) attr.get(String.format("%s_answer", engine_name));
         correct = a.equalsIgnoreCase("yes");
 	}
@@ -61,7 +71,7 @@ public class ResultSet implements Comparable<ResultSet> {
 
 	/** Normalize scores to be from 0 to 1, less is better. */
 	public void setScore(double raw) {
-		score = (raw - best_score) / (worst_score - best_score);
+		score = (raw - range.best) / (range.worst - range.best);
 	}
 
     public boolean isCorrect() {
@@ -72,7 +82,7 @@ public class ResultSet implements Comparable<ResultSet> {
         this.correct = correct;
     }
 
-    public int getRank() {
+    public long getRank() {
         return rank;
     }
 
@@ -111,5 +121,14 @@ public class ResultSet implements Comparable<ResultSet> {
 	public int compareTo(ResultSet other) {
 		return new Double(score).compareTo(other.getScore());
 	}
+}
 
+class ScoreRange {
+	double best = 0;
+	double worst = 1;
+	
+	public ScoreRange(double best, double worst) {
+		this.best = best;
+		this.worst = worst;
+	}
 }

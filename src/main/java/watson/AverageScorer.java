@@ -6,10 +6,10 @@ import java.util.*;
 import org.apache.mahout.*;
 import org.json.simple.parser.ParseException;
 
-public class Scorer {
+public class AverageScorer {
     /** Correlates search results for improved accuracy */
-	public Scorer() {}
-	public Scorer(String filename) throws FileNotFoundException, ParseException, IOException {
+	public AverageScorer() {}
+	public AverageScorer(String filename) throws FileNotFoundException, ParseException, IOException {
 		train(new QuestionMap(filename));
 	}
 	
@@ -46,6 +46,7 @@ public class Scorer {
     	}
     	
     	Collections.sort(output_results);
+    	Collections.reverse(output_results);
     	return output_results;
     }
 }
