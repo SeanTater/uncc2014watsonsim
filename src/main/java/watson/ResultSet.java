@@ -69,7 +69,7 @@ public class ResultSet implements Comparable<ResultSet> {
     }
 
 
-	/** Normalize scores to be from 0 to 1, less is better. */
+	/** Normalize scores to be from 0 to 1, more is better. */
 	public void setScore(double raw) {
 		score = (raw - range.best) / (range.worst - range.best);
 	}

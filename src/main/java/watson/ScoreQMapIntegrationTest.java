@@ -41,32 +41,40 @@ public class ScoreQMapIntegrationTest {
     	 *  - Pretend it's not a problem? */
     	QuestionMap questionmap = new QuestionMap("/home/sean/Dropbox/Projects/deepqa/watson/data/ct.json");
     	int correct = 0;
-    	int total = 50;
+    	int available = 0;
+    	int rank = 0;
+    	int total = 500;
     	int runs = total;
     	for (Question question : questionmap.values()) {
-    		Engine ranked_answers = new AverageScorer().test(question);
+    		Engine ranked_answers = new PrebuiltLRScorer().test(question);
     		ResultSet top_answer = ranked_answers.get(0);
     		assertNotNull(top_answer);
     		assertThat(top_answer.getTitle().length(), not(0));
     		
     		String correct_answer_score = "Not in results";
-    		for (ResultSet r : ranked_answers)
-    			if(r.getTitle().equalsIgnoreCase(question.answer))
+    		int irank =0;
+    		for (ResultSet r : ranked_answers) {
+    			if(r.isCorrect()) {
     				correct_answer_score = String.valueOf(r.getScore());
+    				rank += irank;
+    			}
+    			irank++;
+    		}
     		
     		System.out.println("Q: " + question.question + "\n" +
     				"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
 					"A[Actual:" + correct_answer_score + "]: "  + question.answer);
     		
-    		if (question.answer.equalsIgnoreCase(top_answer.getTitle()))
+    		if (top_answer.isCorrect())
     			correct++;
+    		if (!correct_answer_score.equalsIgnoreCase("Not in results"))
+    			available++;
     		runs--;
     		if(runs < 0) break;
     	}
     	System.out.println("" + correct + " of " + total + " correct");
-    			/*String.format(
-    			"%f | %i of %i correct",
-    			((double) correct )/ total, correct, total));*/
-    	
+    	System.out.println("" + available + " of " + total + " could have been");
+
+    	System.out.println("Average correct rank " + ((double)rank) / available);
 	}
 }
