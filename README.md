@@ -1,11 +1,11 @@
-watson [![Build Status](https://travis-ci.org/SeanTater/watson.png?branch=master)](https://travis-ci.org/SeanTater/watson)
+uncc2014watsonsum [![Build Status](https://travis-ci.org/SeanTater/uncc2014watsonsim.png?branch=master)](https://travis-ci.org/SeanTater/uncc2014watsonsim)
 ======
 
-Watson clone Deep Question Answering System
+Deep Question Answering System
 
 
-Building `watson`
------------------
+Build
+-----
 You need:
 
 - Java >= 7
