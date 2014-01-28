@@ -1,4 +1,4 @@
-package watson;
+package uncc2014watsonsim;
 
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.*;

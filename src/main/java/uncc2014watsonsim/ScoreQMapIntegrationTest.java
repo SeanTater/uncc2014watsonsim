@@ -1,4 +1,4 @@
-package watson;
+package uncc2014watsonsim;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class ScoreQMapIntegrationTest {
     	 *  - Download from internet on the fly (from Dropbox, maybe)?
     	 *  - Place on Github with everything else?
     	 *  - Pretend it's not a problem? */
-    	QuestionMap questionmap = new QuestionMap("/home/sean/Dropbox/Projects/deepqa/watson/data/ct.json");
+    	QuestionMap questionmap = new QuestionMap("/home/sean/Dropbox/Projects/deepqa/uncc2014watsonsim/data/ct.json");
     	Question question = questionmap.get("This London borough is the G in GMT, squire");
     	Engine ranked_answers = new AverageScorer().test(question);
     	String top_answer = ranked_answers.get(0).getTitle();
@@ -39,7 +39,7 @@ public class ScoreQMapIntegrationTest {
     	 *  - Download from internet on the fly (from Dropbox, maybe)?
     	 *  - Place on Github with everything else?
     	 *  - Pretend it's not a problem? */
-    	QuestionMap questionmap = new QuestionMap("/home/sean/Dropbox/Projects/deepqa/watson/data/ct.json");
+    	QuestionMap questionmap = new QuestionMap("/home/sean/Dropbox/Projects/deepqa/uncc2014watsonsim/data/ct.json");
     	int correct = 0;
     	int available = 0;
     	int rank = 0;

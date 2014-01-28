@@ -1,4 +1,4 @@
-package watson;
+package uncc2014watsonsim;
 
 import java.util.ArrayList;
 import java.util.Arrays;
