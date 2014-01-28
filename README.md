@@ -1,4 +1,4 @@
-uncc2014watsonsum [![Build Status](https://travis-ci.org/SeanTater/uncc2014watsonsim.png?branch=master)](https://travis-ci.org/SeanTater/uncc2014watsonsim)
+uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watsonsim.png?branch=master)](https://travis-ci.org/SeanTater/uncc2014watsonsim)
 ======
 
 Deep Question Answering System
@@ -15,7 +15,7 @@ You need:
 - The Search Engine group's dataset (comb.json) if you plan to run the tests.
 
 Then run (on Linux or compatible):
-  - `git clone http://github.com/SeanTater/watson.git`
+  - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
   - `cd watson`
   - `gradle compileJava` or `gradle compileTestJava` (for running tests automatically)
 
