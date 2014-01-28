@@ -16,7 +16,7 @@ You need:
 
 Then run (on Linux or compatible):
   - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
-  - `cd watson`
+  - `cd uncc2014watsonsim`
   - `gradle compileJava` or `gradle compileTestJava` (for running tests automatically)
 
 Feel free to contribute instructions for other systems.
