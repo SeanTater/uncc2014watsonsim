@@ -28,8 +28,7 @@ public class ResultSetTest {
 		assertEquals(0.8, result.getScore(), 0.001);
 		// Scaled
 		// Normally these would be overridden in inheritance
-		result.best_score = 100;
-		result.worst_score = 0;
+		result = new ResultSet(result, new ScoreRange(100, 0));
 		result.setScore(100);
 		assertEquals(0, result.getScore(), 0.001);
 		result.setScore(0);

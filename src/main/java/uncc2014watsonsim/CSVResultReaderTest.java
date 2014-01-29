@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+/** CSV is deprecated. Use JSON instead. */
 public class CSVResultReaderTest {
 
 	@Test

@@ -12,10 +12,10 @@ public class CombinedResult {
     private String title;
     private double indriScore;
     private double luceneScore;
-    private int indriRank;
-    private int luceneRank;
+    private long indriRank;
+    private long luceneRank;
 
-    public CombinedResult(boolean correct, String title, double indriScore, double luceneScore, int indriRank, int luceneRank) {
+    public CombinedResult(boolean correct, String title, double indriScore, double luceneScore, long indriRank, long luceneRank) {
         this.correct = correct;
         this.title = title;
         this.indriScore = indriScore;
@@ -28,7 +28,7 @@ public class CombinedResult {
     public CombinedResult() {
     }
 
-    public int getIndriRank() {
+    public long getIndriRank() {
         return indriRank;
     }
 
@@ -36,7 +36,7 @@ public class CombinedResult {
         this.indriRank = indriRank;
     }
 
-    public int getLuceneRank() {
+    public long getLuceneRank() {
         return luceneRank;
     }
 

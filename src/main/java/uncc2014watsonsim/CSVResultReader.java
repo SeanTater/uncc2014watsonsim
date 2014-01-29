@@ -13,6 +13,7 @@ import com.googlecode.jcsv.reader.internal.*;
 
 /** Reads CSV files and produces Resultsets.
  * Note that the titles and texts, and score ranges are not available.
+ *  CSV is deprecated. Use JSON instead. 
  */
 public class CSVResultReader {
 	CSVReader<String[]> reader;

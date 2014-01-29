@@ -33,7 +33,12 @@ public class ResultSet implements Comparable<ResultSet> {
         this.correct = correct;
         this.rank = rank;
     }
-	
+    
+    public ResultSet(ResultSet original, ScoreRange range) {
+		this(original);
+    	this.range = range;
+    }
+    
 	public ResultSet(String engine_name, JSONObject attr) {
 		// There is a bit of redundancy: the engine name is in every attribute 
 		if (predefined_engines.containsKey(engine_name))
