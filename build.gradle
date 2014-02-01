@@ -17,3 +17,9 @@ dependencies {
     compile 'org.apache.httpcomponents:fluent-hc:4.3.1'
     compile 'org.eclipse.jgit:org.eclipse.jgit:3.2.0.201312181205-r'
 }
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}

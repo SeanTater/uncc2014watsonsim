@@ -3,11 +3,15 @@ package uncc2014watsonsim;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.json.simple.parser.ParseException;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.*;
 
 import static org.junit.Assert.*;
@@ -20,14 +24,30 @@ import org.junit.Test;
  * @author Sean Gallagher
  */
 public class ScoreQMapIntegrationTest {
-
+	
+	/** Fetch the sample data from the internet
+	 * TODO: Move to heroku 
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 * @throws ParseException */
+	private QuestionMap getQuestionMap() throws ClientProtocolException, IOException, ParseException {
+		InputStream net = Request.Get("http://seantater.is-a-linux-user.org/main_v1.0.json.gz").execute().returnContent().asStream();
+		GZIPInputStream gzip = new GZIPInputStream(net);
+		InputStreamReader reader = new InputStreamReader(gzip);
+    	QuestionMap questionmap = new QuestionMap(reader);
+		reader.close();
+		gzip.close();
+		net.close();
+		return questionmap;
+	}
+	
 	@Test
     public void integrate() throws FileNotFoundException, ParseException, IOException {
     	/* TODO: Find out what the usual way of handling large test data is
     	 *  - Download from internet on the fly (from Dropbox, maybe)?
     	 *  - Place on Github with everything else?
     	 *  - Pretend it's not a problem? */
-    	QuestionMap questionmap = new QuestionMap("/home/sean/Dropbox/Projects/deepqa/watson/data/ct.json");
+    	QuestionMap questionmap = getQuestionMap();
     	Question question = questionmap.get("This London borough is the G in GMT, squire");
     	Engine ranked_answers = new AverageScorer().test(question);
     	String top_answer = ranked_answers.get(0).getTitle();
@@ -38,12 +58,8 @@ public class ScoreQMapIntegrationTest {
 	
 	@Test
     public void sample() throws FileNotFoundException, ParseException, IOException, GitAPIException {
-    	/* TODO: Find out what the usual way of handling large test data is
-    	 *  - Download from internet on the fly (from Dropbox, maybe)?
-    	 *  - Place on Github with everything else?
-    	 *  - Pretend it's not a problem? */
+    	QuestionMap questionmap = getQuestionMap();
 		long start_time = System.nanoTime();
-    	QuestionMap questionmap = new QuestionMap("/home/sean/Dropbox/Projects/deepqa/watson/data/ct.json");
     	int top_correct = 0;
     	int top3_correct = 0;
     	int available = 0;
@@ -95,7 +111,7 @@ public class ScoreQMapIntegrationTest {
     	if (head == null)
     		System.out.println("Problem finding git repository. Not submitting stats.");
     	else
-    		Request.Post("http://seantater.is-a-linux-user.org/watsonsim/runs.json").bodyForm(Form.form()
+    		Request.Post("http://seantater.is-a-linux-user.org/runs.json").bodyForm(Form.form()
     			.add("run[branch]", repo.getBranch())
     			.add("run[commit]", head)
     			.add("run[dataset]", "main") // NOTE: Fill this in if you change it

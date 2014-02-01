@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,8 +25,12 @@ import org.json.simple.parser.ParseException;
 public class QuestionMap extends HashMap<String, Question> {
 	private static final long serialVersionUID = 1L;
 	
-    public QuestionMap(String path) throws ParseException, FileNotFoundException, IOException {
-        BufferedReader br = new BufferedReader(new FileReader(new File(path)));
+	public QuestionMap(String path) throws ParseException, FileNotFoundException, IOException {
+		this(new FileReader(new File(path)));
+	}
+	
+    public QuestionMap(Reader reader) throws ParseException, FileNotFoundException, IOException {
+        BufferedReader br = new BufferedReader(reader);
         JSONParser parser = new JSONParser();
         JSONArray root = (JSONArray) ((JSONObject) parser.parse(br)).get("root");
         
