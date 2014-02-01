@@ -3,9 +3,7 @@ uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watso
 
 Deep Question Answering System
 
-
-Build
------
+## Build
 You need:
 
 - Java >= 7
@@ -21,11 +19,17 @@ Then run (on Linux or compatible):
 
 Feel free to contribute instructions for other systems.
 
+## Develop
 
-Architecture
-------------
+### Architecture
 The general stages are:
 
 - Query multiple search engines given the question, retrieving the results with scores when possible. These are compiled into a single JSON dataset for the machine learning group to test against.
 - Compile aggregate scores based on the original scores given with the search results.
 - Choose the top result's title as the question's answer
+
+
+### Tools
+
+- [Check to see if your commit broke the code](https://travis-ci.org/SeanTater/uncc2014watsonsim)
+- [Find out how much better your code works than the last commit](http://seantater.is-a-linux-user.org/runs)
