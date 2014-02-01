@@ -90,7 +90,6 @@ public class ScoreQMapIntegrationTest {
     	
     	// Generate report
     	// Gather git information
-    	File cwd = new File(System.getProperty("user.dir"));
     	Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
     	String head = repo.resolve("HEAD").abbreviate(10).name();
     	if (head == null)
