@@ -31,7 +31,7 @@ public class ScoreQMapIntegrationTest {
 	 * @throws ClientProtocolException 
 	 * @throws ParseException */
 	private QuestionMap getQuestionMap() throws ClientProtocolException, IOException, ParseException {
-		InputStream net = Request.Get("http://seantater.is-a-linux-user.org/main_v1.0.json.gz").execute().returnContent().asStream();
+		InputStream net = Request.Get("https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/main_v1.0.json.gz").execute().returnContent().asStream();
 		GZIPInputStream gzip = new GZIPInputStream(net);
 		InputStreamReader reader = new InputStreamReader(gzip);
     	QuestionMap questionmap = new QuestionMap(reader);
@@ -109,8 +109,7 @@ public class ScoreQMapIntegrationTest {
     	if (System.getenv("TRAVIS_BRANCH") == null)
     		System.out.println("Not running on Travis. Not submitting stats.");
     	else
-    		//TODO: Move to heroku
-    		Request.Post("http://seantater.is-a-linux-user.org/runs.json").bodyForm(Form.form()
+    		Request.Post("http://watsonsim.herokuapp.com/runs.json").bodyForm(Form.form()
     			.add("run[branch]", System.getenv("TRAVIS_BRANCH"))
     			.add("run[commit]", System.getenv("TRAVIS_COMMIT").substring(0, 10))
     			.add("run[dataset]", "main") // NOTE: Fill this in if you change it
