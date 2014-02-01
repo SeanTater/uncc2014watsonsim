@@ -6,6 +6,9 @@ mainClassName = "watson.WatsonML"
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://repo.eclipse.org/content/groups/releases/"
+    }
 }
 
 dependencies {
@@ -13,4 +16,6 @@ dependencies {
     compile group: "com.googlecode.jcsv", name: "jcsv", version: "1.4.0"
     compile group: "com.github.spullara.cli-parser", name: "cli-parser", version: "1.1"
     compile group: "com.googlecode.json-simple", name: "json-simple", version: "1.1"
+    compile 'org.apache.httpcomponents:fluent-hc:4.3.1'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:3.2.0.201312181205-r'
 }
