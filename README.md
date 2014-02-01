@@ -41,4 +41,4 @@ The general stages are:
 ### Tools
 
 - [Check to see if your commit broke the code](https://travis-ci.org/SeanTater/uncc2014watsonsim)
-- [Find out how much better your code works than the last commit](http://seantater.is-a-linux-user.org/runs)
+- [Find out how much better your code works than the last commit](http://watsonsim.herokuapp.com/runs)
