@@ -106,14 +106,13 @@ public class ScoreQMapIntegrationTest {
     	
     	// Generate report
     	// Gather git information
-    	Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
-    	String head = repo.resolve("HEAD").abbreviate(10).name();
-    	if (head == null)
-    		System.out.println("Problem finding git repository. Not submitting stats.");
+    	if (System.getenv("TRAVIS_BRANCH") == null)
+    		System.out.println("Not running on Travis. Not submitting stats.");
     	else
+    		//TODO: Move to heroku
     		Request.Post("http://seantater.is-a-linux-user.org/runs.json").bodyForm(Form.form()
-    			.add("run[branch]", repo.getBranch())
-    			.add("run[commit]", head)
+    			.add("run[branch]", System.getenv("TRAVIS_BRANCH"))
+    			.add("run[commit]", System.getenv("TRAVIS_COMMIT"))
     			.add("run[dataset]", "main") // NOTE: Fill this in if you change it
     			.add("run[top]", String.valueOf(top_correct))
     			.add("run[top3]", String.valueOf(top3_correct))
