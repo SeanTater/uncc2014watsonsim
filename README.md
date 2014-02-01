@@ -10,16 +10,25 @@ You need:
 - [Gradle](http://www.gradle.org)
  - You may not need to install it, as long as you can run the `gradle` binary.
 - An internet connection (to download dependencies)
-- The Search Engine group's dataset (comb.json) if you plan to run the tests.
 
 Then run (on Linux or compatible):
   - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
   - `cd uncc2014watsonsim`
-  - `gradle compileJava` or `gradle compileTestJava` (for running tests automatically)
+  - `gradle assemble`
+  - or `gradle test` (optional)
 
 Feel free to contribute instructions for other systems.
 
 ## Develop
+
+### Getting started
+
+- Build it first
+- Make your changes
+ - Make and run tests on your changes (tests are JUnit4, and go in src/tests/java/uncc2014watsonsim/)
+- Submit changes
+ - Either [make a pull request](https://help.github.com/articles/using-pull-requests) for which there are great how-to's
+ - or, send [me](mailto:stgallag@gmail.com) a request to become a contributer, then push your own changes.
 
 ### Architecture
 The general stages are:
