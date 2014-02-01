@@ -112,7 +112,7 @@ public class ScoreQMapIntegrationTest {
     		//TODO: Move to heroku
     		Request.Post("http://seantater.is-a-linux-user.org/runs.json").bodyForm(Form.form()
     			.add("run[branch]", System.getenv("TRAVIS_BRANCH"))
-    			.add("run[commit]", System.getenv("TRAVIS_COMMIT"))
+    			.add("run[commit]", System.getenv("TRAVIS_COMMIT").substring(0, 10))
     			.add("run[dataset]", "main") // NOTE: Fill this in if you change it
     			.add("run[top]", String.valueOf(top_correct))
     			.add("run[top3]", String.valueOf(top3_correct))
