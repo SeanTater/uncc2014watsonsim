@@ -106,7 +106,7 @@ public class ScoreQMapIntegrationTest {
 		else
 			Request.Post("http://watsonsim.herokuapp.com/runs.json").bodyForm(Form.form()
 					.add("run[branch]", System.getenv("TRAVIS_BRANCH"))
-					.add("run[commit]", System.getenv("TRAVIS_COMMIT").substring(0, 10))
+					.add("run[commit_hash]", System.getenv("TRAVIS_COMMIT").substring(0, 10))
 					.add("run[dataset]", "main") // NOTE: Fill this in if you change it
 					.add("run[top]", String.valueOf(top_correct))
 					.add("run[top3]", String.valueOf(top3_correct))
