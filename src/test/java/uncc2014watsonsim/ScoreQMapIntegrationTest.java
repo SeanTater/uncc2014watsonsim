@@ -58,7 +58,7 @@ public class ScoreQMapIntegrationTest {
 		int top_correct = 0;
 		int top3_correct = 0;
 		int available = 0;
-		double total_rank = 0;
+		double total_inverse_rank = 0;
 		int total_questions = 8045;
 		int total_answers = 0;
 		int runs_remaining = total_questions;
@@ -74,7 +74,7 @@ public class ScoreQMapIntegrationTest {
 				ResultSet answer = ranked_answers.get(correct_rank); 
 				if(answer.isCorrect()) {
 					correct_answer_score = String.valueOf(answer.getScore());
-					total_rank += correct_rank;
+					total_inverse_rank += 1 / (double)correct_rank;
 					available++;
 					if (correct_rank < 3) {
 						top3_correct++;
@@ -93,7 +93,7 @@ public class ScoreQMapIntegrationTest {
 		}
 
 		// Only count the rank of questions that were actually there
-		total_rank /= available;
+		total_inverse_rank /= available;
 		// Finish the timing
 		double runtime = System.nanoTime() - start_time;
 		runtime /= 1e9;
@@ -111,7 +111,7 @@ public class ScoreQMapIntegrationTest {
 					.add("run[top]", String.valueOf(top_correct))
 					.add("run[top3]", String.valueOf(top3_correct))
 					.add("run[available]", String.valueOf(available))
-					.add("run[rank]", String.valueOf(total_rank))
+					.add("run[rank]", String.valueOf(total_inverse_rank))
 					.add("run[total_questions]", String.valueOf(total_questions))
 					.add("run[total_answers]", String.valueOf(total_answers))
 					.add("run[runtime]", String.valueOf(runtime))
@@ -119,6 +119,6 @@ public class ScoreQMapIntegrationTest {
 
 		System.out.println("" + top_correct + " of " + total_questions + " correct");
 		System.out.println("" + available + " of " + total_questions + " could have been");
-		System.out.println("Average correct rank " + total_rank);
+		System.out.println("Mean Inverse Rank " + total_inverse_rank);
 	}
 }
