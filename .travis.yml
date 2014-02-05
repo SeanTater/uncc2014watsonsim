@@ -6,4 +6,4 @@ install:
   - TERM=dumb gradle assemble
 
 script:
-  - TERM=dumb gradle check
+    - TERM=dumb gradle --info check
