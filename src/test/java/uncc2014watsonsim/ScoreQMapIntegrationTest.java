@@ -74,7 +74,7 @@ public class ScoreQMapIntegrationTest {
 				ResultSet answer = ranked_answers.get(correct_rank); 
 				if(answer.isCorrect()) {
 					correct_answer_score = String.valueOf(answer.getScore());
-					total_inverse_rank += 1 / (double)correct_rank;
+					total_inverse_rank += 1 / ((double)correct_rank + 1);
 					available++;
 					if (correct_rank < 3) {
 						top3_correct++;
