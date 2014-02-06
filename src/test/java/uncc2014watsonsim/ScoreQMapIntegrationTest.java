@@ -64,7 +64,7 @@ public class ScoreQMapIntegrationTest {
 		int runs_remaining = total_questions;
 
 		for (Question question : questionmap.values()) {
-			Engine ranked_answers = new PrebuiltLRScorer().test(question);
+			Engine ranked_answers = new AverageScorer().test(question);
 			ResultSet top_answer = ranked_answers.get(0);
 			assertNotNull(top_answer);
 			assertThat(top_answer.getTitle().length(), not(0));
