@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package watson;
+package uncc2014watsonsim;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
