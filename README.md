@@ -17,6 +17,7 @@ Then run (on Linux or compatible):
   - `gradle assemble`
   - `gradle test` if you want to run the tests
   - `gradle eclipse` if you want to setup eclipse classpaths
+    - `gradle cleanEclipse && gradle eclipse` to start over with Eclipse if classpaths are broken
 
 Feel free to contribute instructions for other systems.
 
