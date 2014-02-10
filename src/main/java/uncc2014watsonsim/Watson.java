@@ -21,11 +21,9 @@ public class Watson {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        BufferedReader br = null;
-        String filename = "C:\\Users\\PhaniRahul\\Desktop\\watson\\output.txt";
-        try {
+        
+        try (BufferedReader br = SampleData.get("output.txt.gz")){
             int num = 1;
-            br = new BufferedReader(new FileReader(new File(filename)));
             String line = null;
             ExecutorService pool = Executors.newFixedThreadPool(15);
             while ((line = br.readLine()) != null) {
@@ -45,12 +43,6 @@ public class Watson {
             Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                br.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 }

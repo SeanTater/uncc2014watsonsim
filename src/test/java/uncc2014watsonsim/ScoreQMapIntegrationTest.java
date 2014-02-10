@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.zip.GZIPInputStream;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -30,14 +31,10 @@ public class ScoreQMapIntegrationTest {
 	 * @throws ClientProtocolException 
 	 * @throws ParseException */
 	private QuestionMap getQuestionMap() throws ClientProtocolException, IOException, ParseException {
-		InputStream net = Request.Get("https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/main_v1.0.json.gz").execute().returnContent().asStream();
-		GZIPInputStream gzip = new GZIPInputStream(net);
-		InputStreamReader reader = new InputStreamReader(gzip);
-		QuestionMap questionmap = new QuestionMap(reader);
-		reader.close();
-		gzip.close();
-		net.close();
-		return questionmap;
+		try (Reader reader = SampleData.get("main_v1.0.json.gz")) {
+			QuestionMap questionmap = new QuestionMap(reader);
+			return questionmap;
+		}
 	}
 
 	@Test
