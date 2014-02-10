@@ -27,7 +27,8 @@ public class Watson {
             String line = null;
             ExecutorService pool = Executors.newFixedThreadPool(15);
             while ((line = br.readLine()) != null) {
-                pool.execute(new AnswerJson(line, num++));
+                //pool.execute(new AnswerJson(line, num++));
+            	new AnswerJson(line, num++).run();
             }
             // master.put("list", list);
             pool.shutdown();
