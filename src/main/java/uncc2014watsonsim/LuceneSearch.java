@@ -54,7 +54,7 @@ public class LuceneSearch implements LocalSearch {
                     .open(new File(indexPath)));
             searcher = new IndexSearcher(reader);
         } catch (IOException ex) {
-            Logger.getLogger(WatsonDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WatsonSim.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -63,13 +63,13 @@ public class LuceneSearch implements LocalSearch {
         try {
             query = parser.parse(q);
         } catch (ParseException ex) {
-            Logger.getLogger(WatsonDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WatsonSim.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
             results = searcher.search(query, MAX_RESULTS);
         } catch (IOException ex) {
-            Logger.getLogger(WatsonDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WatsonSim.class.getName()).log(Level.SEVERE, null, ex);
         }
         hits = results.scoreDocs;
         
