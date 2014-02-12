@@ -35,7 +35,7 @@ public class WatsonSim {
         ignoreSet.add("J! Archive");
         ignoreSet.add("Jeopardy");
         
-        /*initialize indri and query
+        //initialize indri and query
         IndriSearch in = new IndriSearch();
         in.setIndex(indri_index);
         in.runQuery(question.question);
@@ -48,7 +48,7 @@ public class WatsonSim {
         			rank);
         	indri.add(r);
         }
-        question.add(indri);*/
+        question.add(indri);
 
         //initialize and query lucene
         LuceneSearch lu = new LuceneSearch(luceneSearchField);

@@ -14,7 +14,7 @@ dependencies {
     // Machine learning
     compile group: "org.apache.mahout",              name: "mahout-core",             version: "0.8"
     compile group: "com.googlecode.jcsv",            name: "jcsv",                    version: "1.4.0"
-    compile group: "icom.github.spullara.cli-parser", name: "cli-parser",              version: "1.1"
+    compile group: "com.github.spullara.cli-parser", name: "cli-parser",              version: "1.1"
 
     // Statistics
     compile group: "com.googlecode.json-simple",     name: "json-simple",             version: "1.1"
@@ -29,6 +29,10 @@ dependencies {
     compile group: "com.google.api-client",          name: "google-api-client",       version: "1.17.0-rc"
     compile 'com.google.apis:google-api-services-customsearch:v1-rev34-1.17.0-rc'
     compile "com.google.http-client:google-http-client-jackson2:1.17.0-rc"
+}
+
+tasks.withType(Test) {
+        systemProperty "java.library.path", file("lib")
 }
 
 test {

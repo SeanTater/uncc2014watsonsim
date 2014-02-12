@@ -40,7 +40,7 @@ public class ScoreQMapIntegrationTest {
 	@Test
 	public void integrate() throws FileNotFoundException, ParseException, IOException {
 		QuestionMap questionmap = getQuestionMap();
-		Question question = questionmap.get("This London borough is the G in GMT, squire");
+		Question question = questionmap.get("This London borough is the G in GMT squire");
 		Engine ranked_answers = new AverageScorer().test(question);
 		String top_answer = ranked_answers.get(0).getTitle();
 		assertNotNull(top_answer);
