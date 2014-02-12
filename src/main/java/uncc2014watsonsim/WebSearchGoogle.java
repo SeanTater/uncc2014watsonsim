@@ -1,4 +1,4 @@
-package watsondemo;
+package uncc2014watsonsim;
 
 /*
  * Java Imports

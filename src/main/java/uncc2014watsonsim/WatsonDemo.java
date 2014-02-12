@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package watsondemo;
+package uncc2014watsonsim;
 
 import com.sun.org.apache.xalan.internal.xsltc.runtime.BasisLibrary;
 import java.io.BufferedReader;
@@ -22,145 +18,72 @@ public class WatsonDemo {
 
     /**
      * @param args the command line arguments
+     * @throws IOException 
      */
-    public static void main(String[] args) {
-        final String indri = "/home/sean/deepqa/indri_index";
-        final String lucene = "/home/sean/deepqa/lucene_index";
+    public static void main(String[] args) throws IOException {
+        final String indri_index = "/home/sean/deepqa/indri_index";
+        final String lucene_index = "/home/sean/deepqa/lucene_index";
         final String luceneSearchField = "text";
         final int maxDocs = 10;
 
         //read from the command line
         System.out.println("Enter the jeopardy question: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String question = "";
-        try {
-            question = br.readLine();
-        } catch (IOException ex) {
-            Logger.getLogger(WatsonDemo.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        question = question.replaceAll("[^0-9a-zA-Z ]+", "").trim();
-
-        //initialize indri and query
-        IndriSearch in = new IndriSearch();
-        in.setIndex(indri);
-        in.runQuery(question);
+        Question question = new Question(br.readLine());
 
         HashSet<String> ignoreSet = new HashSet<String>();
         ignoreSet.add("J! Archive");
         ignoreSet.add("Jeopardy");
+        
+        //initialize indri and query
+        IndriSearch in = new IndriSearch();
+        in.setIndex(indri_index);
+        in.runQuery(question.question);
+        Engine indri = new Engine("indri");
+        for (int rank=0; rank < in.getResultCount(); rank++) {
+        	ResultSet r = new ResultSet(
+        			in.getTitle(rank),
+        			in.getScore(rank),
+        			false, // correct? We don't know yet.
+        			rank);
+        }
+        question.add(indri);
 
-        //initialize an query lucene
+        //initialize and query lucene
         LuceneSearch lu = new LuceneSearch(luceneSearchField);
-        lu.setIndex(lucene);
-        lu.runQuery(question);
+        lu.setIndex(lucene_index);
+        lu.runQuery(question.question);
+        Engine lucene = new Engine("lucene");
+        for (int rank=0; rank < lu.getResultCount(); rank++) {
+        	ResultSet r = new ResultSet(
+        			lu.getTitle(rank),
+        			lu.getScore(rank),
+        			false, // correct? We don't know yet.
+        			rank);
+        }
+        question.add(lucene);
 
         //initialize google search engine and query.
         WebSearchGoogle go = new WebSearchGoogle();
-        go.runQuery(question);
-
-        //build the result objects
-        ArrayList<ResultSet> indriResult = new ArrayList<>();
-        ArrayList<ResultSet> luceneResult = new ArrayList<>();
-        ArrayList<ResultSet> googleResult = new ArrayList<>();
-        double indMax = 0, indMin = 0, lucMax = 0, lucMin = 0, goMin = 0, goMax = 0;
-        for (int i = 0; i < LocalSearch.MAX_RESULTS; i++) {
-            ResultSet ob1 = new ResultSet();
-            ob1.setRank(i + 1);
-            ob1.setTitle(in.getTitle(i));
-            ob1.setScore(in.getScore(i));
-            indriResult.add(ob1);
-            
-
-            //to normalize the scores
-            if (indMax < in.getScore(i)) {
-                indMax = in.getScore(i);
-            }
-            if (indMin > in.getScore(i)) {
-                indMin = in.getScore(i);
-            }
-
-            ResultSet ob2 = new ResultSet();
-            ob2.setRank(i + 1);
-
-            ob2.setTitle(lu.getTitle(i));
-
-            ob2.setScore(lu.getScore(i));
-            luceneResult.add(ob2);
-            System.out.println(lu.getDocument(i));
-
-            //to normalize the scores
-            if (lucMax < lu.getScore(i)) {
-                lucMax = lu.getScore(i);
-            }
-            if (lucMin > lu.getScore(i)) {
-                lucMin = lu.getScore(i);
-            }
-
-            //
-            ResultSet ob3 = new ResultSet();
-
-            ob3.setRank(i + 1);
-            ob3.setTitle(go.getTitle(i));
-            ob3.setScore(maxDocs - i);
-            boolean there = false;
-            for (String ig : ignoreSet) {
-                if (ob3.getTitle().contains(ig)) {
-                    there = true;
-                    break;
-                }
-            }
-            if (!there) {
-                googleResult.add(ob3);
-
-                //to normalize the scores
-                if (goMax < maxDocs - i) {
-                    goMax = maxDocs - i;
-                }
-                if (goMin > maxDocs - i) {
-                    goMin = maxDocs - i;
-                }
-            }
-
+        go.runQuery(question.question);
+        Engine google = new Engine("google");
+        for (int rank=0; rank < in.getResultCount(); rank++) {
+        	ResultSet r = new ResultSet(
+        			go.getTitle(rank),
+        			rank,
+        			false, // correct? We don't know yet.
+        			rank);
         }
-        //normalize the scores
-        double ind = Math.sqrt((indMax * indMax) + (indMin * indMin));
-        for (ResultSet rs : indriResult) {
-            rs.setNormalizedScore(-1 * rs.getScore() / ind);
-        }
-        double luc = Math.sqrt((lucMax * lucMax) + (lucMin * lucMin));
-        for (ResultSet rs : luceneResult) {
-            rs.setNormalizedScore(rs.getScore() / luc);
-        }
-        double goo = Math.sqrt((goMax * goMax) + (goMin * goMin));
-        for (ResultSet rs : googleResult) {
-            rs.setNormalizedScore(rs.getScore() / goo);
-        }
+        question.add(google);
 
-        //merge the result sets.
+        /*TODO: merge the result sets.
         HashSet<CombinedResult> merged = new HashSet<>();
         HashSet<ResultSet> intersect = new HashSet<>();
-        intersect.addAll(indriResult);
-        intersect.retainAll(luceneResult);
-//        intersect.retainAll(googleResult);
-
-        for (ResultSet rsInd : intersect) {
-            ResultSet rsLuc = luceneResult.get(luceneResult.indexOf(rsInd));
-            merged.add(new CombinedResult(rsInd.getTitle(),
-                    rsInd.getScore(), rsLuc.getScore(), rsInd.getRank(),
-                    rsLuc.getRank(), rsInd.getNormalizedScore(),
-                    rsLuc.getNormalizedScore()));
-        }
-        for (ResultSet rs : indriResult) {
-            merged.add(new CombinedResult(rs.getTitle(),
-                    rs.getScore(), 0, rs.getRank(),
-                    -1, rs.getNormalizedScore(), 0));
-        }
-        for (ResultSet rs : luceneResult) {
-            merged.add(new CombinedResult(rs.getTitle(),
-                    0, rs.getScore(), -1, rs.getRank(), 0,
-                    rs.getNormalizedScore()));
-        }
-
+        intersect.addAll(indri);
+        intersect.retainAll(lucene);
+        intersect.retainAll(google);*/
+        
+        /* TODO: Handle inexact title matches
         HashSet<ResultSet> googleLeftovers = new HashSet<>();
         for (ResultSet rs : googleResult) {
             String[] goTitle = rs.getTitle().split(" ");
@@ -199,10 +122,11 @@ public class WatsonDemo {
             merged.add(c);
 
         }
+        */
 
-        //now finally sort the merged result
-        ArrayList<CombinedResult> mergedList = new ArrayList<>(merged);
-        Collections.sort(mergedList);
+        //TODO: now finally sort the merged result
+        /*ArrayList<CombinedResult> mergedList = new ArrayList<>(merged);
+        Collections.sort(mergedList);*/
 
         //display results
 //        for (CombinedResult c : mergedList) {
@@ -212,6 +136,6 @@ public class WatsonDemo {
         //System.out.println(luceneResult);
         //System.out.println(googleResult);
         //System.out.println("Done");
-
+        new AverageScorer().test(question);
     }
 }

@@ -1,4 +1,4 @@
-package watsondemo;
+package uncc2014watsonsim;
 
 /*
  * This interface might change; Please be ready to accomodate the changes.

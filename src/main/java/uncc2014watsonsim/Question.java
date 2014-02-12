@@ -7,8 +7,12 @@ public class Question extends ArrayList<Engine>{
 	private static final long serialVersionUID = 1L;
 	String question, answer;
 	
+	public Question(String text) {
+		this.question = text.replaceAll("[^0-9a-zA-Z ]+", "").trim();
+	}
+	
 	public Question(String question, String answer) {
-		this.question = question;
+		this(question);
 		this.answer = answer;
 	}
 	
