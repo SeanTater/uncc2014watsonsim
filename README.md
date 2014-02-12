@@ -3,6 +3,22 @@ uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watso
 
 Deep Question Answering System
 
+## Quick start
+- [Download the zipfile](https://googledrive.com/host/0B8wOEC5-v5lXUUllV2stSGRRYTA/watsonsim-quickstart-0.1.1.zip)
+- Be sure to:
+  - Make sure you are in the branch you want. Use (or google) `git branch` and `git checkout`
+  - `git pull` to get the latest code _before_ writing any code. Our project is changing fast, don't rely on yesterday's version!
+  - Change the indri library path in .classpath to match the directory where your indri .dll or .so files are stored. (libindri-jni.so specifically) Otherwise you will see `Exception in thread "main" java.lang.UnsatisfiedLinkError: no indri_jni in java.library.path`
+    - Can't find libindri-jni? Make sure you enabled SWIG and had the right dependencies when compiling Indri.
+  - Change the lucene and indri index paths to match your needs in src/main/java/uncc2014watsonsim/watsonsim
+- Remember that:
+  - A git repository is included.
+  - Consider making a branch before making major changes (it's tougher to move the changes later)
+  - Gradle is included under `gradle-1.10/bin`.
+    - use `gradle-1.10/bin/gradle assemble` to get the latest dependencies
+    - add the appropriate line (or ask for it to be added) to build.gradle when you need another library
+
+
 ## Build
 You need:
 
