@@ -9,15 +9,16 @@ repositories {
 }
 
 dependencies {
-    compile group: "org.apache.mahout",              name: "mahout-core",      version: "0.8"
-    compile group: "com.googlecode.jcsv",            name: "jcsv",             version: "1.4.0"
-    compile group: "com.github.spullara.cli-parser", name: "cli-parser",       version: "1.1"
-    compile group: "com.googlecode.json-simple",     name: "json-simple",      version: "1.1"
-    compile group: "org.apache.httpcomponents",      name: "fluent-hc",        version: "4.3.1"
-    compile group: "org.eclipse.jgit",               name: "org.eclipse.jgit", version: "3.2.0.201312181205-r"
-    compile group: "org.apache.lucene",              name: "lucene-core",      version: "4.6.0"
-    compile group: "org.apache.lucene",              name: "lucene-queryparser",   version: "4.6.0"
-    compile group: "lemurproject.indri",                   name: "indri",            version: "5.6"
+    compile group: "org.apache.mahout",              name: "mahout-core",             version: "0.8"
+    compile group: "com.googlecode.jcsv",            name: "jcsv",                    version: "1.4.0"
+    compile group: "com.github.spullara.cli-parser", name: "cli-parser",              version: "1.1"
+    compile group: "com.googlecode.json-simple",     name: "json-simple",             version: "1.1"
+    compile group: "org.apache.httpcomponents",      name: "fluent-hc",               version: "4.3.1"
+    compile group: "org.eclipse.jgit",               name: "org.eclipse.jgit",        version: "3.2.0.201312181205-r"
+    compile group: "org.apache.lucene",              name: "lucene-core",             version: "4.6.0"
+    compile group: "org.apache.lucene",              name: "lucene-queryparser",      version: "4.6.0"
+    compile group: "org.apache.lucene",              name: "lucene-analyzers-common", version: "4.6.0"
+    compile group: "lemurproject.indri",                   name: "indri",             version: "5.6"
 }
 
 test {

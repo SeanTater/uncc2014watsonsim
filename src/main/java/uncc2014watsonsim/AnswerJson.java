@@ -14,6 +14,7 @@ import lemurproject.indri.ScoredExtentResult;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -39,7 +40,7 @@ public class AnswerJson implements Runnable {
 	// TODO: How to install or setup Indri for testing?
 	String inServer = "localhost:4044";
 	// TODO: How to download index?
-	String luIndex = "/home/sean/Dropbox/Projects/deepqa/lucene_index";
+	String luIndex = "/tmp/lucene_index_heavy";
 	final String luSearchField = "text";
 	final int maxDocs = 10;
 	JSONArray list;
@@ -62,12 +63,13 @@ public class AnswerJson implements Runnable {
 	public void run() {
 		if (!good) return;
 		try {
+			
 			//        //initializing indri..
 			//        QueryEnvironment q = new QueryEnvironment();
 			//        try {
 			//            q.addServer(inServer);
 			//        } catch (Exception ex) {
-			//            Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
+			//            Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
 			//            System.out.println("error at line number "+line_num);
 			//        }
 
@@ -76,14 +78,14 @@ public class AnswerJson implements Runnable {
 			IndexSearcher searcher = new IndexSearcher(reader);
 			
 			//since the index repository is made using StandardAnalyzer, we have to use the same
-			Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
+            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
 			QueryParser parser = new QueryParser(Version.LUCENE_46, luSearchField, analyzer);
 
 			//        QueryAnnotation res = null;
 			//        try {
 			//            res = q.runAnnotatedQuery(question, maxDocs);
 			//        } catch (Exception ex) {
-			//            Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
+			//            Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
 			//            System.out.println("error at line number "+line_num);
 			//            // throw ex;
 			//        }
@@ -91,7 +93,7 @@ public class AnswerJson implements Runnable {
 			//        try {
 			//            ser = res.getResults();
 			//        } catch (Exception ex) {
-			//            Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
+			//            Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
 			//            System.out.println("error at line number "+line_num);
 			//            // throw ex;
 			//        }
@@ -99,7 +101,7 @@ public class AnswerJson implements Runnable {
 			//        try {
 			//            indTitles = q.documentMetadata(ser, "title");
 			//        } catch (Exception ex) {
-			//            Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
+			//            Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
 			//            //  throw ex;
 			//        }
 			Query query = parser.parse(question);

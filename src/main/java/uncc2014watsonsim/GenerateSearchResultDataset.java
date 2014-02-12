@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Phani Rahul
  */
-public class Watson {
+public class GenerateSearchResultDataset {
 
     /**
      * @param args the command line arguments
@@ -27,23 +27,22 @@ public class Watson {
             String line = null;
             ExecutorService pool = Executors.newFixedThreadPool(15);
             while ((line = br.readLine()) != null) {
-                //pool.execute(new AnswerJson(line, num++));
-            	new AnswerJson(line, num++).run();
+                pool.execute(new AnswerJson(line, num++));
             }
             // master.put("list", list);
             pool.shutdown();
             try {
                 pool.awaitTermination(2, TimeUnit.DAYS);
             } catch (InterruptedException ex) {
-                Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
             }
             //Main again
             System.out.println("MAIN AGAIN");
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Watson.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
