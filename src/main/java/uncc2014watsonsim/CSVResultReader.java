@@ -76,7 +76,7 @@ public class CSVResultReader {
 			lucene.add(new ResultSet(rowid_string, lscore, correct, rowid));
 			indri.add( new ResultSet(rowid_string, iscore, correct, rowid));
 		}
-		// Need to fill in question text if we keep using csv
+		// Need to fill in text text if we keep using csv
 		Question sets = new Question("Q", "A");
 		sets.add(lucene);
 		sets.add(indri);

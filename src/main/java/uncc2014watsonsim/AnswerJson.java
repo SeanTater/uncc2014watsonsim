@@ -83,7 +83,7 @@ public class AnswerJson implements Runnable {
 
 			//        QueryAnnotation res = null;
 			//        try {
-			//            res = q.runAnnotatedQuery(question, maxDocs);
+			//            res = q.runAnnotatedQuery(text, maxDocs);
 			//        } catch (Exception ex) {
 			//            Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
 			//            System.out.println("error at line number "+line_num);
@@ -111,7 +111,7 @@ public class AnswerJson implements Runnable {
 			JSONObject object = new JSONObject();
 			JSONArray indri_list = new JSONArray();
 			JSONArray lucene_list = new JSONArray();
-			//        System.out.println("q: " + question);
+			//        System.out.println("q: " + text);
 			for (int i = 0; i < maxDocs; i++) {
 				//            JSONObject ind = new JSONObject();
 				//            ind.put("indri_rank", i + 1);
@@ -155,7 +155,7 @@ public class AnswerJson implements Runnable {
 				//            indri_list.add(ind);
 				lucene_list.add(luc);
 			}
-			object.put("question", question_original);
+			object.put("text", question_original);
 			object.put("answer", answer);
 			//        object.put("indri", indri_list);
 			object.put("lucene", lucene_list);

@@ -88,7 +88,7 @@ public class JSON {
 
     @Override
     public String toString() {
-        return "JSON{" + "question=" + question + ", answer=" + answer + ", indri=" + indri + ", lucene=" + lucene + ", all=" + all + '}';
+        return "JSON{" + "text=" + question + ", answer=" + answer + ", indri=" + indri + ", lucene=" + lucene + ", all=" + all + '}';
     }
     
 }

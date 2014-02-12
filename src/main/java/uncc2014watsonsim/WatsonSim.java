@@ -27,7 +27,7 @@ public class WatsonSim {
         final int maxDocs = 10;
 
         //read from the command line
-        System.out.println("Enter the jeopardy question: ");
+        System.out.println("Enter the jeopardy text: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         Question question = new Question(br.readLine());
 
@@ -38,7 +38,7 @@ public class WatsonSim {
         //initialize indri and query
         IndriSearch in = new IndriSearch();
         in.setIndex(indri_index);
-        in.runQuery(question.question);
+        in.runQuery(question.text);
         Engine indri = new Engine("indri");
         for (int rank=0; rank < in.getResultCount(); rank++) {
         	ResultSet r = new ResultSet(
@@ -53,7 +53,7 @@ public class WatsonSim {
         //initialize and query lucene
         LuceneSearch lu = new LuceneSearch(luceneSearchField);
         lu.setIndex(lucene_index);
-        lu.runQuery(question.question);
+        lu.runQuery(question.text);
         Engine lucene = new Engine("lucene");
         for (int rank=0; rank < lu.getResultCount(); rank++) {
         	ResultSet r = new ResultSet(
@@ -67,7 +67,7 @@ public class WatsonSim {
 
         //initialize google search engine and query.
         WebSearchGoogle go = new WebSearchGoogle();
-        go.runQuery(question.question);
+        go.runQuery(question.text);
         Engine google = new Engine("google");
         for (int rank=0; rank < go.getResultCount(); rank++) {
         	ResultSet r = new ResultSet(

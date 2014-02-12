@@ -57,7 +57,7 @@ public class ParseJSON {
         Iterator<JSONObject> questions = root.iterator();
         while (questions.hasNext()) {
             JSONObject question = questions.next();
-            String ques = (String) question.get("question");
+            String ques = (String) question.get("text");
             String ans = (String) question.get("answer");
 
             JSON json = new JSON();
@@ -110,15 +110,15 @@ public class ParseJSON {
 //            JSONArray root = (JSONArray) ((JSONObject) parser.parse(br)).get("root");
 //            Iterator<JSONObject> questions = root.iterator();
 //            while (questions.hasNext()) {
-//                JSONObject question = questions.next();
-//                String ques = (String) question.get("question");
-//                String ans = (String) question.get("answer");
+//                JSONObject text = questions.next();
+//                String ques = (String) text.get("text");
+//                String ans = (String) text.get("answer");
 //
 //                JSON json = new JSON();
 //                json.setQuestion(ques);
 //                json.setAnswer(ans);
 //
-//                Iterator<JSONObject> iitr = ((JSONArray) question.get("indri")).iterator();
+//                Iterator<JSONObject> iitr = ((JSONArray) text.get("indri")).iterator();
 //                while (iitr.hasNext()) {
 //                    JSONObject res = iitr.next();
 //                    String title = (String) res.get("indri_title");
@@ -131,7 +131,7 @@ public class ParseJSON {
 //                    json.getIndri().add(new ResultSet(title, score, correct, (int) rank));
 //                }
 //
-//                Iterator<JSONObject> litr = ((JSONArray) question.get("lucene")).iterator();
+//                Iterator<JSONObject> litr = ((JSONArray) text.get("lucene")).iterator();
 //                while (litr.hasNext()) {
 //                    JSONObject res = litr.next();
 //                    String title = (String) res.get("lucene_title");
@@ -146,7 +146,7 @@ public class ParseJSON {
 ////                json.getAll()
 //                System.out.println("json: ... . " + json.getAll());
 //                break;
-////                System.out.println("one: " + question);
+////                System.out.println("one: " + text);
 //            }
 ////            System.out.println("root: " + root);
 //

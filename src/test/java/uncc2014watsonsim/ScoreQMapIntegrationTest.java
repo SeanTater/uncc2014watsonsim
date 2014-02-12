@@ -81,9 +81,9 @@ public class ScoreQMapIntegrationTest {
 				}
 			}
 			total_answers += ranked_answers.size();
-			//System.out.println("Q: " + question.question + "\n" +
+			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
-			//		"A[Actual:" + correct_answer_score + "]: "  + question.answer);
+			//		"A[Actual:" + correct_answer_score + "]: "  + text.answer);
 
 			runs_remaining--;
 			if(runs_remaining < 0) break;

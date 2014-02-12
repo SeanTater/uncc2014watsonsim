@@ -40,19 +40,19 @@ public class QuestionMap extends HashMap<String, Question> {
             JSONObject question_json = questions.next();
             
             Question question = new Question(
-            		(String) question_json.get("question"),
+            		(String) question_json.get("text"),
             		(String) question_json.get("answer"));
             /*
             JSON json = new JSON();
-            json.setQuestion(question.question);
-            json.setAnswer(question.answer);
+            json.setQuestion(text.question);
+            json.setAnswer(text.answer);
             */
-            List<String> reserved_keys = Arrays.asList(new String[]{"question", "answer"});
+            List<String> reserved_keys = Arrays.asList(new String[]{"text", "answer"});
             
-            // For every attribute of the JSON question...
+            // For every attribute of the JSON text...
             for (String engine_s : (Iterable<String>) question_json.keySet()) {
             	if (!reserved_keys.contains(engine_s)) {
-            		// If it is not the question text or answer text, then it's an engine...
+            		// If it is not the text text or answer text, then it's an engine...
             		Engine engine = new Engine(engine_s);
             		question.add(engine);
             		
@@ -72,7 +72,7 @@ public class QuestionMap extends HashMap<String, Question> {
             	}
             }
 
-            put(question.question, question);
+            put(question.text, question);
         }
     }
 }
