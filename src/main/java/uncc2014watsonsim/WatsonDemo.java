@@ -35,7 +35,7 @@ public class WatsonDemo {
         ignoreSet.add("J! Archive");
         ignoreSet.add("Jeopardy");
         
-        //initialize indri and query
+        /*initialize indri and query
         IndriSearch in = new IndriSearch();
         in.setIndex(indri_index);
         in.runQuery(question.question);
@@ -46,8 +46,9 @@ public class WatsonDemo {
         			in.getScore(rank),
         			false, // correct? We don't know yet.
         			rank);
+        	indri.add(r);
         }
-        question.add(indri);
+        question.add(indri);*/
 
         //initialize and query lucene
         LuceneSearch lu = new LuceneSearch(luceneSearchField);
@@ -60,21 +61,23 @@ public class WatsonDemo {
         			lu.getScore(rank),
         			false, // correct? We don't know yet.
         			rank);
+        	lucene.add(r);
         }
         question.add(lucene);
 
-        //initialize google search engine and query.
+        /*initialize google search engine and query.
         WebSearchGoogle go = new WebSearchGoogle();
         go.runQuery(question.question);
         Engine google = new Engine("google");
-        for (int rank=0; rank < in.getResultCount(); rank++) {
+        for (int rank=0; rank < go.getResultCount(); rank++) {
         	ResultSet r = new ResultSet(
         			go.getTitle(rank),
         			rank,
         			false, // correct? We don't know yet.
         			rank);
+        	google.add(r);
         }
-        question.add(google);
+        question.add(google);*/
 
         /*TODO: merge the result sets.
         HashSet<CombinedResult> merged = new HashSet<>();
@@ -136,6 +139,9 @@ public class WatsonDemo {
         //System.out.println(luceneResult);
         //System.out.println(googleResult);
         //System.out.println("Done");
-        new AverageScorer().test(question);
+        Engine combined = new AverageScorer().test(question);
+        for (ResultSet r : combined) {
+        	System.out.println(String.format("[%01f] %s", r.getScore(), r.getTitle()));
+        }
     }
 }
