@@ -31,7 +31,9 @@ Then run (on Linux or compatible):
   - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
   - `cd uncc2014watsonsim`
   - `gradle assemble`
-  - or `gradle test` (optional)
+  - `gradle test` if you want to run the tests
+  - `gradle eclipse` if you want to setup eclipse classpaths
+    - `gradle cleanEclipse && gradle eclipse` to start over with Eclipse if classpaths are broken
 
 Feel free to contribute instructions for other systems.
 
