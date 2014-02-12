@@ -22,6 +22,7 @@ public class ResultSet implements Comparable<ResultSet> {
     	predefined_engines = new HashMap<String, ScoreRange>();
     	predefined_engines.put("lucene", new ScoreRange(1.2, 0));
     	predefined_engines.put("indri", new ScoreRange(-10, -4));
+    	predefined_engines.put("google", new ScoreRange(0, 10));
     }
     
     // These are intended to be overridden in subclasses
