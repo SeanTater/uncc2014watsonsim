@@ -2,9 +2,13 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
+// Meta information
 mainClassName = "uncc2014watsonsim.WatsonSim"
+version = "0.1.1"
 
+// Dependencies and where to get them (some are nonstandard)
 repositories {
+    flatDir { dirs: "$projectDir/libs" }
     mavenCentral()
     maven {url "https://repo.eclipse.org/content/groups/releases/"}
     maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
@@ -29,14 +33,38 @@ dependencies {
     compile group: "com.google.api-client",          name: "google-api-client",       version: "1.17.0-rc"
     compile 'com.google.apis:google-api-services-customsearch:v1-rev34-1.17.0-rc'
     compile "com.google.http-client:google-http-client-jackson2:1.17.0-rc"
+
+    // Indri native library
+    natives "libindri-jni:libindri-jni:5.6"
 }
 
-tasks.withType(Test) {
-        systemProperty "java.library.path", file("lib")
+
+// Other Tasks
+run {
+    // Allow reading from stdin
+    standardInput = System.in
+    // Find Indri
+    systemProperty "java.library.path", file("/home/sean/Dropbox/Projects/deepqa/watson/lib")
 }
 
 test {
     testLogging {
         exceptionFormat = 'full'
+    }
+}
+
+distZip {
+    // Creates the zipfile distributed to class
+    into(project.name + "-" + project.version) {
+        from '.'
+        include '**'
+        exclude 'bin/'
+        exclude 'build/'
+        exclude 'tmp/'
+    }
+}
+
+eclipse {
+    classpath {
     }
 }

@@ -1,7 +1,9 @@
 package uncc2014watsonsim;
 
 import com.sun.org.apache.xalan.internal.xsltc.runtime.BasisLibrary;
+
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
