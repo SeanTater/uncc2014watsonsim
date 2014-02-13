@@ -3,50 +3,41 @@ uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watso
 
 Deep Question Answering System
 
-## Quick start
-- [Download the zipfile](https://googledrive.com/host/0B8wOEC5-v5lXUUllV2stSGRRYTA/watsonsim-quickstart-0.1.1.zip)i
-- Dependencies
-  - Java >= 7
-  - git
-  - gradle (included, binaries are in gradle-1.10/bin)
-  - Lucene Wikipedia Index (you must already have indexed it; the code will not index it for you)
-  - Indri Wikipedia Index (same)
-  - Internet Connection (for Google - it's possible to comment it out)
-- Setup
-  - Install dependencies: `gradle-1.10/bin/gradle assemble`
-  - Setup indri library path
-    - The easiest way is `gradle-1.10/bin/gradle cleanEclipse eclipse` (leaving out the path if you already have gradle)
-    - libindri-jni.so is included in lib/ but it may not be appropriate for your platform. If you get errors about `indri_jni`, find `libindri-jni.so` or `libindri-jni.dll` and copy it to lib/.
-    - Alternately, you can edit the following line in .classpath (but you may have to edit it again periodically)
-    <attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="FILL_IN_YOUR_LIBRARY_DIRECTORY"/>
-    - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
+## Get started
+
+- Quick Start:
+  - [Download the zipfile](https://googledrive.com/host/0B8wOEC5-v5lXUUllV2stSGRRYTA/watsonsim-quickstart-0.1.1.zip)
+  - libindri-jni.so is included iin lib/ but it may not be appropriate for your platforim. If you get errors about `indri_jni`, find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
+  - Where you use `gradle` later, substitute `gradle-1.10/bin/gradle`
+- Slower Start:
+  - Install [gradle](http://gradle.org), Java (>=7)
+  - Compile Indri
+  - Find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
+  - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
+- Then, either way:
+  - Index Wikipedia Trec with Lucene and with Indri
+  - `gradle assemble` to install dependencies (It's possible but complicated to skip this)
+  - `gradle cleanEclipse eclipse` to correct Eclipse classpaths (since it needs absolute paths)
   - Change the lucene and indri index paths to match your needs in src/main/java/uncc2014watsonsim/watsonsim
     - This will probably soon be a preference
-- Getting started
-  - Make sure you are in the branch you want. Use (or google) `git branch` and `git checkout`
-  - `git pull` to get the latest code _before_ writing any code.
-  - Consider making a branch before making major changes (it's tougher to move the changes later)
-  - Gradle is included under `gradle-1.10/bin`.
-    - `gradle assemble` -> update dependencies
-    - `gradle test` -> run tests
-    - `gradle run` -> run watsonsim (it will ask you for questions, give you results)
-    - Configuration is in build.gradle
+  - `gradle run` to get started playing and asking watsonsim questions
 
+## Start developing
 
-## Alternative start
-- Do the same as the quick start, except where the quick start used a zipfile:
-  - Install [gradle](http://gradle.org) yourself
-  - Find `indri_jni` yourself
-Then run (on Linux or compatible):
-  - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
-  - `cd uncc2014watsonsim`
-  - `gradle assemble`
-  - `gradle test` if you want to run the tests
-  - `gradle eclipse` if you want to setup eclipse classpaths
-    - `gradle cleanEclipse eclipse` to start over with Eclipse if classpaths are broken
-  - `gradle run` to start asking questions
+- Make sure you are in the branch you want. Use (or google) `git branch` and `git checkout`
+- `git pull` to get the latest code _before_ writing any code.
+- Consider making a branch before making major changes (it's tougher to move the changes later)
+- Get comfortable with gradle. As a 5-second tour:
+  - `gradle assemble` -> update dependencies
+  - `gradle test` -> run tests
+  - `gradle run` -> run watsonsim (it will ask you for questions, give you results)
+  - Configuration is in build.gradle
+- Write code and documentation!
+- [Ask to be added as a contributor](stgallag@gmail.com) or if your code is small, send a patch
+- Repeat
 
-Feel free to contribute instructions for other systems.
+### Troubleshoot
+- Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
 
 ### Architecture {stub}
 The general stages are:
@@ -54,7 +45,6 @@ The general stages are:
 - Query multiple search engines given the question, retrieving the results with scores when possible. These are compiled into a single JSON dataset for the machine learning group to test against.
 - Compile aggregate scores based on the original scores given with the search results.
 - Choose the top result's title as the question's answer
-
 
 ### Tools
 
