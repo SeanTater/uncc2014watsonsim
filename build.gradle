@@ -8,7 +8,7 @@ version = "0.1.1"
 
 // Dependencies and where to get them (some are nonstandard)
 repositories {
-    flatDir { dirs: "$projectDir/libs" }
+//    flatDir { dirs "$projectDir/quickstart-lib" }
     mavenCentral()
     maven {url "https://repo.eclipse.org/content/groups/releases/"}
     maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
@@ -35,7 +35,7 @@ dependencies {
     compile "com.google.http-client:google-http-client-jackson2:1.17.0-rc"
 
     // Indri native library
-    natives "libindri-jni:libindri-jni:5.6"
+//    natives "libindri-jni:libindri-jni:5.6"
 }
 
 
@@ -44,7 +44,7 @@ run {
     // Allow reading from stdin
     standardInput = System.in
     // Find Indri
-    systemProperty "java.library.path", file("/home/sean/Dropbox/Projects/deepqa/watson/lib")
+    systemProperty "java.library.path", file("$projectDir/lib")
 }
 
 test {
@@ -63,6 +63,13 @@ distZip {
         exclude 'tmp/'
     }
 }
+
+task refreshQuickstart << { 
+    copy { 
+        from configurations.compile.allArtifactFiles 
+        into "$projectDir/quickstart-lib" 
+    } 
+} 
 
 eclipse {
     classpath {
