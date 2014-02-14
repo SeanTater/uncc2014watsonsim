@@ -24,79 +24,41 @@ public class PrebuiltLRScorer {
 		// No-op until ML code is added
 	}
 	
-    public Engine test(Question question) {
-    	// Look for identical results from multiple engines
+    public Question test(Question question) {
     	
-    	// Presort to allow easy matching 
-    	Comparator<ResultSet> comp = new AnswerTitleComparator();
-    	for (Engine engine : question) 
-    		Collections.sort(engine, comp);
-
-    	Engine out = new Engine("Prebuilt");
-    	
-    	int ii = 0; // Indri index
-    	int li = 0; // Lucene index
-    	Engine indri=null, lucene=null;
-    	for (Engine e : question)
-    		if (e.name.equalsIgnoreCase("indri"))
-    			indri = e;
-    		else
-    			lucene = e;
-    		
-    	while (ii < indri.size() || li < lucene.size()) {
-    		if (ii == indri.size())
-    			// Indri ended. Finish lucene.
-    			for (; li < lucene.size(); li++)
-    				out.add(scoreLucene(lucene.get(li)));
-    		else if (li == lucene.size())
-    			// Lucene ended. Finish indri.
-    			for (; ii < indri.size(); ii++)
-    				out.add(scoreIndri(indri.get(ii)));
-    		else {
-    			// Both continue.
-    			int swtch = comp.compare(indri.get(ii), lucene.get(li));
-				if (swtch == 0) {
-    				// Match found
-    				out.add(scoreBoth(indri.get(ii), lucene.get(li)));
-    				li++;
-    				ii++;
-				} else if (swtch < 0) {
-					// Indri is behind
-					out.add(scoreIndri(indri.get(ii)));
-					ii++;
-				} else {
-					// Lucene is behind
-					out.add(scoreLucene(lucene.get(li)));
-					li++;
-    			}
+    	for (ResultSet result : question) {
+    		Engine lucene = result.first("lucene");
+    		Engine indri = result.first("indri");
+    		Engine combined = new Engine("combined", 0, 0);
+    		if (lucene != null && indri != null) {
+    			combined.score = scoreBoth(indri.score, lucene.score);
+    		} else if (lucene != null) {
+    			combined.score = scoreLucene(lucene.score);
+    		} else if (indri != null) {
+    			combined.score = scoreIndri(indri.score);
     		}
+    		// In any of the above three cases, but not the "else":
+    		if (lucene != null || indri != null)
+    			result.engines.add(combined);
     	}
-    	
-    	Collections.sort(out);
-    	Collections.reverse(out);
-    	return out;
+    	Collections.sort(question);
+    	Collections.reverse(question);
+    	return question;
     }
     
     double sigmoid(double x) {
     	return 1 / (1 + Math.exp(-x));
     }
     
-    ResultSet scoreIndri(ResultSet result) {
-    	ResultSet newr = new ResultSet(result);
-    	newr.setScore(sigmoid(0.2115 * result.getScore() - 1.4136));
-    	return newr;
+    double scoreIndri(double score) {
+    	return sigmoid(0.2115 * score - 1.4136);
     }
-    ResultSet scoreLucene(ResultSet result) {
-    	ResultSet newr = new ResultSet(result);
-    	newr.setScore(sigmoid(0.2683 * result.getScore() - 3.3227));
-    	return newr;
+    double scoreLucene(double score) {
+    	return sigmoid(0.2683 * score - 3.3227);
     }
-    ResultSet scoreBoth(ResultSet indri, ResultSet lucene) {
-    	ResultSet newr = new ResultSet(indri);
-    	newr.setScore(
-    			sigmoid(-0.1592 * indri.getScore()
-    			+ 0.4838 * lucene.getScore()
-				- 4.102));
-    	return newr;
+    double scoreBoth(double indri, double lucene) {
+    	return sigmoid(-0.1592 * indri
+    			+ 0.4838 * lucene
+				- 4.102);
     }
 }

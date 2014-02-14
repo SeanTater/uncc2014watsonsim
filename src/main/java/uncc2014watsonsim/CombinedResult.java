@@ -6,6 +6,7 @@ import java.util.Objects;
  *
  * @author Phani Rahul
  */
+
 public class CombinedResult {
 
     private boolean correct;
@@ -101,7 +102,5 @@ public class CombinedResult {
     @Override
     public String toString() {
         return "CombinedResult{" + "correct=" + correct + ", title=" + title + ", indriScore=" + indriScore + ", luceneScore=" + luceneScore + ", indriRank=" + indriRank + ", luceneRank=" + luceneRank + '}';
-    }
-    
-    
+    }   
 }

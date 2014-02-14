@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.zip.GZIPInputStream;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -30,22 +31,18 @@ public class ScoreQMapIntegrationTest {
 	 * @throws ClientProtocolException 
 	 * @throws ParseException */
 	private QuestionMap getQuestionMap() throws ClientProtocolException, IOException, ParseException {
-		InputStream net = Request.Get("https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/main_v1.0.json.gz").execute().returnContent().asStream();
-		GZIPInputStream gzip = new GZIPInputStream(net);
-		InputStreamReader reader = new InputStreamReader(gzip);
-		QuestionMap questionmap = new QuestionMap(reader);
-		reader.close();
-		gzip.close();
-		net.close();
-		return questionmap;
+		try (Reader reader = SampleData.get("main_v1.0.json.gz")) {
+			QuestionMap questionmap = new QuestionMap(reader);
+			return questionmap;
+		}
 	}
 
 	@Test
 	public void integrate() throws FileNotFoundException, ParseException, IOException {
 		QuestionMap questionmap = getQuestionMap();
-		Question question = questionmap.get("This London borough is the G in GMT, squire");
-		Engine ranked_answers = new AverageScorer().test(question);
-		String top_answer = ranked_answers.get(0).getTitle();
+		Question question = questionmap.get("This London borough is the G in GMT squire");
+		new AverageScorer().test(question);
+		String top_answer = question.get(0).getTitle();
 		assertNotNull(top_answer);
 		assertThat(top_answer.length(), not(0));
 		//Logger.getLogger(Test.class.getName()).log(Level.INFO, "The answer: "+ ranked_answers.get(0).getTitle());
@@ -64,16 +61,14 @@ public class ScoreQMapIntegrationTest {
 		int runs_remaining = total_questions;
 
 		for (Question question : questionmap.values()) {
-			Engine ranked_answers = new PrebuiltLRScorer().test(question);
-			ResultSet top_answer = ranked_answers.get(0);
+			new PrebuiltLRScorer().test(question);
+			ResultSet top_answer = question.get(0);
 			assertNotNull(top_answer);
 			assertThat(top_answer.getTitle().length(), not(0));
 
-			String correct_answer_score = "Not in results";
-			for (int correct_rank=0; correct_rank<ranked_answers.size(); correct_rank++) {
-				ResultSet answer = ranked_answers.get(correct_rank); 
+			for (int correct_rank=0; correct_rank<question.size(); correct_rank++) {
+				ResultSet answer = question.get(correct_rank); 
 				if(answer.isCorrect()) {
-					correct_answer_score = String.valueOf(answer.getScore());
 					total_inverse_rank += 1 / ((double)correct_rank + 1);
 					available++;
 					if (correct_rank < 3) {
@@ -83,10 +78,10 @@ public class ScoreQMapIntegrationTest {
 					break;
 				}
 			}
-			total_answers += ranked_answers.size();
-			//System.out.println("Q: " + question.question + "\n" +
+			total_answers += question.size();
+			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
-			//		"A[Actual:" + correct_answer_score + "]: "  + question.answer);
+			//		"A[Actual:" + correct_answer_score + "]: "  + text.answer);
 
 			runs_remaining--;
 			if(runs_remaining < 0) break;

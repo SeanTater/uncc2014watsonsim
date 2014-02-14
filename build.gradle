@@ -1,25 +1,88 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'application'
 
+// Meta information
+mainClassName = "uncc2014watsonsim.WatsonSim"
+version = "0.1.1"
 
+// Dependencies and where to get them (some are nonstandard)
 repositories {
     mavenCentral()
-    maven {
-        url "https://repo.eclipse.org/content/groups/releases/"
-    }
+    maven {url "https://repo.eclipse.org/content/groups/releases/"}
+    maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
 }
 
 dependencies {
-    compile group: "org.apache.mahout", name: "mahout-core", version: "0.8"
-    compile group: "com.googlecode.jcsv", name: "jcsv", version: "1.4.0"
-    compile group: "com.github.spullara.cli-parser", name: "cli-parser", version: "1.1"
-    compile group: "com.googlecode.json-simple", name: "json-simple", version: "1.1"
-    compile 'org.apache.httpcomponents:fluent-hc:4.3.1'
-    compile 'org.eclipse.jgit:org.eclipse.jgit:3.2.0.201312181205-r'
+    // Machine learning
+    compile group: "org.apache.mahout",              name: "mahout-core",             version: "0.8"
+    compile group: "com.googlecode.jcsv",            name: "jcsv",                    version: "1.4.0"
+    compile group: "com.github.spullara.cli-parser", name: "cli-parser",              version: "1.1"
+
+    // Statistics
+    compile group: "com.googlecode.json-simple",     name: "json-simple",             version: "1.1"
+    compile group: "org.apache.httpcomponents",      name: "fluent-hc",               version: "4.3.1"
+    compile group: "org.eclipse.jgit",               name: "org.eclipse.jgit",        version: "3.2.0.201312181205-r"
+
+    // Search Engines
+    compile group: "org.apache.lucene",              name: "lucene-core",             version: "4.6.0"
+    compile group: "org.apache.lucene",              name: "lucene-queryparser",      version: "4.6.0"
+    compile group: "org.apache.lucene",              name: "lucene-analyzers-common", version: "4.6.0"
+    compile group: "lemurproject.indri",             name: "indri",                   version: "5.6"
+    compile group: "com.google.api-client",          name: "google-api-client",       version: "1.17.0-rc"
+    compile 'com.google.apis:google-api-services-customsearch:v1-rev34-1.17.0-rc'
+    compile "com.google.http-client:google-http-client-jackson2:1.17.0-rc"
+
+    // Approximate String Matching
+    compile 'org.apache.commons:commons-lang3:3.2.1'
+
+    // Indri native library
+//    natives "libindri-jni:libindri-jni:5.6"
+}
+
+
+// Other Tasks
+run {
+    // Allow reading from stdin
+    standardInput = System.in
+    // Find Indri
+    systemProperty "java.library.path", file("$projectDir/lib")
 }
 
 test {
     testLogging {
         exceptionFormat = 'full'
+    }
+}
+
+distZip {
+    // Creates the zipfile distributed to class
+    into(project.name + "-" + project.version) {
+        from '.'
+        include '**'
+        exclude 'bin/'
+        exclude 'build/'
+        exclude 'data/'
+        exclude 'tmp/'
+    }
+}
+
+task refreshQuickstart << { 
+    copy { 
+        from configurations.compile.allArtifactFiles 
+        into "$projectDir/quickstart-lib" 
+    } 
+}
+
+eclipse {
+    classpath {
+        file.withXml {provider ->
+            provider.asNode().findAll { it.@path.contains("indri") }.each {
+                it.appendNode('attributes')
+                it.children().each {
+                    it.appendNode('attribute', [name: 'org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY', value: "$projectDir/lib"])
+                }
+            }
+        }
     }
 }

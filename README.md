@@ -3,42 +3,53 @@ uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watso
 
 Deep Question Answering System
 
-## Build
-You need:
+## Get started
 
-- Java >= 7
-- [Gradle](http://www.gradle.org)
- - You may not need to install it, as long as you can run the `gradle` binary.
-- An internet connection (to download dependencies)
-
-Then run (on Linux or compatible):
+- Quick Start:
+  - [Download the zipfile](https://googledrive.com/host/0B8wOEC5-v5lXUUllV2stSGRRYTA/watsonsim-quickstart-0.1.1.zip)
+  - libindri-jni.so is included in uncc2014watsonsim/lib but it may not be appropriate for your platforim. If you get errors about `indri_jni`, find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
+  - Where you use `gradle` later, substitute `gradle-1.11/bin/gradle`
+- Slower Start:
+  - Install [gradle](http://gradle.org), Java (>=7)
+  - Compile Indri
+  - Find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
   - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
-  - `cd uncc2014watsonsim`
-  - `gradle assemble`
-  - `gradle test` if you want to run the tests
-  - `gradle eclipse` if you want to setup eclipse classpaths
-    - `gradle cleanEclipse && gradle eclipse` to start over with Eclipse if classpaths are broken
+- Then, either way:
+  - Index Wikipedia Trec with Lucene and with Indri
+  - `gradle assemble` to install dependencies (It's possible but complicated to skip this)
+  - `gradle cleanEclipse eclipse` to correct Eclipse classpaths (since it needs absolute paths)
+  - Change the lucene and indri index paths to match your needs in src/main/java/uncc2014watsonsim/watsonsim
+    - This will probably soon be a preference
+  - `gradle run` to get started playing and asking watsonsim questions
 
-Feel free to contribute instructions for other systems.
+## Start developing
 
-## Develop
+- Make sure you are in the branch you want. Use (or google) `git branch` and `git checkout`
+- `git pull` to get the latest code _before_ writing any code.
+- Consider making a branch before making major changes (it's tougher to move the changes later)
+- Get comfortable with gradle. As a 5-second tour:
+  - `gradle assemble` -> update dependencies
+  - `gradle test` -> run tests
+  - `gradle run` -> run watsonsim (it will ask you for questions, give you results)
+  - Configuration is in build.gradle
+- Write code and documentation!
+- [Ask to be added as a contributor](stgallag@gmail.com) or if your code is small, send a patch
+- Repeat
 
-### Getting started
+### Troubleshoot
+- Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
 
-- Build it first
-- Make your changes
- - Make and run tests on your changes (tests are JUnit4, and go in src/tests/java/uncc2014watsonsim/)
-- Submit changes
- - Either [make a pull request](https://help.github.com/articles/using-pull-requests) for which there are great how-to's
- - or, send [me](mailto:stgallag@gmail.com) a request to become a contributer, then push your own changes.
+### Architecture {stub}
+Testing setup:
+- A large database of questions is run against predefined search engines.
+- The results are recorded as a large JSON file, saved, and later reopened.
+- The results are rescored (by an average or using hand built Logistic Regression)
+- The top result becomes the candidate answer, and statistics are generated
 
-### Architecture
-The general stages are:
-
-- Query multiple search engines given the question, retrieving the results with scores when possible. These are compiled into a single JSON dataset for the machine learning group to test against.
-- Compile aggregate scores based on the original scores given with the search results.
-- Choose the top result's title as the question's answer
-
+Classes:
+- Question: Holds ResultSet's, collates similar results together (using Levenshtein distance)
+- ResultSet: Holds one candidate answer text (as title), and 1+ Engines.
+- Engine: Represents one search result, has a rank, a score, and an engine name.
 
 ### Tools
 
