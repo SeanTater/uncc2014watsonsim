@@ -33,7 +33,7 @@ public class ScorerTest {
 		q.add(yahoo1);
 		ml.test(q);
 		assertEquals(q.get(0), yahoo1);
-		assertEquals(q.get(0).first("combined").score, 1, 0.001);
+		assertEquals(q.get(0).first("combined").score, 0.75, 0.001);
 	}
 	
 	@Test
