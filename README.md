@@ -40,11 +40,16 @@ Deep Question Answering System
 - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
 
 ### Architecture {stub}
-The general stages are:
+Testing setup:
+- A large database of questions is run against predefined search engines.
+- The results are recorded as a large JSON file, saved, and later reopened.
+- The results are rescored (by an average or using hand built Logistic Regression)
+- The top result becomes the candidate answer, and statistics are generated
 
-- Query multiple search engines given the question, retrieving the results with scores when possible. These are compiled into a single JSON dataset for the machine learning group to test against.
-- Compile aggregate scores based on the original scores given with the search results.
-- Choose the top result's title as the question's answer
+Classes:
+- Question: Holds ResultSet's, collates similar results together (using Levenshtein distance)
+- ResultSet: Holds one candidate answer text (as title), and 1+ Engines.
+- Engine: Represents one search result, has a rank, a score, and an engine name.
 
 ### Tools
 

@@ -17,7 +17,7 @@ public class ResultSetTest {
 
 		assertEquals(
 			new ResultSet("Pete and repeat were sitting on a fence", "example", 0, 0, false),
-			new ResultSet("Repeat and pete were sitting on a dence", "example", 0, 0, false));
+			new ResultSet("Peteand repeat were sitting on a fence", "example", 0, 0, false));
 	}
 
 }
