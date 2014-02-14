@@ -73,5 +73,13 @@ task refreshQuickstart << {
 
 eclipse {
     classpath {
+        file.withXml {provider ->
+            provider.asNode().findAll { it.@path.contains("indri") }.each {
+                it.appendNode('attributes')
+                it.children().each {
+                    it.appendNode('attribute', [name: 'org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY', value: "$projectDir/lib"])
+                }
+            }
+        }
     }
 }
