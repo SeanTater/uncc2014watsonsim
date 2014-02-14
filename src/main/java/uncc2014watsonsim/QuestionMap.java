@@ -50,18 +50,15 @@ public class QuestionMap extends HashMap<String, Question> {
             List<String> reserved_keys = Arrays.asList(new String[]{"question", "answer"});
             
             // For every attribute of the JSON text...
-            for (String engine_s : (Iterable<String>) question_json.keySet()) {
-            	if (!reserved_keys.contains(engine_s)) {
-            		// If it is not the text text or answer text, then it's an engine...
-            		Engine engine = new Engine(engine_s);
-            		question.add(engine);
+            for (String engine_name : (Iterable<String>) question_json.keySet()) {
+            	if (!reserved_keys.contains(engine_name)) {
+            		// If it is not the question text or answer text, then it's an engine...
             		
             		// TODO: A shorter way??
-            		Iterator<JSONObject> iitr = ((JSONArray) question_json.get(engine.name)).iterator();
+            		Iterator<JSONObject> iitr = ((JSONArray) question_json.get(engine_name)).iterator();
                     while (iitr.hasNext()) {
                         JSONObject res = iitr.next();
-                        ResultSet rs = new ResultSet(engine_s, res); 
-                        engine.add(rs);
+                        question.add(new ResultSet(engine_name, res));
                         
                         /*TODO: This limits support to lucene and indri
                         switch (engine_s) {
