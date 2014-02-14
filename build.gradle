@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
+apply plugin: 'maven'
 
 // Meta information
 mainClassName = "uncc2014watsonsim.WatsonSim"
@@ -70,7 +71,23 @@ task refreshQuickstart << {
         from configurations.compile.allArtifactFiles 
         into "$projectDir/quickstart-lib" 
     } 
-} 
+}
+
+install {
+    //uploadArchives {
+        repositories {
+             mavenInstaller {
+                 repository(url: "$projectDir/quickstart-lib")
+             }
+         }
+//    }
+//    repositories.mavenInstaller {
+//        repository(url: "$projectDir/quickstart-lib")
+//        //url "$projectDir/quickstart-lib"
+//        //pom.version = '1.0Maven'
+//        //pom.artifactId = 'myName'
+//    }
+}
 
 eclipse {
     classpath {
