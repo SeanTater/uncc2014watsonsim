@@ -41,8 +41,8 @@ public class ScoreQMapIntegrationTest {
 	public void integrate() throws FileNotFoundException, ParseException, IOException {
 		QuestionMap questionmap = getQuestionMap();
 		Question question = questionmap.get("This London borough is the G in GMT squire");
-		Engine ranked_answers = new AverageScorer().test(question);
-		String top_answer = ranked_answers.get(0).getTitle();
+		new AverageScorer().test(question);
+		String top_answer = question.get(0).getTitle();
 		assertNotNull(top_answer);
 		assertThat(top_answer.length(), not(0));
 		//Logger.getLogger(Test.class.getName()).log(Level.INFO, "The answer: "+ ranked_answers.get(0).getTitle());
@@ -61,16 +61,14 @@ public class ScoreQMapIntegrationTest {
 		int runs_remaining = total_questions;
 
 		for (Question question : questionmap.values()) {
-			Engine ranked_answers = new PrebuiltLRScorer().test(question);
-			ResultSet top_answer = ranked_answers.get(0);
+			new PrebuiltLRScorer().test(question);
+			ResultSet top_answer = question.get(0);
 			assertNotNull(top_answer);
 			assertThat(top_answer.getTitle().length(), not(0));
 
-			String correct_answer_score = "Not in results";
-			for (int correct_rank=0; correct_rank<ranked_answers.size(); correct_rank++) {
-				ResultSet answer = ranked_answers.get(correct_rank); 
+			for (int correct_rank=0; correct_rank<question.size(); correct_rank++) {
+				ResultSet answer = question.get(correct_rank); 
 				if(answer.isCorrect()) {
-					correct_answer_score = String.valueOf(answer.getScore());
 					total_inverse_rank += 1 / ((double)correct_rank + 1);
 					available++;
 					if (correct_rank < 3) {
@@ -80,7 +78,7 @@ public class ScoreQMapIntegrationTest {
 					break;
 				}
 			}
-			total_answers += ranked_answers.size();
+			total_answers += question.size();
 			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
 			//		"A[Actual:" + correct_answer_score + "]: "  + text.answer);

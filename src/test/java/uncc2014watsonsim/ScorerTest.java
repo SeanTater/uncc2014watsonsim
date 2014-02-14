@@ -1,39 +1,64 @@
 package uncc2014watsonsim;
 
 import static org.junit.Assert.*;
+
 import java.util.*;
+
+import org.junit.Before;
 import org.junit.Test;
 
 public class ScorerTest {
 
-	@Test
-	public void testAggregate() {
+	// Setup possible inputs
+	ResultSet yahoo1;
+	ResultSet yahoo2;
+	ResultSet bing1;
+	ResultSet bing2;
+	AverageScorer ml;
+	
+	@Before
+	public void setUp() {
 		// Setup possible inputs
-		Engine yahoo = new Engine("Yahoo");
-		yahoo.add(new ResultSet("Alligators", 0.5, true, 1));
-		Engine bing = new Engine("Bing");
-		bing.add(new ResultSet("Alligators", 0.5, true, 1));
-		
-		Engine output_set;
-		AverageScorer ml = new AverageScorer();
-		
+		yahoo1 = new ResultSet("Alligators", "yahoo", 1, 0.75, true);
+		yahoo2 = new ResultSet("Eels", "yahoo", 2, 0.38, false);
+		bing1 = new ResultSet("Alligators", "bing", 1, 0.25, true);
+		bing2 = new ResultSet("Elk", "bing", 2, 0.19, false);
+		ml = new AverageScorer();
+	}
+
+	@Test
+	public void testOne() {
 		// Make an exact copy when there is 1 result
-		output_set = ml.test(new Question("Animals", "Alligators", yahoo));
-		assertEquals(output_set.get(0), yahoo.get(0));
-		assertEquals(output_set.get(0).getScore(), yahoo.get(0).getScore(), 0.001);
-		
+		Question q = new Question("Fake Question?");
+		q.add(yahoo1);
+		ml.test(q);
+		assertEquals(q.get(0), yahoo1);
+		assertEquals(q.get(0).first("combined").score, 1, 0.001);
+	}
+	
+	@Test
+	public void testTwo() {
 		// Average two results
-		output_set = ml.test(new Question("Animals", "Alligators", yahoo, bing));
-		assertEquals(output_set.get(0), yahoo.get(0));
-		assertEquals(0.5, output_set.get(0).getScore(), 0.001);
+		Question q = new Question("Fake Question?");
+		q.add(yahoo1);
+		q.add(bing1);
+		ml.test(q);
+		assertEquals(q.get(0), yahoo1);
+		assertEquals(q.get(0).first("combined").score, 0.5, 0.001);
+	}
 		
+	@Test
+	public void testSort() {
 		// Sort unique results
-		yahoo.add(new ResultSet("Eels", 0.38, false, 2));
-		bing.add(new ResultSet("Elk", 0.19, false, 2));
-		output_set = ml.test(new Question("Animals", "Alligators", yahoo, bing));
-		assertEquals("Alligators", output_set.get(0).getTitle());
-		assertEquals("Eels", output_set.get(1).getTitle());
-		assertEquals("Elk", output_set.get(2).getTitle());
+		Question q = new Question("Fake Question?");
+		q.add(yahoo1);
+		q.add(yahoo2);
+		q.add(bing1);
+		q.add(bing2);
+		ml.test(q);
+		assertEquals("Alligators", q.get(0).getTitle());
+		assertEquals("Eels", q.get(1).getTitle());
+		assertEquals("Elk", q.get(2).getTitle());
 	}
 
 }
