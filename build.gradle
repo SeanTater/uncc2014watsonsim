@@ -55,11 +55,12 @@ test {
 
 distZip {
     // Creates the zipfile distributed to class
-    into(project.name + "-" + project.version) {
+    into(project.name + "-quickstart-" + project.version) {
         from '.'
         include '**'
         exclude 'bin/'
         exclude 'build/'
+        exclude 'data/'
         exclude 'tmp/'
     }
 }
