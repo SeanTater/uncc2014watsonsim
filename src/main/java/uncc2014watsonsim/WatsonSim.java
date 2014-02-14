@@ -26,7 +26,6 @@ public class WatsonSim {
         final String indri_index = "/home/sean/deepqa/indri_index";
         final String lucene_index = "/home/sean/deepqa/lucene_index";
         final String luceneSearchField = "text";
-        final int maxDocs = 10;
 
         //read from the command line
         System.out.println("Enter the jeopardy text: ");
@@ -41,45 +40,42 @@ public class WatsonSim {
         IndriSearch in = new IndriSearch();
         in.setIndex(indri_index);
         in.runQuery(question.text);
-        Engine indri = new Engine("indri");
         for (int rank=0; rank < in.getResultCount(); rank++) {
-        	ResultSet r = new ResultSet(
-        			in.getTitle(rank),
-        			in.getScore(rank),
-        			false, // correct? We don't know yet.
-        			rank);
-        	indri.add(r);
+        	question.add(new ResultSet(
+    			in.getTitle(rank),
+    			"indri",
+    			rank,
+    			in.getScore(rank),
+    			false // correct? We don't know yet.
+    			));
         }
-        question.add(indri);
 
         //initialize and query lucene
         LuceneSearch lu = new LuceneSearch(luceneSearchField);
         lu.setIndex(lucene_index);
         lu.runQuery(question.text);
-        Engine lucene = new Engine("lucene");
-        for (int rank=0; rank < lu.getResultCount(); rank++) {
-        	ResultSet r = new ResultSet(
-        			lu.getTitle(rank),
-        			lu.getScore(rank),
-        			false, // correct? We don't know yet.
-        			rank);
-        	lucene.add(r);
+        for (int rank=0; rank < in.getResultCount(); rank++) {
+        	question.add(new ResultSet(
+    			lu.getTitle(rank),
+    			"lucene",
+    			rank,
+    			lu.getScore(rank),
+    			false // correct? We don't know yet.
+    			));
         }
-        question.add(lucene);
 
         //initialize google search engine and query.
         WebSearchGoogle go = new WebSearchGoogle();
         go.runQuery(question.text);
-        Engine google = new Engine("google");
-        for (int rank=0; rank < go.getResultCount(); rank++) {
-        	ResultSet r = new ResultSet(
-        			go.getTitle(rank),
-        			rank,
-        			false, // correct? We don't know yet.
-        			rank);
-        	google.add(r);
+        for (int rank=0; rank < in.getResultCount(); rank++) {
+        	question.add(new ResultSet(
+    			go.getTitle(rank),
+    			"google",
+    			rank,
+    			rank,
+    			false // correct? We don't know yet.
+    			));
         }
-        question.add(google);
 
         /*TODO: merge the result sets.
         HashSet<CombinedResult> merged = new HashSet<>();
@@ -141,9 +137,9 @@ public class WatsonSim {
         //System.out.println(luceneResult);
         //System.out.println(googleResult);
         //System.out.println("Done");
-        Engine combined = new AverageScorer().test(question);
-        for (ResultSet r : combined) {
-        	System.out.println(String.format("[%01f] %s", r.getScore(), r.getTitle()));
+        new AverageScorer().test(question);
+        for (ResultSet r : question) {
+        	System.out.println(String.format("[%01f] %s", r.combined().score, r.getTitle()));
         }
     }
 }
