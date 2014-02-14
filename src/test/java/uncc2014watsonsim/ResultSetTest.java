@@ -7,34 +7,17 @@ import org.junit.Test;
 
 public class ResultSetTest {
 	static ResultSet result;
-	
-	@BeforeClass
-	public static void setUp() {
-		 result = new ResultSet("title", 0.5, true, 1);
-	}
 
 	@Test
 	public void testEqualsObject() {
-		// Results are equal if their titles are equal.
-		assertEquals(result, new ResultSet(result));
-		assertEquals(result, new ResultSet("title", 0.5, true, 1));
-	}
+		// Results are equal if their titles are similar.
+		assertEquals(
+			new ResultSet("duck duck goose", "example", 0, 0, false),
+			new ResultSet("duck duck", "example", 0, 0, false));
 
-	@Test
-	public void testSetScore() {
-		assertEquals(0.5, result.getScore(), 0.001);
-		// Unscaled
-		result.setScore(0.8);
-		assertEquals(0.8, result.getScore(), 0.001);
-		// Scaled
-		// Normally these would be overridden in inheritance
-		result = new ResultSet(result, new ScoreRange(100, 0));
-		result.setScore(100);
-		assertEquals(0, result.getScore(), 0.001);
-		result.setScore(0);
-		assertEquals(1, result.getScore(), 0.001);
-		result.setScore(50);
-		assertEquals(0.5, result.getScore(), 0.001);
+		assertEquals(
+			new ResultSet("Pete and repeat were sitting on a fence", "example", 0, 0, false),
+			new ResultSet("Repeat and pete were sitting on a dence", "example", 0, 0, false));
 	}
 
 }
