@@ -32,14 +32,14 @@ Deep Question Answering System
   - `gradle test` -> run tests
   - `gradle run` -> run watsonsim (it will ask you for questions, give you results)
   - Configuration is in build.gradle
-- Write code and documentation!
+- Write code and [documentation](http://seantater.github.io/uncc2014watsonsim/)!
 - [Ask to be added as a contributor](stgallag@gmail.com) or if your code is small, send a patch
 - Repeat
 
-### Troubleshoot
+## Troubleshoot
 - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
 
-### Architecture {stub}
+## Architecture {stub}
 Testing setup:
 - A large database of questions is run against predefined search engines.
 - The results are recorded as a large JSON file, saved, and later reopened.
@@ -54,4 +54,5 @@ Classes:
 ### Tools
 
 - [Check to see if your commit broke the code](https://travis-ci.org/SeanTater/uncc2014watsonsim)
+- [Examine the reference documentation](http://seantater.github.io/uncc2014watsonsim/)
 - [Find out how much better your code works than the last commit](http://watsonsim.herokuapp.com/runs)
