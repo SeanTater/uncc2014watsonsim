@@ -107,11 +107,11 @@ public class ResultSet implements Comparable<ResultSet> {
         return "ResultSet{" + "title=" + getTitle() + ", correct=" + correct + '}';
     }
     
-    /** Fetch the combined Engine if it exists (otherwise null) */
-    public Engine combined() {
+    /** Fetch the first Engine with this name if it exists (otherwise null) */
+    public Engine first(String name) {
         // A linear search of 3 or 4 engines is probably not bad
 		for (Engine e: engines) {
-			if (e.name.equals("combined")) {
+			if (e.name.equals(name)) {
 				return e;
 			}
 		}
@@ -120,8 +120,8 @@ public class ResultSet implements Comparable<ResultSet> {
     
     @Override
 	public int compareTo(ResultSet other) {
-    	Engine us = combined();
-    	Engine them = other.combined();
+    	Engine us = first("combined");
+    	Engine them = other.first("combined");
     	if (us == null || them == null)
     		// Comparing a resultset without a combined engine is undefined
     		return 0;
