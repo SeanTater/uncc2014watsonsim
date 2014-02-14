@@ -139,7 +139,7 @@ public class WatsonSim {
         //System.out.println("Done");
         new AverageScorer().test(question);
         for (ResultSet r : question) {
-        	System.out.println(String.format("[%01f] %s", r.combined().score, r.getTitle()));
+        	System.out.println(String.format("[%01f] %s", r.first("combined").score, r.getTitle()));
         }
     }
 }
