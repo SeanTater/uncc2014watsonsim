@@ -1,13 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
+apply plugin: 'maven'
 
 // Meta information
 mainClassName = "uncc2014watsonsim.WatsonSim"
-version = "0.1.1"
+version = "0.1.2"
+group = "edu.uncc"
 
 // Dependencies and where to get them (some are nonstandard)
 repositories {
+    maven {url "$projectDir/quickstart-lib/"}
     mavenCentral()
     maven {url "https://repo.eclipse.org/content/groups/releases/"}
     maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
@@ -59,6 +62,10 @@ distZip {
     // Creates the zipfile distributed to class
     into(project.name + "-" + project.version) {
         from '.'
+        // Uncomment to include jars in distribution
+        // Note this does not allow for transitive dependencies
+        //from configurations.runtime.allArtifacts.files
+        //from configurations.runtime
         include '**'
         exclude 'bin/'
         exclude 'build/'

@@ -6,7 +6,7 @@ Deep Question Answering System
 ## Get started
 
 - Quick Start:
-  - [Download the zipfile](https://googledrive.com/host/0B8wOEC5-v5lXUUllV2stSGRRYTA/watsonsim-0.1.1.zip)
+  - [Download the zipfile](https://googledrive.com/host/0B8wOEC5-v5lXUUllV2stSGRRYTA/watsonsim-0.1.2.zip)
   - libindri-jni.so is included in watsonsim-0.1.1/lib but it may not be appropriate for your platforim. If you get errors about `indri_jni`, find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
   - Where you use `gradle` later, substitute `gradle-1.11/bin/gradle`
 - Slower Start:
