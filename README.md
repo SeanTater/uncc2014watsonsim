@@ -33,7 +33,7 @@ Deep Question Answering System
   - `gradle run` -> run watsonsim (it will ask you for questions, give you results)
   - Configuration is in build.gradle
 - Write code and [documentation](http://seantater.github.io/uncc2014watsonsim/)!
-- [Ask to be added as a contributor](stgallag@gmail.com) or if your code is small, send a patch
+- [Ask to be added as a contributor](mailto:stgallag@gmail.com) or if your code is small, send a patch
 - Repeat
 
 ## Troubleshoot
