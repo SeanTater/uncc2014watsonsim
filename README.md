@@ -15,10 +15,14 @@ Deep Question Answering System
   - Find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
   - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
 - Then, either way:
-  - Make your own Google cloud app in the [Google console](https://cloud.google.com/console/).
-    - Enable the Custom Search API
-    - Create a Public API Key, put it in src/main/.../WebSearchGoogle.java
-    - Change the app name in WebSearchGoogle.java if you chose something different
+  - Setup Google Search (in src/main/.../WebSearchGoogle.java)
+    - Make your own Google cloud app in the [Google console](https://cloud.google.com/console/).
+      - Enable the Custom Search API
+      - Create a Public API Key, put it in the source.
+    - Make your own custom search engine in the [Custom Search Console](https://www.google.com/cse/create/new)
+      - Search any site (but you have to pick a domain, maybe wikipedia.org would be good)
+      - Edit the custom search you just made. In "Sites to search", change "Search only included sites" to "Search the entire web but emphasize included sites"
+      - Get the search engine ID, put it in the source.
   - Index Wikipedia Trec with Lucene and with Indri (otherwise you must disable them)
   - `gradle assemble` to install dependencies (It's possible but complicated to skip this)
   - `gradle cleanEclipse eclipse` to correct Eclipse classpaths (since it needs absolute paths)
