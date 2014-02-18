@@ -76,67 +76,7 @@ public class WatsonSim {
     			false // correct? We don't know yet.
     			));
         }
-
-        /*TODO: merge the result sets.
-        HashSet<CombinedResult> merged = new HashSet<>();
-        HashSet<ResultSet> intersect = new HashSet<>();
-        intersect.addAll(indri);
-        intersect.retainAll(lucene);
-        intersect.retainAll(google);*/
         
-        /* TODO: Handle inexact title matches
-        HashSet<ResultSet> googleLeftovers = new HashSet<>();
-        for (ResultSet rs : googleResult) {
-            String[] goTitle = rs.getTitle().split(" ");
-            for (CombinedResult every : merged) {
-                String[] eveTitle = every.getTitle().split(" ");
-                boolean merge = true;
-                for (String eT : eveTitle) {
-                    boolean exists = false;
-                    for (String gT : goTitle) {
-
-                        if (gT.equalsIgnoreCase(eT)) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if (!exists) {
-                        merge = false;
-                    }
-                }
-                if (merge) {
-                    every.setGoogleText(rs.getTitle());
-                    every.setGoogleScore(rs.getScore());
-                    every.setGoogleRank(rs.getRank());
-                    every.setNormalizedGoogleScore(rs.getNormalizedScore());
-                } else {
-                    googleLeftovers.add(rs);
-                }
-            }
-        }
-        for (ResultSet rs : googleLeftovers) {
-            CombinedResult c = new CombinedResult(rs.getTitle(), 0, 0, -1, -1, 0, 0);
-            c.setGoogleText(rs.getTitle());
-            c.setGoogleScore(rs.getScore());
-            c.setGoogleRank(rs.getRank());
-            c.setNormalizedGoogleScore(rs.getNormalizedScore());
-            merged.add(c);
-
-        }
-        */
-
-        //TODO: now finally sort the merged result
-        /*ArrayList<CombinedResult> mergedList = new ArrayList<>(merged);
-        Collections.sort(mergedList);*/
-
-        //display results
-//        for (CombinedResult c : mergedList) {
-//            System.out.println(c);
-//        }
-        //System.out.println(indriResult);
-        //System.out.println(luceneResult);
-        //System.out.println(googleResult);
-        //System.out.println("Done");
         new AverageScorer().test(question);
         for (ResultSet r : question) {
         	System.out.println(String.format("[%01f] %s", r.first("combined").score, r.getTitle()));
