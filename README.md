@@ -17,8 +17,9 @@ Deep Question Answering System
 - Then, either way:
   - Setup Google Search (in src/main/.../WebSearchGoogle.java)
     - Make your own Google cloud app in the [Google console](https://cloud.google.com/console/).
+      - Put the name into the source.
       - Enable the Custom Search API
-      - Create a Public API Key, put it in the source.
+      - Create a server Public API Key, put it in the source.
     - Make your own custom search engine in the [Custom Search Console](https://www.google.com/cse/create/new)
       - Search any site (but you have to pick a domain, maybe wikipedia.org would be good)
       - Edit the custom search you just made. In "Sites to search", change "Search only included sites" to "Search the entire web but emphasize included sites"
