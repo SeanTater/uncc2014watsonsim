@@ -13,7 +13,7 @@ Deep Question Answering System
   - Install [gradle](http://gradle.org), Java (>=7)
   - Compile Indri
   - Find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
-  - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
+  - `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
 - Then, either way:
   - Setup Google Search (in src/main/.../PrivateGoogleCredentials.java)
     - Make your own Google cloud app in the [Google console](https://cloud.google.com/console/).
