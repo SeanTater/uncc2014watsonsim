@@ -10,7 +10,7 @@ group = "edu.uncc"
 
 // Dependencies and where to get them (some are nonstandard)
 repositories {
-    maven {url "$projectDir/quickstart-lib/"}
+    //maven {url "$projectDir/quickstart-lib/"}
     mavenCentral()
     maven {url "https://repo.eclipse.org/content/groups/releases/"}
     maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}

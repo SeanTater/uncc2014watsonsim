@@ -29,11 +29,6 @@ import com.google.api.services.customsearch.model.Search;
  *
  */
 public class WebSearchGoogle implements WebSearch {
-
-	// Constants
-	private static final String APPLICATION_NAME = "ITCS4010 Google";
-	private static final String KEY = "AIzaSyB3-c2634TACDUJ2L6Z2YZw54YaOTkpwxY"; //Google provided API key
-	public static final String CUSTOMSEARCH_ID = "011139517373112470727:irjnobrmjre";
 	
 	static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -41,7 +36,7 @@ public class WebSearchGoogle implements WebSearch {
 	
 	//Initialized Key
 	private static final GoogleClientRequestInitializer KEY_INITIALIZER =
-                new CustomsearchRequestInitializer(KEY);
+                new CustomsearchRequestInitializer(PrivateGoogleCredentials.googleAPIKey);
 	
 	// Store results in object's own array
 	private ArrayList<Result> resultsList = new ArrayList<Result>();
@@ -64,7 +59,7 @@ public class WebSearchGoogle implements WebSearch {
 		 */
 		Customsearch customsearch = new Customsearch.Builder(
 				HTTP_TRANSPORT, JSON_FACTORY, null)
-		.setApplicationName(APPLICATION_NAME)
+		.setApplicationName(PrivateGoogleCredentials.googleApplicationName)
 		.setGoogleClientRequestInitializer(KEY_INITIALIZER)
 		.build();
 		
@@ -79,7 +74,7 @@ public class WebSearchGoogle implements WebSearch {
 			*/
 			List queryList = customsearch.cse().list(query);
 			
-			queryList.setCx(CUSTOMSEARCH_ID);
+			queryList.setCx(PrivateGoogleCredentials.googleCustomSearchID);
                        // queryList.setNum(new Long((long)30));
 			Search results = queryList.execute(); //Fetch Data
 			resultsList = (ArrayList<Result>) results.getItems(); //Store the data in our object as a Java ArrayList
