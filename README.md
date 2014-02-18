@@ -15,7 +15,7 @@ Deep Question Answering System
   - Find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
   - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
 - Then, either way:
-  - Setup Google Search (in src/main/.../WebSearchGoogle.java)
+  - Setup Google Search (in src/main/.../PrivateGoogleCredentials.java)
     - Make your own Google cloud app in the [Google console](https://cloud.google.com/console/).
       - Put the name into the source.
       - Enable the Custom Search API
