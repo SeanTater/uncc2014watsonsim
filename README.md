@@ -15,7 +15,18 @@ Deep Question Answering System
   - Find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
   - `git clone http://github.com/SeanTater/uncc2014watsonsim.git`
 - Then, either way:
-  - Index Wikipedia Trec with Lucene and with Indri
+  - Setup Google Search (in src/main/.../PrivateGoogleCredentials.java)
+    - Make your own Google cloud app in the [Google console](https://cloud.google.com/console/).
+      - Put the name into the source.
+      - Enable the Custom Search API
+      - Create a server Public API Key, put it in the source.
+    - Make your own custom search engine in the [Custom Search Console](https://www.google.com/cse/create/new)
+      - Search any site (but you have to pick a domain, maybe wikipedia.org would be good)
+      - Edit the custom search you just made. In "Sites to search", change "Search only included sites" to "Search the entire web but emphasize included sites"
+      - Get the search engine ID, put it in the source.
+  - Setup local search engines
+    - Index Wikipedia Trec with Lucene and with Indri (otherwise you must disable them)
+    - Edit the paths in WatsonSim.java to match your index locations
   - `gradle assemble` to install dependencies (It's possible but complicated to skip this)
   - `gradle cleanEclipse eclipse` to correct Eclipse classpaths (since it needs absolute paths)
   - Change the lucene and indri index paths to match your needs in src/main/java/uncc2014watsonsim/watsonsim
@@ -33,7 +44,7 @@ Deep Question Answering System
   - `gradle run` -> run watsonsim (it will ask you for questions, give you results)
   - Configuration is in build.gradle
 - Write code and [documentation](http://seantater.github.io/uncc2014watsonsim/)!
-- [Ask to be added as a contributor](stgallag@gmail.com) or if your code is small, send a patch
+- [Ask to be added as a contributor](mailto:stgallag@gmail.com) or if your code is small, send a patch
 - Repeat
 
 ## Troubleshoot
