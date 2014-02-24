@@ -24,6 +24,8 @@ Deep Question Answering System
       - Search any site (but you have to pick a domain, maybe wikipedia.org would be good)
       - Edit the custom search you just made. In "Sites to search", change "Search only included sites" to "Search the entire web but emphasize included sites"
       - Get the search engine ID, put it in the source.
+    - To keep from publishing your API key to the world, have git ignore changes without deleting it:
+      - `git update-index --assume-unchanged src/main/java/privatedata/PrivateGoogleCredentials.java`
   - Setup local search engines
     - Index Wikipedia Trec with Lucene and with Indri (otherwise you must disable them)
     - Edit the paths in WatsonSim.java to match your index locations
