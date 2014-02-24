@@ -74,7 +74,7 @@ public class ScoreQMapIntegrationTest {
 		int[] conf_hist = new int[100];
 
 		for (Question question : questionmap.values()) {
-			new PrebuiltLRScorer().test(question);
+			new AverageScorer().test(question);
 			ResultSet top_answer = question.get(0);
 			assertNotNull(top_answer);
 			assertThat(top_answer.getTitle().length(), not(0));
@@ -96,8 +96,8 @@ public class ScoreQMapIntegrationTest {
 			if (question.size() >= 1) {
 				// Supposing there is at least one answer
 				ResultSet rs = question.get(0);
-				// Clamp to [0, 100]
-				int bin = (int) Math.max(0, Math.min(rs.first("combined").score, 1)) * 100;
+				// Clamp to [0, 99]
+				int bin = (int)(rs.first("combined").score * 100);
 				if(rs.isCorrect()) conf_correct[bin]++;
 				conf_hist[bin]++;
 			}

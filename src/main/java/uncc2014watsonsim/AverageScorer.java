@@ -25,9 +25,10 @@ public class AverageScorer {
     			score += engine.score;
     			count++;
     		}
-    		score /= count;
+    		// Average and scale (to make the resulting confidence more realistic)
+    		score /= count * 10;
     		// Logistic function
-    		score = 1/1+Math.exp(score);
+    		score = 1.0/(1.0+Math.exp(-score));
     		result.engines.add(new Engine("combined", count, score));
     	}
     	
