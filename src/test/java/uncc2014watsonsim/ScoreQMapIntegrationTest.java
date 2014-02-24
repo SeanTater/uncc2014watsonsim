@@ -36,6 +36,14 @@ public class ScoreQMapIntegrationTest {
 			return questionmap;
 		}
 	}
+	
+	private String join(int[] arr) {
+		String out = "";
+		for (int a: arr) {
+			out += String.valueOf(a) + " ";
+		}
+		return out;
+	}
 
 	@Test
 	public void integrate() throws FileNotFoundException, ParseException, IOException {
@@ -59,6 +67,9 @@ public class ScoreQMapIntegrationTest {
 		int total_questions = 8045;
 		int total_answers = 0;
 		int runs_remaining = total_questions;
+		
+		int[] conf_correct = new int[100];
+		int[] conf_hist = new int[100];
 
 		for (Question question : questionmap.values()) {
 			new PrebuiltLRScorer().test(question);
@@ -78,6 +89,17 @@ public class ScoreQMapIntegrationTest {
 					break;
 				}
 			}
+			
+			// Measure how accurate the top question is as a histogram across confidence
+			if (question.size() >= 1) {
+				// Supposing there is at least one answer
+				ResultSet rs = question.get(0);
+				// Clamp to [0, 100]
+				int bin = (int) Math.max(0, Math.min(rs.first("combined").score, 1)) * 100;
+				if(rs.isCorrect()) conf_correct[bin]++;
+				conf_hist[bin]++;
+			}
+			
 			total_answers += question.size();
 			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
@@ -109,6 +131,8 @@ public class ScoreQMapIntegrationTest {
 					.add("run[rank]", String.valueOf(total_inverse_rank))
 					.add("run[total_questions]", String.valueOf(total_questions))
 					.add("run[total_answers]", String.valueOf(total_answers))
+					.add("run[confidence_histogram]", join(conf_hist))
+					.add("run[confidence_correct_histogram]", join(conf_correct))
 					.add("run[runtime]", String.valueOf(runtime))
 					.build()).execute();
 

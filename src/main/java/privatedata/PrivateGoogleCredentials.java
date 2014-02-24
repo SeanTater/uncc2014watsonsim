@@ -1,4 +1,4 @@
-package uncc2014watsonsim;
+package privatedata;
 
 public class PrivateGoogleCredentials {
 	// Constants
