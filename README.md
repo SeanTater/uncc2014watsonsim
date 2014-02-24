@@ -16,7 +16,7 @@ Deep Question Answering System
   - `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
 - Then, either way:
   - Setup Google Search (in src/main/.../PrivateGoogleCredentials.java)
-    - Make your own Google cloud app in the [Google console](https://cloud.google.com/console/).
+    - Make your own Google cloud app in the [Google console](https://cloud.google.com/console).
       - Put the name into the source.
       - Enable the Custom Search API
       - Create a server Public API Key, put it in the source.
