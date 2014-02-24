@@ -6,12 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.json.simple.parser.ParseException;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.*;
 
@@ -118,23 +120,34 @@ public class ScoreQMapIntegrationTest {
 
 		// Generate report
 		// Gather git information
-		if (System.getenv("TRAVIS_BRANCH") == null)
-			System.out.println("Not running on Travis. Not submitting stats.");
-		else
-			Request.Post("http://watsonsim.herokuapp.com/runs.json").bodyForm(Form.form()
-					.add("run[branch]", System.getenv("TRAVIS_BRANCH"))
-					.add("run[commit_hash]", System.getenv("TRAVIS_COMMIT").substring(0, 10))
-					.add("run[dataset]", "main") // NOTE: Fill this in if you change it
-					.add("run[top]", String.valueOf(top_correct))
-					.add("run[top3]", String.valueOf(top3_correct))
-					.add("run[available]", String.valueOf(available))
-					.add("run[rank]", String.valueOf(total_inverse_rank))
-					.add("run[total_questions]", String.valueOf(total_questions))
-					.add("run[total_answers]", String.valueOf(total_answers))
-					.add("run[confidence_histogram]", join(conf_hist))
-					.add("run[confidence_correct_histogram]", join(conf_correct))
-					.add("run[runtime]", String.valueOf(runtime))
-					.build()).execute();
+		String branch, commit;
+		if (System.getenv("TRAVIS_BRANCH") != null) { 
+			branch = System.getenv("TRAVIS_BRANCH");
+			commit = System.getenv("TRAVIS_COMMIT");
+		} else {
+		  	Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
+		   	commit = repo.resolve("HEAD").abbreviate(10).name();
+		   	if (commit == null)
+		   		fail("Problem finding git repository. Not submitting stats.");
+			branch = repo.getBranch();
+		}
+		List<NameValuePair> response = Form.form()
+				.add("run[branch]", branch)
+				.add("run[commit_hash]", commit.substring(0, 10))
+				.add("run[dataset]", "main") // NOTE: Fill this in if you change it
+				.add("run[top]", String.valueOf(top_correct))
+				.add("run[top3]", String.valueOf(top3_correct))
+				.add("run[available]", String.valueOf(available))
+				.add("run[rank]", String.valueOf(total_inverse_rank))
+				.add("run[total_questions]", String.valueOf(total_questions))
+				.add("run[total_answers]", String.valueOf(total_answers))
+				.add("run[confidence_histogram]", join(conf_hist))
+				.add("run[confidence_correct_histogram]", join(conf_correct))
+				.add("run[runtime]", String.valueOf(runtime))
+				.build();
+		System.out.println(response);
+		Request.Post("http://watsonsim.herokuapp.com/runs.json").bodyForm(response).execute();
+		
 
 		System.out.println("" + top_correct + " of " + total_questions + " correct");
 		System.out.println("" + available + " of " + total_questions + " could have been");

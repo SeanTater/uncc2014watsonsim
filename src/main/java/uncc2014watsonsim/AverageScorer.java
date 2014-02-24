@@ -26,6 +26,8 @@ public class AverageScorer {
     			count++;
     		}
     		score /= count;
+    		// Logistic function
+    		score = 1/1+Math.exp(score);
     		result.engines.add(new Engine("combined", count, score));
     	}
     	
