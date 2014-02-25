@@ -1,6 +1,6 @@
 package privatedata;
 
-public class PrivateGoogleCredentials {
+public class UserSpecificConstants {
 	// Constants
 	public static final String googleApplicationName = "UNCC Watson Clone";
 	public static final String googleAPIKey = "AIzaSyAMF-XnRYf-A_Fp8s_Fn-orYkUwgv6JDW0"; //Google provided API key
