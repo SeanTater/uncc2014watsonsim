@@ -39,7 +39,7 @@ public class QuestionMap extends HashMap<String, Question> {
         while (questions.hasNext()) {
             JSONObject question_json = questions.next();
             
-            Question question = new Question(
+            Question question = Question.known(
             		(String) question_json.get("question"),
             		(String) question_json.get("answer"));
             /*

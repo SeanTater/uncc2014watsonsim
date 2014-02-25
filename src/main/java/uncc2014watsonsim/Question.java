@@ -9,15 +9,32 @@ public class Question extends ArrayList<ResultSet>{
     private String category = "unknown";
     private QType type;
 	
+    /** Create a question from it's raw text */
 	public Question(String text) {
 		this.raw_text = text;
 		this.text = text.replaceAll("[^0-9a-zA-Z ]+", "").trim();
 		this.type = QClassDetection.detectType(this);
 	}
 	
-	public Question(String question, String answer) {
+	/** Create a question given it's raw text and category */
+	public Question(String question, String category) {
 		this(question);
-		this.answer = answer;
+		this.category = category;
+	}
+	
+	/** Create a question to which the raw text and answer are known but not the category */
+	public static Question known(String question, String answer) {
+		Question q = new Question(question);
+		q.answer = answer;
+		return q;
+	}
+	
+	/** Create a question to which the raw text, answer, and category are known*/
+	public static Question known(String question, String answer, String category) {
+		Question q = new Question(question);
+		q.answer = answer;
+		q.setCategory(category);
+		return q;
 	}
 	
     public String getCategory() {
