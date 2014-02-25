@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 
-import privatedata.PrivateGoogleCredentials;
+import privatedata.UserSpecificConstants;
 
 /*
  * Google API Imports
@@ -39,7 +39,7 @@ public class WebSearchGoogle implements WebSearch {
 	
 	//Initialized Key
 	private static final GoogleClientRequestInitializer KEY_INITIALIZER =
-                new CustomsearchRequestInitializer(PrivateGoogleCredentials.googleAPIKey);
+                new CustomsearchRequestInitializer(UserSpecificConstants.googleAPIKey);
 	
 	// Store results in object's own array
 	private ArrayList<Result> resultsList = new ArrayList<Result>();
@@ -62,7 +62,7 @@ public class WebSearchGoogle implements WebSearch {
 		 */
 		Customsearch customsearch = new Customsearch.Builder(
 				HTTP_TRANSPORT, JSON_FACTORY, null)
-		.setApplicationName(PrivateGoogleCredentials.googleApplicationName)
+		.setApplicationName(UserSpecificConstants.googleApplicationName)
 		.setGoogleClientRequestInitializer(KEY_INITIALIZER)
 		.build();
 		
@@ -77,7 +77,7 @@ public class WebSearchGoogle implements WebSearch {
 			*/
 			List queryList = customsearch.cse().list(query);
 			
-			queryList.setCx(PrivateGoogleCredentials.googleCustomSearchID);
+			queryList.setCx(UserSpecificConstants.googleCustomSearchID);
                        // queryList.setNum(new Long((long)30));
 			Search results = queryList.execute(); //Fetch Data
 			resultsList = (ArrayList<Result>) results.getItems(); //Store the data in our object as a Java ArrayList

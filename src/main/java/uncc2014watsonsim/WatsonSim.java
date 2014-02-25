@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import privatedata.UserSpecificConstants;
+
 /**
  *
  * @author Phani Rahul
@@ -23,10 +25,6 @@ public class WatsonSim {
      * @throws IOException 
      */
     public static void main(String[] args) throws IOException {
-        final String indri_index = "/home/sean/deepqa/indri_index";
-        final String lucene_index = "/home/sean/deepqa/lucene_index";
-        final String luceneSearchField = "text";
-        
 
         //read from the command line
         System.out.println("Enter the jeopardy text: ");
@@ -41,7 +39,7 @@ public class WatsonSim {
 	        
 	        //initialize indri and query
 	        IndriSearch in = new IndriSearch();
-	        in.setIndex(indri_index);
+	        in.setIndex(UserSpecificConstants.indriIndex);
 	        in.runQuery(question.text);
 	        for (int rank=0; rank < in.getResultCount(); rank++) {
 	        	question.add(new ResultSet(
@@ -54,8 +52,8 @@ public class WatsonSim {
 	        }
 	
 	        //initialize and query lucene
-	        LuceneSearch lu = new LuceneSearch(luceneSearchField);
-	        lu.setIndex(lucene_index);
+	        LuceneSearch lu = new LuceneSearch(UserSpecificConstants.luceneSearchField);
+	        lu.setIndex(UserSpecificConstants.luceneIndex);
 	        lu.runQuery(question.text);
 	        for (int rank=0; rank < in.getResultCount(); rank++) {
 	        	question.add(new ResultSet(
