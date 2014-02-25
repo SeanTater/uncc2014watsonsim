@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Question extends ArrayList<ResultSet>{
 	private static final long serialVersionUID = 1L;
-	String text, answer, raw_text;
+	String text, answer, raw_text, category;
 	
 	public Question(String text) {
 		this.raw_text = text;
