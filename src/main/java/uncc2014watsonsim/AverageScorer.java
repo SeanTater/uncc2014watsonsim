@@ -17,6 +17,10 @@ public class AverageScorer {
 		// No-op until ML code is added
 	}
 	
+	public static double logistic(double score) {
+		return score = 1.0/(1.0+Math.exp(-score));
+	}
+	
     public Question test(Question question) {
     	for (ResultSet result : question) {
     		double score = 0;
@@ -26,9 +30,9 @@ public class AverageScorer {
     			count++;
     		}
     		// Average and scale (to make the resulting confidence more realistic)
-    		score /= count * 10;
+    		score /= count;
     		// Logistic function
-    		score = 1.0/(1.0+Math.exp(-score));
+    		score = logistic(score);
     		result.engines.add(new Engine("combined", count, score));
     	}
     	
