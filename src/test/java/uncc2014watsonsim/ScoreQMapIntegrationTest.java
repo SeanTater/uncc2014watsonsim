@@ -59,7 +59,6 @@ class StatsGenerator {
 	
 	double runtime;
 	int[] conf_correct = new int[100];
-	
 	int[] conf_hist = new int[100];
 	
 	public StatsGenerator() throws ClientProtocolException, IOException, ParseException {
