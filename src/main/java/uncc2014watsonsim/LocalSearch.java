@@ -12,12 +12,6 @@ package uncc2014watsonsim;
  * @author Phani Rahul
  */
 public interface LocalSearch {
-    
-    /**
-     * Sets the path to the directory of the index repository
-     * @param indexPath 
-     */
-    public void setIndex(String indexPath);
 
     /**
      * simply runs the <i>query</i>

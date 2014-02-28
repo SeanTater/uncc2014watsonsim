@@ -22,9 +22,9 @@ public class WatsonSim {
 
     /**
      * @param args the command line arguments
-     * @throws IOException 
+     * @throws Exception 
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 
         //read from the command line
         System.out.println("Enter the jeopardy text: ");
@@ -39,7 +39,6 @@ public class WatsonSim {
 	        
 	        //initialize indri and query
 	        IndriSearch in = new IndriSearch();
-	        in.setIndex(UserSpecificConstants.indriIndex);
 	        in.runQuery(question.text);
 	        for (int rank=0; rank < in.getResultCount(); rank++) {
 	        	question.add(new ResultSet(
@@ -52,8 +51,7 @@ public class WatsonSim {
 	        }
 	
 	        //initialize and query lucene
-	        LuceneSearch lu = new LuceneSearch(UserSpecificConstants.luceneSearchField);
-	        lu.setIndex(UserSpecificConstants.luceneIndex);
+	        LuceneSearch lu = new LuceneSearch();
 	        lu.runQuery(question.text);
 	        for (int rank=0; rank < in.getResultCount(); rank++) {
 	        	question.add(new ResultSet(
