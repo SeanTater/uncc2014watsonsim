@@ -29,46 +29,27 @@ public class WatsonSim {
         //read from the command line
         System.out.println("Enter the jeopardy text: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        Question question = new Question(br.readLine());
+        String command = br.readLine();
         
-    	while (!question.raw_text.equalsIgnoreCase("")) {
-	
+    	while (!command.isEmpty()) {
+            Question question = new Question(command);
 	        HashSet<String> ignoreSet = new HashSet<String>();
 	        ignoreSet.add("J! Archive");
 	        ignoreSet.add("Jeopardy");
 	        
 	        //initialize indri and query
-	        IndriSearch in = new IndriSearch();
-	        in.runQuery(question.text);
-	        for (int rank=0; rank < in.getResultCount(); rank++) {
-	        	question.add(new ResultSet(
-	    			in.getTitle(rank),
-	    			"indri",
-	    			rank,
-	    			in.getScore(rank),
-	    			false // correct? We don't know yet.
-	    			));
-	        }
+        	question.addAll(IndriSearch.runQuery(question.text));
 	
 	        //initialize and query lucene
-	        LuceneSearch lu = new LuceneSearch();
-	        lu.runQuery(question.text);
-	        for (int rank=0; rank < in.getResultCount(); rank++) {
-	        	question.add(new ResultSet(
-	    			lu.getTitle(rank),
-	    			"lucene",
-	    			rank,
-	    			lu.getScore(rank),
-	    			false // correct? We don't know yet.
-	    			));
-	        }
+	        question.addAll(LuceneSearch.runQuery(question.text));
 	
 	        //initialize google search engine and query.
 	        WebSearchGoogle go = new WebSearchGoogle();
 	        go.runQuery(question.text);
-	        for (int rank=0; rank < in.getResultCount(); rank++) {
+	        for (int rank=0; rank < go.getResultCount(); rank++) {
 	        	question.add(new ResultSet(
 	    			go.getTitle(rank),
+	    			"", 
 	    			"google",
 	    			rank,
 	    			rank,
@@ -83,9 +64,13 @@ public class WatsonSim {
 	        
 	
 	        //read from the command line
-	        System.out.println("Enter the jeopardy text or enter to quit: ");
-	        br = new BufferedReader(new InputStreamReader(System.in));
-	        question = new Question(br.readLine());
+	        System.out.println("Enter [0-9]+ to inspect full text, a question to search again, or enter to quit\n>>> ");
+	        command = br.readLine();
+	        while (command.matches("[0-9]+")) {
+	        	ResultSet rs = question.get(Integer.parseInt(command));
+	        	System.out.println("Full text for [" + rs.getTitle() + "]: \n" + rs.getFullText() + "\n");
+	        	command = br.readLine();
+	        }
     	}
     }
 }

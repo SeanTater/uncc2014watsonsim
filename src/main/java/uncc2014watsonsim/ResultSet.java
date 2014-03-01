@@ -16,12 +16,14 @@ import org.json.simple.JSONObject;
 public class ResultSet implements Comparable<ResultSet> {
 
     private List<String> titles = new ArrayList<String>();
+    private List<String> full_texts = new ArrayList<String>();
     private boolean correct;
     public List<Engine> engines = new ArrayList<Engine>();
 
     /** Create a ResultSet with one implicitly defined Engine */
-    public ResultSet(String title, String engine, long rank, double score, boolean correct) {
+    public ResultSet(String title, String full_text, String engine, long rank, double score, boolean correct) {
         this.titles.add(title);
+        this.full_texts.add(full_text);
         this.engines.add(new Engine(engine, rank, score));
         this.correct = correct;
     }
@@ -49,6 +51,11 @@ public class ResultSet implements Comparable<ResultSet> {
     	// TODO: Consider a way of making a title from multiple titles
     	// NLP realm?
         return titles.get(0);
+    }
+    
+    /** Get the primary full text for this record */
+    public String getFullText() {
+    	return full_texts.get(0);
     }
 
     /** deprecated */
@@ -132,5 +139,9 @@ public class ResultSet implements Comparable<ResultSet> {
     public void merge(ResultSet other) {
     	engines.addAll(other.engines);
     	titles.addAll(other.titles);
+    	// Only add non-empty full texts
+    	for (String full_text : other.full_texts)
+    		if (!full_text.isEmpty())
+    			full_texts.add(full_text);
     }
 }

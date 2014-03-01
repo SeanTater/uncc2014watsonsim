@@ -17,8 +17,9 @@ public interface LocalSearch {
      * simply runs the <i>query</i>
      *
      * @param query
+     * @throws Exception 
      */
-    public void runQuery(String query);
+    public void runQuery(String query) throws Exception;
 
     /**
      * this method gets the score of the document from the search result, given

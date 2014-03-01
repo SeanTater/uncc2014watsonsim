@@ -2,6 +2,7 @@ package uncc2014watsonsim;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class Question extends ArrayList<ResultSet>{
 	private static final long serialVersionUID = 1L;
@@ -65,6 +66,13 @@ public class Question extends ArrayList<ResultSet>{
 		}
 		super.add(cand);
 		return true;
+	}
+	
+	@Override
+	public boolean addAll(Collection<? extends ResultSet> c) {
+		boolean changed=false;
+		for (ResultSet rs : c) changed |= add(rs);
+		return changed;
 	}
 
 }
