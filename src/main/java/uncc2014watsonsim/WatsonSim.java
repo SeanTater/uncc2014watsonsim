@@ -1,19 +1,8 @@
 package uncc2014watsonsim;
 
-import com.sun.org.apache.xalan.internal.xsltc.runtime.BasisLibrary;
-
 import java.io.BufferedReader;
-import java.io.Console;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import privatedata.UserSpecificConstants;
-
 /**
  *
  * @author Phani Rahul
@@ -58,8 +47,10 @@ public class WatsonSim {
 	        }
 	        
 	        new AverageScorer().test(question);
-	        for (ResultSet r : question) {
-	        	System.out.println(String.format("[%01f] %s", r.first("combined").score, r.getTitle()));
+	        // Not a range-based for because we want the rank
+	        for (int i=0; i<question.size(); i++) {
+	        	ResultSet r = question.get(i);
+	        	System.out.println(String.format("%d: [%01f] %s", i, r.first("combined").score, r.getTitle()));
 	        }
 	        
 	
