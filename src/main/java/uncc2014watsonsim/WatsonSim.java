@@ -33,18 +33,7 @@ public class WatsonSim {
 	        question.addAll(LuceneSearch.runQuery(question.text));
 	
 	        //initialize google search engine and query.
-	        WebSearchGoogle go = new WebSearchGoogle();
-	        go.runQuery(question.text);
-	        for (int rank=0; rank < go.getResultCount(); rank++) {
-	        	question.add(new ResultSet(
-	    			go.getTitle(rank),
-	    			"", 
-	    			"google",
-	    			rank,
-	    			rank,
-	    			false // correct? We don't know yet.
-	    			));
-	        }
+	        question.addAll(WebSearchGoogle.runQuery(question.text));
 	        
 	        new AverageScorer().test(question);
 	        // Not a range-based for because we want the rank

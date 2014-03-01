@@ -9,7 +9,10 @@ import java.util.ArrayList;
 
 
 
+import java.util.List;
+
 import privatedata.UserSpecificConstants;
+
 
 /*
  * Google API Imports
@@ -20,7 +23,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.customsearch.Customsearch;
-import com.google.api.services.customsearch.Customsearch.Cse.List;
+import com.google.api.services.customsearch.Customsearch.Cse;
 import com.google.api.services.customsearch.CustomsearchRequestInitializer;
 import com.google.api.services.customsearch.model.Result;
 import com.google.api.services.customsearch.model.Search;
@@ -31,108 +34,59 @@ import com.google.api.services.customsearch.model.Search;
  * 			 with ITCS 4010 Watson Class at UNCC
  *
  */
-public class WebSearchGoogle implements WebSearch {
-	
+public class WebSearchGoogle {
 	static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-
-	
 	//Initialized Key
-	private static final GoogleClientRequestInitializer KEY_INITIALIZER =
-                new CustomsearchRequestInitializer(UserSpecificConstants.googleAPIKey);
-	
-	// Store results in object's own array
-	private ArrayList<Result> resultsList = new ArrayList<Result>();
-	
-	/* (non-Javadoc)
-	 * @see WebSearch#runQuery(java.lang.String)
-	 */
-	@Override
-	public void runQuery(String query) {
-		//Check empty query
-		if(query == ""){
-			System.out.println("Google Search: No query entered");
-			return;
-		}
+	static final GoogleClientRequestInitializer KEY_INITIALIZER =
+        new CustomsearchRequestInitializer(UserSpecificConstants.googleAPIKey);
+	static final Cse customsearchengine;
+	static {
 		/*
 		 * Build a customsearch object and initialize it with a
 		 * builder object.
 		 * We will use a Json Factory for data transport.
-		 * 
 		 */
-		Customsearch customsearch = new Customsearch.Builder(
+		customsearchengine = new Customsearch.Builder(
 				HTTP_TRANSPORT, JSON_FACTORY, null)
 		.setApplicationName(UserSpecificConstants.googleApplicationName)
 		.setGoogleClientRequestInitializer(KEY_INITIALIZER)
-		.build();
+		.build().cse();
+	}
+	
+	/* (non-Javadoc)
+	 * @see WebSearch#runQuery(java.lang.String)
+	 */
+	public static List<ResultSet> runQuery(String query) throws IOException {
+		List<ResultSet> results = new ArrayList<ResultSet>();
+		//Check empty query
+		if (! query.isEmpty())
+			return results;
+	   /* 
+		* This is a Customsearch.cse.List object, not a Java List object.
+		*  This object represents a search which has not yet been retrieved.
+		*  
+		*  We set the cx or search engine ID to a custom engine created for
+		*  the purpose of this project which essentially just searches the
+		*  entire web.
+		*/
+		Cse.List queryList = customsearchengine.list(query);
 		
-		try {
-		   /* 
-			* This is a Customsearch.cse.List object, not a Java List object.
-			*  This object represents a search which has not yet been retrieved.
-			*  
-			*  We set the cx or search engine ID to a custom engine created for
-			*  the purpose of this project which essentially just searches the
-			*  entire web.
-			*/
-			List queryList = customsearch.cse().list(query);
-			
-			queryList.setCx(UserSpecificConstants.googleCustomSearchID);
-                       // queryList.setNum(new Long((long)30));
-			Search results = queryList.execute(); //Fetch Data
-			resultsList = (ArrayList<Result>) results.getItems(); //Store the data in our object as a Java ArrayList
-			
-		} catch (IOException e) {
-			e.printStackTrace();
+		queryList.setCx(UserSpecificConstants.googleCustomSearchID);
+        // To choose how many results: queryList.setNum(new Long((long)30));
+		List<Result> in_r = queryList.execute().getItems();
+		// Not a range for because we need rank
+		for (int i=0; i<in_r.size(); i++) {
+			results.add(new ResultSet(
+				in_r.get(i).getTitle(),  // Title 
+				in_r.get(i).getSnippet(),// "Full" Text
+				"google",                // Engine
+				i,                       // Rank 
+				(double) i,              // Score
+				false                    // Correctness
+				// Later: include in_r.get(i).getFormattedUrl()
+				));
 		}
-		
-		return; 
-
+		return results; 
 	}
-
-	/* (non-Javadoc)
-	 * @see WebSearch#getTitle(int)
-	 */
-	@Override
-	public String getTitle(int index) {
-		String title = "";
-		try{
-			//Get Google Result and Title for index.
-			Result result = resultsList.get(index);
-			title = result.getTitle();
-		}catch(IndexOutOfBoundsException e){
-			//Throws out of range
-			System.out.println("Google Search: Index out of range!");
-			return null;
-		}
-		return title;
-	}
-
-	/* (non-Javadoc)
-	 * @see WebSearch#getDocumentPointer(int)
-	 */
-	@Override
-	public String getDocumentPointer(int index) {
-		String url = "";
-		try{
-			//Get Google Result and URL for index.
-			Result result = resultsList.get(index);
-			url = result.getFormattedUrl();
-		}catch(IndexOutOfBoundsException e){
-			//Throws out of range
-			System.out.println("Google Search: Index out of range!");
-			return null;
-		}
-		return url;
-	}
-
-	/* (non-Javadoc)
-	 * @see WebSearch#getResultCount()
-	 */
-	@Override
-	public int getResultCount() {
-		return resultsList.size();
-	}
-
-
 }
