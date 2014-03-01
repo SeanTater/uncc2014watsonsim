@@ -39,7 +39,7 @@ public class WatsonSim {
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
 	        	ResultSet r = question.get(i);
-	        	System.out.println(String.format("%d: [%01f] %s", i, r.first("combined").score, r.getTitle()));
+	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
 	        
 	

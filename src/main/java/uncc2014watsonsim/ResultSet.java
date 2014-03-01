@@ -111,7 +111,14 @@ public class ResultSet implements Comparable<ResultSet> {
 
     @Override
     public String toString() {
-        return "ResultSet{" + "title=" + getTitle() + ", correct=" + correct + '}';
+    	// Make a short view of the engines as single-letter abbreviations
+    	String engines = "";
+    	for (Engine e: this.engines) engines += e.name.substring(0, 1);
+    	
+    	String correct = isCorrect() ? "✓" : "✗";
+    	
+    	// Should look like: [0.9998 gil ✓] Flying Waterbuffalos ... 
+    	return String.format("[%01f %-3s %s] %s", first("combined").score, engines, correct, getTitle());
     }
     
     /** Fetch the first Engine with this name if it exists (otherwise null) */
