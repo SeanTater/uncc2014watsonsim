@@ -5,6 +5,7 @@ import argparse
 import sqlite3
 import bs4
 from clint.textui import progress
+import multiprocessing
 from multiprocessing.pool import Pool
 
 parser = argparse.ArgumentParser(description="Import TREC data into sqlite3")
