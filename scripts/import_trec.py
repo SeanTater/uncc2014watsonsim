@@ -3,11 +3,10 @@
 # -> pip install clint
 import argparse
 import sqlite3
-import bs4
 from clint.textui import progress
 import multiprocessing
 from multiprocessing.pool import Pool
-
+from lxml.etree import HTML
 parser = argparse.ArgumentParser(description="Import TREC data into sqlite3")
 parser.add_argument("-c", "--create", action="store_true", help="Clear/Init Database")
 parser.add_argument("-t", "--table", default="documents", help="SQL table to dump into")
@@ -30,15 +29,17 @@ if args.create:
 
 def parse_one(fname):
     with open(fname) as f:
-      b = bs4.BeautifulSoup(f)
+      b = HTML(f.read()).findall("*doc")
       # find("text") is there because .text is ambiguous
       # the if d.find... is there because many entries are missing text
       return [
-        [d.docno.text, d.title.text, d.find("text") and d.find("text").text or None]
-        for d in b.find_all("doc")]
+        [d.findtext("docno"), d.findtext("title"), d.findtext("text")]
+        for d in b]
 
-p = Pool(multiprocessing.cpu_count()+1, maxtasksperchild=5)
-for entries in progress.bar(p.imap_unordered(parse_one, args.trec, 10), "Importing TREC data..", 50, expected_size=len(args.trec)):
+#p = Pool(multiprocessing.cpu_count()+1, maxtasksperchild=5)
+#runner = p.imap_unordered(parse_one, args.trec, 10)
+runner = (parse_one(x) for x in args.trec)
+for entries in progress.bar(runner, "Importing TREC data..", 50, expected_size=len(args.trec)):
   db.executemany("insert into %s (docno, title, content, source) values (?,?,?,'%s');" %(args.table, args.source), entries)
   db.execute("insert into {table}({table}) values ('merge=200,8');".format(table=args.table)) # Clean search trees a bit
   db.commit()
