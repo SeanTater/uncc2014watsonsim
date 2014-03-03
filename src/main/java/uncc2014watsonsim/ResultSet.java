@@ -50,7 +50,11 @@ public class ResultSet implements Comparable<ResultSet> {
     public String getTitle() {
     	// TODO: Consider a way of making a title from multiple titles
     	// NLP realm?
-        return titles.get(0);
+    	String shortest_title = titles.get(0);
+    	for (String title : titles)
+    		if (title.length() < shortest_title.length())
+    			shortest_title = title;
+        return shortest_title;
     }
     
     /** Get the primary full text for this record */

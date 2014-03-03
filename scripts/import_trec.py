@@ -36,8 +36,8 @@ for i, fname in progress.bar(enumerate(args.trec), "Importing TREC data..", 50, 
       for d in b]
 
   db.executemany("insert into %s (docno, title, content, source) values (?,?,?,'%s');" %(args.table, args.source), entries)
-  db.execute("insert into {table}({table}) values ('merge=200,8');".format(table=args.table)) # Clean search trees a bit
   if not (i % 250):
+      db.execute("insert into {table}({table}) values ('merge=200,8');".format(table=args.table)) # Clean search trees a bit
       db.commit()
 
 # Clean the tree the last time. 
