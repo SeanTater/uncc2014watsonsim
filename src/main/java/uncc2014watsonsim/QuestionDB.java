@@ -26,8 +26,19 @@ public class QuestionDB {
 		// So don't bother adding code to do all that.
 	}
 	
-	public static List<Question> fetch(int start, int length) throws SQLException {
-		String q_select = String.format("select * from questions order by rowid limit %d offset %d;", length, start);
+	/** Fetch Questions with existing Indri/Lucene/Google search results */
+	public static List<Question> fetch_cached(int start, int length) throws SQLException {
+		return fetch(String.format(
+			"select * from questions where cached order by rowid limit %d offset %d;", length, start));
+	}
+	
+	/** Fetch Questions without existing results */
+	public static List<Question> fetch_uncached(int start, int length) throws SQLException {
+		return fetch(String.format(
+			"select * from questions where not cached order by rowid limit %d offset %d;", length, start));
+	}
+	
+	public static List<Question> fetch(String q_select) throws SQLException {
 		// Get a list of questions, ordered so that it is consistent
 		ResultSet sql = conn.createStatement().executeQuery(q_select);
 		Map<Integer, Question> questions = new HashMap<Integer, Question>();
