@@ -27,20 +27,18 @@ if args.create:
       source text);
       """.format(table=args.table))
 
-def parse_one(fname):
-    with open(fname) as f:
-      b = HTML(f.read()).findall("*doc")
-      # find("text") is there because .text is ambiguous
-      # the if d.find... is there because many entries are missing text
-      return [
-        [d.findtext("docno"), d.findtext("title"), d.findtext("text")]
-        for d in b]
+ 
+for i, fname in progress.bar(enumerate(args.trec), "Importing TREC data..", 50, expected_size=len(args.trec)):
+  with open(fname) as f:
+    b = HTML(f.read()).findall("*doc")
+    entries = [
+      [d.findtext("docno"), d.findtext("title"), d.findtext("text")]
+      for d in b]
 
-for e in progress.bar(args.trec, "Importing TREC data..", 50):
-  parse_one(f)
   db.executemany("insert into %s (docno, title, content, source) values (?,?,?,'%s');" %(args.table, args.source), entries)
   db.execute("insert into {table}({table}) values ('merge=200,8');".format(table=args.table)) # Clean search trees a bit
-  db.commit()
+  if not (i % 250):
+      db.commit()
 
 # Clean the tree the last time. 
 db.execute("insert into {table}({table}) values ('optimize');".format(table=args.table))

@@ -1,10 +1,5 @@
 package uncc2014watsonsim;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +48,8 @@ class SingleTrainingResult extends Thread {
 			uncollated_results.addAll(IndriSearch.runQuery(q.text));
 			uncollated_results.addAll(LuceneSearch.runQuery(q.text));
 			uncollated_results.addAll(WebSearchGoogle.runQuery(q.text));
-			System.out.print(".");
+			// Let the user know things are moving along.
+			System.out.print("."); 
 		} catch (Exception e) {
 			// Eat exceptions
 			e.printStackTrace();
