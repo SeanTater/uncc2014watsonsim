@@ -36,15 +36,11 @@ def parse_one(fname):
         [d.findtext("docno"), d.findtext("title"), d.findtext("text")]
         for d in b]
 
-#p = Pool(multiprocessing.cpu_count()+1, maxtasksperchild=5)
-#runner = p.imap_unordered(parse_one, args.trec, 10)
-runner = (parse_one(x) for x in args.trec)
-for entries in progress.bar(runner, "Importing TREC data..", 50, expected_size=len(args.trec)):
+for e in progress.bar(args.trec, "Importing TREC data..", 50):
+  parse_one(f)
   db.executemany("insert into %s (docno, title, content, source) values (?,?,?,'%s');" %(args.table, args.source), entries)
   db.execute("insert into {table}({table}) values ('merge=200,8');".format(table=args.table)) # Clean search trees a bit
   db.commit()
-p.close()
-p.join()
 
 # Clean the tree the last time. 
 db.execute("insert into {table}({table}) values ('optimize');".format(table=args.table))
