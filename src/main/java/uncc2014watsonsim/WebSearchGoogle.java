@@ -5,10 +5,6 @@ package uncc2014watsonsim;
  */
 import java.io.IOException;
 import java.util.ArrayList;
-
-
-
-
 import java.util.List;
 
 import privatedata.UserSpecificConstants;
