@@ -7,10 +7,10 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Question extends ArrayList<ResultSet> {
-
-    private static final long serialVersionUID = 1L;
-    String text, answer, raw_text;
+public class Question extends ArrayList<ResultSet>{
+	private static final long serialVersionUID = 1L;
+	int id; // Question ID comes from the database and is optional.
+	String text, answer, raw_text;
     private String category = "unknown";
     private QType type;
 

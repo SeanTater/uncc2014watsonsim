@@ -20,10 +20,10 @@ public class GenerateSearchResultDataset {
      * @throws SQLException 
      */
     public static void main(String[] args) throws SQLException {
-
         ExecutorService pool = Executors.newFixedThreadPool(15);
-    	for (Question q : QuestionDB.fetch_uncached(0, 10)) {
+    	for (Question q : QuestionDB.fetch_uncached(0,-1)) {
     		pool.execute(new SingleTrainingResult(q));
+    		//new SingleTrainingResult(q).run();
     	}
         pool.shutdown();
         try {
@@ -47,9 +47,12 @@ class SingleTrainingResult extends Thread {
 			List<ResultSet> uncollated_results = new ArrayList<ResultSet>(); 
 			uncollated_results.addAll(IndriSearch.runQuery(q.text));
 			uncollated_results.addAll(LuceneSearch.runQuery(q.text));
-			uncollated_results.addAll(WebSearchGoogle.runQuery(q.text));
+			//uncollated_results.addAll(WebSearchGoogle.runQuery(q.text));
+			QuestionDB.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.
-			System.out.print("."); 
+			System.out.print(".");
+			// Somewhere around once in 80 times..
+			if (q.id % 80 == 0) System.out.println(); 
 		} catch (Exception e) {
 			// Eat exceptions
 			e.printStackTrace();

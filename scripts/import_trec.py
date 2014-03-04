@@ -19,12 +19,51 @@ db = sqlite3.connect(args.db)
 if args.create:
   db.executescript("""
     drop table if exists {table};
-    create virtual table {table} using fts4 (
+    create table {table} (
+      docno text,
+      title text,
+      text text,
+      source text,
+    );
+
+    drop table if exists excluded_{table};
+    create table excluded_{table} (
+      docno text,
+      title text,
+      text text,
+      source text,
+    );
+
+
+    drop table if exists search_{table};
+    create virtual table search_{table} using fts4 (
+      content="{table}",
       tokenize="porter", 
       docno text unique,
       title text,
-      content text,
+      text text,
       source text);
+
+    drop_trigger if exists {table}_bu;
+    create trigger {table}_bu before update on {table} begin
+      delete from search_{table} where docid=old.rowid;
+    end;
+    drop_trigger if exists {table}_bd;
+    create trigger {table}_bd before delete on {table} begin
+      delete from search_{table} where docid=old.rowid;
+    end;
+
+    drop_trigger if exists {table}_au;
+    create trigger {table}_au after update on {table} begin
+      insert into search_{table}(docid, docno, title, content, source) values(new.rowid, new.docno, new.title, new.content, new.source);
+    end;
+    drop_trigger if exists {table}_ai;
+    create trigger {table}_ai after insert on {table} begin
+      insert into search_{table}(docid, docno, title, content, source) values(new.rowid, new.docno, new.title, new.content, new.source);
+    end;
+    
+    create unique index if not exists {table}_docno on {table}(docno);
+    create unique index if not exists excluded_{table}_docno on excluded_{table}(docno);
       """.format(table=args.table))
 
  
