@@ -61,9 +61,6 @@ if args.create:
     create trigger {table}_ai after insert on {table} begin
       insert into search_{table}(docid, docno, title, content, source) values(new.rowid, new.docno, new.title, new.content, new.source);
     end;
-    
-    create unique index if not exists {table}_docno on {table}(docno);
-    create unique index if not exists excluded_{table}_docno on excluded_{table}(docno);
       """.format(table=args.table))
 
  
