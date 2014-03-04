@@ -39,15 +39,16 @@ public class QuestionDB {
 	    s.execute();
 	    
 		s = conn.prepareStatement("insert into results(question, title, fulltext, engine, rank, score, correct)"
-				+ "values (1, ?, ?, ?, ?, ?, ?);");
+				+ "values (?, ?, ?, ?, ?, ?, ?);");
 		for (ResultSet r : results) {
-			s.setString(1, r.getTitle());
-			s.setString(2, r.getFullText());
+			s.setLong(1, q.id);
+			s.setString(2, r.getTitle());
+			s.setString(3, r.getFullText());
 			// In this case, we know there is exactly one engine so it is safe to access it.
-			s.setString(3, r.engines.get(0).name);
-			s.setLong(4, r.engines.get(0).rank);
-			s.setDouble(5, r.engines.get(0).score);
-			s.setBoolean(6, r.isCorrect());
+			s.setString(4, r.engines.get(0).name);
+			s.setLong(5, r.engines.get(0).rank);
+			s.setDouble(6, r.engines.get(0).score);
+			s.setBoolean(7, r.isCorrect());
 			s.addBatch();
 		}
 		s.executeBatch();
