@@ -45,7 +45,10 @@ public class ResultSet implements Comparable<ResultSet> {
     	titles.add(resultset.getTitle());
     	correct = resultset.correct;
     }
-
+    /** some discussion has to be made on how this has to work. Not finalized*/
+    public void setTitle(String title){
+        titles.add(0, title);
+    }
     /** Get the primary title for this record */
     public String getTitle() {
     	// TODO: Consider a way of making a title from multiple titles
@@ -155,4 +158,5 @@ public class ResultSet implements Comparable<ResultSet> {
     		if (!full_text.isEmpty())
     			full_texts.add(full_text);
     }
+    
 }

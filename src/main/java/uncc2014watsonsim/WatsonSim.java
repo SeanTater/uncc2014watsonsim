@@ -39,6 +39,24 @@ public class WatsonSim {
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
 	        	ResultSet r = question.get(i);
+                        String title = r.getTitle();
+                        String aW[] = title.split(" ");
+                        String qW[] = question.text.split(" ");
+                        StringBuilder newTitle = new StringBuilder();
+                        for(String a : aW ){
+                            boolean there = false;
+                            for(String q:qW){
+                                if(q.equalsIgnoreCase(a)){
+                                    there = true;
+                                    break;
+                                }
+                            }
+                            if(!there){
+                                newTitle.append(a);
+                                newTitle.append(" ");
+                            }
+                        }
+                        r.setTitle(newTitle.toString());
 	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
 	        

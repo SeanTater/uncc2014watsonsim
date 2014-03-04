@@ -56,7 +56,7 @@ public class WebSearchGoogle {
 	public static List<ResultSet> runQuery(String query) throws IOException {
 		List<ResultSet> results = new ArrayList<ResultSet>();
 		//Check empty query
-		if (! query.isEmpty())
+		if (query.isEmpty())
 			return results;
 	   /* 
 		* This is a Customsearch.cse.List object, not a Java List object.

@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
-import org.apache.mahout.*;
+//import org.apache.mahout.*;
 import org.json.simple.parser.ParseException;
 
 public class AverageScorer {
