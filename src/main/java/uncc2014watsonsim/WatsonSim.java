@@ -27,10 +27,10 @@ public class WatsonSim {
 	        ignoreSet.add("Jeopardy");
 	        
 	        //initialize indri and query
-        	question.addAll(IndriSearch.runQuery(question.text));
+        	//question.addAll(IndriSearch.runQuery(question.text));
 	
 	        //initialize and query lucene
-	        question.addAll(LuceneSearch.runQuery(question.text));
+	        //question.addAll(LuceneSearch.runQuery(question.text));
 	
 	        //initialize google search engine and query.
 	        question.addAll(WebSearchGoogle.runQuery(question.text));

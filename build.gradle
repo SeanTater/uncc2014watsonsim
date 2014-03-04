@@ -8,6 +8,16 @@ mainClassName = "uncc2014watsonsim.WatsonSim"
 version = "0.1.2"
 group = "edu.uncc"
 
+// Meta-dependencies (what you need so as to run this buildscript)
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'de.undercouch:gradle-download-task:0.5'
+    }
+}
+
 // Dependencies and where to get them (some are nonstandard)
 repositories {
     //maven {url "$projectDir/quickstart-lib/"}
@@ -43,10 +53,32 @@ dependencies {
 //    natives "libindri-jni:libindri-jni:5.6"
     // Sqlite native library (but it comes in a jar)
     compile "org.xerial:sqlite-jdbc:3.7.2"
+    
+    // OpenNLP
+    compile "org.apache.opennlp:opennlp-tools:1.5.3"
 }
 
 
 // Other Tasks
+apply plugin: 'download-task'
+task downloadAll << {
+    download {
+        src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/questions.db"
+        dest "$projectDir/data"
+        onlyIfNewer true
+    }
+    download {
+        src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/sources.db"
+        dest "$projectDir/data"
+        onlyIfNewer true
+    }
+    download {
+        src 'http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin'
+        dest "$projectDir/data"
+        onlyIfNewer true
+    }
+}
+
 run {
     // Allow reading from stdin
     standardInput = System.in
