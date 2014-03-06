@@ -10,10 +10,10 @@ public class AverageScorer {
     /** Correlates search results for improved accuracy */
 	public AverageScorer() {}
 	public AverageScorer(String filename) throws FileNotFoundException, ParseException, IOException {
-		train(new QuestionMap(filename));
+		train(QuestionSource.from_json(filename));
 	}
 	
-	public void train(QuestionMap dataset) {
+	public void train(QuestionSource dataset) {
 		// No-op until ML code is added
 	}
 	

@@ -3,6 +3,7 @@ package uncc2014watsonsim;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -20,17 +21,18 @@ import org.junit.Test;
 
 public class ScoreQMapIntegrationTest {
 	@Test
-	public void integrate() throws FileNotFoundException, ParseException, IOException {
-		QuestionMap questionmap = StatsGenerator.getQuestionMap();
-		Question question = questionmap.get("This London borough is the G in GMT squire");
-		new AverageScorer().test(question);
-		String top_answer = question.get(0).getTitle();
-		assertNotNull(top_answer);
-		assertThat(top_answer.length(), not(0));
+	public void integrate() throws Exception {
+		QuestionSource questionmap = StatsGenerator.getQuestionSource();
+		for (Question question : questionmap) if (question.raw_text.equals("This London borough is the G in GMT squire")) {
+			new AverageScorer().test(question);
+			String top_answer = question.get(0).getTitle();
+			assertNotNull(top_answer);
+			assertThat(top_answer.length(), not(0));
+		}
 	}
 
 	@Test
-	public void sample() throws FileNotFoundException, ParseException, IOException, GitAPIException {
+	public void sample() throws Exception {
 		new StatsGenerator().run();
 	}
 }
@@ -43,14 +45,17 @@ class StatsGenerator {
 	/** Fetch the sample data from the Internet
 	 * @throws IOException 
 	 * @throws ClientProtocolException 
-	 * @throws ParseException */
-	static QuestionMap getQuestionMap() throws ClientProtocolException, IOException, ParseException {
+	 * @throws ParseException 
+	 * @throws SQLException */
+	static QuestionSource getQuestionSource() throws Exception {
+		/** Fetched sample data from the internet:
 		try (Reader reader = SampleData.get("main_v1.0.json.gz")) {
-			QuestionMap questionmap = new QuestionMap(reader);
-			return questionmap;
-		}
+			QuestionSource questionsource = QuestionSource.from_json(reader);
+			return questionsource;
+		}*/
+		return QuestionSource.from_live();
 	}
-	QuestionMap questionmap;
+	QuestionSource questionsource;
 	// correct[n] =def= number of correct answers at rank n 
 	int[] correct = new int[100];
 	int available = 0;
@@ -61,8 +66,8 @@ class StatsGenerator {
 	int[] conf_correct = new int[100];
 	int[] conf_hist = new int[100];
 	
-	public StatsGenerator() throws ClientProtocolException, IOException, ParseException {
-		questionmap = getQuestionMap();
+	public StatsGenerator() throws Exception {
+		questionsource = getQuestionSource();
 	}
 	
 	/** Measure how accurate the top question is as a histogram across confidence */
@@ -114,7 +119,7 @@ class StatsGenerator {
 				.add("run[top3]", String.valueOf(correct[0] + correct[1] + correct[2]))
 				.add("run[available]", String.valueOf(available))
 				.add("run[rank]", String.valueOf(total_inverse_rank))
-				.add("run[total_questions]", String.valueOf(questionmap.size()))
+				.add("run[total_questions]", String.valueOf(questionsource.size()))
 				.add("run[total_answers]", String.valueOf(total_answers))
 				.add("run[confidence_histogram]", join(conf_hist))
 				.add("run[confidence_correct_histogram]", join(conf_correct))
@@ -124,14 +129,15 @@ class StatsGenerator {
 		Request.Post("http://watsonsim.herokuapp.com/runs.json").bodyForm(response).execute();
 		
 	
-		System.out.println("" + correct[0] + " of " + questionmap.size() + " correct");
-		System.out.println("" + available + " of " + questionmap.size() + " could have been");
+		System.out.println("" + correct[0] + " of " + questionsource.size() + " correct");
+		System.out.println("" + available + " of " + questionsource.size() + " could have been");
 		System.out.println("Mean Inverse Rank " + total_inverse_rank);
 	}
 
-	public void run() throws IOException {
+	public void run() throws Exception {
 		long start_time = System.nanoTime();
-		for (Question question : questionmap.values()) {
+		for (Question question : questionsource) {
+			if (question.size() == 0) continue;
 			new AverageScorer().test(question);
 			ResultSet top_answer = question.get(0);
 			assertNotNull(top_answer);

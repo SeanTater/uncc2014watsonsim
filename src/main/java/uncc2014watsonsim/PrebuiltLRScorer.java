@@ -17,10 +17,10 @@ public class PrebuiltLRScorer {
      * implementation with Lucene and Indri*/
 	public PrebuiltLRScorer() {}
 	public PrebuiltLRScorer(String filename) throws FileNotFoundException, ParseException, IOException {
-		train(new QuestionMap(filename));
+		train(QuestionSource.from_json(filename));
 	}
 	
-	public void train(QuestionMap dataset) {
+	public void train(QuestionSource dataset) {
 		// No-op until ML code is added
 	}
 	
