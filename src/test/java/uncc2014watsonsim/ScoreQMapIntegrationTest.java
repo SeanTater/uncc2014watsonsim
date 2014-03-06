@@ -91,9 +91,10 @@ class StatsGenerator {
 		return out;
 	}
 	
-	public void onCorrectAnswer(ResultSet answer, int rank) {
+	public void onCorrectAnswer(Question question, ResultSet candidate, int rank) {
 		total_inverse_rank += 1 / ((double)rank + 1);
 		available++;
+		// Clamp the rank to 100. Past that we don't have a histogram.
 		correct[rank < 100 ? rank : 99]++;
 	}
 	
@@ -115,7 +116,7 @@ class StatsGenerator {
 		List<NameValuePair> response = Form.form()
 				.add("run[branch]", branch)
 				.add("run[commit_hash]", commit.substring(0, 10))
-				.add("run[dataset]", "main") // NOTE: Fill this in if you change it
+				.add("run[dataset]", "generated") // NOTE: Fill this in if you change it
 				.add("run[top]", String.valueOf(correct[0]))
 				.add("run[top3]", String.valueOf(correct[0] + correct[1] + correct[2]))
 				.add("run[available]", String.valueOf(available))
@@ -145,10 +146,12 @@ class StatsGenerator {
 			assertThat(top_answer.getTitle().length(), not(0));
 	
 			for (int rank=0; rank<question.size(); rank++) {
-				ResultSet answer = question.get(rank);
-				if(answer.equals(question.answer)) {
-					onCorrectAnswer(answer, rank);
+				ResultSet candidate = question.get(rank);
+				if(candidate.equals(question.answer)) {
+					onCorrectAnswer(question, candidate, rank);
 					break;
+				} else {
+					System.out.println("Supposedly " + candidate.getTitle() + " != " + question.answer.getTitle());
 				}
 			}
 			

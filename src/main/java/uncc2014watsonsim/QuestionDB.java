@@ -27,11 +27,11 @@ public class QuestionDB {
 			
 			bulk_delete = conn.prepareStatement("delete from results where question = ?");
 			bulk_insert = conn.prepareStatement("insert into results(question, title, fulltext, engine, rank, score)"
-					+ "values (?, ?, ?, ?, ?, ?);");
+					+ " values (?, ?, ?, ?, ?, ?);");
 
 			bulk_select_questions = conn.prepareStatement("select * from questions where rowid > ? order by rowid limit ?;");
-			bulk_select_results = conn.prepareStatement("select results.question as question_id, title, fulltext, category, engine, rank, score from results inner join questions on results.question = questions.rowid " +
-					"where (results.question >= ?) and (results.question <= ?);");
+			bulk_select_results = conn.prepareStatement("select results.question as question_id, title, fulltext, category, engine, rank, score from results inner join questions on results.question = questions.rowid" +
+					" where (results.question >= ?) and (results.question <= ?);");
 		} catch(SQLException | ClassNotFoundException e) {
 	       // if the error message is "out of memory", 
 	       // it probably means no database file is found

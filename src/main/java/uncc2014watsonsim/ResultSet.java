@@ -88,13 +88,14 @@ public class ResultSet implements Comparable<ResultSet> {
         
         // Here be dragons: This is (title_count^2 * title_length^3) complexity!
         for (String t1 : this.titles) {
+        	t1 = t1.replaceFirst("\\(.*\\)", "");
         	for (String t2 : other.titles) {
-                // 1: You get the length difference for free
-                int threshold = Math.abs(t1.length() - t2.length());
-                // 2: And up to a quarter of the shorter answer  
-                threshold += Math.min(t1.length(), t1.length()) / 4;
+        		t2 = t2.replaceFirst("\\(.*\\)", "");
+                // 2: Up to half of the shorter answer
+        		
+                int threshold = Math.min(t1.length(), t2.length()) / 2;
                 
-                if (StringUtils.getLevenshteinDistance(t1, t2) < threshold)
+                if (StringUtils.getLevenshteinDistance(t1.toLowerCase(), t2.toLowerCase()) < threshold)
                 	return true;
         	}
         }
