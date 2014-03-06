@@ -7,10 +7,11 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Question extends ArrayList<ResultSet>{
-	private static final long serialVersionUID = 1L;
-	int id; // Question ID comes from the database and is optional.
-	String text, answer, raw_text;
+public class Question extends ArrayList<ResultSet> {
+
+    private static final long serialVersionUID = 1L;
+    int id; // Question ID comes from the database and is optional.
+    String text, answer, raw_text;
     private String category = "unknown";
     private QType type;
 
@@ -24,7 +25,7 @@ public class Question extends ArrayList<ResultSet>{
         } catch (IOException ex) {
             Logger.getLogger(Question.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.type = QClassDetection.detectType(this);
     }
 
@@ -84,13 +85,20 @@ public class Question extends ArrayList<ResultSet>{
 //			}
 //		}
         String title = cand.getTitle();
-        String newTitle =NameRecognition.hasNoun(title);
         if (!title.contains("Category:")
-                && !title.contains("List of")
-                &&(newTitle.length())>0) {
-            cand.setTitle(newTitle);
-            super.add(cand);
+                && !title.contains("List of")) {
+            if (this.type == QType.FITB) {
+                Regex.matchFITB(raw_text);
+                String newTitle = NameRecognition.hasNoun(title);
+                if ((newTitle.length()) > 0) {
+                    cand.setTitle(newTitle);
+                    super.add(cand);
+                }
+            } else{
+                super.add(cand);
+            }
         }
+
         return true;
     }
 
