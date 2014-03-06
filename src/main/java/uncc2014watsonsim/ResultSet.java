@@ -17,15 +17,13 @@ public class ResultSet implements Comparable<ResultSet> {
 
     private List<String> titles = new ArrayList<String>();
     private List<String> full_texts = new ArrayList<String>();
-    private boolean correct;
     public List<Engine> engines = new ArrayList<Engine>();
 
     /** Create a ResultSet with one implicitly defined Engine */
-    public ResultSet(String title, String full_text, String engine, long rank, double score, boolean correct) {
+    public ResultSet(String title, String full_text, String engine, long rank, double score) {
         this.titles.add(title);
         this.full_texts.add(full_text);
         this.engines.add(new Engine(engine, rank, score));
-        this.correct = correct;
     }
     
     /** Create a ResultSet (with engine) from JSON */
@@ -35,15 +33,11 @@ public class ResultSet implements Comparable<ResultSet> {
         long rank = (long) attr.get(String.format("%s_rank", engine_name));
         double score = (double) attr.get(String.format("%s_score", engine_name));
         engines.add(new Engine(engine_name, rank, score));
-        // TODO: Reformat questions so that the correct answer is a ResultSet in the engine "perfect"
-        String a = (String) attr.get(String.format("%s_answer", engine_name));
-        correct = a.equalsIgnoreCase("yes");
 	}
     
     /** Copy constructor */
     public ResultSet(ResultSet resultset) {
     	titles.add(resultset.getTitle());
-    	correct = resultset.correct;
     }
     /** some discussion has to be made on how this has to work. Not finalized*/
     public void setTitle(String title){
@@ -63,11 +57,6 @@ public class ResultSet implements Comparable<ResultSet> {
     /** Get the primary full text for this record */
     public String getFullText() {
     	return full_texts.get(0);
-    }
-
-    /** deprecated */
-    public boolean isCorrect() {
-        return correct;
     }
 
     @Override
@@ -118,10 +107,11 @@ public class ResultSet implements Comparable<ResultSet> {
     	String engines = "";
     	for (Engine e: this.engines) engines += e.name.substring(0, 1);
     	
-    	String correct = isCorrect() ? "✓" : "✗";
+    	// ResultSet don't know if they are correct anymore..
+    	//String correct = isCorrect() ? "✓" : "✗";
     	
-    	// Should look like: [0.9998 gil ✓] Flying Waterbuffalos ... 
-    	return String.format("[%01f %-3s %s] %s", first("combined").score, engines, correct, getTitle());
+    	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
+    	return String.format("[%01f %-3s] %s", first("combined").score, engines, getTitle());
     }
     
     /** Fetch the first Engine with this name if it exists (otherwise null) */

@@ -43,7 +43,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public static Question known(String question, String answer) {
         Question q = new Question(question);
-        q.answer = new ResultSet(answer, answer, "answer", 0, 1, true);
+        q.answer = new ResultSet(answer, answer, "answer", 0, 1);
         return q;
     }
 
@@ -52,7 +52,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public static Question known(String question, String answer, String category) {
         Question q = new Question(question);
-        q.answer = new ResultSet(answer, answer, "answer", 0, 1, true);
+        q.answer = new ResultSet(answer, answer, "answer", 0, 1);
         q.setCategory(category);
         return q;
     }

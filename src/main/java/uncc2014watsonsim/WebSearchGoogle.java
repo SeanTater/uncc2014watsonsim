@@ -78,9 +78,7 @@ public class WebSearchGoogle {
 				in_r.get(i).getSnippet(),// "Full" Text
 				"google",                // Engine
 				i,                       // Rank 
-				(double) i,              // Score
-				false                    // Correctness
-				// Later: include in_r.get(i).getFormattedUrl()
+				(double) i
 				));
 		}
 		return results; 

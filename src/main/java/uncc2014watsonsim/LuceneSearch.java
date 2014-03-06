@@ -53,8 +53,7 @@ public class LuceneSearch {
 					doc.get("text"),  // Text
 					"lucene",         // Engine
 					i,                // Rank
-					s.score,          // Score
-					false             // Correct
+					s.score
 					));
 		}
 		return results;

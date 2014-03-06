@@ -42,8 +42,7 @@ public class IndriSearch{
 				full_texts[i].text, // Full Text
 				"indri",            // Engine
 				i,                  // Rank
-				ser[i].score,       // Score
-				false               // Correct? We don't know yet.
+				ser[i].score
 			));
 		}
 		return results;

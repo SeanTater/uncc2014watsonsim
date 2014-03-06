@@ -34,5 +34,5 @@ public interface LocalSearch {
     /**
      * How many results should Lucene and Indri return?
      */
-    public final int MAX_RESULTS = 100;
+    public final int MAX_RESULTS = 20;
 }

@@ -26,11 +26,11 @@ public class QuestionDB {
 			conn.createStatement().execute("PRAGMA synchronous = OFF;");
 			
 			bulk_delete = conn.prepareStatement("delete from results where question = ?");
-			bulk_insert = conn.prepareStatement("insert into results(question, title, fulltext, engine, rank, score, correct)"
-					+ "values (?, ?, ?, ?, ?, ?, ?);");
+			bulk_insert = conn.prepareStatement("insert into results(question, title, fulltext, engine, rank, score)"
+					+ "values (?, ?, ?, ?, ?, ?);");
 
 			bulk_select_questions = conn.prepareStatement("select * from questions where rowid > ? order by rowid limit ?;");
-			bulk_select_results = conn.prepareStatement("select results.question as question_id, title, fulltext, category, engine, rank, score, correct from results inner join questions on results.question = questions.rowid " +
+			bulk_select_results = conn.prepareStatement("select results.question as question_id, title, fulltext, category, engine, rank, score from results inner join questions on results.question = questions.rowid " +
 					"where (results.question >= ?) and (results.question <= ?);");
 		} catch(SQLException | ClassNotFoundException e) {
 	       // if the error message is "out of memory", 
@@ -58,7 +58,6 @@ public class QuestionDB {
 			bulk_insert.setString(4, r.engines.get(0).name);
 			bulk_insert.setLong(5, r.engines.get(0).rank);
 			bulk_insert.setDouble(6, r.engines.get(0).score);
-			bulk_insert.setBoolean(7, r.isCorrect());
 			bulk_insert.addBatch();
 		}
 		bulk_insert.executeBatch();
@@ -100,8 +99,7 @@ public class QuestionDB {
 				sql.getString("fulltext"),
 				sql.getString("engine"),
 				sql.getInt("rank"),
-				sql.getDouble("score"),
-				sql.getBoolean("correct")
+				sql.getDouble("score")
 			));
 		}
 		return new QuestionSource(questions.values());
