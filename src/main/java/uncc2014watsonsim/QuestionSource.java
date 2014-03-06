@@ -43,8 +43,17 @@ public class QuestionSource extends ArrayList<Question> {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static QuestionSource from_live() throws SQLException {
-		return QuestionDB.fetch_with_results(0, 100);
+	public static QuestionSource from_live() throws Exception {
+		QuestionSource q_source = QuestionDB.fetch_without_results(0, 100);
+		for (Question q : q_source) {
+			q.addAll(IndriSearch.runQuery(q.text));
+			q.addAll(LuceneSearch.runQuery(q.text));
+		}
+		return q_source;
+	}
+	
+	public static QuestionSource from_db() throws SQLException {
+		return QuestionDB.fetch_with_results(0, 1000);
 	}
 	
 	public static QuestionSource from_json(String path) throws ParseException, FileNotFoundException, IOException {

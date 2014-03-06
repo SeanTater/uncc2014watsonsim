@@ -53,6 +53,7 @@ class StatsGenerator {
 			QuestionSource questionsource = QuestionSource.from_json(reader);
 			return questionsource;
 		}*/
+		//return QuestionSource.from_db();
 		return QuestionSource.from_live();
 	}
 	QuestionSource questionsource;
@@ -77,7 +78,7 @@ class StatsGenerator {
 			ResultSet rs = question.get(0);
 			// Clamp to [0, 99]
 			int bin = (int)(rs.first("combined").score * 100);
-			if(rs.isCorrect()) conf_correct[bin]++;
+			if(rs.equals(question.answer)) conf_correct[bin]++;
 			conf_hist[bin]++;
 		}
 	}
@@ -93,7 +94,7 @@ class StatsGenerator {
 	public void onCorrectAnswer(ResultSet answer, int rank) {
 		total_inverse_rank += 1 / ((double)rank + 1);
 		available++;
-		correct[rank]++;
+		correct[rank < 100 ? rank : 99]++;
 	}
 	
 	private void report() throws IOException {
@@ -145,7 +146,7 @@ class StatsGenerator {
 	
 			for (int rank=0; rank<question.size(); rank++) {
 				ResultSet answer = question.get(rank);
-				if(answer.isCorrect()) {
+				if(answer.equals(question.answer)) {
 					onCorrectAnswer(answer, rank);
 					break;
 				}

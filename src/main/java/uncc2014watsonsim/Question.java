@@ -10,7 +10,8 @@ import java.util.logging.Logger;
 public class Question extends ArrayList<ResultSet>{
 	private static final long serialVersionUID = 1L;
 	int id; // Question ID comes from the database and is optional.
-	String text, answer, raw_text;
+	String text, raw_text;
+	ResultSet answer;
     private String category = "unknown";
     private QType type;
 
@@ -42,7 +43,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public static Question known(String question, String answer) {
         Question q = new Question(question);
-        q.answer = answer;
+        q.answer = new ResultSet(answer, answer, "answer", 0, 1, true);
         return q;
     }
 
@@ -51,7 +52,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public static Question known(String question, String answer, String category) {
         Question q = new Question(question);
-        q.answer = answer;
+        q.answer = new ResultSet(answer, answer, "answer", 0, 1, true);
         q.setCategory(category);
         return q;
     }

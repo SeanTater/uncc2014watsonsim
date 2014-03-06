@@ -69,10 +69,6 @@ public class ResultSet implements Comparable<ResultSet> {
     public boolean isCorrect() {
         return correct;
     }
-    /** deprecated */
-    public void setCorrect(boolean correct) {
-        this.correct = correct;
-    }
 
     @Override
     /** How to handle inexact matches this way?? */
