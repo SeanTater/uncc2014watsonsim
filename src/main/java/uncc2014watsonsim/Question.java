@@ -84,14 +84,14 @@ public class Question extends ArrayList<ResultSet>{
 //				return false;
 //			}
 //		}
-//        String title = cand.getTitle();
-//        String newTitle =NameRecognition.hasNoun(title);
-//        if (!title.contains("Category:")
-//                && !title.contains("List of")
-//                &&(newTitle.length())>0) {
-//            cand.setTitle(newTitle);
+        String title = cand.getTitle();
+        String newTitle =NameRecognition.hasNoun(title);
+        if (!title.contains("Category:")
+                && !title.contains("List of")
+                &&(newTitle.length())>0) {
+            cand.setTitle(newTitle);
             super.add(cand);
-//        }
+        }
         return true;
     }
 

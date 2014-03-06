@@ -6,7 +6,6 @@
 package uncc2014watsonsim;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -28,8 +27,7 @@ public class NameRecognition {
         InputStream is = null;
 
         
-        is = new FileInputStream("C:\\Users\\PhaniRahul\\Documents"
-                + "\\NetBeansProjects\\NLP\\data\\en-ner-person.bin");
+        is = new FileInputStream(SampleData.get_filename("en-ner-person.bin"));
         model = new TokenNameFinderModel(is);
         nameFinder = null;
         try {
