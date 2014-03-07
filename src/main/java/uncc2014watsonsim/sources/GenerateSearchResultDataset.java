@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.QuestionDB;
+import uncc2014watsonsim.DBQuestionSource;
 import uncc2014watsonsim.ResultSet;
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
@@ -28,7 +28,7 @@ public class GenerateSearchResultDataset {
      */
     public static void main(String[] args) throws SQLException {
         ExecutorService pool = Executors.newFixedThreadPool(8);
-    	for (Question q : QuestionDB.fetch_without_results(0,85)) {
+    	for (Question q : DBQuestionSource.fetch_without_results(0,85)) {
     		pool.execute(new SingleTrainingResult(q));
     		//new SingleTrainingResult(q).run();
     	}
@@ -55,7 +55,7 @@ class SingleTrainingResult extends Thread {
 			uncollated_results.addAll(IndriSearcher.runQuery(q.text));
 			uncollated_results.addAll(LuceneSearcher.runQuery(q.text));
 			uncollated_results.addAll(GoogleSearcher.runQuery(q.text));
-			QuestionDB.replace_cache(q, uncollated_results);
+			DBQuestionSource.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.
 			System.out.print(".");
 			// Somewhere around once in 80 times..

@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class QuestionDB {
+public class DBQuestionSource extends QuestionSource {
+	private static final long serialVersionUID = 1L;
 	static Connection conn;
 	static PreparedStatement bulk_delete;
 	static PreparedStatement bulk_insert;
@@ -40,6 +41,10 @@ public class QuestionDB {
 		// JDBC's SQLite uses autocommit (So commit() is redundant)
 		// Furthermore, close() is a no-op as long as the results are commit()'d
 		// So don't bother adding code to do all that.
+	}	
+
+	public DBQuestionSource() throws Exception {
+		fetch_without_results(0, 100);
 	}
 	
 	/** Replace the results for a single question 
@@ -81,8 +86,8 @@ public class QuestionDB {
 		return questions;
 	}
 	
-	public static QuestionSource fetch_without_results(int start, int length) throws SQLException {
-		return new QuestionSource(fetch_map_without_results(start, length).values());
+	public void fetch_without_results(int start, int length) throws SQLException {
+		this.addAll(fetch_map_without_results(start, length).values());
 	}
 	
 	public static QuestionSource fetch_with_results(int start, int length) throws SQLException {

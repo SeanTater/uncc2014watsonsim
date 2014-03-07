@@ -19,6 +19,9 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
+import uncc2014watsonsim.search.IndriSearcher;
+import uncc2014watsonsim.search.LuceneSearcher;
+
 public class ScoreQMapIntegrationTest {
 	@Test
 	public void integrate() throws Exception {
@@ -53,8 +56,12 @@ class StatsGenerator {
 		//	QuestionSource questionsource = QuestionSource.from_json(reader);
 		//	return questionsource;
 		//}
-		return QuestionSource.from_db();
-		//return QuestionSource.from_live();
+		QuestionSource qs = new DBQuestionSource();
+		for (Question q : qs) {
+			q.addAll(new IndriSearcher().runQuery(q.text));
+			q.addAll(new LuceneSearcher().runQuery(q.text));
+		}
+		return qs;
 	}
 	QuestionSource questionsource;
 	// correct[n] =def= number of correct answers at rank n 
