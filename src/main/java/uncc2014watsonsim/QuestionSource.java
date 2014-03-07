@@ -50,7 +50,7 @@ public class QuestionSource extends ArrayList<Question> {
 	}
 	
 	public static QuestionSource from_db() throws SQLException {
-		return QuestionDB.fetch_with_results(0, 1000);
+		return QuestionDB.fetch_with_results(0, 85);
 	}
 	
 	public static QuestionSource from_json(String path) throws ParseException, FileNotFoundException, IOException {

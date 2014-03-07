@@ -49,11 +49,11 @@ class StatsGenerator {
 	 * @throws SQLException */
 	static QuestionSource getQuestionSource() throws Exception {
 		// Fetched sample data from the internet:
-		try (Reader reader = SampleData.get_url("main_v1.0.json.gz")) {
-			QuestionSource questionsource = QuestionSource.from_json(reader);
-			return questionsource;
-		}
-		//return QuestionSource.from_db();
+		//try (Reader reader = SampleData.get_url("main_v1.0.json.gz")) {
+		//	QuestionSource questionsource = QuestionSource.from_json(reader);
+		//	return questionsource;
+		//}
+		return QuestionSource.from_db();
 		//return QuestionSource.from_live();
 	}
 	QuestionSource questionsource;

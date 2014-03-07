@@ -87,6 +87,11 @@ run {
 }
 
 test {
+    download {
+        src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/questions.db"
+        dest "$projectDir/data"
+        onlyIfNewer true
+    }
     testLogging {
         exceptionFormat = 'full'
     }
