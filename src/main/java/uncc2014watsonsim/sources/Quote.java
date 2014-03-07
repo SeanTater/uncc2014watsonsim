@@ -3,7 +3,7 @@
  * @Purpose	For Indexing WikiQuotes. 
  * 		A helper class which represents a single document in an index
  */
-package uncc2014watsonsim.extras.sources;
+package uncc2014watsonsim.sources;
 
 import java.io.BufferedReader;
 import java.util.Scanner;

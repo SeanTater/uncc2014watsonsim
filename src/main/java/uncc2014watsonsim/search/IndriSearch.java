@@ -1,9 +1,10 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.search;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import privatedata.UserSpecificConstants;
+import uncc2014watsonsim.ResultSet;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;

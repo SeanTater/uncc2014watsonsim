@@ -2,7 +2,6 @@ package uncc2014watsonsim;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,8 +9,9 @@ import java.util.logging.Logger;
 
 public class Question extends ArrayList<ResultSet>{
 	private static final long serialVersionUID = 1L;
-	int id; // Question ID comes from the database and is optional.
-	String text, raw_text;
+	public int id; // Question ID comes from the database and is optional.
+	public String text;
+	String raw_text;
 	ResultSet answer;
     private String category = "unknown";
     private QType type;

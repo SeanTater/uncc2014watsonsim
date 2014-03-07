@@ -3,6 +3,10 @@ package uncc2014watsonsim;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
+
+import uncc2014watsonsim.search.IndriSearch;
+import uncc2014watsonsim.search.LuceneSearch;
+import uncc2014watsonsim.search.WebSearchGoogle;
 /**
  *
  * @author Phani Rahul

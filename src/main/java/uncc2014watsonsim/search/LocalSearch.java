@@ -1,6 +1,8 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.search;
 
 import java.util.List;
+
+import uncc2014watsonsim.ResultSet;
 
 /*
  * This interface might change; Please be ready to accomodate the changes.

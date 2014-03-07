@@ -2,7 +2,7 @@
  * Lucene library can do much more that what is being done in this program. 
  * Look at the lucene documentation to get more juice out of the library
  */
-package uncc2014watsonsim.extras.sources;
+package uncc2014watsonsim.sources;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,7 +29,7 @@ import org.apache.lucene.util.Version;
  * 				catch for one of the files in the short wikipedia which seems to have a formatting issue 
  * 				(and any others in the future which might)
  */
-public class IndexerLuceneDirectory {
+public class LuceneDirectoryIndexer {
 
     /**
      * the path to the directory where you want the index repository to be made.
@@ -107,7 +107,7 @@ public class IndexerLuceneDirectory {
             writer.close();// if we don't close the writer, the index isn't made.
             System.out.println("Done indexing at " + indexDirectory);
         } catch (IOException ex) {
-            Logger.getLogger(IndexerLuceneDirectory.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LuceneDirectoryIndexer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

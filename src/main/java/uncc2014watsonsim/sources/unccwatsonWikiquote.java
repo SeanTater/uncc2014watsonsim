@@ -5,7 +5,7 @@
  * Output is a series of text files with TREC formatted quotes.
  * Broken into a series of files with 1000 quote authors in ach file.
  */
-package uncc2014watsonsim.extras.sources;
+package uncc2014watsonsim.sources;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

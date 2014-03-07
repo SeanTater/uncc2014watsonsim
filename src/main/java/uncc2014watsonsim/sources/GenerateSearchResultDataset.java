@@ -1,4 +1,4 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.sources;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,6 +8,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import uncc2014watsonsim.Question;
+import uncc2014watsonsim.QuestionDB;
+import uncc2014watsonsim.ResultSet;
+import uncc2014watsonsim.search.IndriSearch;
+import uncc2014watsonsim.search.LuceneSearch;
+import uncc2014watsonsim.search.WebSearchGoogle;
 
 /**
  *

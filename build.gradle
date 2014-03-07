@@ -20,7 +20,6 @@ buildscript {
 
 // Dependencies and where to get them (some are nonstandard)
 repositories {
-    //maven {url "$projectDir/quickstart-lib/"}
     mavenCentral()
     maven {url "https://repo.eclipse.org/content/groups/releases/"}
     maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
@@ -61,37 +60,53 @@ dependencies {
 
 // Other Tasks
 apply plugin: 'download-task'
-task downloadAll << {
+def gdrive_decompress(filename) {
     download {
-        src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/questions.db"
+        src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/$filename"
         dest "$projectDir/data"
         onlyIfNewer true
     }
-    download {
-        src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/sources.db"
-        dest "$projectDir/data"
-        onlyIfNewer true
+    copy {
+        from tarTree("$projectDir/data/$filename")
+        into "$projectDir/data"
     }
+}
+
+task downloadRequired << {
+    gdrive_decompress("questions.db.tar.gz")
     download {
         src 'http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin'
         dest "$projectDir/data"
         onlyIfNewer true
     }
 }
+assemble.dependsOn downloadRequired
 
-run {
+task downloadOptional << {
+    gdrive_decompress("sources.db.tar.gz")
+}
+
+task(run_interactive, type: JavaExec) {
     // Allow reading from stdin
     standardInput = System.in
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
+    main "uncc2014watsonsim.WatsonSim"
+}
+
+task(run_cache_searches, dependsOn: downloadOptional, type: JavaExec) {
+    // Find Indri
+    systemProperty "java.library.path", file("$projectDir/lib")
+    main "uncc2014watsonsim.sources.GenerateSearchResultDataset"
+}
+
+task(run_index) {
+    // Find Indri
+    systemProperty "java.library.path", file("$projectDir/lib")
+    main "uncc2014watsonsim.sources.DBIndexer"
 }
 
 test {
-    download {
-        src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/questions.db"
-        dest "$projectDir/data"
-        onlyIfNewer true
-    }
     testLogging {
         exceptionFormat = 'full'
     }

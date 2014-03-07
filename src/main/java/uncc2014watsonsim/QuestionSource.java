@@ -18,6 +18,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import uncc2014watsonsim.search.IndriSearch;
+import uncc2014watsonsim.search.LuceneSearch;
+
 /**
  * @author Phani Rahul
  * @author Sean Gallagher

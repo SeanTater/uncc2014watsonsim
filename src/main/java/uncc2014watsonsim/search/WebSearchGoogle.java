@@ -1,4 +1,4 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.search;
 
 /*
  * Java Imports
@@ -9,6 +9,8 @@ import java.util.List;
 
 import privatedata.UserSpecificConstants;
 
+
+import uncc2014watsonsim.ResultSet;
 
 /*
  * Google API Imports

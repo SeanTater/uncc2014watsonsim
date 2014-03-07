@@ -1,4 +1,4 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.search;
 
 /*
  * This interface might change; Please be ready to accomodate the changes.
