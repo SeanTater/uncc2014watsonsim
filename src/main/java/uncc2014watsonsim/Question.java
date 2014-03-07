@@ -88,7 +88,7 @@ public class Question extends ArrayList<ResultSet> {
         if (!title.contains("Category:")
                 && !title.contains("List of")) {
             if (this.type == QType.FITB) {
-                Regex.matchFITB(raw_text);
+//                Regex.matchFITB(raw_text);
                 String newTitle = NameRecognition.hasNoun(title);
                 if ((newTitle.length()) > 0) {
                     cand.setTitle(newTitle);
