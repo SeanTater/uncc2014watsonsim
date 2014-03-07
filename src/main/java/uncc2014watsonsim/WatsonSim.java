@@ -13,12 +13,12 @@ import uncc2014watsonsim.search.GoogleSearcher;
  * @author Phani Rahul
  */
 public class WatsonSim {
-	static Learner learner = new AverageLearner();
 	static Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
 		new GoogleSearcher()
 	};
+	static Learner learner = new AverageLearner();
 
     /**
      * @param args the command line arguments
@@ -44,7 +44,7 @@ public class WatsonSim {
 	        learner.test(question);
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
-	        	ResultSet r = question.get(i);
+	        	Answer r = question.get(i);
                         String title = r.getTitle();
                         String aW[] = title.split(" ");
                         String qW[] = question.text.split(" ");
@@ -71,7 +71,7 @@ public class WatsonSim {
 	        System.out.println("Enter [0-9]+ to inspect full text, a question to search again, or enter to quit\n>>> ");
 	        command = br.readLine();
 	        while (command.matches("[0-9]+")) {
-	        	ResultSet rs = question.get(Integer.parseInt(command));
+	        	Answer rs = question.get(Integer.parseInt(command));
 	        	System.out.println("Full text for [" + rs.getTitle() + "]: \n" + rs.getFullText() + "\n");
 	        	command = br.readLine();
 	        }

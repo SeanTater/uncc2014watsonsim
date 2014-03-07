@@ -49,19 +49,19 @@ public class DBQuestionSource extends QuestionSource {
 	
 	/** Replace the results for a single question 
 	 * @throws SQLException */
-	public static void replace_cache(Question q, List<ResultSet> results) throws SQLException {
+	public static void replace_cache(Question q, List<Answer> results) throws SQLException {
 		// Get a list of results and populate the questions with them
 	    bulk_delete.setLong(1, q.id);
 	    bulk_delete.execute();
 	    
-		for (ResultSet r : results) {
+		for (Answer r : results) {
 			bulk_insert.setLong(1, q.id);
 			bulk_insert.setString(2, r.getTitle());
 			bulk_insert.setString(3, r.getFullText());
 			// In this case, we know there is exactly one engine so it is safe to access it.
-			bulk_insert.setString(4, r.engines.get(0).name);
-			bulk_insert.setLong(5, r.engines.get(0).rank);
-			bulk_insert.setDouble(6, r.engines.get(0).score);
+			bulk_insert.setString(4, r.docs.get(0).engine_name);
+			bulk_insert.setLong(5, r.docs.get(0).rank);
+			bulk_insert.setDouble(6, r.docs.get(0).score);
 			bulk_insert.addBatch();
 		}
 		bulk_insert.executeBatch();
@@ -98,7 +98,7 @@ public class DBQuestionSource extends QuestionSource {
 		bulk_select_results.setInt(2, Collections.max(questions.keySet()));
 		java.sql.ResultSet sql = bulk_select_results.executeQuery();
 		while(sql.next()){
-			questions.get(sql.getInt("question_id")).add(new uncc2014watsonsim.ResultSet(
+			questions.get(sql.getInt("question_id")).add(new uncc2014watsonsim.Answer(
 				sql.getString("title"),
 				sql.getString("fulltext"),
 				sql.getString("engine"),

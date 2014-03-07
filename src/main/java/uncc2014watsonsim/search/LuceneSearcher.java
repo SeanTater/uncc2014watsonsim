@@ -18,7 +18,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
-import uncc2014watsonsim.ResultSet;
+import uncc2014watsonsim.Answer;
 
 /**
  *
@@ -42,14 +42,14 @@ public class LuceneSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);
 	}
 
-	public synchronized List<ResultSet> runQuery(String q) throws Exception {
+	public synchronized List<Answer> runQuery(String q) throws Exception {
 		ScoreDoc[] hits = searcher.search(parser.parse(q), MAX_RESULTS).scoreDocs;
-		List<ResultSet> results = new ArrayList<ResultSet>(); 
+		List<Answer> results = new ArrayList<Answer>(); 
 		// This isn't range based because we need the rank
 		for (int i=0; i < MAX_RESULTS; i++) {
 			ScoreDoc s = hits[i];
 			Document doc = searcher.doc(s.doc);
-			results.add(new ResultSet(
+			results.add(new Answer(
 					doc.get("title"), // Title
 					doc.get("text"),  // Text
 					"lucene",         // Engine

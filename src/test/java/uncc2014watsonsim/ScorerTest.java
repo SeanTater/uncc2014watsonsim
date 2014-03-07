@@ -10,19 +10,19 @@ import org.junit.Test;
 public class ScorerTest {
 
 	// Setup possible inputs
-	ResultSet yahoo1;
-	ResultSet yahoo2;
-	ResultSet bing1;
-	ResultSet bing2;
+	Answer yahoo1;
+	Answer yahoo2;
+	Answer bing1;
+	Answer bing2;
 	Learner ml;
 	
 	@Before
 	public void setUp() {
 		// Setup possible inputs
-		yahoo1 = new ResultSet("Alligators", "text", "yahoo", 1, 0.75);
-		yahoo2 = new ResultSet("Eels", "text", "yahoo", 2, 0.38);
-		bing1 = new ResultSet("Alligators", "text", "bing", 1, 0.25);
-		bing2 = new ResultSet("Elk", "text", "bing", 2, 0.19);
+		yahoo1 = new Answer("Alligators", "text", "yahoo", 1, 0.75);
+		yahoo2 = new Answer("Eels", "text", "yahoo", 2, 0.38);
+		bing1 = new Answer("Alligators", "text", "bing", 1, 0.25);
+		bing2 = new Answer("Elk", "text", "bing", 2, 0.19);
 		ml = new AverageLearner();
 	}
 

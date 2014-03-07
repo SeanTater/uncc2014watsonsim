@@ -10,7 +10,7 @@ import java.util.List;
 import privatedata.UserSpecificConstants;
 
 
-import uncc2014watsonsim.ResultSet;
+import uncc2014watsonsim.Answer;
 
 /*
  * Google API Imports
@@ -54,8 +54,8 @@ public class GoogleSearcher extends Searcher {
 	/* (non-Javadoc)
 	 * @see WebSearch#runQuery(java.lang.String)
 	 */
-	public List<ResultSet> runQuery(String query) throws IOException {
-		List<ResultSet> results = new ArrayList<ResultSet>();
+	public List<Answer> runQuery(String query) throws IOException {
+		List<Answer> results = new ArrayList<Answer>();
 		//Check empty query
 		if (query.isEmpty())
 			return results;
@@ -74,7 +74,7 @@ public class GoogleSearcher extends Searcher {
 		List<Result> in_r = queryList.execute().getItems();
 		// Not a range for because we need rank
 		for (int i=0; i<in_r.size(); i++) {
-			results.add(new ResultSet(
+			results.add(new Answer(
 				in_r.get(i).getTitle(),  // Title 
 				in_r.get(i).getSnippet(),// "Full" Text
 				"google",                // Engine

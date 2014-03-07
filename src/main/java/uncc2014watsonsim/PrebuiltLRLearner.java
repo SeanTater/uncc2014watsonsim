@@ -9,10 +9,10 @@ public class PrebuiltLRLearner extends Learner {
 	
 	@Override
     public void test_implementation(Question question) {
-    	for (ResultSet result : question) {
-    		Engine lucene = result.first("lucene");
-    		Engine indri = result.first("indri");
-    		Engine combined = new Engine("combined", 0, 0);
+    	for (Answer result : question) {
+    		Document lucene = result.first("lucene");
+    		Document indri = result.first("indri");
+    		Document combined = new Document(result.getTitle(), result.getFullText(), null, "combined", 0, 0);
     		if (lucene != null && indri != null) {
     			combined.score = scoreBoth(indri.score, lucene.score);
     		} else if (lucene != null) {
@@ -22,7 +22,7 @@ public class PrebuiltLRLearner extends Learner {
     		}
     		// In any of the above three cases, but not the "else":
     		if (lucene != null || indri != null)
-    			result.engines.add(combined);
+    			result.docs.add(combined);
     	}
     }
     
@@ -42,8 +42,8 @@ public class PrebuiltLRLearner extends Learner {
 				- 4.102);
     }
     
-    class AnswerTitleComparator implements Comparator<ResultSet> {
-    	public int compare(ResultSet a, ResultSet b) {
+    class AnswerTitleComparator implements Comparator<Answer> {
+    	public int compare(Answer a, Answer b) {
     		return a.getTitle().compareToIgnoreCase(b.getTitle());
     	}
     }

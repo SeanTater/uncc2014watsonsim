@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.DBQuestionSource;
-import uncc2014watsonsim.ResultSet;
+import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.GoogleSearcher;
@@ -51,7 +51,7 @@ class SingleTrainingResult extends Thread {
 	
 	public void run() {
 		try {
-			List<ResultSet> uncollated_results = new ArrayList<ResultSet>(); 
+			List<Answer> uncollated_results = new ArrayList<Answer>(); 
 			uncollated_results.addAll(IndriSearcher.runQuery(q.text));
 			uncollated_results.addAll(LuceneSearcher.runQuery(q.text));
 			uncollated_results.addAll(GoogleSearcher.runQuery(q.text));

@@ -82,7 +82,7 @@ class StatsGenerator {
 	public void calculateConfidenceHistogram(Question question) {
 		if (question.size() >= 1) {
 			// Supposing there is at least one answer
-			ResultSet rs = question.get(0);
+			Answer rs = question.get(0);
 			// Clamp to [0, 99]
 			int bin = (int)(rs.first("combined").score * 100);
 			if(rs.equals(question.answer)) conf_correct[bin]++;
@@ -98,7 +98,7 @@ class StatsGenerator {
 		return out;
 	}
 	
-	public void onCorrectAnswer(Question question, ResultSet candidate, int rank) {
+	public void onCorrectAnswer(Question question, Answer candidate, int rank) {
 		total_inverse_rank += 1 / ((double)rank + 1);
 		available++;
 		// Clamp the rank to 100. Past that we don't have a histogram.
@@ -148,12 +148,12 @@ class StatsGenerator {
 		for (Question question : questionsource) {
 			if (question.size() == 0) continue;
 			new AverageLearner().test(question);
-			ResultSet top_answer = question.get(0);
+			Answer top_answer = question.get(0);
 			assertNotNull(top_answer);
 			assertThat(top_answer.getTitle().length(), not(0));
 	
 			for (int rank=0; rank<question.size(); rank++) {
-				ResultSet candidate = question.get(rank);
+				Answer candidate = question.get(rank);
 				if(candidate.equals(question.answer)) {
 					onCorrectAnswer(question, candidate, rank);
 					break;

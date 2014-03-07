@@ -11,50 +11,41 @@ import org.json.simple.JSONObject;
  * @author Phani Rahul
  * @author Sean Gallagher
  */
-public class ResultSet implements Comparable<ResultSet> {
+public class Answer implements Comparable<Answer> {
+    public List<Document> docs = new ArrayList<Document>();
 
-    private List<String> titles = new ArrayList<String>();
-    private List<String> full_texts = new ArrayList<String>();
-    public List<Engine> engines = new ArrayList<Engine>();
-
-    /** Create a ResultSet with one implicitly defined Engine */
-    public ResultSet(String title, String full_text, String engine, long rank, double score) {
-        this.titles.add(title);
-        this.full_texts.add(full_text);
-        this.engines.add(new Engine(engine, rank, score));
+    /** Create an Answer with one implicitly defined Engine */
+    public Answer(String title, String full_text, String engine, long rank, double score) {
+        this.docs.add(new Document(title, full_text, null, engine, rank, score));
     }
     
-    /** Create a ResultSet (with engine) from JSON */
-	public ResultSet(String engine_name, JSONObject attr) {
+    /** Create an Answer (with engine) from JSON */
+	public Answer(String engine_name, JSONObject attr) {
 		// There is a bit of redundancy: the engine name is in every attribute
-        titles.add((String) attr.get(String.format("%s_title", engine_name)));
+        String title = (String) attr.get(String.format("%s_title", engine_name));
         long rank = (long) attr.get(String.format("%s_rank", engine_name));
         double score = (double) attr.get(String.format("%s_score", engine_name));
-        engines.add(new Engine(engine_name, rank, score));
+        docs.add(new Document(title, "", null, engine_name, rank, score));
 	}
-    
-    /** Copy constructor */
-    public ResultSet(ResultSet resultset) {
-    	titles.add(resultset.getTitle());
-    }
+	
     /** some discussion has to be made on how this has to work. Not finalized*/
-    public void setTitle(String title){
-        titles.add(0, title);
+    public void setTitle(String title) {
+    	docs.get(0).title = title;
     }
     /** Get the primary title for this record */
     public String getTitle() {
     	// TODO: Consider a way of making a title from multiple titles
     	// NLP realm?
-    	String shortest_title = titles.get(0);
-    	for (String title : titles)
-    		if (title.length() < shortest_title.length())
-    			shortest_title = title;
+    	String shortest_title = docs.get(0).title;
+    	for (Document doc : docs)
+    		if (doc.title.length() < shortest_title.length())
+    			shortest_title = doc.title;
         return shortest_title;
     }
     
     /** Get the primary full text for this record */
     public String getFullText() {
-    	return full_texts.get(0);
+    	return docs.get(0).text;
     }
 
     @Override
@@ -78,17 +69,17 @@ public class ResultSet implements Comparable<ResultSet> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ResultSet other = (ResultSet) obj;
+        final Answer other = (Answer) obj;
         
         // Now real code: compare titles
         // TODO: NLP could do this better
         // How far to go?
         
         // Here be dragons: This is (title_count^2 * title_length^3) complexity!
-        for (String t1 : this.titles) {
-        	t1 = t1.replaceFirst("\\(.*\\)", "");
-        	for (String t2 : other.titles) {
-        		t2 = t2.replaceFirst("\\(.*\\)", "");
+        for (Document doc1 : this.docs) {
+        	String t1 = doc1.title.replaceFirst("\\(.*\\)", "");
+        	for (Document doc2 : other.docs) {
+        		String t2 = doc2.title.replaceFirst("\\(.*\\)", "");
                 // 2: Up to half of the shorter answer
         		
                 int threshold = Math.min(t1.length(), t2.length()) / 2;
@@ -104,7 +95,7 @@ public class ResultSet implements Comparable<ResultSet> {
     public String toString() {
     	// Make a short view of the engines as single-letter abbreviations
     	String engines = "";
-    	for (Engine e: this.engines) engines += e.name.substring(0, 1);
+    	for (Document e: this.docs) engines += e.engine_name.substring(0, 1);
     	
     	// ResultSet don't know if they are correct anymore..
     	//String correct = isCorrect() ? "✓" : "✗";
@@ -114,10 +105,10 @@ public class ResultSet implements Comparable<ResultSet> {
     }
     
     /** Fetch the first Engine with this name if it exists (otherwise null) */
-    public Engine first(String name) {
+    public Document first(String name) {
         // A linear search of 3 or 4 engines is probably not bad
-		for (Engine e: engines) {
-			if (e.name.equals(name)) {
+		for (Document e: docs) {
+			if (e.engine_name.equals(name)) {
 				return e;
 			}
 		}
@@ -125,23 +116,18 @@ public class ResultSet implements Comparable<ResultSet> {
     }
     
     @Override
-	public int compareTo(ResultSet other) {
-    	Engine us = first("combined");
-    	Engine them = other.first("combined");
+	public int compareTo(Answer other) {
+    	Document us = first("combined");
+    	Document them = other.first("combined");
     	if (us == null || them == null)
     		// Comparing a resultset without a combined engine is undefined
     		return 0;
     	return new Double(us.score).compareTo(new Double(them.score));
 	}
     
-    /** Change this ResultSet to include all the information of another */
-    public void merge(ResultSet other) {
-    	engines.addAll(other.engines);
-    	titles.addAll(other.titles);
-    	// Only add non-empty full texts
-    	for (String full_text : other.full_texts)
-    		if (!full_text.isEmpty())
-    			full_texts.add(full_text);
+    /** Change this Answer to include all the information of another */
+    public void merge(Answer other) {
+    	docs.addAll(other.docs);
     }
     
 }

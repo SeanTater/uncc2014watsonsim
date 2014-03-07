@@ -7,10 +7,10 @@ public class AverageLearner extends Learner {
 	
 	@Override
 	public void test_implementation(Question question) {
-		for (ResultSet result : question) {
+		for (Answer result : question) {
 			double score = 0;
 			int count = 0;
-			for (Engine engine : result.engines) {
+			for (Document engine : result.docs) {
 				score += engine.score;
 				count++;
 			}
@@ -18,7 +18,7 @@ public class AverageLearner extends Learner {
 			score /= count;
 			// Logistic function
 			score = logistic(score);
-			result.engines.add(new Engine("combined", count, score));
+			result.docs.add(new Document(result.getTitle(), result.getFullText(), null, "combined", count, score));
 		}
 	}
 	

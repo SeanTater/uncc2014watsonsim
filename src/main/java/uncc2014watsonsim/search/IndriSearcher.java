@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import privatedata.UserSpecificConstants;
-import uncc2014watsonsim.ResultSet;
+import uncc2014watsonsim.Answer;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
@@ -28,7 +28,7 @@ public class IndriSearcher extends Searcher {
 		}
 	}
 
-	public List<ResultSet> runQuery(String query) throws Exception {
+	public List<Answer> runQuery(String query) throws Exception {
 		// Run the query
 		ScoredExtentResult[] ser = IndriSearcher.q
 				.runQuery(query, MAX_RESULTS);
@@ -36,9 +36,9 @@ public class IndriSearcher extends Searcher {
 		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
 		ParsedDocument[] full_texts = IndriSearcher.q.documents(ser);
 		// Compile them into a uniform format
-		List<ResultSet> results = new ArrayList<ResultSet>();
+		List<Answer> results = new ArrayList<Answer>();
 		for (int i=0; i<ser.length; i++) {
-	    	results.add(new ResultSet(
+	    	results.add(new Answer(
 				titles[i],          // Title
 				full_texts[i].text, // Full Text
 				"indri",            // Engine

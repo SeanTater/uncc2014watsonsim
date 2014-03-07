@@ -2,7 +2,7 @@ package uncc2014watsonsim.search;
 
 import java.util.List;
 
-import uncc2014watsonsim.ResultSet;
+import uncc2014watsonsim.Answer;
 
 /*
  * This interface might change; Please be ready to accomodate the changes.
@@ -31,7 +31,7 @@ public abstract class Searcher {
      * @param query
      * @throws Exception 
      */
-    public abstract List<ResultSet> runQuery(String query) throws Exception;
+    public abstract List<Answer> runQuery(String query) throws Exception;
 
     /**
      * How many results should Lucene and Indri return?

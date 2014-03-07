@@ -7,12 +7,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Question extends ArrayList<ResultSet>{
+public class Question extends ArrayList<Answer>{
 	private static final long serialVersionUID = 1L;
 	public int id; // Question ID comes from the database and is optional.
 	public String text;
 	String raw_text;
-	ResultSet answer;
+	Answer answer;
     private String category = "unknown";
     private QType type;
 
@@ -44,7 +44,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public static Question known(String question, String answer) {
         Question q = new Question(question);
-        q.answer = new ResultSet(answer, answer, "answer", 0, 1);
+        q.answer = new Answer(answer, answer, "answer", 0, 1);
         return q;
     }
 
@@ -53,7 +53,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public static Question known(String question, String answer, String category) {
         Question q = new Question(question);
-        q.answer = new ResultSet(answer, answer, "answer", 0, 1);
+        q.answer = new Answer(answer, answer, "answer", 0, 1);
         q.setCategory(category);
         return q;
     }
@@ -78,7 +78,7 @@ public class Question extends ArrayList<ResultSet>{
     /**
      * Add a new result candidate
      */
-    public boolean add(ResultSet cand) {
+    public boolean add(Answer cand) {
 //		for (ResultSet existing : this) {
 //			if (existing.equals(cand)) {
 //				existing.merge(cand);
@@ -104,9 +104,9 @@ public class Question extends ArrayList<ResultSet>{
     }
 
     @Override
-    public boolean addAll(Collection<? extends ResultSet> c) {
+    public boolean addAll(Collection<? extends Answer> c) {
         boolean changed = false;
-        for (ResultSet rs : c) {
+        for (Answer rs : c) {
             changed |= add(rs);
         }
         return changed;

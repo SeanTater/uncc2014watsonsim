@@ -49,7 +49,7 @@ public class JSONQuestionSource extends QuestionSource {
 	        		Iterator<JSONObject> iitr = ((JSONArray) question_json.get(engine_name)).iterator();
 	                while (iitr.hasNext()) {
 	                    JSONObject res = iitr.next();
-	                    question.add(new ResultSet(engine_name, res));
+	                    question.add(new Answer(engine_name, res));
 	                    
 	                    /*TODO: This limits support to lucene and indri
 	                    switch (engine_s) {
