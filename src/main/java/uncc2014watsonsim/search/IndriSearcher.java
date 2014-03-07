@@ -13,7 +13,7 @@ import lemurproject.indri.ScoredExtentResult;
  *
  * @author Phani Rahul
  */
-public class IndriSearch{
+public class IndriSearcher extends Searcher {
 	private static QueryEnvironment q;
 	static {
 		// Only initialize the query environment and index once
@@ -28,13 +28,13 @@ public class IndriSearch{
 		}
 	}
 
-	public static List<ResultSet> runQuery(String query) throws Exception {
+	public List<ResultSet> runQuery(String query) throws Exception {
 		// Run the query
-		ScoredExtentResult[] ser = IndriSearch.q
-				.runQuery(query, LocalSearch.MAX_RESULTS);
+		ScoredExtentResult[] ser = IndriSearcher.q
+				.runQuery(query, MAX_RESULTS);
 		// Fetch all titles, texts
-		String[] titles = IndriSearch.q.documentMetadata(ser, "title");
-		ParsedDocument[] full_texts = IndriSearch.q.documents(ser);
+		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
+		ParsedDocument[] full_texts = IndriSearcher.q.documents(ser);
 		// Compile them into a uniform format
 		List<ResultSet> results = new ArrayList<ResultSet>();
 		for (int i=0; i<ser.length; i++) {

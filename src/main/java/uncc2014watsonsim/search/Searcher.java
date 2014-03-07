@@ -15,7 +15,7 @@ import uncc2014watsonsim.ResultSet;
  *
  * @author Phani Rahul
  */
-public interface LocalSearch {
+public abstract class Searcher {
 
     /**
      * Runs the <i>query</i>, populating a list of ResultSets
@@ -31,7 +31,7 @@ public interface LocalSearch {
      * @param query
      * @throws Exception 
      */
-    public List<ResultSet> runQuery(String query) throws Exception;
+    public abstract List<ResultSet> runQuery(String query) throws Exception;
 
     /**
      * How many results should Lucene and Indri return?

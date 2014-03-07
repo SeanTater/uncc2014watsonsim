@@ -12,9 +12,9 @@ import java.util.logging.Logger;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.QuestionDB;
 import uncc2014watsonsim.ResultSet;
-import uncc2014watsonsim.search.IndriSearch;
-import uncc2014watsonsim.search.LuceneSearch;
-import uncc2014watsonsim.search.WebSearchGoogle;
+import uncc2014watsonsim.search.IndriSearcher;
+import uncc2014watsonsim.search.LuceneSearcher;
+import uncc2014watsonsim.search.GoogleSearcher;
 
 /**
  *
@@ -52,9 +52,9 @@ class SingleTrainingResult extends Thread {
 	public void run() {
 		try {
 			List<ResultSet> uncollated_results = new ArrayList<ResultSet>(); 
-			uncollated_results.addAll(IndriSearch.runQuery(q.text));
-			uncollated_results.addAll(LuceneSearch.runQuery(q.text));
-			uncollated_results.addAll(WebSearchGoogle.runQuery(q.text));
+			uncollated_results.addAll(IndriSearcher.runQuery(q.text));
+			uncollated_results.addAll(LuceneSearcher.runQuery(q.text));
+			uncollated_results.addAll(GoogleSearcher.runQuery(q.text));
 			QuestionDB.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.
 			System.out.print(".");

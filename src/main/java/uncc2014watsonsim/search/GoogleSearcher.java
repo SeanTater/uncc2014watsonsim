@@ -24,7 +24,6 @@ import com.google.api.services.customsearch.Customsearch;
 import com.google.api.services.customsearch.Customsearch.Cse;
 import com.google.api.services.customsearch.CustomsearchRequestInitializer;
 import com.google.api.services.customsearch.model.Result;
-import com.google.api.services.customsearch.model.Search;
 
 /**
  * @author Jonathan Shuman
@@ -32,7 +31,7 @@ import com.google.api.services.customsearch.model.Search;
  * 			 with ITCS 4010 Watson Class at UNCC
  *
  */
-public class WebSearchGoogle {
+public class GoogleSearcher extends Searcher {
 	static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	//Initialized Key
@@ -55,7 +54,7 @@ public class WebSearchGoogle {
 	/* (non-Javadoc)
 	 * @see WebSearch#runQuery(java.lang.String)
 	 */
-	public static List<ResultSet> runQuery(String query) throws IOException {
+	public List<ResultSet> runQuery(String query) throws IOException {
 		List<ResultSet> results = new ArrayList<ResultSet>();
 		//Check empty query
 		if (query.isEmpty())

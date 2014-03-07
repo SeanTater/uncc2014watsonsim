@@ -14,7 +14,7 @@ public class ScorerTest {
 	ResultSet yahoo2;
 	ResultSet bing1;
 	ResultSet bing2;
-	AverageScorer ml;
+	Learner ml;
 	
 	@Before
 	public void setUp() {
@@ -23,7 +23,7 @@ public class ScorerTest {
 		yahoo2 = new ResultSet("Eels", "text", "yahoo", 2, 0.38);
 		bing1 = new ResultSet("Alligators", "text", "bing", 1, 0.25);
 		bing2 = new ResultSet("Elk", "text", "bing", 2, 0.19);
-		ml = new AverageScorer();
+		ml = new AverageLearner();
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class ScorerTest {
 		q.add(yahoo1);
 		ml.test(q);
 		assertEquals(q.get(0), yahoo1);
-		assertEquals(q.get(0).first("combined").score, AverageScorer.logistic(0.75), 0.001);
+		assertEquals(q.get(0).first("combined").score, AverageLearner.logistic(0.75), 0.001);
 	}
 	
 	@Test
@@ -44,7 +44,7 @@ public class ScorerTest {
 		q.add(bing1);
 		ml.test(q);
 		assertEquals(q.get(0), yahoo1);
-		assertEquals(q.get(0).first("combined").score, AverageScorer.logistic(0.5), 0.001);
+		assertEquals(q.get(0).first("combined").score, AverageLearner.logistic(0.5), 0.001);
 	}
 		
 	@Test

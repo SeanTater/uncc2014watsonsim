@@ -18,8 +18,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import uncc2014watsonsim.search.IndriSearch;
-import uncc2014watsonsim.search.LuceneSearch;
+import uncc2014watsonsim.search.IndriSearcher;
+import uncc2014watsonsim.search.LuceneSearcher;
 
 /**
  * @author Phani Rahul
@@ -46,8 +46,8 @@ public class QuestionSource extends ArrayList<Question> {
 	public static QuestionSource from_live() throws Exception {
 		QuestionSource q_source = QuestionDB.fetch_without_results(0, 100);
 		for (Question q : q_source) {
-			q.addAll(IndriSearch.runQuery(q.text));
-			q.addAll(LuceneSearch.runQuery(q.text));
+			q.addAll(IndriSearcher.runQuery(q.text));
+			q.addAll(LuceneSearcher.runQuery(q.text));
 		}
 		return q_source;
 	}

@@ -24,7 +24,7 @@ import uncc2014watsonsim.ResultSet;
  *
  * @author Phani Rahul
  */
-public class LuceneSearch {
+public class LuceneSearcher extends Searcher {
 	private static IndexReader reader;
 	private static IndexSearcher searcher = null;
 	private static Analyzer analyzer;
@@ -42,11 +42,11 @@ public class LuceneSearch {
 		searcher = new IndexSearcher(reader);
 	}
 
-	public synchronized static List<ResultSet> runQuery(String q) throws Exception {
-		ScoreDoc[] hits = searcher.search(parser.parse(q), LocalSearch.MAX_RESULTS).scoreDocs;
+	public synchronized List<ResultSet> runQuery(String q) throws Exception {
+		ScoreDoc[] hits = searcher.search(parser.parse(q), MAX_RESULTS).scoreDocs;
 		List<ResultSet> results = new ArrayList<ResultSet>(); 
 		// This isn't range based because we need the rank
-		for (int i=0; i < LocalSearch.MAX_RESULTS; i++) {
+		for (int i=0; i < MAX_RESULTS; i++) {
 			ScoreDoc s = hits[i];
 			Document doc = searcher.doc(s.doc);
 			results.add(new ResultSet(

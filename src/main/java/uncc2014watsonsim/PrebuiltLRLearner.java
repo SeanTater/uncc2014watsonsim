@@ -1,31 +1,14 @@
 package uncc2014watsonsim;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 
-import org.json.simple.parser.ParseException;
-
-class AnswerTitleComparator implements Comparator<ResultSet> {
-	public int compare(ResultSet a, ResultSet b) {
-		return a.getTitle().compareToIgnoreCase(b.getTitle());
-	}
-}
-
-public class PrebuiltLRScorer {
+public class PrebuiltLRLearner extends Learner {
     /** Correlates search results for improved accuracy
      * It uses models prebuilt from Weka so it only makes sense to use this
      * implementation with Lucene and Indri*/
-	public PrebuiltLRScorer() {}
-	public PrebuiltLRScorer(String filename) throws FileNotFoundException, ParseException, IOException {
-		train(QuestionSource.from_json(filename));
-	}
+	public PrebuiltLRLearner() {}
 	
-	public void train(QuestionSource dataset) {
-		// No-op until ML code is added
-	}
-	
-    public Question test(Question question) {
-    	
+	@Override
+    public void test_implementation(Question question) {
     	for (ResultSet result : question) {
     		Engine lucene = result.first("lucene");
     		Engine indri = result.first("indri");
@@ -41,9 +24,6 @@ public class PrebuiltLRScorer {
     		if (lucene != null || indri != null)
     			result.engines.add(combined);
     	}
-    	Collections.sort(question);
-    	Collections.reverse(question);
-    	return question;
     }
     
     double sigmoid(double x) {
@@ -60,5 +40,11 @@ public class PrebuiltLRScorer {
     	return sigmoid(-0.1592 * indri
     			+ 0.4838 * lucene
 				- 4.102);
+    }
+    
+    class AnswerTitleComparator implements Comparator<ResultSet> {
+    	public int compare(ResultSet a, ResultSet b) {
+    		return a.getTitle().compareToIgnoreCase(b.getTitle());
+    	}
     }
 }

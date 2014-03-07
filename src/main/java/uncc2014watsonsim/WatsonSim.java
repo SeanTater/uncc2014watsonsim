@@ -4,14 +4,21 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
-import uncc2014watsonsim.search.IndriSearch;
-import uncc2014watsonsim.search.LuceneSearch;
-import uncc2014watsonsim.search.WebSearchGoogle;
+import uncc2014watsonsim.search.IndriSearcher;
+import uncc2014watsonsim.search.LuceneSearcher;
+import uncc2014watsonsim.search.Searcher;
+import uncc2014watsonsim.search.GoogleSearcher;
 /**
  *
  * @author Phani Rahul
  */
 public class WatsonSim {
+	static Learner learner = new AverageLearner();
+	static Searcher[] searchers = {
+		new LuceneSearcher(),
+		new IndriSearcher(),
+		new GoogleSearcher()
+	};
 
     /**
      * @param args the command line arguments
@@ -30,16 +37,11 @@ public class WatsonSim {
 	        ignoreSet.add("J! Archive");
 	        ignoreSet.add("Jeopardy");
 	        
-	        //initialize indri and query
-        	question.addAll(IndriSearch.runQuery(question.text));
-	
-	        //initialize and query lucene
-	        question.addAll(LuceneSearch.runQuery(question.text));
-	
-	        //initialize google search engine and query.
-	        question.addAll(WebSearchGoogle.runQuery(question.text));
+	        for (Searcher s : searchers)
+	        	// Query every engine
+	        	question.addAll(s.runQuery(question.text));
 	        
-	        new AverageScorer().test(question);
+	        learner.test(question);
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
 	        	ResultSet r = question.get(i);

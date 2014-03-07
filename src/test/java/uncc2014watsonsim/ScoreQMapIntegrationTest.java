@@ -24,7 +24,7 @@ public class ScoreQMapIntegrationTest {
 	public void integrate() throws Exception {
 		QuestionSource questionmap = StatsGenerator.getQuestionSource();
 		for (Question question : questionmap) if (question.raw_text.equals("This London borough is the G in GMT squire")) {
-			new AverageScorer().test(question);
+			new AverageLearner().test(question);
 			String top_answer = question.get(0).getTitle();
 			assertNotNull(top_answer);
 			assertThat(top_answer.length(), not(0));
@@ -140,7 +140,7 @@ class StatsGenerator {
 		long start_time = System.nanoTime();
 		for (Question question : questionsource) {
 			if (question.size() == 0) continue;
-			new AverageScorer().test(question);
+			new AverageLearner().test(question);
 			ResultSet top_answer = question.get(0);
 			assertNotNull(top_answer);
 			assertThat(top_answer.getTitle().length(), not(0));
