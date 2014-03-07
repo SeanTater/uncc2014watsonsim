@@ -90,7 +90,7 @@ public class DBQuestionSource extends QuestionSource {
 		this.addAll(fetch_map_without_results(start, length).values());
 	}
 	
-	public static QuestionSource fetch_with_results(int start, int length) throws SQLException {
+	public QuestionSource fetch_with_results(int start, int length) throws SQLException {
 	    Map<Integer, Question> questions = fetch_map_without_results(start, length);
 		// Get a list of results and populate the questions with them
 	    System.out.println("look for q from " + Collections.min(questions.keySet()) + " to " + Collections.max(questions.keySet()));

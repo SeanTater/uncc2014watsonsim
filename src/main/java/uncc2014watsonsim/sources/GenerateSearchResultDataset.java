@@ -28,7 +28,7 @@ public class GenerateSearchResultDataset {
      */
     public static void main(String[] args) throws SQLException {
         ExecutorService pool = Executors.newFixedThreadPool(8);
-    	for (Question q : DBQuestionSource.fetch_without_results(0,85)) {
+    	for (Question q : new DBQuestionSource().fetch_without_results(0,85)) {
     		pool.execute(new SingleTrainingResult(q));
     		//new SingleTrainingResult(q).run();
     	}

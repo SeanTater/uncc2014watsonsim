@@ -100,7 +100,7 @@ task(run_cache_searches, dependsOn: downloadOptional, type: JavaExec) {
     main "uncc2014watsonsim.sources.GenerateSearchResultDataset"
 }
 
-task(run_index) {
+task(run_index, type: JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
     main "uncc2014watsonsim.sources.DBIndexer"
