@@ -31,7 +31,8 @@ public class IndriSearcher extends Searcher {
 	public List<Answer> runQuery(String query) throws Exception {
 		// Run the query
 		ScoredExtentResult[] ser = IndriSearcher.q
-				.runQuery(query, MAX_RESULTS);
+				.runQuery(String.format(UserSpecificConstants.indriResultsFilter,query), 
+						MAX_RESULTS);
 		// Fetch all titles, texts
 		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
 		ParsedDocument[] full_texts = IndriSearcher.q.documents(ser);
