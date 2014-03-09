@@ -33,6 +33,7 @@ public class LuceneSearch {
 	static {
 		analyzer = new StandardAnalyzer(Version.LUCENE_46);
 		parser = new QueryParser(Version.LUCENE_46, UserSpecificConstants.luceneSearchField, analyzer);
+		parser.setAllowLeadingWildcard(true);		
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
 		} catch (IOException e) {
@@ -43,7 +44,7 @@ public class LuceneSearch {
 	}
 
 	public synchronized static List<ResultSet> runQuery(String q) throws Exception {
-		ScoreDoc[] hits = searcher.search(parser.parse(q), LocalSearch.MAX_RESULTS).scoreDocs;
+		ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), LocalSearch.MAX_RESULTS).scoreDocs;
 		List<ResultSet> results = new ArrayList<ResultSet>(); 
 		// This isn't range based because we need the rank
 		for (int i=0; i < LocalSearch.MAX_RESULTS; i++) {

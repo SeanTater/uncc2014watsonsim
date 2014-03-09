@@ -31,7 +31,8 @@ public class IndriSearch{
 	public static List<ResultSet> runQuery(String query) throws Exception {
 		// Run the query
 		ScoredExtentResult[] ser = IndriSearch.q
-				.runQuery(query, LocalSearch.MAX_RESULTS);
+				.runQuery(String.format(UserSpecificConstants.indriResultsFilter,query), 
+						LocalSearch.MAX_RESULTS);
 		// Fetch all titles, texts
 		String[] titles = IndriSearch.q.documentMetadata(ser, "title");
 		ParsedDocument[] full_texts = IndriSearch.q.documents(ser);
