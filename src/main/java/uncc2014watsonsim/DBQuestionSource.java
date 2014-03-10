@@ -22,7 +22,6 @@ public class DBQuestionSource extends QuestionSource {
 		    Class.forName("org.sqlite.JDBC");
 			conn = DriverManager.getConnection("jdbc:sqlite:data" + File.separator + "questions.db");
 			conn.createStatement().execute("PRAGMA journal_mode = TRUNCATE;");
-			conn.createStatement().execute("PRAGMA journal_size_limit = 1048576;"); // 1MB
 			conn.createStatement().execute("PRAGMA synchronous = OFF;");
 			
 			bulk_delete = conn.prepareStatement("delete from results where question = ?");

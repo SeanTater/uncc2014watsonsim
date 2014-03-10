@@ -18,6 +18,9 @@ public class WatsonSim {
 		new IndriSearcher(),
 		new GoogleSearcher()
 	};
+	static Researcher[] researchers = {
+		
+	};
 	static Learner learner = new AverageLearner();
 
     /**
@@ -40,6 +43,10 @@ public class WatsonSim {
 	        for (Searcher s : searchers)
 	        	// Query every engine
 	        	question.addAll(s.runQuery(question.text));
+	        
+        	for (Researcher r : researchers)
+        		r.research(question);
+	        	
 	        
 	        learner.test(question);
 	        // Not a range-based for because we want the rank

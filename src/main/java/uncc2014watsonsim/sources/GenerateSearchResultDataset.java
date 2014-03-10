@@ -15,6 +15,7 @@ import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.GoogleSearcher;
+import uncc2014watsonsim.search.Searcher;
 
 /**
  *
@@ -24,11 +25,13 @@ public class GenerateSearchResultDataset {
 
     /**
      * @param args the command line arguments
-     * @throws SQLException 
+     * @throws Exception 
      */
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws Exception {
         ExecutorService pool = Executors.newFixedThreadPool(8);
-    	for (Question q : new DBQuestionSource().fetch_without_results(0,85)) {
+        DBQuestionSource dbquestions = new DBQuestionSource();
+        dbquestions.fetch_without_results(3162,50);
+    	for (Question q : dbquestions) {
     		pool.execute(new SingleTrainingResult(q));
     		//new SingleTrainingResult(q).run();
     	}
@@ -44,6 +47,11 @@ public class GenerateSearchResultDataset {
 
 class SingleTrainingResult extends Thread {
 	Question q;
+	static Searcher[] searchers = {
+		new LuceneSearcher(),
+		new IndriSearcher(),
+		new GoogleSearcher()
+	};
 	
 	public SingleTrainingResult(Question q) {
 		this.q = q;
@@ -52,9 +60,9 @@ class SingleTrainingResult extends Thread {
 	public void run() {
 		try {
 			List<Answer> uncollated_results = new ArrayList<Answer>(); 
-			uncollated_results.addAll(IndriSearcher.runQuery(q.text));
-			uncollated_results.addAll(LuceneSearcher.runQuery(q.text));
-			uncollated_results.addAll(GoogleSearcher.runQuery(q.text));
+			for (Searcher searcher : searchers) {
+				uncollated_results.addAll(searcher.runQuery(q.text));
+			}
 			DBQuestionSource.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.
 			System.out.print(".");
