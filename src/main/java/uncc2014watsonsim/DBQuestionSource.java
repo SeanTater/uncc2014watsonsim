@@ -1,4 +1,5 @@
 package uncc2014watsonsim;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -44,7 +45,7 @@ public class DBQuestionSource extends QuestionSource {
 	}	
 
 	public DBQuestionSource() throws Exception {
-		fetch_without_results(0, 100);
+		//fetch_without_results(0, 100);
 	}
 	
 	/** Replace the results for a single question 
@@ -67,7 +68,7 @@ public class DBQuestionSource extends QuestionSource {
 		bulk_insert.executeBatch();
 	}
 	
-	public static Map<Integer, Question> fetch_map_without_results(int start, int length) throws SQLException {
+	public Map<Integer, Question> fetch_map_without_results(int start, int length) throws SQLException {
 		// Get a list of questions, ordered so that it is consistent
 		bulk_select_questions.setInt(1, start);
 		bulk_select_questions.setInt(2, length);
@@ -108,4 +109,5 @@ public class DBQuestionSource extends QuestionSource {
 		}
 		return new QuestionSource(questions.values());
 	}
+
 }

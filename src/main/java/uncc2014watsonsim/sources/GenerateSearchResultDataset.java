@@ -24,11 +24,14 @@ public class GenerateSearchResultDataset {
 
     /**
      * @param args the command line arguments
-     * @throws SQLException 
+     * @throws Exception 
      */
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws Exception {
         ExecutorService pool = Executors.newFixedThreadPool(8);
-    	for (Question q : new DBQuestionSource().fetch_without_results(0,85)) {
+        
+        DBQuestionSource db = new DBQuestionSource();
+        
+    	for (Question q : db.fetch_map_without_results(0,85).values()) {
     		pool.execute(new SingleTrainingResult(q));
     		//new SingleTrainingResult(q).run();
     	}
@@ -50,11 +53,16 @@ class SingleTrainingResult extends Thread {
 	}
 	
 	public void run() {
+		
+		IndriSearcher in = new IndriSearcher();
+		LuceneSearcher lu = new LuceneSearcher();
+		GoogleSearcher go = new GoogleSearcher();
+		
 		try {
 			List<Answer> uncollated_results = new ArrayList<Answer>(); 
-			uncollated_results.addAll(IndriSearcher.runQuery(q.text));
-			uncollated_results.addAll(LuceneSearcher.runQuery(q.text));
-			uncollated_results.addAll(GoogleSearcher.runQuery(q.text));
+			uncollated_results.addAll(in.runQuery(q.text));
+			uncollated_results.addAll(lu.runQuery(q.text));
+			uncollated_results.addAll(go.runQuery(q.text));
 			DBQuestionSource.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.
 			System.out.print(".");

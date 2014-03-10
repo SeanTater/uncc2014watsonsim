@@ -2,7 +2,9 @@ package uncc2014watsonsim;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
@@ -30,6 +32,7 @@ public class WatsonSim {
         System.out.println("Enter the jeopardy text: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = br.readLine();
+        ArrayList<Answer> toBeMerged = null;
         
     	while (!command.isEmpty()) {
             Question question = new Question(command);
@@ -41,7 +44,10 @@ public class WatsonSim {
 	        	// Query every engine
 	        	question.addAll(s.runQuery(question.text));
 	        
+	        toBeMerged = new ArrayList<Answer>();
+	        
 	        learner.test(question);
+	        //MergeResults finalResults = new MergeResults(question);
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
 	        	Answer r = question.get(i);
@@ -64,9 +70,15 @@ public class WatsonSim {
                         }
                         r.setTitle(newTitle.toString());
 	        	System.out.println(String.format("%2d: %s", i, r));
+                //toBeMerged.add(r);
 	        }
 	        
-	
+	        /*FinalResult f = MergeResults.merge(toBeMerged);
+	        
+	        for(Entry<String, Integer> entry : f.getResults().entrySet()){
+	        	System.out.println(entry.getKey() + " : " + entry.getValue());
+	        }*/
+	        
 	        //read from the command line
 	        System.out.println("Enter [0-9]+ to inspect full text, a question to search again, or enter to quit\n>>> ");
 	        command = br.readLine();
