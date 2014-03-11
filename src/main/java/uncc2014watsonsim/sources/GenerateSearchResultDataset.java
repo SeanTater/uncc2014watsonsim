@@ -1,9 +1,15 @@
 package uncc2014watsonsim.sources;
 
+import com.github.sardine.Sardine;
+import com.github.sardine.SardineFactory;
+
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,9 +17,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import uncc2014watsonsim.Question;
-import uncc2014watsonsim.DBQuestionSource;
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.DBQuestionSource;
+import uncc2014watsonsim.Question;
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.GoogleSearcher;
@@ -53,7 +59,14 @@ public class GenerateSearchResultDataset {
         } catch (InterruptedException ex) {
             Logger.getLogger(GenerateSearchResultDataset.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Finished.");
+        
+        System.out.println("Uploading results...");
+        
+        Sardine conn = SardineFactory.begin();
+        try (FileInputStream fis = new FileInputStream(new File("data/questions.db"))) {
+        	conn.put("http://seantater.is-a-linux-user.org/watsonsim/" + (new Date()).toString().replace(" ", "-") + ".db", fis);
+    	}
+        System.out.println("Done.");
     }
 }
 

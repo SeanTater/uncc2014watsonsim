@@ -2,10 +2,11 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'maven'
+apply plugin: 'download-task'
 
 // Meta information
 mainClassName = "uncc2014watsonsim.WatsonSim"
-version = "0.1.2"
+version = "0.2"
 group = "edu.uncc"
 
 // Meta-dependencies (what you need so as to run this buildscript)
@@ -55,11 +56,12 @@ dependencies {
     
     // OpenNLP
     compile "org.apache.opennlp:opennlp-tools:1.5.3"
+    
+    compile 'com.github.lookfirst:sardine:5.1'
 }
 
 
 // Other Tasks
-apply plugin: 'download-task'
 def gdrive_decompress(filename) {
     download {
         src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/$filename"
@@ -94,13 +96,13 @@ task(run_interactive, type: JavaExec) {
     main "uncc2014watsonsim.WatsonSim"
 }
 
-task(run_cache_searches, dependsOn: downloadOptional, type: JavaExec) {
+task(run_cache_searches, dependsOn: downloadRequired, type: JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
     main "uncc2014watsonsim.sources.GenerateSearchResultDataset"
 }
 
-task(run_index, type: JavaExec) {
+task(run_index, dependsOn: downloadOptional, type: JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
     main "uncc2014watsonsim.sources.DBIndexer"
