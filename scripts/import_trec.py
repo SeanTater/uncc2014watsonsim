@@ -10,12 +10,17 @@ from lxml.etree import HTML
 parser = argparse.ArgumentParser(description="Import TREC data into sqlite3")
 parser.add_argument("-c", "--create", action="store_true", help="Clear/Init Database")
 parser.add_argument("-t", "--table", default="documents", help="SQL table to dump into")
+parser.add_argument("-b", "--broken", action="store_true", help="Support malformed XML gracefully, but read the ")
 parser.add_argument("db", help="SQLite database")
 parser.add_argument("source", help="Source tag [e.g. wikipedia,wikiquotes,shakespeare ...]")
 parser.add_argument("trec", nargs="+", help="Input TREC files")
 args = parser.parse_args()
 
 db = sqlite3.connect(args.db)
+db.executescript("""
+  pragma journal_mode = TRUNCATE;
+  pragma synchronous = OFF;""")
+
 if args.create:
   db.executescript("""
     drop table if exists {table};
@@ -63,7 +68,9 @@ if args.create:
     end;
       """.format(table=args.table))
 
- 
+
+def entry_generator(filename):
+
 for i, fname in progress.bar(enumerate(args.trec), "Importing TREC data..", 50, expected_size=len(args.trec)):
   with open(fname) as f:
     b = HTML(f.read()).findall("*doc")

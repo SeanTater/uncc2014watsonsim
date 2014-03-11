@@ -1,5 +1,7 @@
 package uncc2014watsonsim.sources;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +30,19 @@ public class GenerateSearchResultDataset {
      * @throws Exception 
      */
     public static void main(String[] args) throws Exception {
+    	// 7 lines to read an integer from stdin
+    	int start = 0;
+    	try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+    		System.out.print("Start on question number: ");
+    		start = Integer.parseInt(br.readLine());
+    	}
+    	if (start <= 0) {
+    		System.out.println("Starting number must be greater than 0.");
+    		return;
+    	}
         ExecutorService pool = Executors.newFixedThreadPool(8);
         DBQuestionSource dbquestions = new DBQuestionSource();
-        dbquestions.fetch_without_results(3162,50);
+        dbquestions.fetch_without_results(start, 100);
     	for (Question q : dbquestions) {
     		pool.execute(new SingleTrainingResult(q));
     		//new SingleTrainingResult(q).run();
@@ -48,8 +60,8 @@ public class GenerateSearchResultDataset {
 class SingleTrainingResult extends Thread {
 	Question q;
 	static Searcher[] searchers = {
-		new LuceneSearcher(),
-		new IndriSearcher(),
+		//new LuceneSearcher(),
+		//new IndriSearcher(),
 		new GoogleSearcher()
 	};
 	
