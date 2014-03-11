@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class DBQuestionSource extends QuestionSource {
 	private static final long serialVersionUID = 1L;
-	static Connection conn;
-	static PreparedStatement bulk_delete;
-	static PreparedStatement bulk_insert;
-	static PreparedStatement bulk_select_questions;
-	static PreparedStatement bulk_select_results;
+	static final Connection conn;
+	static final PreparedStatement bulk_delete;
+	static final PreparedStatement bulk_insert;
+	static final PreparedStatement bulk_select_questions;
+	static final PreparedStatement bulk_select_results;
 	static {
 		try {
 		    // load the sqlite-JDBC driver using the current class loader
@@ -24,17 +24,23 @@ public class DBQuestionSource extends QuestionSource {
 			conn.createStatement().execute("PRAGMA journal_mode = TRUNCATE;");
 			conn.createStatement().execute("PRAGMA synchronous = OFF;");
 			
-			bulk_delete = conn.prepareStatement("delete from results where question = ?");
-			bulk_insert = conn.prepareStatement("insert into results(question, title, fulltext, engine, rank, score)"
-					+ " values (?, ?, ?, ?, ?, ?);");
-
-			bulk_select_questions = conn.prepareStatement("select * from questions where rowid > ? order by rowid limit ?;");
-			bulk_select_results = conn.prepareStatement("select results.question as question_id, title, fulltext, category, engine, rank, score from results inner join questions on results.question = questions.rowid" +
-					" where (results.question >= ?) and (results.question <= ?);");
+			bulk_delete = conn.prepareStatement(
+					"delete from results where question = ?;");
+			bulk_insert = conn.prepareStatement(
+					"insert into results(question, title, fulltext, engine, rank, score, reference) "
+					+ "values (?, ?, ?, ?, ?, ?, ?);");
+			bulk_select_questions = conn.prepareStatement(
+					"select * from questions where rowid > ? order by rowid limit ?;");
+			bulk_select_results = conn.prepareStatement(
+					"select results.question "
+					+ "as question_id, title, fulltext, category, engine, rank, score, reference "
+					+ "from results inner join questions on results.question = questions.rowid "
+					+ "where (results.question >= ?) and (results.question <= ?);");
 		} catch(SQLException | ClassNotFoundException e) {
 	       // if the error message is "out of memory", 
 	       // it probably means no database file is found
-	       System.err.println(e.getMessage());
+	       e.printStackTrace();
+	       throw new RuntimeException("Can't run without a database.");
 		}
 		
 		// JDBC's SQLite uses autocommit (So commit() is redundant)
@@ -46,7 +52,8 @@ public class DBQuestionSource extends QuestionSource {
 		fetch_without_results(0, 100);
 	}
 	
-	/** Replace the results for a single question 
+	/** Replace the cached results for a single question.
+	 * Every answer must have _one_ document. The database doesn't support more.
 	 * @throws SQLException */
 	public static void replace_cache(Question q, List<Answer> results) throws SQLException {
 		// Get a list of results and populate the questions with them
@@ -57,10 +64,11 @@ public class DBQuestionSource extends QuestionSource {
 			bulk_insert.setLong(1, q.id);
 			bulk_insert.setString(2, r.getTitle());
 			bulk_insert.setString(3, r.getFullText());
-			// In this case, we know there is exactly one engine so it is safe to access it.
+			// In this case, we know there is exactly one document so it is safe to access it.
 			bulk_insert.setString(4, r.docs.get(0).engine_name);
 			bulk_insert.setLong(5, r.docs.get(0).rank);
 			bulk_insert.setDouble(6, r.docs.get(0).score);
+			bulk_insert.setString(7, r.docs.get(0).reference);
 			bulk_insert.addBatch();
 		}
 		bulk_insert.executeBatch();
@@ -100,6 +108,7 @@ public class DBQuestionSource extends QuestionSource {
 			questions.get(sql.getInt("question_id")).add(new uncc2014watsonsim.Answer(
 				sql.getString("title"),
 				sql.getString("fulltext"),
+				sql.getString("reference"),
 				sql.getString("engine"),
 				sql.getInt("rank"),
 				sql.getDouble("score")

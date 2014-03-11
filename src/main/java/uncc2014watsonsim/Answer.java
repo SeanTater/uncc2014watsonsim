@@ -15,8 +15,8 @@ public class Answer implements Comparable<Answer> {
     public List<Document> docs = new ArrayList<Document>();
 
     /** Create an Answer with one implicitly defined Engine */
-    public Answer(String title, String full_text, String engine, long rank, double score) {
-        this.docs.add(new Document(title, full_text, null, engine, rank, score));
+    public Answer(String title, String full_text, String reference, String engine, long rank, double score) {
+        this.docs.add(new Document(title, full_text, reference, engine, rank, score));
     }
     
     /** Create an Answer (with engine) from JSON */

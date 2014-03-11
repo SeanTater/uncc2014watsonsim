@@ -44,7 +44,7 @@ public class Question extends ArrayList<Answer>{
      */
     public static Question known(String question, String answer) {
         Question q = new Question(question);
-        q.answer = new Answer(answer, answer, "answer", 0, 1);
+        q.answer = new Answer(answer, answer, null, "answer", 0, 1);
         return q;
     }
 
@@ -53,7 +53,7 @@ public class Question extends ArrayList<Answer>{
      */
     public static Question known(String question, String answer, String category) {
         Question q = new Question(question);
-        q.answer = new Answer(answer, answer, "answer", 0, 1);
+        q.answer = new Answer(answer, answer, null, "answer", 0, 1);
         q.setCategory(category);
         return q;
     }

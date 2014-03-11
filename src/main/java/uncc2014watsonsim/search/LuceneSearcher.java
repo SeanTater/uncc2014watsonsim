@@ -53,6 +53,7 @@ public class LuceneSearcher extends Searcher {
 			results.add(new Answer(
 					doc.get("title"), // Title
 					doc.get("text"),  // Text
+					doc.get("docno"), // Reference
 					"lucene",         // Engine
 					i,                // Rank
 					s.score

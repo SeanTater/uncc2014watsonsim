@@ -77,6 +77,7 @@ public class GoogleSearcher extends Searcher {
 			results.add(new Answer(
 				in_r.get(i).getTitle(),  // Title 
 				in_r.get(i).getSnippet(),// "Full" Text
+				in_r.get(i).getFormattedUrl(), // Reference
 				"google",                // Engine
 				i,                       // Rank 
 				(double) i

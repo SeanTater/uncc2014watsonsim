@@ -106,7 +106,7 @@ public class DBIndexer {
             Document doc = new Document();
             //I have used 'Field' for the sake of ease of use. You can also use others like 'StringField', etc
             doc.add(new Field("title", sql.getString("title"), Field.Store.YES, Field.Index.ANALYZED));
-            doc.add(new Field("docno", sql.getString("docno"), Field.Store.NO, Field.Index.NOT_ANALYZED));
+            doc.add(new Field("docno", sql.getString("docno"), Field.Store.YES, Field.Index.NOT_ANALYZED));
             doc.add(new Field("text", sql.getString("text"), Field.Store.YES, Field.Index.ANALYZED));
             writer.addDocument(doc);
             

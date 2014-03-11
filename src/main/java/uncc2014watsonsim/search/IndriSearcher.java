@@ -35,6 +35,7 @@ public class IndriSearcher extends Searcher {
 						MAX_RESULTS);
 		// Fetch all titles, texts
 		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
+		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
 		ParsedDocument[] full_texts = IndriSearcher.q.documents(ser);
 		// Compile them into a uniform format
 		List<Answer> results = new ArrayList<Answer>();
@@ -42,6 +43,7 @@ public class IndriSearcher extends Searcher {
 	    	results.add(new Answer(
 				titles[i],          // Title
 				full_texts[i].text, // Full Text
+				docnos[i],          // Reference
 				"indri",            // Engine
 				i,                  // Rank
 				ser[i].score

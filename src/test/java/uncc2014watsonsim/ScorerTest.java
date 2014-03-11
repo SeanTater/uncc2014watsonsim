@@ -19,10 +19,10 @@ public class ScorerTest {
 	@Before
 	public void setUp() {
 		// Setup possible inputs
-		yahoo1 = new Answer("Alligators", "text", "yahoo", 1, 0.75);
-		yahoo2 = new Answer("Eels", "text", "yahoo", 2, 0.38);
-		bing1 = new Answer("Alligators", "text", "bing", 1, 0.25);
-		bing2 = new Answer("Elk", "text", "bing", 2, 0.19);
+		yahoo1 = new Answer("Alligators", "text", "reference", "yahoo", 1, 0.75);
+		yahoo2 = new Answer("Eels", "text", "reference", "yahoo", 2, 0.38);
+		bing1 = new Answer("Alligators", "text", "reference", "bing", 1, 0.25);
+		bing2 = new Answer("Elk", "text", "reference", "bing", 2, 0.19);
 		ml = new AverageLearner();
 	}
 

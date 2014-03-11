@@ -13,15 +13,15 @@ import uncc2014watsonsim.search.GoogleSearcher;
  * @author Phani Rahul
  */
 public class WatsonSim {
-	static Searcher[] searchers = {
+	static final Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
 		new GoogleSearcher()
 	};
-	static Researcher[] researchers = {
+	static final Researcher[] researchers = {
 		
 	};
-	static Learner learner = new AverageLearner();
+	static final Learner learner = new AverageLearner();
 
     /**
      * @param args the command line arguments
