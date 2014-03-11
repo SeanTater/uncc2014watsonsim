@@ -50,8 +50,8 @@ public class GenerateSearchResultDataset {
         DBQuestionSource dbquestions = new DBQuestionSource();
         dbquestions.fetch_without_results(start, 5);
     	for (Question q : dbquestions) {
-    		pool.execute(new SingleTrainingResult(q));
-    		//new SingleTrainingResult(q).run();
+    		//pool.execute(new SingleTrainingResult(q));
+    		new SingleTrainingResult(q).run();
     	}
         pool.shutdown();
         try {
@@ -87,7 +87,7 @@ class SingleTrainingResult extends Thread {
 			List<Answer> uncollated_results = new ArrayList<Answer>(); 
 			for (Searcher searcher : searchers)
 				uncollated_results.addAll(searcher.runQuery(q.text));
-			
+			Thread.sleep(1000);
 			DBQuestionSource.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.
 			System.out.print(".");
