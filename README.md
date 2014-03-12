@@ -11,7 +11,6 @@ Deep Question Answering System
   - For Linux 64, pick the right library in uncc2012watsonsim/lib and copy it to libindri-jni.so
   - For Windows 64, do the same but end it in .dll
   - For others, or if the above doesn't work, compile indri on your own and copy `libindri-jni.so` or `libindri-jni.dll` to uncc2014watsonsim/lib.
-
 - Setup UserSpecificConstants (in src/main/java)
   - Make a copy of the file without .sample at the end of the filename
   - Make your own Google cloud app in the [Google console](https://cloud.google.com/console).
