@@ -24,14 +24,12 @@ Deep Question Answering System
 - Have Gradle setup gobs of other stuff
   - `/where/you/unzipped/gradle/bin/gradle cleanEclipse eclipse assemble`
 
-## Running Queries
-- To run homework Google queries
-  - You do not need a indri or lucene index (yet).
-  - You do need an internet connection.
-  - Follow 'Get Started' above.
-  - Find the question starting ID in the table linked to on Moodle.
-  - Open and run src/java/GenerateSearchResultDataset.java with your favorite IDE (Eclipse may be easier)
-    - When it asks, give your question starting ID.
+## Running Homework Google Queries
+- You do need an internet connection.
+- Follow 'Get Started' above if you haven't already.
+- Find the question starting ID in the table linked to on Moodle.
+- Open and run src/java/GenerateSearchResultDataset.java with your favorite IDE (Eclipse may be easier)
+  - When it asks, give your question starting ID.
 - If it's not working, submit an issue.
 
 ## Start developing
