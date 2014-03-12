@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import uncc2014watsonsim.search.LuceneSearcher;
+import uncc2014watsonsim.search.Searcher;
+
 public class WordProximityResearcher extends Researcher {
 
 	@Override
-	public void research_question(Question q) {
-		// TODO Auto-generated method stub
+	public void research_question(Question q) throws Exception {
 		Set<String> q_words = new HashSet<String>();
 		q_words.addAll(Arrays.asList(q.text.split("\\W+")));
 		

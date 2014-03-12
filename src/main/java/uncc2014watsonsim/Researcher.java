@@ -10,8 +10,9 @@ abstract public class Researcher {
 	 * Simply calls research_answer for every Answer
 	 * Override this if you need more power.
 	 * @param question
+	 * @throws Exception 
 	 */
-	public void research_question(Question q) {
+	public void research_question(Question q) throws Exception {
 		for (Answer a : q)
 			research_answer(a);
 	}
