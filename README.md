@@ -28,8 +28,10 @@ Deep Question Answering System
 - To run homework Google queries
   - You do not need a indri or lucene index (yet).
   - You do need an internet connection.
-  - Open and run src/java/GenerateSearchResultDataset.java with your favorite IDE
-    - Eclipse classpaths are setup by default so it may be easier
+  - Follow 'Get Started' above.
+  - Find the question starting ID in the table linked to on Moodle.
+  - Open and run src/java/GenerateSearchResultDataset.java with your favorite IDE (Eclipse may be easier)
+    - When it asks, give your question starting ID.
 - If it's not working, submit an issue.
 
 ## Start developing
