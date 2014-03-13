@@ -26,11 +26,13 @@ Deep Question Answering System
 
 ## Running Homework Google Queries
 - You do need an internet connection.
-- Follow 'Get Started' above if you haven't already.
-- Find the question starting ID in the table linked to on Moodle.
-- Open and run src/java/GenerateSearchResultDataset.java with your favorite IDE (Eclipse may be easier)
+- Follow 'Get started' above if you haven't already.
+- Find a question starting ID next to your name in the table linked to on Moodle ('Questions to Crawl'). Each person has multiple starting IDs so you can query a new set of questions each day to contribute more.
+- If you haven't run 'gradle assemble' recently, you will need to run that to get the new dependencies.  Note that if you're using Eclipse, you may need to run the full 'gradle cleanEclipse eclipse assemble'.
+- Open and run src/main/java/uncc2014watsonsim/sources/GenerateSearchResultDataset with your favorite IDE (Eclipse may be easier).
   - When it asks, give your question starting ID.
 - If it's not working, submit an issue.
+- One known issue is a "GoogleJsonResponseException: 500 Internal Server Error" "Backend Error".  To resolve, increase the Thread.sleep(1000) time in GenerateSearchResultDataset.java.  Try 2000 or 4000.  (10000 works but is slow.)
 
 ## Start developing
 
