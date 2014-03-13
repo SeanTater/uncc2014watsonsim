@@ -17,8 +17,8 @@ import uncc2014watsonsim.search.GoogleSearcher;
 public class WatsonSim {
 	static final Searcher[] searchers = {
 		new LuceneSearcher(),
-		new IndriSearcher(),
-		new GoogleSearcher()
+		new IndriSearcher()
+		//new GoogleSearcher()
 	};
 	static final Researcher[] researchers = {
 		
@@ -42,18 +42,20 @@ public class WatsonSim {
 	        ignoreSet.add("J! Archive");
 	        ignoreSet.add("Jeopardy");
 	        
+	        System.out.println("This is a " + question.getType() + " Question");
+	        
 	        for (Searcher s : searchers)
 	        	// Query every engine
 	        	if(question.getType() != QType.FITB){
 	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.indriIndex, UserSpecificConstants.luceneIndex));
 	        	} else {
-	        		System.out.println("FITB Index Running");
 	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.quotesIndriIndex, UserSpecificConstants.quotesLuceneIndex));
 	        	}
 	        
         	for (Researcher r : researchers)
         		r.research(question);
 	        	
+        	
 	        learner.test(question);
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
