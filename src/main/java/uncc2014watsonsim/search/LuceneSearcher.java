@@ -12,7 +12,6 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -34,16 +33,25 @@ public class LuceneSearcher extends Searcher {
 		analyzer = new StandardAnalyzer(Version.LUCENE_46);
 		parser = new QueryParser(Version.LUCENE_46, UserSpecificConstants.luceneSearchField, analyzer);
 		parser.setAllowLeadingWildcard(true);		
-		try {
+		/*try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
-		searcher = new IndexSearcher(reader);
+		searcher = new IndexSearcher(reader);*/
 	}
 
-	public synchronized List<Answer> runQuery(String q) throws Exception {
+	public synchronized List<Answer> runQuery(String q, String indriIndex, String luceneIndex) throws Exception {
+		
+		try {
+			reader = DirectoryReader.open(FSDirectory.open(new File(luceneIndex)));
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
+		}
+		searcher = new IndexSearcher(reader);
+		
 		ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
 		List<Answer> results = new ArrayList<Answer>(); 
 		// This isn't range based because we need the rank
@@ -61,4 +69,5 @@ public class LuceneSearcher extends Searcher {
 		}
 		return results;
 	}
+
 }
