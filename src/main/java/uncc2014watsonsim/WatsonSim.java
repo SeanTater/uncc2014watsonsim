@@ -46,11 +46,7 @@ public class WatsonSim {
 	        
 	        for (Searcher s : searchers)
 	        	// Query every engine
-	        	if(question.getType() != QType.FITB){
-	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.indriIndex, UserSpecificConstants.luceneIndex));
-	        	} else {
-	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.quotesIndriIndex, UserSpecificConstants.quotesLuceneIndex));
-	        	}
+	            question.addAll(s.runQuery(question.text));
 	        
         	for (Researcher r : researchers)
         		r.research(question);

@@ -28,12 +28,12 @@ public class IndriSearcher extends Searcher {
 		}*/
 	}
 
-	public List<Answer> runQuery(String query, String indriIndex, String luceneIndex) throws Exception {
+	public List<Answer> runQuery(String query) throws Exception {
 		// Run the query
 		
 		// Either add the Indri index or die.
 		try {
-			q.addIndex(indriIndex);
+			q.addIndex(UserSpecificConstants.indriIndex);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Indri index is missing or corrupt. Please check that you entered the right path in UserSpecificConstants.java.");

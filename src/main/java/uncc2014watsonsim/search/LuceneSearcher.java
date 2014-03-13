@@ -42,10 +42,10 @@ public class LuceneSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);*/
 	}
 
-	public synchronized List<Answer> runQuery(String q, String indriIndex, String luceneIndex) throws Exception {
+	public synchronized List<Answer> runQuery(String q) throws Exception {
 		
 		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(luceneIndex)));
+			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");

@@ -54,7 +54,7 @@ public class GoogleSearcher extends Searcher {
 	/* (non-Javadoc)
 	 * @see WebSearch#runQuery(java.lang.String)
 	 */
-	public List<Answer> runQuery(String query, String indriIndex, String luceneIndex) throws IOException {
+	public List<Answer> runQuery(String query) throws IOException {
 		List<Answer> results = new ArrayList<Answer>();
 		//Check empty query
 		if (query.isEmpty())
