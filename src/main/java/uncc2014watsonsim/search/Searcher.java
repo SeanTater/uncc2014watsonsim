@@ -31,7 +31,10 @@ public abstract class Searcher {
      * @param query
      * @throws Exception 
      */
-    public abstract List<Answer> runQuery(String query) throws Exception;
+    
+	//public abstract List<Answer> runQuery(String query) throws Exception;
+    
+    public abstract List<Answer> runQuery(String query, String indriIndex, String luceneIndex) throws Exception;
 
     /**
      * How many results should Lucene and Indri return?

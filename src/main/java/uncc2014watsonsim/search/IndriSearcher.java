@@ -20,16 +20,25 @@ public class IndriSearcher extends Searcher {
 		q = new QueryEnvironment();
 		
 		// Either add the Indri index or die.
-		try {
+		/*try {
 			q.addIndex(UserSpecificConstants.indriIndex);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Indri index is missing or corrupt. Please check that you entered the right path in UserSpecificConstants.java.");
-		}
+		}*/
 	}
 
-	public List<Answer> runQuery(String query) throws Exception {
+	public List<Answer> runQuery(String query, String indriIndex, String luceneIndex) throws Exception {
 		// Run the query
+		
+		// Either add the Indri index or die.
+		try {
+			q.addIndex(indriIndex);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Indri index is missing or corrupt. Please check that you entered the right path in UserSpecificConstants.java.");
+		}
+		
 		ScoredExtentResult[] ser = IndriSearcher.q
 				.runQuery(String.format(UserSpecificConstants.indriResultsFilter,query), 
 						MAX_RESULTS);
@@ -51,4 +60,5 @@ public class IndriSearcher extends Searcher {
 		}
 		return results;
 	}
+
 }

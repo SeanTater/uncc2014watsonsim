@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
+import privatedata.UserSpecificConstants;
+
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.Searcher;
@@ -42,34 +44,38 @@ public class WatsonSim {
 	        
 	        for (Searcher s : searchers)
 	        	// Query every engine
-	        	question.addAll(s.runQuery(question.text));
+	        	if(question.getType() != QType.FITB){
+	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.indriIndex, UserSpecificConstants.luceneIndex));
+	        	} else {
+	        		System.out.println("FITB Index Running");
+	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.quotesIndriIndex, UserSpecificConstants.quotesLuceneIndex));
+	        	}
 	        
         	for (Researcher r : researchers)
         		r.research(question);
 	        	
-	        
 	        learner.test(question);
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
 	        	Answer r = question.get(i);
-                        String title = r.getTitle();
-                        String aW[] = title.split(" ");
-                        String qW[] = question.text.split(" ");
-                        StringBuilder newTitle = new StringBuilder();
-                        for(String a : aW ){
-                            boolean there = false;
-                            for(String q:qW){
-                                if(q.equalsIgnoreCase(a)){
-                                    there = true;
-                                    break;
-                                }
-                            }
-                            if(!there){
-                                newTitle.append(a);
-                                newTitle.append(" ");
-                            }
+                /*String title = r.getTitle();
+                String aW[] = title.split(" ");
+                String qW[] = question.text.split(" ");
+                StringBuilder newTitle = new StringBuilder();
+                for(String a : aW ){
+                    boolean there = false;
+                    for(String q:qW){
+                        if(q.equalsIgnoreCase(a)){
+                            there = true;
+                            break;
                         }
-                        r.setTitle(newTitle.toString());
+                    }
+                    if(!there){
+                        newTitle.append(a);
+                        newTitle.append(" ");
+                    }
+                }
+                r.setTitle(newTitle.toString());*/
 	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
 	        
