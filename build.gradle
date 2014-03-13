@@ -58,6 +58,7 @@ dependencies {
     compile "org.apache.opennlp:opennlp-tools:1.5.3"
     
     compile 'com.github.lookfirst:sardine:5.1'
+    compile 'org.slf4j:slf4j-simple:1.6.1'
 }
 
 
