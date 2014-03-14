@@ -4,7 +4,7 @@ uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watso
 Deep Question Answering System
 
 ## Check out the video
-For Linux users, there is [a video walk-through](http://youtu.be/v8LOfA8trn8) taking you from a clean Fedora install to completed homework. Even if you don't use Linux, you may want to refer to it.
+For Linux users, there is [a video walk-through](http://youtu.be/v8LOfA8trn8) taking you from a clean Fedora install to completed Google query homework. Even if you don't use Linux, you may want to refer to it.
 
 ## Get started
 - `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
