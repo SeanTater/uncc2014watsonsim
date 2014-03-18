@@ -53,21 +53,21 @@ public class LuceneSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);
 		
 		ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
-		List<Answer> results = new ArrayList<Answer>(); 
+		List<uncc2014watsonsim.Document> results = new ArrayList<uncc2014watsonsim.Document>(); 
 		// This isn't range based because we need the rank
 		for (int i=0; i < MAX_RESULTS; i++) {
 			ScoreDoc s = hits[i];
 			Document doc = searcher.doc(s.doc);
-			results.add(new Answer(
-					doc.get("title"), // Title
-					doc.get("text"),  // Text
-					doc.get("docno"), // Reference
-					"lucene",         // Engine
-					i,                // Rank
-					s.score
+			results.add(new uncc2014watsonsim.Document(
+					"lucene", 			// Engine
+					null,			  	// Title
+					null, 				// Text
+					doc.get("docno"),   // Reference
+					i,                	// Rank
+					s.score				// Source
 					));
 		}
-		return results;
+		return fillFromSources(results);
 	}
 
 }

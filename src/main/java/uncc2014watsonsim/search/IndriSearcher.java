@@ -5,6 +5,7 @@ import java.util.List;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Document;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
@@ -18,14 +19,6 @@ public class IndriSearcher extends Searcher {
 	static {
 		// Only initialize the query environment and index once
 		q = new QueryEnvironment();
-		
-		// Either add the Indri index or die.
-		/*try {
-			q.addIndex(UserSpecificConstants.indriIndex);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Indri index is missing or corrupt. Please check that you entered the right path in UserSpecificConstants.java.");
-		}*/
 	}
 
 	public List<Answer> runQuery(String query) throws Exception {
@@ -43,22 +36,20 @@ public class IndriSearcher extends Searcher {
 				.runQuery(String.format(UserSpecificConstants.indriResultsFilter,query), 
 						MAX_RESULTS);
 		// Fetch all titles, texts
-		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
 		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
-		ParsedDocument[] full_texts = IndriSearcher.q.documents(ser);
 		// Compile them into a uniform format
-		List<Answer> results = new ArrayList<Answer>();
+		List<Document> results = new ArrayList<Document>();
 		for (int i=0; i<ser.length; i++) {
-	    	results.add(new Answer(
-				titles[i],          // Title
-				full_texts[i].text, // Full Text
+	    	results.add(new Document(
+				"indri",         	// Engine
+				null,				// Title
+				null, 				// Full Text
 				docnos[i],          // Reference
-				"indri",            // Engine
 				i,                  // Rank
-				ser[i].score
+				ser[i].score		// Score
 			));
 		}
-		return results;
+		return fillFromSources(results);
 	}
 
 }

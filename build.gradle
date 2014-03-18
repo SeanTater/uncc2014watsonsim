@@ -5,7 +5,7 @@ apply plugin: 'maven'
 apply plugin: 'download-task'
 
 // Meta information
-mainClassName = "uncc2014watsonsim.WatsonSim"
+mainClassName = "uncc2014watsonsim.sources.DBIndexer"
 version = "0.2"
 group = "edu.uncc"
 
@@ -89,12 +89,14 @@ task downloadOptional << {
     gdrive_decompress("sources.db.tar.gz")
 }
 
-task(run_interactive, type: JavaExec) {
+
+
+run {
     // Allow reading from stdin
     standardInput = System.in
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
-    main "uncc2014watsonsim.WatsonSim"
+    main "uncc2014watsonsim.sources.DBIndexer"
 }
 
 task(run_cache_searches, dependsOn: downloadRequired, type: JavaExec) {
@@ -103,7 +105,7 @@ task(run_cache_searches, dependsOn: downloadRequired, type: JavaExec) {
     main "uncc2014watsonsim.sources.GenerateSearchResultDataset"
 }
 
-task(run_index, dependsOn: downloadOptional, type: JavaExec) {
+task(run_index, type: JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
     main "uncc2014watsonsim.sources.DBIndexer"

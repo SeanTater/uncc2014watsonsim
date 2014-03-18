@@ -11,42 +11,7 @@ import java.util.Map;
 
 public class DBQuestionSource extends QuestionSource {
 	private static final long serialVersionUID = 1L;
-	static final Connection conn;
-	static final PreparedStatement bulk_delete;
-	static final PreparedStatement bulk_insert;
-	static final PreparedStatement bulk_select_questions;
-	static final PreparedStatement bulk_select_results;
-	static {
-		try {
-		    // load the sqlite-JDBC driver using the current class loader
-		    Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:data" + File.separator + "questions.db");
-			conn.createStatement().execute("PRAGMA journal_mode = TRUNCATE;");
-			conn.createStatement().execute("PRAGMA synchronous = OFF;");
-			
-			bulk_delete = conn.prepareStatement(
-					"delete from results where question = ?;");
-			bulk_insert = conn.prepareStatement(
-					"insert into results(question, title, fulltext, engine, rank, score, reference) "
-					+ "values (?, ?, ?, ?, ?, ?, ?);");
-			bulk_select_questions = conn.prepareStatement(
-					"select * from questions where rowid > ? order by rowid limit ?;");
-			bulk_select_results = conn.prepareStatement(
-					"select results.question "
-					+ "as question_id, title, fulltext, category, engine, rank, score, reference "
-					+ "from results inner join questions on results.question = questions.rowid "
-					+ "where (results.question >= ?) and (results.question <= ?);");
-		} catch(SQLException | ClassNotFoundException e) {
-	       // if the error message is "out of memory", 
-	       // it probably means no database file is found
-	       e.printStackTrace();
-	       throw new RuntimeException("Can't run without a database.");
-		}
-		
-		// JDBC's SQLite uses autocommit (So commit() is redundant)
-		// Furthermore, close() is a no-op as long as the results are commit()'d
-		// So don't bother adding code to do all that.
-	}	
+	static final SQLiteDB db = new SQLiteDB("questions");
 
 	public DBQuestionSource() throws Exception {
 		fetch_without_results(0, 100);
@@ -57,6 +22,10 @@ public class DBQuestionSource extends QuestionSource {
 	 * @throws SQLException */
 	public static void replace_cache(Question q, List<Answer> results) throws SQLException {
 		// Get a list of results and populate the questions with them
+		PreparedStatement bulk_delete = db.prep("delete from results where question = ?;");
+		PreparedStatement bulk_insert = db.prep(
+				"insert into results(question, title, fulltext, engine, rank, score, reference) "
+				+ "values (?, ?, ?, ?, ?, ?, ?);");
 	    bulk_delete.setLong(1, q.id);
 	    bulk_delete.execute();
 	    
@@ -76,6 +45,8 @@ public class DBQuestionSource extends QuestionSource {
 	
 	public static Map<Integer, Question> fetch_map_without_results(int start, int length) throws SQLException {
 		// Get a list of questions, ordered so that it is consistent
+		PreparedStatement bulk_select_questions = db.conn.prepareStatement(
+				"select * from questions where rowid > ? order by rowid limit ?;");
 		bulk_select_questions.setInt(1, start);
 		bulk_select_questions.setInt(2, length);
 		java.sql.ResultSet sql = bulk_select_questions.executeQuery();
@@ -101,15 +72,21 @@ public class DBQuestionSource extends QuestionSource {
 	    Map<Integer, Question> questions = fetch_map_without_results(start, length);
 		// Get a list of results and populate the questions with them
 	    System.out.println("look for q from " + Collections.min(questions.keySet()) + " to " + Collections.max(questions.keySet()));
+
+		PreparedStatement bulk_select_results = db.prep(
+				"select results.question "
+				+ "as question_id, title, fulltext, category, engine, rank, score, reference "
+				+ "from results inner join questions on results.question = questions.rowid "
+				+ "where (results.question >= ?) and (results.question <= ?);");
 		bulk_select_results.setInt(1, Collections.min(questions.keySet()));
 		bulk_select_results.setInt(2, Collections.max(questions.keySet()));
 		java.sql.ResultSet sql = bulk_select_results.executeQuery();
 		while(sql.next()){
 			questions.get(sql.getInt("question_id")).add(new uncc2014watsonsim.Answer(
+				sql.getString("engine"),
 				sql.getString("title"),
 				sql.getString("fulltext"),
 				sql.getString("reference"),
-				sql.getString("engine"),
 				sql.getInt("rank"),
 				sql.getDouble("score")
 			));
