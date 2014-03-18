@@ -57,10 +57,13 @@ class StatsGenerator {
 		//	return questionsource;
 		//}
 		QuestionSource qs = new DBQuestionSource();
-		for (Question q : qs) {
+		for (int i=0; i<qs.size(); i++) {
+			Question q = qs.get(i);
+			System.out.print(" " + i);
 			q.addAll(new IndriSearcher().runQuery(q.text));
 			q.addAll(new LuceneSearcher().runQuery(q.text));
 		}
+		System.out.println();
 		return qs;
 	}
 	QuestionSource questionsource;

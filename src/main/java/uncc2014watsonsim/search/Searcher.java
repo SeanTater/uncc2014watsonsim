@@ -52,14 +52,17 @@ public abstract class Searcher {
      */
     List<Answer> fillFromSources(List<Document> docs) {
     	List<Answer> results = new ArrayList<Answer>();
-    	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?");
+    	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?;");
+
     	for (Document d: docs) {
     		ResultSet doc_row;
     		try {
 				fetcher.setString(1, d.reference);
 				doc_row = fetcher.executeQuery();
 	    		d.title = doc_row.getString("title");
+	    		if (d.title == null) d.title = "";
 	    		d.text = doc_row.getString("text");
+	    		if (d.text == null) d.text = "";
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException("Failed to execute sources full text search. "

@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class SQLiteDB {
 	public final Connection conn;
-	HashMap<String, PreparedStatement> statements;
+	HashMap<String, PreparedStatement> statements = new HashMap<String, PreparedStatement>();
 	
 	public SQLiteDB(String name) {
 		try {

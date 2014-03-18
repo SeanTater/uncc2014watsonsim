@@ -41,8 +41,8 @@ public class IndriSearcher extends Searcher {
 		List<Document> results = new ArrayList<Document>();
 		for (int i=0; i<ser.length; i++) {
 	    	results.add(new Document(
-				"indri",         	// Engine
-				null,				// Title
+    			"indri",         	// Engine
+    			null,				// Title
 				null, 				// Full Text
 				docnos[i],          // Reference
 				i,                  // Rank

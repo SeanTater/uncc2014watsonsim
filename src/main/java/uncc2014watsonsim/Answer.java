@@ -21,7 +21,7 @@ public class Answer implements Comparable<Answer> {
     
     /** Create an Answer with one implicitly defined Document */
     public Answer(String engine, String title, String full_text, String reference, long rank, double score) {
-        this(new Document(title, full_text, reference, engine, rank, score));
+        this(new Document(engine, title, full_text, reference, rank, score));
     }
     
     
@@ -31,7 +31,7 @@ public class Answer implements Comparable<Answer> {
         String title = (String) attr.get(String.format("%s_title", engine_name));
         long rank = (long) attr.get(String.format("%s_rank", engine_name));
         double score = (double) attr.get(String.format("%s_score", engine_name));
-        docs.add(new Document(title, "", null, engine_name, rank, score));
+        docs.add(new Document(engine_name, title, "", null, rank, score));
 	}
 	
     /** some discussion has to be made on how this has to work. Not finalized*/

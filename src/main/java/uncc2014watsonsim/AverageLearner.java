@@ -18,7 +18,7 @@ public class AverageLearner extends Learner {
 			score /= count;
 			// Logistic function
 			score = logistic(score);
-			result.docs.add(new Document(result.getTitle(), result.getFullText(), null, "combined", count, score));
+			result.docs.add(new Document("combined", result.getTitle(), result.getFullText(), null, count, score));
 		}
 	}
 	

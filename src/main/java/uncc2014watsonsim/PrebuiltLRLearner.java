@@ -12,7 +12,7 @@ public class PrebuiltLRLearner extends Learner {
     	for (Answer result : question) {
     		Document lucene = result.first("lucene");
     		Document indri = result.first("indri");
-    		Document combined = new Document(result.getTitle(), result.getFullText(), null, "combined", 0, 0);
+    		Document combined = new Document("combined", result.getTitle(), result.getFullText(), null, 0, 0);
     		if (lucene != null && indri != null) {
     			combined.score = scoreBoth(indri.score, lucene.score);
     		} else if (lucene != null) {
