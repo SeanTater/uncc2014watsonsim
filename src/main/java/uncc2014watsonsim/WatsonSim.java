@@ -10,19 +10,23 @@ import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.Searcher;
 import uncc2014watsonsim.search.GoogleSearcher;
+
 /**
  *
  * @author Phani Rahul
  */
 public class WatsonSim {
+	
 	static final Searcher[] searchers = {
 		new LuceneSearcher(),
-		new IndriSearcher()
-		//new GoogleSearcher()
+		new IndriSearcher(),
+		new GoogleSearcher()
 	};
+	
 	static final Researcher[] researchers = {
 		
 	};
+	
 	static final Learner learner = new AverageLearner();
 
     /**
@@ -44,19 +48,22 @@ public class WatsonSim {
 	        
 	        System.out.println("This is a " + question.getType() + " Question");
 	        
-	        for (Searcher s : searchers)
+	        for (Searcher s : searchers){
 	        	// Query every engine
-	        	if(question.getType() != QType.FITB){
+	        	if(question.getType() == QType.FACTOID){
 	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.indriIndex, UserSpecificConstants.luceneIndex));
-	        	} else {
+	        	} else if (question.getType() == QType.FITB) {
 	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.quotesIndriIndex, UserSpecificConstants.quotesLuceneIndex));
+	        	} else {
+	        		return;
 	        	}
+	        }
 	        
         	for (Researcher r : researchers)
         		r.research(question);
 	        	
-        	
 	        learner.test(question);
+	        
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
 	        	Answer r = question.get(i);
@@ -78,6 +85,16 @@ public class WatsonSim {
                     }
                 }
                 r.setTitle(newTitle.toString());*/
+	        	
+	        	for(int j = 0; j < question.size(); j++){
+	        		if(i != j){
+	        			Answer r1 = question.get(j);
+	        			if(MergeResults.isSame(r.getTitle(), r1.getTitle())){
+	        				r.merge(r1);
+	        			}
+	        		}
+	        	}
+	        	
 	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
 	        

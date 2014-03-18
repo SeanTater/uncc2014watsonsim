@@ -86,8 +86,8 @@ public class Question extends ArrayList<Answer>{
 //			}
 //		}
         String title = cand.getTitle();
-        if (!title.contains("Category:")
-                && !title.contains("List of")) {
+        if (!title.contains("J! Archive")
+                && !title.contains("Jeopardy")) {
             if (this.type == QType.FITB) {
 //                Regex.matchFITB(raw_text);
                 String newTitle = NameRecognition.hasNoun(title);
