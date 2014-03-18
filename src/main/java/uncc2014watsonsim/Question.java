@@ -74,42 +74,4 @@ public class Question extends ArrayList<Answer>{
         this.type = type;
     }
 
-    @Override
-    /**
-     * Add a new result candidate
-     */
-    public boolean add(Answer cand) {
-//		for (ResultSet existing : this) {
-//			if (existing.equals(cand)) {
-//				existing.merge(cand);
-//				return false;
-//			}
-//		}
-        String title = cand.getTitle();
-        if (!title.contains("Category:")
-                && !title.contains("List of")) {
-            if (this.type == QType.FITB) {
-//                Regex.matchFITB(raw_text);
-                String newTitle = NameRecognition.hasNoun(title);
-                if ((newTitle.length()) > 0) {
-                    cand.setTitle(newTitle);
-                    super.add(cand);
-                }
-            } else{
-                super.add(cand);
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends Answer> c) {
-        boolean changed = false;
-        for (Answer rs : c) {
-            changed |= add(rs);
-        }
-        return changed;
-    }
-
 }

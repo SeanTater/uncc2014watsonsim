@@ -10,7 +10,7 @@ import uncc2014watsonsim.search.Searcher;
 public class WordProximityResearcher extends Researcher {
 
 	@Override
-	public void research_question(Question q) throws Exception {
+	public void research(Question q) throws Exception {
 		Set<String> q_words = new HashSet<String>();
 		q_words.addAll(Arrays.asList(q.text.split("\\W+")));
 		

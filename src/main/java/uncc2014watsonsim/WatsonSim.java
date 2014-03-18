@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 
 import privatedata.UserSpecificConstants;
-
+import uncc2014watsonsim.search.CachingSearcher;
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.Searcher;
@@ -15,15 +15,16 @@ import uncc2014watsonsim.search.GoogleSearcher;
  * @author Phani Rahul
  */
 public class WatsonSim {
-	static final Searcher[] searchers = {
+	static final Searcher searcher = new CachingSearcher(new Searcher[]{
 		new LuceneSearcher(),
 		new IndriSearcher()
 		//new GoogleSearcher()
-	};
+	});
 	static final Researcher[] researchers = {
-		
+		new MergeResearcher(),
+		new NameRecognitionResearcher()
 	};
-	static final Learner learner = new AverageLearner();
+	static final Learner learner = new PrebuiltLRLearner();
 
     /**
      * @param args the command line arguments
@@ -44,12 +45,12 @@ public class WatsonSim {
 	        
 	        System.out.println("This is a " + question.getType() + " Question");
 	        
-	        for (Searcher s : searchers)
-	        	// Query every engine
-	            question.addAll(s.runQuery(question.text));
+        	// Query every engine
+            question.addAll(searcher.runQuery(question.text));
 	        
-        	for (Researcher r : researchers)
+        	for (Researcher r : researchers) {
         		r.research(question);
+        	}
 	        	
         	
 	        learner.test(question);

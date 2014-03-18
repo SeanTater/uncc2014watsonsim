@@ -3,7 +3,9 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +13,28 @@ import java.util.Map;
 
 public class DBQuestionSource extends QuestionSource {
 	private static final long serialVersionUID = 1L;
-	static final SQLiteDB db = new SQLiteDB("questions");
+	private static final SQLiteDB db = new SQLiteDB("questions");
 
-	public DBQuestionSource() throws Exception {
-		fetch_without_results(0, 100);
+	
+	/** Get length questions, starting with question id > (not >=) start
+	 * In hindsight >= would have been better but now it needs to be consistent.
+	 */
+	public DBQuestionSource(int start, int length) throws Exception {
+		// Get a list of questions, ordered so that it is consistent
+		PreparedStatement bulk_select_questions = db.prep(
+				"select * from questions where rowid > ? order by rowid limit ?;");
+		bulk_select_questions.setInt(1, start);
+		bulk_select_questions.setInt(2, length);
+		read_results(bulk_select_questions.executeQuery());
+	}
+	
+	/** Run an arbitrary query on the database to get questions.
+	 */
+	public DBQuestionSource(String conditions) throws Exception {
+		// Get a list of questions, ordered so that it is consistent
+		PreparedStatement query = db.prep("select * from questions "
+				+ conditions + ";");
+		read_results(query.executeQuery());
 	}
 	
 	/** Replace the cached results for a single question.
@@ -43,54 +63,13 @@ public class DBQuestionSource extends QuestionSource {
 		bulk_insert.executeBatch();
 	}
 	
-	public static Map<Integer, Question> fetch_map_without_results(int start, int length) throws SQLException {
-		// Get a list of questions, ordered so that it is consistent
-		PreparedStatement bulk_select_questions = db.conn.prepareStatement(
-				"select * from questions where rowid > ? order by rowid limit ?;");
-		bulk_select_questions.setInt(1, start);
-		bulk_select_questions.setInt(2, length);
-		java.sql.ResultSet sql = bulk_select_questions.executeQuery();
-		
-		Map<Integer, Question> questions = new HashMap<Integer, Question>();
+	public void read_results(ResultSet sql) throws SQLException {
 		while(sql.next()){
-			Question q = Question.known(
+			add(Question.known(
 				sql.getString("question"),
 				sql.getString("answer"),
 				sql.getString("category")
-			);
-			q.id = sql.getInt("rowid");
-			questions.put(q.id, q);
-		}
-		return questions;
-	}
-	
-	public void fetch_without_results(int start, int length) throws SQLException {
-		this.addAll(fetch_map_without_results(start, length).values());
-	}
-	
-	public QuestionSource fetch_with_results(int start, int length) throws SQLException {
-	    Map<Integer, Question> questions = fetch_map_without_results(start, length);
-		// Get a list of results and populate the questions with them
-	    System.out.println("look for q from " + Collections.min(questions.keySet()) + " to " + Collections.max(questions.keySet()));
-
-		PreparedStatement bulk_select_results = db.prep(
-				"select results.question "
-				+ "as question_id, title, fulltext, category, engine, rank, score, reference "
-				+ "from results inner join questions on results.question = questions.rowid "
-				+ "where (results.question >= ?) and (results.question <= ?);");
-		bulk_select_results.setInt(1, Collections.min(questions.keySet()));
-		bulk_select_results.setInt(2, Collections.max(questions.keySet()));
-		java.sql.ResultSet sql = bulk_select_results.executeQuery();
-		while(sql.next()){
-			questions.get(sql.getInt("question_id")).add(new uncc2014watsonsim.Answer(
-				sql.getString("engine"),
-				sql.getString("title"),
-				sql.getString("fulltext"),
-				sql.getString("reference"),
-				sql.getInt("rank"),
-				sql.getDouble("score")
 			));
 		}
-		return new QuestionSource(questions.values());
 	}
 }
