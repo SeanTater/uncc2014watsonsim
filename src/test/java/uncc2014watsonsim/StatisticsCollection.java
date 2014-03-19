@@ -83,7 +83,7 @@ class StatsGenerator {
 	});
 	Researcher[] researchers = new Researcher[]{
 			new MergeResearcher(),
-			new NameRecognitionResearcher()
+			new PersonRecognitionResearcher()
 	};
 	Learner learner = new PrebuiltLRLearner();
 	

@@ -32,9 +32,13 @@ public class IndriSearcher extends Searcher {
 			throw new RuntimeException("Indri index is missing or corrupt. Please check that you entered the right path in UserSpecificConstants.java.");
 		}
 		
-		ScoredExtentResult[] ser = IndriSearcher.q
-				.runQuery(String.format(UserSpecificConstants.indriResultsFilter,query), 
-						MAX_RESULTS);
+		String exclusions = "";
+		for (String term: query.split("\\W+")) {
+			exclusions += String.format("10.0 #NOT(title: %s) ", term);
+		}
+		String main_query = String.format("#WEIGHT(1.0 text:#combine(%s) %s)", query, exclusions);
+		
+		ScoredExtentResult[] ser = IndriSearcher.q.runQuery(query, MAX_RESULTS);
 		// Fetch all titles, texts
 		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
 		// Compile them into a uniform format

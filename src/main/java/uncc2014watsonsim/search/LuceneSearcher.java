@@ -42,7 +42,7 @@ public class LuceneSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);*/
 	}
 
-	public synchronized List<Answer> runQuery(String q) throws Exception {
+	public synchronized List<Answer> runQuery(String question_text) throws Exception {
 		
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
@@ -51,6 +51,12 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);
+		
+		
+		String q = ""; 
+		for (String term : question_text.split("\\W+")) {
+			q += String.format("text:%s NOT title:%s ", term, term);
+		}
 		
 		ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
 		List<uncc2014watsonsim.Document> results = new ArrayList<uncc2014watsonsim.Document>(); 

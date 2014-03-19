@@ -4,27 +4,23 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
-import privatedata.UserSpecificConstants;
-import uncc2014watsonsim.search.CachingSearcher;
-import uncc2014watsonsim.search.IndriSearcher;
-import uncc2014watsonsim.search.LuceneSearcher;
-import uncc2014watsonsim.search.Searcher;
-import uncc2014watsonsim.search.GoogleSearcher;
+import uncc2014watsonsim.search.*;
+import uncc2014watsonsim.scoring.*;
 /**
  *
  * @author Phani Rahul
  */
 public class WatsonSim {
-	static final Searcher searcher = new CachingSearcher(new Searcher[]{
+	static final Searcher[] searchers = new Searcher[]{
 		new LuceneSearcher(),
-		new IndriSearcher()
+		new IndriSearcher(),
 		//new GoogleSearcher()
-	});
+	};
 	static final Researcher[] researchers = {
 		new MergeResearcher(),
-		new NameRecognitionResearcher()
+		new PersonRecognitionResearcher()
 	};
-	static final Learner learner = new PrebuiltLRLearner();
+	static final Learner learner = new WekaLearner();
 
     /**
      * @param args the command line arguments
@@ -46,12 +42,12 @@ public class WatsonSim {
 	        System.out.println("This is a " + question.getType() + " Question");
 	        
         	// Query every engine
-            question.addAll(searcher.runQuery(question.text));
+	        for (Searcher s: searchers)
+	        	question.addAll(s.runQuery(question.text));
 	        
         	for (Researcher r : researchers) {
         		r.research(question);
         	}
-	        	
         	
 	        learner.test(question);
 	        // Not a range-based for because we want the rank

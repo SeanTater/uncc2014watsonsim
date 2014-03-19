@@ -16,13 +16,13 @@ import opennlp.tools.util.Span;
  *
  * @author Phani Rahul
  */
-public class NameRecognitionResearcher extends Researcher {
+public class PersonRecognitionResearcher extends Researcher {
 
     private static TokenNameFinderModel model = null;
     private static NameFinderME nameFinder = null;
     private boolean enabled=true;
 
-    public NameRecognitionResearcher() {
+    public PersonRecognitionResearcher() {
         InputStream is;
 		try {
 			is = new FileInputStream(SampleData.get_filename("en-ner-person.bin"));
@@ -36,7 +36,7 @@ public class NameRecognitionResearcher extends Researcher {
         try {
             nameFinder = new NameFinderME(model);
         } catch (Exception ex) {
-            Logger.getLogger(NameRecognitionResearcher.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PersonRecognitionResearcher.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
