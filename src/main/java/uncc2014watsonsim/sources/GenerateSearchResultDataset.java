@@ -48,7 +48,7 @@ public class GenerateSearchResultDataset {
     	}
         ExecutorService pool = Executors.newFixedThreadPool(8);
         DBQuestionSource dbquestions = new DBQuestionSource();
-        dbquestions.fetch_without_results(start, 5);
+        dbquestions.fetch_without_results(start, 100);
     	for (Question q : dbquestions) {
     		//pool.execute(new SingleTrainingResult(q));
     		new SingleTrainingResult(q).run();
