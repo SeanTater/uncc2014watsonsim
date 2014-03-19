@@ -1,0 +1,11 @@
+@relation allengines-question-results
+
+@attribute indrirank numeric
+@attribute indriscore numeric
+@attribute lucenerank numeric
+@attribute lucenescore numeric
+@attribute googlerank numeric
+@attribute correct numeric
+
+@data
+

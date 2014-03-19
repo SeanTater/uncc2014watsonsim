@@ -3,6 +3,9 @@ uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watso
 
 Deep Question Answering System
 
+## Check out the video
+For Linux users, there is [a video walk-through](http://youtu.be/v8LOfA8trn8) taking you from a clean Fedora install to completed Google query homework. Even if you don't use Linux, you may want to refer to it.
+
 ## Get started
 - `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
 - Download and unzip [gradle](http://services.gradle.org/distributions/gradle-1.11-bin.zip) somewhere convenient to call from the command line. (Most Linux distros have a packaged version that may be easier, but may also be out of date.)
