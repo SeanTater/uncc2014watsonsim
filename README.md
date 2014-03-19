@@ -35,6 +35,7 @@ For Linux users, there is [a video walk-through](http://youtu.be/v8LOfA8trn8) ta
 - Open and run src/main/java/uncc2014watsonsim/sources/GenerateSearchResultDataset with your favorite IDE (Eclipse may be easier).
   - When it asks, give your question starting ID.
 - If it's not working, submit an issue.
+- *If you are re-running this, make sure you have the latest version of the program first with `git pull`!*
 - One known issue is a "GoogleJsonResponseException: 500 Internal Server Error" "Backend Error".  To resolve, increase the Thread.sleep(1000) time in GenerateSearchResultDataset.java.  Try 2000 or 4000.  (10000 works but is slow.)
 
 ## Start developing
