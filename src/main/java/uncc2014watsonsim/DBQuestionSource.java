@@ -42,12 +42,12 @@ public class DBQuestionSource extends QuestionSource {
 	 * @throws SQLException */
 	public static void replace_cache(Question q, List<Answer> results) throws SQLException {
 		// Get a list of results and populate the questions with them
-		PreparedStatement bulk_delete = db.prep("delete from results where question = ?;");
+		//PreparedStatement bulk_delete = db.prep("delete from results where question = ?;");
 		PreparedStatement bulk_insert = db.prep(
-				"insert into results(question, title, fulltext, engine, rank, score, reference) "
+				"insert or replace into results(question, title, fulltext, engine, rank, score, reference) "
 				+ "values (?, ?, ?, ?, ?, ?, ?);");
-	    bulk_delete.setLong(1, q.id);
-	    bulk_delete.execute();
+	    //bulk_delete.setLong(1, q.id);
+	    //bulk_delete.execute();
 	    
 		for (Answer r : results) {
 			bulk_insert.setLong(1, q.id);
@@ -65,11 +65,13 @@ public class DBQuestionSource extends QuestionSource {
 	
 	public void read_results(ResultSet sql) throws SQLException {
 		while(sql.next()){
-			add(Question.known(
-				sql.getString("question"),
-				sql.getString("answer"),
-				sql.getString("category")
-			));
+			Question q = Question.known(
+					sql.getString("question"),
+					sql.getString("answer"),
+					sql.getString("category")
+				);
+			q.id = sql.getInt("rowid");
+			add(q);
 		}
 	}
 }

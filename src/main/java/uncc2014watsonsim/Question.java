@@ -73,5 +73,5 @@ public class Question extends ArrayList<Answer>{
     public void setType(QType type) {
         this.type = type;
     }
-
 }
+
