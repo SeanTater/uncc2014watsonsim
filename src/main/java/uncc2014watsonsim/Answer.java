@@ -101,7 +101,8 @@ public class Answer implements Comparable<Answer> {
     	//String correct = isCorrect() ? "✓" : "✗";
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
-    	return String.format("[%01f %-3s] %s", first("combined").score, engines, getTitle());
+    	//return String.format("[%01f %-3s] %s", first("combined").score, engines, getTitle());
+    	return String.format("[%01f ] %s", first("combined").score, getTitle());
     }
     
     /** Fetch the first Engine with this name if it exists (otherwise null) */
