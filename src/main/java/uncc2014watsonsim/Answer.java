@@ -1,7 +1,9 @@
 package uncc2014watsonsim;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +15,7 @@ import org.json.simple.JSONObject;
  */
 public class Answer implements Comparable<Answer> {
     public List<Document> docs = new ArrayList<Document>();
+    public Map<String, Double> scores = new HashMap<String, Double>();
 
     /** Create an Answer with one implicitly defined Document */
     public Answer(Document d) {
@@ -20,18 +23,19 @@ public class Answer implements Comparable<Answer> {
     }
     
     /** Create an Answer with one implicitly defined Document */
-    public Answer(String engine, String title, String full_text, String reference, long rank, double score) {
-        this(new Document(engine, title, full_text, reference, rank, score));
+    public Answer(String engine, String title, String full_text, String reference, double rank, double score) {
+    	this(new Document(engine, title, full_text, reference));
+    	scores.put(engine+"_rank", rank);
+    	scores.put(engine+"_score", score);
     }
     
     
     /** Create an Answer (with engine) from JSON */
-	public Answer(String engine_name, JSONObject attr) {
-		// There is a bit of redundancy: the engine name is in every attribute
-        String title = (String) attr.get(String.format("%s_title", engine_name));
-        long rank = (long) attr.get(String.format("%s_rank", engine_name));
-        double score = (double) attr.get(String.format("%s_score", engine_name));
-        docs.add(new Document(engine_name, title, "", null, rank, score));
+	public Answer(String engine, JSONObject attr) {
+        String title = (String) attr.get(engine+"_title");
+        scores.put(engine+"_rank", (double) attr.get(engine+"_rank"));
+        scores.put(engine+"_score", (double) attr.get(engine+"_score"));
+        docs.add(new Document(engine, title, "", null));
 	}
 	
     /** some discussion has to be made on how this has to work. Not finalized*/
@@ -107,28 +111,20 @@ public class Answer implements Comparable<Answer> {
     	//String correct = isCorrect() ? "✓" : "✗";
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
-    	return String.format("[%01f %-3s] %s", first("combined").score, engines, getTitle());
+    	return String.format("[%01f %-3s] %s", score(), engines, getTitle());
     }
     
     /** Fetch the first Engine with this name if it exists (otherwise null) */
-    public Document first(String name) {
-        // A linear search of 3 or 4 engines is probably not bad
-		for (Document e: docs) {
-			if (e.engine_name.equals(name)) {
-				return e;
-			}
-		}
-        return null;
+    public Double score() {
+        return scores.get("combined");
     }
     
     @Override
 	public int compareTo(Answer other) {
-    	Document us = first("combined");
-    	Document them = other.first("combined");
-    	if (us == null || them == null)
+    	if (score() == null || other.score() == null)
     		// Comparing a resultset without a combined engine is undefined
     		return 0;
-    	return new Double(us.score).compareTo(new Double(them.score));
+    	return score().compareTo(other.score());
 	}
     
     /** Change this Answer to include all the information of another */

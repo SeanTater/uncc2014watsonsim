@@ -46,13 +46,15 @@ public class CachingSearcher extends Searcher {
 				for (Answer a: s.runQuery(query)) {
 					// Add every Answer to the cache
 					results.add(a);
+
+					String engine = a.docs.get(0).engine_name;
 					set_cache.setString(1, query);
-					set_cache.setString(2, a.docs.get(0).engine_name);
+					set_cache.setString(2, engine);
 					set_cache.setString(3, a.docs.get(0).title);
 					set_cache.setString(4, a.docs.get(0).text);
 					set_cache.setString(5, a.docs.get(0).reference);
-					set_cache.setLong(6, a.docs.get(0).rank);
-					set_cache.setDouble(7, a.docs.get(0).score);
+					set_cache.setDouble(6, a.scores.get(engine+"_rank"));
+					set_cache.setDouble(7, a.scores.get(engine+"_score"));
 					set_cache.addBatch();
 				}
 			}

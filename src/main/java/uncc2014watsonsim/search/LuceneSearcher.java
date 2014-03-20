@@ -55,16 +55,16 @@ public class LuceneSearcher extends Searcher {
 		
 		String q = ""; 
 		for (String term : question_text.split("\\W+")) {
-			q += String.format("text:%s NOT title:%s ", term, term);
+			q += String.format("text:%s ", term, term);
 		}
 		
 		ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
-		List<uncc2014watsonsim.Document> results = new ArrayList<uncc2014watsonsim.Document>(); 
+		List<Answer> results = new ArrayList<Answer>(); 
 		// This isn't range based because we need the rank
 		for (int i=0; i < MAX_RESULTS; i++) {
 			ScoreDoc s = hits[i];
 			Document doc = searcher.doc(s.doc);
-			results.add(new uncc2014watsonsim.Document(
+			results.add(new uncc2014watsonsim.Answer(
 					"lucene", 			// Engine
 					null,			  	// Title
 					null, 				// Text

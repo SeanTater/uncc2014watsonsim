@@ -30,17 +30,17 @@ public class StatisticsCollection {
 	@Test
 	public void factoid() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
-		new StatsGenerator("factoid", "where "
+		new StatsGenerator("factoid_kstar", "where "
 				+ "question not glob '*_*' "
 				+ "and category not glob '*COMMON BONDS*' "
 				+ "and category not glob '*BEFORE & AFTER*' "
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 20").run();
+				+ "limit 1000").run();
 	}
 	
-	@Test
+	/*@Test
 	public void notfactfitb() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		new StatsGenerator("not_fact_fitb", "where "
@@ -58,7 +58,7 @@ public class StatisticsCollection {
 	public void all() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		new StatsGenerator("all", "limit 20").run();
-	}
+	}*/
 }
 
 /**
@@ -81,7 +81,7 @@ class StatsGenerator {
 	Searcher s = new CachingSearcher(new Searcher[]{
 			new IndriSearcher(),
 			new LuceneSearcher(),
-			new GoogleSearcher()
+			//new GoogleSearcher()
 	});
 	Researcher[] researchers = new Researcher[]{
 			new MergeResearcher(),
@@ -116,10 +116,10 @@ class StatsGenerator {
 	public void calculateConfidenceHistogram(Question question) {
 		if (question.size() >= 1) {
 			// Supposing there is at least one answer
-			Answer rs = question.get(0);
+			Answer a = question.get(0);
 			// Clamp to [0, 99]
-			int bin = (int)(rs.first("combined").score * 100);
-			if(rs.equals(question.answer)) conf_correct[bin]++;
+			int bin = (int)(a.score() * 100);
+			if(a.equals(question.answer)) conf_correct[bin]++;
 			conf_hist[bin]++;
 		}
 	}

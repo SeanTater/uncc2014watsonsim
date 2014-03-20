@@ -74,7 +74,7 @@ class SingleTrainingResult extends Thread {
 	static Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		//new GoogleSearcher()
+		new GoogleSearcher()
 	};
 	
 	public SingleTrainingResult(Question q) {

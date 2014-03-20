@@ -21,11 +21,11 @@ public class WatsonSim {
 	static final Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		new GoogleSearcher()
+		//new GoogleSearcher()
 	};
 	
 	static final Researcher[] researchers = {
-		new MergeResearcher(),
+		//new MergeResearcher(),
 		new PersonRecognitionResearcher()
 	};
 	

@@ -42,9 +42,9 @@ public class IndriSearcher extends Searcher {
 		// Fetch all titles, texts
 		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
 		// Compile them into a uniform format
-		List<Document> results = new ArrayList<Document>();
+		List<Answer> results = new ArrayList<Answer>();
 		for (int i=0; i<ser.length; i++) {
-	    	results.add(new Document(
+	    	results.add(new Answer(
     			"indri",         	// Engine
     			null,				// Title
 				null, 				// Full Text

@@ -9,26 +9,21 @@ import uncc2014watsonsim.scoring.QuestionResultsScorer;
  *
  */
 public class WekaLearner extends Learner {
+	private final String[] names = {"indri_rank", "indri_score", "lucene_rank", "lucene_score", "google_rank"};
 	
 	public void test_implementation(Question question) throws Exception {
 		QuestionResultsScorer q = new AllEnginesResultsScorer();
 		q.initialize();
+		
 		for (Answer a: question) {
-			Document indri = a.first("indri") != null ? a.first("indri") : new Document("indri", "","", null, 20, 0);
-			Document lucene = a.first("lucene") != null? a.first("lucene") : new Document("lucene", "","", null, 20, 0);
-			Document google = a.first("google") != null ? a.first("google") : new Document("google", "","", null, 20, 0);
-			a.docs.add(new Document(
-					"combined", // Engine name
-					a.getTitle(), // Title
-					a.getFullText(), // Full Text
-					null, // Reference
-					0, // Rank
-					q.score(new double[]{
-							indri.rank,
-							indri.score,
-							lucene.rank,
-							lucene.score,
-							google.rank}))); // Score
+			double[] scores = {20.0, -15.0, 20.0, -1.0, 20.0};
+			
+			for (int i=0; i<names.length; i++) {
+				if (a.scores.containsKey(names[i]))
+					scores[i] = a.scores.get(names[i]);
+			}
+			
+			a.scores.put("combined", q.score(scores));
 		}
 		
 	}

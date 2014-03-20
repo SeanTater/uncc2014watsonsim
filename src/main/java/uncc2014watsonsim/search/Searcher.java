@@ -50,11 +50,12 @@ public abstract class Searcher {
     
     /** Fill in the missing titles and full texts from Answers using sources.db
      */
-    List<Answer> fillFromSources(List<Document> docs) {
+    List<Answer> fillFromSources(List<Answer> answers) {
     	List<Answer> results = new ArrayList<Answer>();
     	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?;");
 
-    	for (Document d: docs) {
+    	for (Answer a: answers) {
+    		Document d = a.docs.get(0);
     		ResultSet doc_row;
     		try {
 				fetcher.setString(1, d.reference);

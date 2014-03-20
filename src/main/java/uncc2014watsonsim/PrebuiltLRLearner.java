@@ -10,19 +10,19 @@ public class PrebuiltLRLearner extends Learner {
 	@Override
     public void test_implementation(Question question) {
     	for (Answer result : question) {
-    		Document lucene = result.first("lucene");
-    		Document indri = result.first("indri");
-    		Document combined = new Document("combined", result.getTitle(), result.getFullText(), null, 0, 0);
+    		Double lucene = result.scores.get("lucene");
+    		Double indri = result.scores.get("indri");
+    		Double combined = 0.0;
     		if (lucene != null && indri != null) {
-    			combined.score = scoreBoth(indri.score, lucene.score);
+    			combined = scoreBoth(indri, lucene);
     		} else if (lucene != null) {
-    			combined.score = scoreLucene(lucene.score);
+    			combined = scoreLucene(lucene);
     		} else if (indri != null) {
-    			combined.score = scoreIndri(indri.score);
+    			combined = scoreIndri(indri);
     		}
     		// In any of the above three cases, but not the "else":
     		if (lucene != null || indri != null)
-    			result.docs.add(combined);
+    			result.scores.put("combined", combined);
     	}
     }
     

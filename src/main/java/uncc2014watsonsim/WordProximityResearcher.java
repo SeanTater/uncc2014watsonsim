@@ -26,9 +26,11 @@ public class WordProximityResearcher extends Researcher {
 					distance++;
 				}
 			}
+
+			// This result is given as log(interval). Does that matter?
+			a.scores.put("word_proximity", average_log_distance);
 		}
 		
-		// This result is given as log(interval). Does that matter?
 	}
 	
 }

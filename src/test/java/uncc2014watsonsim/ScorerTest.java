@@ -33,7 +33,7 @@ public class ScorerTest {
 		q.add(yahoo1);
 		ml.test(q);
 		assertEquals(q.get(0), yahoo1);
-		assertEquals(q.get(0).first("combined").score, AverageLearner.logistic(0.75), 0.001);
+		assertEquals(q.get(0).scores.get("combined"), AverageLearner.logistic(0.75), 0.001);
 	}
 	
 	@Test
@@ -44,7 +44,7 @@ public class ScorerTest {
 		q.add(bing1);
 		ml.test(q);
 		assertEquals(q.get(0), yahoo1);
-		assertEquals(q.get(0).first("combined").score, AverageLearner.logistic(0.5), 0.001);
+		assertEquals(q.get(0).scores.get("combined"), AverageLearner.logistic(0.5), 0.001);
 	}
 		
 	@Test
