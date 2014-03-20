@@ -27,7 +27,7 @@ public class ScorerTest {
 	}
 
 	@Test
-	public void testOne() {
+	public void testOne() throws Exception {
 		// Make an exact copy when there is 1 result
 		Question q = new Question("Fake Question?");
 		q.add(yahoo1);
@@ -37,7 +37,7 @@ public class ScorerTest {
 	}
 	
 	@Test
-	public void testTwo() {
+	public void testTwo() throws Exception {
 		// Average two results
 		Question q = new Question("Fake Question?");
 		q.add(yahoo1);
@@ -48,7 +48,7 @@ public class ScorerTest {
 	}
 		
 	@Test
-	public void testSort() {
+	public void testSort() throws Exception {
 		// Sort unique results
 		Question q = new Question("Fake Question?");
 		q.add(yahoo1);

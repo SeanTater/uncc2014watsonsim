@@ -15,6 +15,7 @@ import static org.hamcrest.CoreMatchers.*;
 import org.junit.Test;
 
 import uncc2014watsonsim.search.CachingSearcher;
+import uncc2014watsonsim.search.GoogleSearcher;
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.Searcher;
@@ -23,7 +24,7 @@ public class StatisticsCollection {
 	
 	@Test
 	public void fitb() throws Exception {
-		new StatsGenerator("fitb", "where question glob '*_*' limit 100").run();
+		new StatsGenerator("fitb", "where question glob '*_*' limit 20").run();
 	}
 
 	@Test
@@ -36,7 +37,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 100").run();
+				+ "limit 20").run();
 	}
 	
 	@Test
@@ -49,14 +50,14 @@ public class StatisticsCollection {
 				+ "or category glob '*ANAGRAM*' "
 				+ "or category glob '*SCRAMBLED*' "
 				+ "or category glob '*JUMBLED*' "
-				+ "limit 100").run();
+				+ "limit 20").run();
 	}
 	
 	
 	@Test
 	public void all() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
-		new StatsGenerator("all", "limit 100").run();
+		new StatsGenerator("all", "limit 20").run();
 	}
 }
 
@@ -79,13 +80,14 @@ class StatsGenerator {
 	
 	Searcher s = new CachingSearcher(new Searcher[]{
 			new IndriSearcher(),
-			new LuceneSearcher()
+			new LuceneSearcher(),
+			new GoogleSearcher()
 	});
 	Researcher[] researchers = new Researcher[]{
 			new MergeResearcher(),
 			new PersonRecognitionResearcher()
 	};
-	Learner learner = new PrebuiltLRLearner();
+	Learner learner = new WekaLearner();
 	
 	public StatsGenerator(String dataset, String question_query) throws Exception {
 		this.dataset = dataset;

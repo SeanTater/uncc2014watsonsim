@@ -14,7 +14,7 @@ public class WatsonSim {
 	static final Searcher[] searchers = new Searcher[]{
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		//new GoogleSearcher()
+		new GoogleSearcher()
 	};
 	static final Researcher[] researchers = {
 		new MergeResearcher(),
