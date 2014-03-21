@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 
 /**
@@ -66,39 +65,23 @@ public class Answer implements Comparable<Answer> {
         return hash;
     }
 
-    @Override
     /** Are these two entries approximately equal?
      * Note: This equality is technically intransitive
      *       but treating it like it is may actually be a good idea
      */
-    public boolean equals(Object obj) {
-    	// Boilerplate equals()
-        if (obj == null) {
+    public boolean matches(Answer other) {
+        if (other == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Answer other = (Answer) obj;
         
-        // Now real code: compare titles
-        // TODO: NLP could do this better
-        // How far to go?
-        
-        // Here be dragons: This is (title_count^2 * title_length^3) complexity!
         for (Document doc1 : this.docs) {
-        	String t1 = doc1.title.replaceFirst("\\(.*\\)", "");
+        	String t1 = StringUtils.filterRelevant(doc1.title);
         	for (Document doc2 : other.docs) {
-        		String t2 = doc2.title.replaceFirst("\\(.*\\)", "");
-                // 2: Up to half of the shorter answer
-        		
-                int threshold = Math.min(t1.length(), t2.length()) / 2;
-                
-                if (StringUtils.getLevenshteinDistance(t1.toLowerCase(), t2.toLowerCase()) < threshold)
-                	return true;
+        		String t2 = StringUtils.filterRelevant(doc2.title);
+        		if (StringUtils.match_subset(t1, t2)) return true;
         	}
-        }
-    	return false;
+    	}
+        return false;
     }
 
     @Override

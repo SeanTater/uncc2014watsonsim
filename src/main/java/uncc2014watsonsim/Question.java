@@ -21,12 +21,7 @@ public class Question extends ArrayList<Answer>{
      */
     public Question(String text) {
         this.raw_text = text;
-        try {
-            this.text = StopFilter.filtered(text.replaceAll("[^0-9a-zA-Z ]+", "").trim());
-        } catch (IOException ex) {
-            Logger.getLogger(Question.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        this.text = StringUtils.filterRelevant(text);
         this.type = QClassDetection.detectType(this);
     }
 
