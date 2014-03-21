@@ -2,6 +2,8 @@ package uncc2014watsonsim;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +22,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	public static String filterRelevant(String text) {
 		String mQuestion="";
 		
-		text = text.replaceAll("[^0-9a-zA-Z ]+", "").trim();
+		text = text.replaceAll("[^0-9a-zA-Z ]+", "").toLowerCase().trim();
 		TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_46, new StringReader(text));
 		tokenStream = new org.apache.lucene.analysis.core.StopFilter(Version.LUCENE_46, tokenStream, EnglishAnalyzer.getDefaultStopSet());
 		CharTermAttribute token = tokenStream.addAttribute(CharTermAttribute.class);
@@ -50,29 +52,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             // Removing stop words and non-alphanumeric characters from the strings
             candidate = StringUtils.filterRelevant(candidate);
             reference = StringUtils.filterRelevant(reference);
-            String subs[] = candidate.split(" ");
-            String fulls[] = reference.split(" ");
-
-            //is one completely in two?
-            boolean there = true;
-            for (String o : subs) {
-                boolean subInFulls = false;
-                for (String t : fulls) {
-                    if(t.equalsIgnoreCase(o)){
-                        subInFulls = true;
-                        break;
-                    }                    
-                }
-                
-                if(!subInFulls){
-                    there=false;
-                    break;
-                }
-            }
-            if(there){
-                return true;
-            }
-            return false;
+            
+            // Match these two sets in linear (or linearithmic) time
+            HashSet<String> reference_terms = new HashSet<String>();
+            reference_terms.addAll(Arrays.asList(reference.toLowerCase().split("\\W+")));
+            return reference_terms.containsAll(Arrays.asList(candidate.toLowerCase().split("\\W+")));
     }
     
     /** Guess if one answer matches the other based on levenshtein distance */
