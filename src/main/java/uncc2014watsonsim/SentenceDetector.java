@@ -1,4 +1,4 @@
-
+package uncc2014watsonsim;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,7 +27,6 @@ import opennlp.tools.util.Span;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class SentenceDetector {
 	
@@ -150,8 +149,6 @@ public class SentenceDetector {
         Span nameSpansOrganization[] = organizationFinder.find(tokens);
         System.out.println("Name Entity Recogntion date: ");
         System.out.println(Arrays.toString(nameSpansOrganization));
-        
-      
-        
+                
     }
 }
