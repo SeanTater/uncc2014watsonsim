@@ -47,8 +47,7 @@ public class GenerateSearchResultDataset {
     		return;
     	}
         ExecutorService pool = Executors.newFixedThreadPool(8);
-        DBQuestionSource dbquestions = new DBQuestionSource();
-        dbquestions.fetch_without_results(start, 100);
+        DBQuestionSource dbquestions = new DBQuestionSource("where rowid > "+start+" limit 100");
     	for (Question q : dbquestions) {
     		//pool.execute(new SingleTrainingResult(q));
     		new SingleTrainingResult(q).run();
@@ -73,8 +72,8 @@ public class GenerateSearchResultDataset {
 class SingleTrainingResult extends Thread {
 	Question q;
 	static Searcher[] searchers = {
-		//new LuceneSearcher(),
-		//new IndriSearcher(),
+		new LuceneSearcher(),
+		new IndriSearcher(),
 		new GoogleSearcher()
 	};
 	
@@ -87,10 +86,10 @@ class SingleTrainingResult extends Thread {
 			List<Answer> uncollated_results = new ArrayList<Answer>(); 
 			for (Searcher searcher : searchers)
 				uncollated_results.addAll(searcher.runQuery(q.text));
-			Thread.sleep(1000);
+			//Thread.sleep(1000);
 			DBQuestionSource.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.
-			System.out.print(".");
+			System.out.print(""+ q.id + " ");
 			// Somewhere around once in 80 times..
 			if (q.id % 80 == 0) System.out.println(); 
 		} catch (Exception e) {

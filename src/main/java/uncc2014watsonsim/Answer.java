@@ -1,10 +1,11 @@
 package uncc2014watsonsim;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 
 /**
@@ -13,19 +14,28 @@ import org.json.simple.JSONObject;
  */
 public class Answer implements Comparable<Answer> {
     public List<Document> docs = new ArrayList<Document>();
+    public Map<String, Double> scores = new HashMap<String, Double>();
 
-    /** Create an Answer with one implicitly defined Engine */
-    public Answer(String title, String full_text, String reference, String engine, long rank, double score) {
-        this.docs.add(new Document(title, full_text, reference, engine, rank, score));
+    /** Create an Answer with one implicitly defined Document */
+    public Answer(Document d) {
+        this.docs.add(d);
     }
     
+    /** Create an Answer with one implicitly defined Document */
+    public Answer(String engine, String title, String full_text, String reference, double rank, double score) {
+    	this(new Document(engine, title, full_text, reference));
+    	
+    	scores.put(engine+"_rank", rank);
+    	scores.put(engine+"_score", score);
+    }
+    
+    
     /** Create an Answer (with engine) from JSON */
-	public Answer(String engine_name, JSONObject attr) {
-		// There is a bit of redundancy: the engine name is in every attribute
-        String title = (String) attr.get(String.format("%s_title", engine_name));
-        long rank = (long) attr.get(String.format("%s_rank", engine_name));
-        double score = (double) attr.get(String.format("%s_score", engine_name));
-        docs.add(new Document(title, "", null, engine_name, rank, score));
+	public Answer(String engine, JSONObject attr) {
+        String title = (String) attr.get(engine+"_title");
+        scores.put(engine+"_rank", (double) attr.get(engine+"_rank"));
+        scores.put(engine+"_score", (double) attr.get(engine+"_score"));
+        docs.add(new Document(engine, title, "", null));
 	}
 	
     /** some discussion has to be made on how this has to work. Not finalized*/
@@ -56,39 +66,22 @@ public class Answer implements Comparable<Answer> {
         return hash;
     }
 
-    @Override
-    /** Are these two entries approximately equal?
-     * Note: This equality is technically intransitive
-     *       but treating it like it is may actually be a good idea
+    /** Does `this` match `other`, where `this` is the candidate answer
+     *  and `other` is the reference. **Not Transitive or Commutative**!
      */
-    public boolean equals(Object obj) {
-    	// Boilerplate equals()
-        if (obj == null) {
+    public boolean matches(Answer other) {
+        if (other == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Answer other = (Answer) obj;
         
-        // Now real code: compare titles
-        // TODO: NLP could do this better
-        // How far to go?
-        
-        // Here be dragons: This is (title_count^2 * title_length^3) complexity!
         for (Document doc1 : this.docs) {
-        	String t1 = doc1.title.replaceFirst("\\(.*\\)", "");
+        	String t1 = StringUtils.filterRelevant(doc1.title);
         	for (Document doc2 : other.docs) {
-        		String t2 = doc2.title.replaceFirst("\\(.*\\)", "");
-                // 2: Up to half of the shorter answer
-        		
-                int threshold = Math.min(t1.length(), t2.length()) / 2;
-                
-                if (StringUtils.getLevenshteinDistance(t1.toLowerCase(), t2.toLowerCase()) < threshold)
-                	return true;
+        		String t2 = StringUtils.filterRelevant(doc2.title);
+        		if (StringUtils.match_subset(t1, t2)) return true;
         	}
-        }
-    	return false;
+    	}
+        return false;
     }
 
     @Override
@@ -101,32 +94,24 @@ public class Answer implements Comparable<Answer> {
     	//String correct = isCorrect() ? "✓" : "✗";
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
-    	//return String.format("[%01f %-3s] %s", first("combined").score, engines, getTitle());
-    	return String.format("[%01f ] %s", first("combined").score, getTitle());
+    	return String.format("[%01f %-3s] %s", score(), engines, getTitle());
     }
     
-    /** Fetch the first Engine with this name if it exists (otherwise null) */
-    public Document first(String name) {
-        // A linear search of 3 or 4 engines is probably not bad
-		for (Document e: docs) {
-			if (e.engine_name.equals(name)) {
-				return e;
-			}
-		}
-        return null;
+    /** Convenience method for returning the combined score for this answer */
+    public Double score() {
+        return scores.get("combined");
     }
     
     @Override
 	public int compareTo(Answer other) {
-    	Document us = first("combined");
-    	Document them = other.first("combined");
-    	if (us == null || them == null)
+    	if (score() == null || other.score() == null)
     		// Comparing a resultset without a combined engine is undefined
     		return 0;
-    	return new Double(us.score).compareTo(new Double(them.score));
+    	return score().compareTo(other.score());
 	}
     
-    /** Change this Answer to include all the information of another */
+    /** Change this Answer to include all the information of another
+     * TODO: What should we do to merge scores? */
     public void merge(Answer other) {
     	docs.addAll(other.docs);
     }

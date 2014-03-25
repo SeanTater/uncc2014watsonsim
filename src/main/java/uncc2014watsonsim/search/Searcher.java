@@ -1,8 +1,14 @@
 package uncc2014watsonsim.search;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Document;
+import uncc2014watsonsim.SQLiteDB;
 
 /*
  * This interface might change; Please be ready to accomodate the changes.
@@ -16,6 +22,8 @@ import uncc2014watsonsim.Answer;
  * @author Phani Rahul
  */
 public abstract class Searcher {
+	
+	static final SQLiteDB db = new SQLiteDB("sources");
 
     /**
      * Runs the <i>query</i>, populating a list of ResultSets
@@ -37,5 +45,32 @@ public abstract class Searcher {
     /**
      * How many results should Lucene and Indri return?
      */
-    public final int MAX_RESULTS = 20;
+    public final int MAX_RESULTS = 100;
+    
+    
+    /** Fill in the missing titles and full texts from Answers using sources.db
+     */
+    List<Answer> fillFromSources(List<Answer> answers) {
+    	List<Answer> results = new ArrayList<Answer>();
+    	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?;");
+
+    	for (Answer a: answers) {
+    		Document d = a.docs.get(0);
+    		ResultSet doc_row;
+    		try {
+				fetcher.setString(1, d.reference);
+				doc_row = fetcher.executeQuery();
+	    		d.title = doc_row.getString("title");
+	    		if (d.title == null) d.title = "";
+	    		d.text = doc_row.getString("text");
+	    		if (d.text == null) d.text = "";
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Failed to execute sources full text search. "
+						+ "Missing document? docno:"+d.reference);
+			}
+    		results.add(a);
+    	}
+    	return results;
+    }
 }

@@ -75,10 +75,10 @@ public class GoogleSearcher extends Searcher {
 		// Not a range for because we need rank
 		for (int i=0; i<in_r.size(); i++) {
 			results.add(new Answer(
-				in_r.get(i).getTitle(),  // Title 
-				in_r.get(i).getSnippet(),// "Full" Text
-				in_r.get(i).getFormattedUrl(), // Reference
-				"google",                // Engine
+				"google",  // Title 
+				in_r.get(i).getTitle(),// "Full" Text
+				in_r.get(i).getSnippet(), // Reference
+				in_r.get(i).getFormattedUrl(),                // Engine
 				i,                       // Rank 
 				(double) i
 				));

@@ -10,15 +10,15 @@ public class AverageLearner extends Learner {
 		for (Answer result : question) {
 			double score = 0;
 			int count = 0;
-			for (Document engine : result.docs) {
-				score += engine.score;
+			for (String engine : result.scores.keySet()) {
+				score += result.scores.get(engine);
 				count++;
 			}
 			// Average and scale (to make the resulting confidence more realistic)
 			score /= count;
 			// Logistic function
 			score = logistic(score);
-			result.docs.add(new Document(result.getTitle(), result.getFullText(), null, "combined", count, score));
+			result.scores.put("combined", score);
 		}
 	}
 	

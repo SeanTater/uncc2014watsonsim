@@ -4,12 +4,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
+import uncc2014watsonsim.search.*;
+import uncc2014watsonsim.scoring.*;
 import privatedata.UserSpecificConstants;
 
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.Searcher;
 import uncc2014watsonsim.search.GoogleSearcher;
+
 /**
  *
  * @author Phani Rahul
@@ -17,13 +20,16 @@ import uncc2014watsonsim.search.GoogleSearcher;
 public class WatsonSim {
 	static final Searcher[] searchers = {
 		new LuceneSearcher(),
-		new IndriSearcher()
+		new IndriSearcher(),
 		//new GoogleSearcher()
 	};
+	
 	static final Researcher[] researchers = {
-		
+		new MergeResearcher(),
+		new PersonRecognitionResearcher()
 	};
-	static final Learner learner = new AverageLearner();
+	
+	static final Learner learner = new WekaLearner();
 
     /**
      * @param args the command line arguments
@@ -44,36 +50,32 @@ public class WatsonSim {
 	        
 	        System.out.println("This is a " + question.getType() + " Question");
 	        
-	        for (Searcher s : searchers)
-	        	// Query every engine
-	            question.addAll(s.runQuery(question.text));
+        	// Query every engine
+	        for (Searcher s: searchers)
+	        	question.addAll(s.runQuery(question.text));
 	        
-        	for (Researcher r : researchers)
+	        /* This is Jagan's quotes FITB code. I do not have quotes indexed separately so I can't do this.
+	        for (Searcher s : searchers){
+	        	// Query every engine
+	        	if(question.getType() == QType.FACTOID){
+	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.indriIndex, UserSpecificConstants.luceneIndex));
+	        	} else if (question.getType() == QType.FITB) {
+	        		question.addAll(s.runQuery(question.text, UserSpecificConstants.quotesIndriIndex, UserSpecificConstants.quotesLuceneIndex));
+	        	} else {
+	        		return;
+	        	}
+	        }*/
+	        
+        	for (Researcher r : researchers) {
         		r.research(question);
-	        	
+        	}
         	
 	        learner.test(question);
+	        
 	        // Not a range-based for because we want the rank
 	        for (int i=0; i<question.size(); i++) {
 	        	Answer r = question.get(i);
-                /*String title = r.getTitle();
-                String aW[] = title.split(" ");
-                String qW[] = question.text.split(" ");
-                StringBuilder newTitle = new StringBuilder();
-                for(String a : aW ){
-                    boolean there = false;
-                    for(String q:qW){
-                        if(q.equalsIgnoreCase(a)){
-                            there = true;
-                            break;
-                        }
-                    }
-                    if(!there){
-                        newTitle.append(a);
-                        newTitle.append(" ");
-                    }
-                }
-                r.setTitle(newTitle.toString());*/
+	        	// The merge researcher does what was once here.
 	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
 	        

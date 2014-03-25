@@ -2,9 +2,6 @@ package uncc2014watsonsim;
 
 abstract public class Researcher {
 	// There will probably be something you want many researchers to do..
-	public void research(Question q) {
-		
-	}
 	
 	/** Default implementation of research for a question.
 	 * Simply calls research_answer for every Answer
@@ -12,7 +9,7 @@ abstract public class Researcher {
 	 * @param question
 	 * @throws Exception 
 	 */
-	public void research_question(Question q) throws Exception {
+	public void research(Question q) throws Exception{
 		for (Answer a : q)
 			research_answer(a);
 	}

@@ -46,7 +46,10 @@ db.executescript("""
     title text,
     text text,
     source text);
+""".format(table=args.table))
 
+
+"""
   drop trigger if exists {table}_bu;
   create trigger {table}_bu before update on {table} begin
     delete from search_{table} where docid=old.rowid;
@@ -64,4 +67,4 @@ db.executescript("""
   create trigger {table}_ai after insert on {table} begin
     insert into search_{table}(docid, docno, title, text, source) values(new.rowid, new.docno, new.title, new.text, new.source);
   end;
-    """.format(table=args.table))
+    """
