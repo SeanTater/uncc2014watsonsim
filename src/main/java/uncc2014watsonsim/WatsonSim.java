@@ -4,14 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
-import uncc2014watsonsim.search.*;
-import uncc2014watsonsim.scoring.*;
-import privatedata.UserSpecificConstants;
-
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.Searcher;
-import uncc2014watsonsim.search.GoogleSearcher;
 
 /**
  *

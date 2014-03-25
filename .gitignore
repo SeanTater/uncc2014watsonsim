@@ -6,3 +6,10 @@ build/
 *.jar
 *.war
 *.ear
+.classpath
+.project
+.settings/*
+bin/*
+data/*
+lib/*
+.gitignore
