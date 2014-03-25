@@ -24,6 +24,7 @@ public class Answer implements Comparable<Answer> {
     /** Create an Answer with one implicitly defined Document */
     public Answer(String engine, String title, String full_text, String reference, double rank, double score) {
     	this(new Document(engine, title, full_text, reference));
+    	
     	scores.put(engine+"_rank", rank);
     	scores.put(engine+"_score", score);
     }
@@ -65,9 +66,8 @@ public class Answer implements Comparable<Answer> {
         return hash;
     }
 
-    /** Are these two entries approximately equal?
-     * Note: This equality is technically intransitive
-     *       but treating it like it is may actually be a good idea
+    /** Does `this` match `other`, where `this` is the candidate answer
+     *  and `other` is the reference. **Not Transitive or Commutative**!
      */
     public boolean matches(Answer other) {
         if (other == null) {
@@ -97,7 +97,7 @@ public class Answer implements Comparable<Answer> {
     	return String.format("[%01f %-3s] %s", score(), engines, getTitle());
     }
     
-    /** Fetch the first Engine with this name if it exists (otherwise null) */
+    /** Convenience method for returning the combined score for this answer */
     public Double score() {
         return scores.get("combined");
     }
@@ -110,7 +110,8 @@ public class Answer implements Comparable<Answer> {
     	return score().compareTo(other.score());
 	}
     
-    /** Change this Answer to include all the information of another */
+    /** Change this Answer to include all the information of another
+     * TODO: What should we do to merge scores? */
     public void merge(Answer other) {
     	docs.addAll(other.docs);
     }

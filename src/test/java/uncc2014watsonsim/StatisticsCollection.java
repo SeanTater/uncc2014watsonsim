@@ -40,7 +40,7 @@ public class StatisticsCollection {
 				+ "limit 1000").run();
 	}
 	
-	/*@Test
+	@Test
 	public void notfactfitb() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		new StatsGenerator("not_fact_fitb", "where "
@@ -57,8 +57,8 @@ public class StatisticsCollection {
 	@Test
 	public void all() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
-		new StatsGenerator("all", "limit 20").run();
-	}*/
+		new StatsGenerator("all", "limit 250").run();
+	}
 }
 
 /**
@@ -102,6 +102,7 @@ class StatsGenerator {
 			
 			/// The basic pipeline
 			// Search
+
 			q.addAll(s.runQuery(q.text));
 			// Research
 			for (Researcher r: researchers)
@@ -191,7 +192,7 @@ class StatsGenerator {
 	
 			for (int rank=0; rank<question.size(); rank++) {
 				Answer candidate = question.get(rank);
-				if(candidate.equals(question.answer)) {
+				if (candidate.matches(question.answer)) {
 					onCorrectAnswer(question, candidate, rank);
 					break;
 				}

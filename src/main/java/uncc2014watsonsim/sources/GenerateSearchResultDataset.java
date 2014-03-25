@@ -47,7 +47,7 @@ public class GenerateSearchResultDataset {
     		return;
     	}
         ExecutorService pool = Executors.newFixedThreadPool(8);
-        DBQuestionSource dbquestions = new DBQuestionSource("where rowid in (select question from results where engine='google')");
+        DBQuestionSource dbquestions = new DBQuestionSource("where rowid > "+start+" limit 100");
     	for (Question q : dbquestions) {
     		//pool.execute(new SingleTrainingResult(q));
     		new SingleTrainingResult(q).run();

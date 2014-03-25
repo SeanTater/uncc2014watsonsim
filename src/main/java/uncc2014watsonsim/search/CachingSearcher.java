@@ -53,8 +53,12 @@ public class CachingSearcher extends Searcher {
 					set_cache.setString(3, a.docs.get(0).title);
 					set_cache.setString(4, a.docs.get(0).text);
 					set_cache.setString(5, a.docs.get(0).reference);
-					set_cache.setDouble(6, a.scores.get(engine+"_rank"));
-					set_cache.setDouble(7, a.scores.get(engine+"_score"));
+					Double rank = a.scores.get(engine+"_rank");
+					if (rank == null) rank = 0.0;
+					set_cache.setDouble(6, rank);
+					Double score = a.scores.get(engine+"_score");
+					if (score == null) score = 0.0;
+					set_cache.setDouble(7, score);
 					set_cache.addBatch();
 				}
 			}

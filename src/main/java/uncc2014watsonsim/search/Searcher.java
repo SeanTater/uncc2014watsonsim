@@ -45,7 +45,7 @@ public abstract class Searcher {
     /**
      * How many results should Lucene and Indri return?
      */
-    public final int MAX_RESULTS = 20;
+    public final int MAX_RESULTS = 100;
     
     
     /** Fill in the missing titles and full texts from Answers using sources.db
@@ -69,7 +69,7 @@ public abstract class Searcher {
 				throw new RuntimeException("Failed to execute sources full text search. "
 						+ "Missing document? docno:"+d.reference);
 			}
-    		results.add(new Answer(d));
+    		results.add(a);
     	}
     	return results;
     }

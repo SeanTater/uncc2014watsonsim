@@ -25,7 +25,7 @@ public class WatsonSim {
 	};
 	
 	static final Researcher[] researchers = {
-		//new MergeResearcher(),
+		new MergeResearcher(),
 		new PersonRecognitionResearcher()
 	};
 	
