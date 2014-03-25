@@ -12,4 +12,5 @@ build/
 bin/*
 data/*
 lib/*
+src/main/java/privatedata/UserSpecificConstants.java
 .gitignore
