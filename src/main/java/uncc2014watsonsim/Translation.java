@@ -5,10 +5,6 @@
  */
 package uncc2014watsonsim;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author rahul
@@ -22,11 +18,7 @@ public class Translation {
 
         question = question.replaceAll("[^0-9a-zA-Z ]+", " ");
         String processed = null;
-        try {
-            processed = StopFilter.filtered(question);
-        } catch (IOException ex) {
-            Logger.getLogger(Translation.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processed = StringUtils.filterRelevant(question);
         String words[] = processed.split(" ");
         String query = indriResultsFilter;
 
@@ -41,11 +33,7 @@ public class Translation {
                 + " NOT title:index*";
         question = question.replaceAll("[^0-9a-zA-Z ]+", " ");
         String processed = null;
-        try {
-            processed = StopFilter.filtered(question);
-        } catch (IOException ex) {
-            Logger.getLogger(Translation.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processed = StringUtils.filterRelevant(question);
         String words[] = processed.split(" ");
 
         String query = luceneResultsFilter;
