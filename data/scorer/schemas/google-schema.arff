@@ -1,0 +1,7 @@
+@relation google-question-results
+
+@attribute googlerank numeric
+@attribute correct numeric
+
+@data
+

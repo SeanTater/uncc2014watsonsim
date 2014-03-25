@@ -4,8 +4,6 @@ public class Document extends Passage {
 	// Which engine found this passage? 
 	public String engine_name;
 	public String title;
-	public long rank;
-	public double score;
 	
 	/** Create a Document
 	 * @param engine name
@@ -15,11 +13,9 @@ public class Document extends Passage {
 	 * @param rank
 	 * @param score
 	 */
-	public Document(String title, String text, String reference, String engine_name, long rank, double score) {
+	public Document(String engine_name, String title, String text, String reference) {
 		super(text, reference);
 		this.engine_name = engine_name;
 		this.title = title;
-		this.rank = rank;
-		this.score = score;
 	}
 }

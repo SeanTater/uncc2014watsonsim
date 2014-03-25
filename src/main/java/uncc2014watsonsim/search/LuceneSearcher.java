@@ -42,7 +42,7 @@ public class LuceneSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);*/
 	}
 
-	public synchronized List<Answer> runQuery(String q) throws Exception {
+	public synchronized List<Answer> runQuery(String question_text) throws Exception {
 		
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
@@ -52,22 +52,28 @@ public class LuceneSearcher extends Searcher {
 		}
 		searcher = new IndexSearcher(reader);
 		
+		
+		String q = ""; 
+		for (String term : question_text.split("\\W+")) {
+			q += String.format("text:%s ", term, term);
+		}
+		
 		ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
 		List<Answer> results = new ArrayList<Answer>(); 
 		// This isn't range based because we need the rank
 		for (int i=0; i < MAX_RESULTS; i++) {
 			ScoreDoc s = hits[i];
 			Document doc = searcher.doc(s.doc);
-			results.add(new Answer(
-					doc.get("title"), // Title
-					doc.get("text"),  // Text
-					doc.get("docno"), // Reference
-					"lucene",         // Engine
-					i,                // Rank
-					s.score
+			results.add(new uncc2014watsonsim.Answer(
+					"lucene", 			// Engine
+					null,			  	// Title
+					null, 				// Text
+					doc.get("docno"),   // Reference
+					i,                	// Rank
+					s.score				// Source
 					));
 		}
-		return results;
+		return fillFromSources(results);
 	}
 
 }

@@ -21,12 +21,7 @@ public class Question extends ArrayList<Answer>{
      */
     public Question(String text) {
         this.raw_text = text;
-        try {
-            this.text = StopFilter.filtered(text.replaceAll("[^0-9a-zA-Z ]+", "").trim());
-        } catch (IOException ex) {
-            Logger.getLogger(Question.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        this.text = StringUtils.filterRelevant(text);
         this.type = QClassDetection.detectType(this);
     }
 
@@ -44,7 +39,7 @@ public class Question extends ArrayList<Answer>{
      */
     public static Question known(String question, String answer) {
         Question q = new Question(question);
-        q.answer = new Answer(answer, answer, null, "answer", 0, 1);
+        q.answer = new Answer("answer", answer, answer, null, 0, 1);
         return q;
     }
 
@@ -53,7 +48,7 @@ public class Question extends ArrayList<Answer>{
      */
     public static Question known(String question, String answer, String category) {
         Question q = new Question(question);
-        q.answer = new Answer(answer, answer, null, "answer", 0, 1);
+        q.answer = new Answer("answer", answer, answer, null, 0, 1);
         q.setCategory(category);
         return q;
     }
@@ -73,43 +68,5 @@ public class Question extends ArrayList<Answer>{
     public void setType(QType type) {
         this.type = type;
     }
-
-    @Override
-    /**
-     * Add a new result candidate
-     */
-    public boolean add(Answer cand) {
-//		for (ResultSet existing : this) {
-//			if (existing.equals(cand)) {
-//				existing.merge(cand);
-//				return false;
-//			}
-//		}
-        String title = cand.getTitle();
-        if (!title.contains("Category:")
-                && !title.contains("List of")) {
-            if (this.type == QType.FITB) {
-//                Regex.matchFITB(raw_text);
-                String newTitle = NameRecognition.hasNoun(title);
-                if ((newTitle.length()) > 0) {
-                    cand.setTitle(newTitle);
-                    super.add(cand);
-                }
-            } else{
-                super.add(cand);
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends Answer> c) {
-        boolean changed = false;
-        for (Answer rs : c) {
-            changed |= add(rs);
-        }
-        return changed;
-    }
-
 }
+
