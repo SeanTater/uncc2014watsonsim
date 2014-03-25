@@ -46,8 +46,8 @@ public class WatsonSim {
 	        System.out.println("This is a " + question.getType() + " Question");
 	        
         	// Query every engine
-	        for (Searcher s: searchers)
-	        	question.addAll(s.runQuery(question.text));
+	        for (Searcher s: searchers)	        	
+	        		question.addAll(s.runQuery(question.text));
 	        
 	        /* This is Jagan's quotes FITB code. I do not have quotes indexed separately so I can't do this.
 	        for (Searcher s : searchers){

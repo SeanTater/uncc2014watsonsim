@@ -6,6 +6,7 @@ import java.util.List;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Document;
+import uncc2014watsonsim.Translation;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
@@ -36,9 +37,11 @@ public class IndriSearcher extends Searcher {
 		for (String term: query.split("\\W+")) {
 			exclusions += String.format("10.0 #NOT(title: %s) ", term);
 		}
-		String main_query = String.format("#WEIGHT(1.0 text:#combine(%s) %s)", query, exclusions);
+		//String main_query = String.format("#WEIGHT(1.0 text:#combine(%s) %s)", query, exclusions);
 		
-		ScoredExtentResult[] ser = IndriSearcher.q.runQuery(query, MAX_RESULTS);
+		String main_query = Translation.getIndriQuery(query);
+		
+		ScoredExtentResult[] ser = IndriSearcher.q.runQuery(main_query, MAX_RESULTS);
 		// Fetch all titles, texts
 		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
 		// Compile them into a uniform format
