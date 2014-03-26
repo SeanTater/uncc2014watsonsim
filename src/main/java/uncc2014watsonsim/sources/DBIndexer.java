@@ -55,7 +55,7 @@ public class DBIndexer {
     /**
      * the input file which has to be indexed. This is a database made from TRECtext's
      */
-    private static final String INPUT_DB = "data" + File.separator + "sources.db";
+    private static final String INPUT_DB = "data/sources.db";
 	static Connection conn;
 	static {
 		try {
