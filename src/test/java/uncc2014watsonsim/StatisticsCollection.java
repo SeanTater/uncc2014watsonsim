@@ -37,7 +37,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 1000").run();
+				+ "limit 400").run();
 	}
 	
 	@Test
