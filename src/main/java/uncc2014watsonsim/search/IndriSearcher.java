@@ -6,6 +6,7 @@ import java.util.List;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Document;
+import uncc2014watsonsim.Translation;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
@@ -37,7 +38,9 @@ public class IndriSearcher extends Searcher {
 			throw new RuntimeException("Indri index is missing or corrupt. Please check that you entered the right path in UserSpecificConstants.java.");
 		}
 		
-		ScoredExtentResult[] ser = IndriSearcher.q.runQuery(query, MAX_RESULTS);
+		String main_query = Translation.getIndriQuery(query);
+		
+		ScoredExtentResult[] ser = IndriSearcher.q.runQuery(main_query, MAX_RESULTS);
 		// Fetch all titles, texts
 		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
 		

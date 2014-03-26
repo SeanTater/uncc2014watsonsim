@@ -18,6 +18,7 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Translation;
 
 /**
  *
@@ -63,7 +64,10 @@ public class LuceneSearcher extends Searcher {
 			q += String.format("text:%s ", term, term);
 		}
 		
-		ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
+		//ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
+		
+		ScoreDoc[] hits = searcher.search(parser.parse(Translation.getLuceneQuery(question_text)), MAX_RESULTS).scoreDocs;
+		
 		List<Answer> results = new ArrayList<Answer>(); 
 		// This isn't range based because we need the rank
 		for (int i=0; i < MAX_RESULTS; i++) {
