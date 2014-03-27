@@ -48,6 +48,10 @@ public class LuceneSearcher extends Searcher {
 		this.includes_fulltext = includes_fulltext;
 	}
 
+	public LuceneSearcher() {
+		this(true);
+	}
+
 	public synchronized List<Answer> runQuery(String question_text) throws Exception {
 		
 		try {

@@ -26,6 +26,10 @@ public class IndriSearcher extends Searcher {
 	public IndriSearcher(boolean includes_fulltext) {
 		this.includes_fulltext = includes_fulltext; 
 	}
+	
+	public IndriSearcher() {
+		this(true);
+	}
 
 	public List<Answer> runQuery(String query) throws Exception {
 		// Run the query
