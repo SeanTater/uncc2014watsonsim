@@ -6,6 +6,7 @@ build/
 *.jar
 *.war
 *.ear
+<<<<<<< Updated upstream
 .classpath
 .project
 .settings/*
@@ -14,3 +15,6 @@ data/*
 lib/*
 src/main/java/privatedata/UserSpecificConstants.java
 .gitignore
+=======
+/bin
+>>>>>>> Stashed changes

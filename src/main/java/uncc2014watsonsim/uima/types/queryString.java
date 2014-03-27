@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** A query string (question)
- * Updated by JCasGen Wed Mar 19 16:56:45 EDT 2014
- * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
+ * Updated by JCasGen Thu Mar 27 09:59:57 EDT 2014
+ * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/LuceneDocumentSearch.xml
  * @generated */
 public class queryString extends TOP {
   /** @generated

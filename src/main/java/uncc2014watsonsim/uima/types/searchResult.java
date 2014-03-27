@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Wed Mar 19 16:56:45 EDT 2014
- * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
+ * Updated by JCasGen Thu Mar 27 09:59:58 EDT 2014
+ * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/LuceneDocumentSearch.xml
  * @generated */
 public class searchResult extends TOP {
   /** @generated
@@ -176,7 +176,6 @@ public class searchResult extends TOP {
   //* Feature: score
 
   /** getter for score - gets The combined, or not combined, score of the result
-
    * @generated
    * @return value of the feature 
    */
@@ -185,8 +184,7 @@ public class searchResult extends TOP {
       jcasType.jcas.throwFeatMissing("score", "uncc2014watsonsim.uima.types.searchResult");
     return jcasType.ll_cas.ll_getDoubleValue(addr, ((searchResult_Type)jcasType).casFeatCode_score);}
     
-  /** setter for score - sets The combined, or not combined, score of the result
- 
+  /** setter for score - sets The combined, or not combined, score of the result 
    * @generated
    * @param v value to set into the feature 
    */
