@@ -45,7 +45,7 @@ public abstract class Searcher {
     /**
      * How many results should Lucene and Indri return?
      */
-    public final int MAX_RESULTS = 100;
+    public final int MAX_RESULTS = 30;
     
     
     /** Fill in the missing titles and full texts from Answers using sources.db
