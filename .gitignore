@@ -11,6 +11,6 @@ build/
 .settings/*
 bin/*
 data/*
-# lib/*
+lib/indri_jni.dll
+lib/indri_jni.so
 src/main/java/privatedata/UserSpecificConstants.java
-/bin
