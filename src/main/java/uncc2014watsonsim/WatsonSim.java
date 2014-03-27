@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
+import uncc2014watsonsim.search.BingSearcher;
 import uncc2014watsonsim.search.GoogleSearcher;
 import uncc2014watsonsim.search.IndriSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
@@ -17,7 +18,8 @@ public class WatsonSim {
 	static final Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		new GoogleSearcher()
+		new BingSearcher(),
+		//new GoogleSearcher()
 	};
 	
 	static final Researcher[] researchers = {
