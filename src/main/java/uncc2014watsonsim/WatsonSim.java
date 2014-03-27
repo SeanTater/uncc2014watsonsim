@@ -14,8 +14,8 @@ import uncc2014watsonsim.search.Searcher;
  */
 public class WatsonSim {
 	static final Searcher[] searchers = {
-		new LuceneSearcher(true),
-		new IndriSearcher(true),
+		new LuceneSearcher(),
+		new IndriSearcher(),
 		//new GoogleSearcher()
 	};
 	

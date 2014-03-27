@@ -21,15 +21,6 @@ public class IndriSearcher extends Searcher {
 		// Only initialize the query environment and index once
 		q = new QueryEnvironment();
 	}
-	private boolean includes_fulltext;
-	
-	public IndriSearcher(boolean includes_fulltext) {
-		this.includes_fulltext = includes_fulltext; 
-	}
-	
-	public IndriSearcher() {
-		this(true);
-	}
 
 	public List<Answer> runQuery(String query) throws Exception {
 		// Run the query
@@ -48,42 +39,24 @@ public class IndriSearcher extends Searcher {
 		// Fetch all titles, texts
 		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
 		
-		if (includes_fulltext) {
-			// If they have them, get the titles and full texts
-			ParsedDocument[] full_texts = IndriSearcher.q.documents(ser);
-			String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
+		// If they have them, get the titles and full texts
+		ParsedDocument[] full_texts = IndriSearcher.q.documents(ser);
+		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
 
-			// Compile them into a uniform format
-			List<Answer> results = new ArrayList<Answer>();
-			for (int i=0; i<ser.length; i++) {
-		    	results.add(new Answer(
-	    			"indri",         	// Engine
-	    			full_texts[i].text,	// Title
-					titles[i], // Full Text
-					docnos[i],          // Reference
-					i,                  // Rank
-					ser[i].score		// Score
-				));
-			}
-
-			return results;
-		} else {
-
-			// Compile them into a uniform format
-			List<Answer> results = new ArrayList<Answer>();
-			for (int i=0; i<ser.length; i++) {
-		    	results.add(new Answer(
-	    			"indri",         	// Engine
-	    			null,	// Title
-					null, // Full Text
-					docnos[i],          // Reference
-					i,                  // Rank
-					ser[i].score		// Score
-				));
-			}
-
-			return fillFromSources(results);
+		// Compile them into a uniform format
+		List<Answer> results = new ArrayList<Answer>();
+		for (int i=0; i<ser.length; i++) {
+	    	results.add(new Answer(
+    			"indri",         	// Engine
+    			titles[i],	        // Title
+    			full_texts[i].text, // Full Text
+				docnos[i],          // Reference
+				i,                  // Rank
+				ser[i].score		// Score
+			));
 		}
+		// Indri's titles and full texts could be empty. If they are, fill them from sources.db
+		return fillFromSources(results);
 	}
 
 }
