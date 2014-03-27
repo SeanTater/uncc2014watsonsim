@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import privatedata.UserSpecificConstants;
-
+import org.apache.http.client.fluent.*;
 import org.apache.commons.codec.binary.Base64;
 //import org.jsoup.Jsoup;
 
@@ -25,26 +25,16 @@ public class BingSearcher extends Searcher {
 		
 		//TODO: Should this be done in StringUtils?
 	    query = query.replaceAll(" ", "%20");
-	    byte[] accountKeyBytes = Base64.encodeBase64((UserSpecificConstants.bingAPIKey + ":" + UserSpecificConstants.bingAPIKey).getBytes());
-	    String accountKeyEnc = new String(accountKeyBytes);
-	    URL url;
+	    String url;
 	    try {
-	    	url = new URL("https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27" + query + "%27&$top=50&$format=Atom");
-	    	
-		    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		    conn.setRequestMethod("GET");
-		    conn.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
-		    conn.setRequestProperty("Accept", "application/json");
-		    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		    StringBuilder sb = new StringBuilder();
-		    String output;
-		    char[] buffer = new char[4096];
-		    
-		    while ((output = br.readLine()) != null) {
-		        sb.append(output);
-		    }
-		   
-		    conn.disconnect(); 
+	    	url = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27" + query + "%27&$top=50&$format=Atom";
+	    	String resp = Executor
+	    		.newInstance()
+	    		.auth(UserSpecificConstants.bingAPIKey, UserSpecificConstants.bingAPIKey)
+	    		.execute(Request.Get(url))
+	    		.returnContent()
+	    		.asString();
+		    // ?? conn.setRequestProperty("Accept", "application/json");
 	    	
 		    int count = 0;
 		    List<String> Titles = new ArrayList<String>();
@@ -54,7 +44,7 @@ public class BingSearcher extends Searcher {
 		  //*************************Title*******************************		
 		    List<Integer> startPositions = new ArrayList<Integer>();
 		    Pattern ps = Pattern.compile("<d:Title");
-		    Matcher ms = ps.matcher(sb);
+		    Matcher ms = ps.matcher(resp);
 		    while (ms.find() && count < MAX_RESULTS) {
 		    	startPositions.add(ms.start());
 		    	count++;
@@ -63,7 +53,7 @@ public class BingSearcher extends Searcher {
 		    count = 0;
 		    List<Integer> endPositions = new ArrayList<Integer>();
 		    Pattern pe = Pattern.compile("</d:Title>");
-		    Matcher me = pe.matcher(sb);
+		    Matcher me = pe.matcher(resp);
 		    while (me.find() && count < MAX_RESULTS) {
 		    	endPositions.add(me.start());
 		        count++;
@@ -71,16 +61,14 @@ public class BingSearcher extends Searcher {
 		    
 		    for (int x = 0; x < MAX_RESULTS; x++)
 		    {
-		    	sb.getChars(startPositions.get(x)+29, endPositions.get(x), buffer, 0);
-		    	Titles.add(new String(buffer));
+		    	Titles.add(resp.substring(startPositions.get(x)+29, endPositions.get(x)));
 		    }
 		    
 		  //*************************Description*******************************		
 		    count = 0;
-		    buffer = new char[4096];
 		    startPositions = new ArrayList<Integer>();
 		    ps = Pattern.compile("<d:Description");
-		    ms = ps.matcher(sb);
+		    ms = ps.matcher(resp);
 		    while (ms.find() && count < MAX_RESULTS) {
 		    	startPositions.add(ms.start());
 		    	count++;
@@ -89,7 +77,7 @@ public class BingSearcher extends Searcher {
 		    count = 0;
 		    endPositions = new ArrayList<Integer>();
 		    pe = Pattern.compile("</d:Description>");
-		    me = pe.matcher(sb);
+		    me = pe.matcher(resp);
 		    while (me.find() && count < MAX_RESULTS) {
 		    	endPositions.add(me.start());
 		        count++;
@@ -97,16 +85,14 @@ public class BingSearcher extends Searcher {
 		    
 		    for (int x = 0; x < MAX_RESULTS; x++)
 		    {
-		    	sb.getChars(startPositions.get(x)+35, endPositions.get(x), buffer, 0);
-		    	Descriptions.add(new String(buffer));
+		    	Descriptions.add(resp.substring(startPositions.get(x)+35, endPositions.get(x)));
 		    }
 		    
 		  //*************************URL*******************************		
 		    count = 0;
-		    buffer = new char[4096];
 		    startPositions = new ArrayList<Integer>();
 		    ps = Pattern.compile("<d:Url");
-		    ms = ps.matcher(sb);
+		    ms = ps.matcher(resp);
 		    while (ms.find() && count < MAX_RESULTS) {
 		    	startPositions.add(ms.start());
 		    	count++;
@@ -115,7 +101,7 @@ public class BingSearcher extends Searcher {
 		    count = 0;
 		    endPositions = new ArrayList<Integer>();
 		    pe = Pattern.compile("</d:Url>");
-		    me = pe.matcher(sb);
+		    me = pe.matcher(resp);
 		    while (me.find() && count < MAX_RESULTS) {
 		    	endPositions.add(me.start());
 		        count++;
@@ -123,8 +109,7 @@ public class BingSearcher extends Searcher {
 		    
 		    for (int x = 0; x < MAX_RESULTS; x++)
 		    {
-		    	sb.getChars(startPositions.get(x)+27, endPositions.get(x), buffer, 0);
-		    	Urls.add(new String(buffer));
+		    	Urls.add(resp.substring(startPositions.get(x)+27, endPositions.get(x)));
 		    }
 		    
 		    for(int x = 0; x < Titles.size(); x++)
