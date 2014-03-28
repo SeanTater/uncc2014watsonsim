@@ -6,6 +6,7 @@ import java.util.List;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Document;
+import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
@@ -52,10 +53,9 @@ public class IndriSearcher extends Searcher {
     			"indri",         	// Engine
     			titles[i],	        // Title
     			full_texts[i].text, // Full Text
-				docnos[i],          // Reference
-				i,                  // Rank
-				ser[i].score		// Score
-			));
+				docnos[i])          // Reference
+			.score(Score.INDRI_RANK, (double) i)
+			.score(Score.INDRI_SCORE, ser[i].score));
 		}
 		// Indri's titles and full texts could be empty. If they are, fill them from sources.db
 		return fillFromSources(results);

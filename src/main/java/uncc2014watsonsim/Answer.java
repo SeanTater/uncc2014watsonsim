@@ -1,6 +1,7 @@
 package uncc2014watsonsim;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import org.json.simple.JSONObject;
  */
 public class Answer implements Comparable<Answer> {
     public List<Document> docs = new ArrayList<Document>();
-    public Map<String, Double> scores = new HashMap<String, Double>();
+    public Map<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
 
     /** Create an Answer with one implicitly defined Document */
     public Answer(Document d) {
@@ -22,20 +23,20 @@ public class Answer implements Comparable<Answer> {
     }
     
     /** Create an Answer with one implicitly defined Document */
-    public Answer(String engine, String title, String full_text, String reference, double rank, double score) {
+    public Answer(String engine, String title, String full_text, String reference) {
     	this(new Document(engine, title, full_text, reference));
-    	
-    	scores.put(engine+"_rank", rank);
-    	scores.put(engine+"_score", score);
     }
     
     
     /** Create an Answer (with engine) from JSON */
 	public Answer(String engine, JSONObject attr) {
-        String title = (String) attr.get(engine+"_title");
-        scores.put(engine+"_rank", (double) attr.get(engine+"_rank"));
-        scores.put(engine+"_score", (double) attr.get(engine+"_score"));
-        docs.add(new Document(engine, title, "", null));
+		this(
+			engine,
+			(String) attr.get(engine+"_title"),
+			"",
+			"");
+		score(Score.valueOf(engine+"_RANK"), (double) attr.get(engine+"_rank"));
+		score(Score.valueOf(engine+"_SCORE"), (double) attr.get(engine+"_score"));
 	}
 	
     /** some discussion has to be made on how this has to work. Not finalized*/
@@ -99,7 +100,16 @@ public class Answer implements Comparable<Answer> {
     
     /** Convenience method for returning the combined score for this answer */
     public Double score() {
-        return scores.get("combined");
+        return scores.get(Score.COMBINED);
+    }
+    
+    public Double score(Score name) {
+    	return scores.get(name);
+    }
+    
+    public Answer score(Score name, Double value) {
+    	scores.put(name, value);
+    	return this;
     }
     
     @Override

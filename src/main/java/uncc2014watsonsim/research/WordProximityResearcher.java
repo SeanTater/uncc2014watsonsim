@@ -6,6 +6,7 @@ import java.util.Set;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.Score;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.Searcher;
 
@@ -31,7 +32,7 @@ public class WordProximityResearcher extends Researcher {
 			}
 
 			// This result is given as log(interval). Does that matter?
-			a.scores.put("word_proximity", average_log_distance);
+			a.scores.put(Score.WORD_PROXIMITY, average_log_distance);
 		}
 		
 	}

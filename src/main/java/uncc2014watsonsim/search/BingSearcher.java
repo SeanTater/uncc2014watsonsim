@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Score;
 
 public class BingSearcher extends Searcher {
 	
@@ -38,10 +39,9 @@ public class BingSearcher extends Searcher {
 	        			"bing",         	// Engine
 	        			e.select("d|Title").text(),	        // Title
 	        			e.select("d|Description").text(), // Full Text
-	        			e.select("d|Url").text(),          // Reference
-	    				i,                  // Rank
-	    				0		// Score
-	    			));
+	        			e.select("d|Url").text())          // Reference
+	    				.score(Score.BING_RANK, (double) i) // Score
+	    			);
 	    		i++;
 	    	}
 		    

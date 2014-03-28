@@ -18,6 +18,7 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
 
 /**
@@ -72,10 +73,10 @@ public class LuceneSearcher extends Searcher {
 					"lucene", 			// Engine
 					doc.get("title"),	// Title
 					doc.get("text"), 	// Text
-					doc.get("docno"),   // Reference
-					i,                	// Rank
-					s.score				// Source
-					));
+					doc.get("docno"))   // Reference
+					.score(Score.LUCENE_RANK, (double) i)           // Rank
+					.score(Score.LUCENE_SCORE, (double) s.score)	// Source
+					);
 		}
 		
 		// Fill any missing full text from sources
