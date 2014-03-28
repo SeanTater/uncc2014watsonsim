@@ -18,6 +18,7 @@ public class Pipeline {
 		new MergeResearcher(),
 		new PersonRecognitionResearcher(),
 		new WordProximityResearcher(),
+		new CorrectResearcher(),
 		new WekaTeeResearcher(),
 	};
 	
