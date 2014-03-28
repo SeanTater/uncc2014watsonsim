@@ -12,8 +12,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import uncc2014watsonsim.Answer;
-		
+
 public class BingSearcher extends Searcher {
+	
 	@Override
 	public List<Answer> runQuery(String query) throws Exception {
 		

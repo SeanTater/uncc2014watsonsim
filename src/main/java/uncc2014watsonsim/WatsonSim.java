@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
+import uncc2014watsonsim.research.MergeResearcher;
+import uncc2014watsonsim.research.PersonRecognitionResearcher;
+import uncc2014watsonsim.research.Researcher;
+import uncc2014watsonsim.research.WordProximityResearcher;
 import uncc2014watsonsim.search.BingSearcher;
 import uncc2014watsonsim.search.GoogleSearcher;
 import uncc2014watsonsim.search.IndriSearcher;
@@ -24,7 +28,8 @@ public class WatsonSim {
 	
 	static final Researcher[] researchers = {
 		new MergeResearcher(),
-		new PersonRecognitionResearcher()
+		new PersonRecognitionResearcher(),
+		new WordProximityResearcher()
 	};
 	
 	static final Learner learner = new WekaLearner();

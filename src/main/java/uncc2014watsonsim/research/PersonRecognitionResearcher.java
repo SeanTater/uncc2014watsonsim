@@ -1,4 +1,4 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.research;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +11,10 @@ import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.Span;
+import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.QType;
+import uncc2014watsonsim.Question;
+import uncc2014watsonsim.SampleData;
 
 /**
  *

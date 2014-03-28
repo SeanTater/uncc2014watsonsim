@@ -20,7 +20,9 @@ public class IndriSearcher extends Searcher {
 	static {
 		// Only initialize the query environment and index once
 		q = new QueryEnvironment();
+		
 	}
+	
 
 	public List<Answer> runQuery(String query) throws Exception {
 		// Run the query

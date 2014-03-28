@@ -14,6 +14,9 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
+import uncc2014watsonsim.research.MergeResearcher;
+import uncc2014watsonsim.research.PersonRecognitionResearcher;
+import uncc2014watsonsim.research.Researcher;
 import uncc2014watsonsim.search.CachingSearcher;
 import uncc2014watsonsim.search.GoogleSearcher;
 import uncc2014watsonsim.search.IndriSearcher;

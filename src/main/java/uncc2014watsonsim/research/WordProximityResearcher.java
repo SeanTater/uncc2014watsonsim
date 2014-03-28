@@ -1,9 +1,11 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.research;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Question;
 import uncc2014watsonsim.search.LuceneSearcher;
 import uncc2014watsonsim.search.Searcher;
 
