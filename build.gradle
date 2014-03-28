@@ -46,6 +46,8 @@ dependencies {
     compile group: "com.google.api-client",          name: "google-api-client",       version: "1.17.0-rc"
     compile 'com.google.apis:google-api-services-customsearch:v1-rev34-1.17.0-rc'
     compile "com.google.http-client:google-http-client-jackson2:1.17.0-rc"
+    compile "org.apache.abdera:abdera-parser:1.1.1"
+    compile "org.jsoup:jsoup:1.7.3"
 
     // Approximate String Matching
     compile 'org.apache.commons:commons-lang3:3.2.1'
