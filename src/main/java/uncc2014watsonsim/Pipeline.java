@@ -1,16 +1,7 @@
 package uncc2014watsonsim;
 
-import java.util.HashSet;
-
-import uncc2014watsonsim.research.MergeResearcher;
-import uncc2014watsonsim.research.PersonRecognitionResearcher;
-import uncc2014watsonsim.research.Researcher;
-import uncc2014watsonsim.research.WordProximityResearcher;
-import uncc2014watsonsim.search.BingSearcher;
-import uncc2014watsonsim.search.GoogleSearcher;
-import uncc2014watsonsim.search.IndriSearcher;
-import uncc2014watsonsim.search.LuceneSearcher;
-import uncc2014watsonsim.search.Searcher;
+import uncc2014watsonsim.research.*;
+import uncc2014watsonsim.search.*;
 
 /** The standard Question Analysis pipeline
  *
@@ -26,7 +17,8 @@ public class Pipeline {
 	static final Researcher[] researchers = {
 		new MergeResearcher(),
 		new PersonRecognitionResearcher(),
-		new WordProximityResearcher()
+		new WordProximityResearcher(),
+		new WekaTeeResearcher(),
 	};
 	
 	static final Learner learner = new WekaLearner();
@@ -60,9 +52,12 @@ public class Pipeline {
         ignoreSet.add("J! Archive");
         ignoreSet.add("Jeopardy");
         */
-    	for (Researcher r : researchers) {
+    	for (Researcher r : researchers)
     		r.research(question);
-    	}
+    	
+    	for (Researcher r : researchers)
+    		r.complete();
+    	
     	
         learner.test(question);
         return question;

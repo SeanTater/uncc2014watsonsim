@@ -8,7 +8,9 @@ import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.SQLiteDB;
+import uncc2014watsonsim.Score;
 
+//TODO: Enum scoring breaks this class.
 public class CachingSearcher extends Searcher {
 	Searcher[] searchers;
 	SQLiteDB db = new SQLiteDB("questions");
@@ -29,14 +31,17 @@ public class CachingSearcher extends Searcher {
 
 		while (sql.next()) {
 			// Load cache into Answers
-			results.add(new Answer(
+			Answer a = new Answer(
 					sql.getString("engine"),
 					sql.getString("title"),
 					sql.getString("fulltext"),
-					sql.getString("reference"),
-					sql.getLong("rank"),
-					sql.getDouble("score")
-					));
+					sql.getString("reference"));
+			try {
+				a.score(Score.valueOf(sql.getString("engine").toUpperCase() + "_RANK"), sql.getDouble("rank"));
+			} catch (NullPointerException e) {}
+			try {
+				a.score(Score.valueOf(sql.getString("engine").toUpperCase() + "_SCORE"), sql.getDouble("score"));
+			} catch (NullPointerException e) {}
 		}
 		if (results.isEmpty()) {
 			// If the SQL search didn't return anything, then run the Searcher.

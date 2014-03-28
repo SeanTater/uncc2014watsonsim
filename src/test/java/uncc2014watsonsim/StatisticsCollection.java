@@ -27,7 +27,7 @@ public class StatisticsCollection {
 	
 	@Test
 	public void fitb() throws Exception {
-		new StatsGenerator("fitb", "where question glob '*_*' limit 20").run();
+		new StatsGenerator("fitb", "where question glob '*_*' limit 100").run();
 	}
 
 	@Test

@@ -24,4 +24,9 @@ abstract public class Researcher {
 	 * @param answer
 	 */
 	public void research_answer(Answer a) {}
+	
+	/** Default implementation for ending question research.
+	 * This might trigger some database inserts or fike writing, for example.
+	 */
+	public void complete() {};
 }

@@ -1,5 +1,7 @@
 package uncc2014watsonsim;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import uncc2014watsonsim.scoring.AllEnginesResultsScorer;
 import uncc2014watsonsim.scoring.QuestionResultsScorer;
 import uncc2014watsonsim.Score;
@@ -12,10 +14,7 @@ public class WekaLearner extends Learner {
 		q.initialize();
 		
 		for (Answer a: question) {
-			double[] scores = {20.0, -15.0, 20.0, -1.0, 20.0, 55.0, 10.0};
-			for (Score name : a.scores.keySet())
-				scores[name.ordinal()] = a.scores.get(name);
-			a.scores.put(Score.COMBINED, q.score(scores));
+			a.scores.put(Score.COMBINED, q.score(a.scoresArray()));
 		}
 		
 	}

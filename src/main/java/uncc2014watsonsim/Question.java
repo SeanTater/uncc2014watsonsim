@@ -12,7 +12,7 @@ public class Question extends ArrayList<Answer>{
 	public int id; // Question ID comes from the database and is optional.
 	public String text;
 	String raw_text;
-	Answer answer;
+	public Answer answer;
     private String category = "unknown";
     private QType type;
 
