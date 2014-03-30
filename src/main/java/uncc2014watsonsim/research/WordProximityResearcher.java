@@ -7,8 +7,6 @@ import java.util.Set;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.search.LuceneSearcher;
-import uncc2014watsonsim.search.Searcher;
 
 public class WordProximityResearcher extends Researcher {
 

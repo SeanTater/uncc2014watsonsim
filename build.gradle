@@ -6,7 +6,7 @@ apply plugin: 'download-task'
 
 // Meta information
 mainClassName = "uncc2014watsonsim.sources.DBIndexer"
-version = "0.2"
+version = "0.2.0"
 group = "edu.uncc"
 
 // Meta-dependencies (what you need so as to run this buildscript)
