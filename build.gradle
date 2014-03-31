@@ -65,6 +65,9 @@ dependencies {
 	
 	// UIMA for Java
 	compile group:'org.apache.uima',					name: 'uimaj-core',			version: '2.3.1'
+
+    // lightweight web framework
+    compile "com.sparkjava:spark-core:1.1.1"
 }
 
 

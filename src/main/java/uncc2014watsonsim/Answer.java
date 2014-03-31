@@ -101,6 +101,10 @@ public class Answer implements Comparable<Answer> {
     	return String.format("[%01f %-3s] %s", score(), engines, getTitle());
     }
     
+    public String toJSON() {
+    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", score(), getTitle().replace("\"", "\\\""));
+    }
+    
     /* Score retrieval */
     
     /** Return the combined score for the answer, or null */

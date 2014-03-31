@@ -25,16 +25,21 @@ public class Pipeline {
 	static final Learner learner = new WekaLearner();
 
 	
-	public static Question ask(String qtext) throws Exception {
+	public static Question ask(String qtext) {
 	    return ask(new Question(qtext));
 	}
 	
     /** Run the full standard pipeline */
-    public static Question ask(Question question) throws Exception {
+    public static Question ask(Question question) {
         
     	// Query every engine
-        for (Searcher s: searchers)	        	
-    		question.addAll(s.runQuery(question.text));
+        for (Searcher s: searchers)
+			try {
+				question.addAll(s.runQuery(question.text));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         
         /* This is Jagan's quotes FITB code. I do not have quotes indexed separately so I can't do this.
         for (Searcher s : searchers){
@@ -54,13 +59,23 @@ public class Pipeline {
         ignoreSet.add("Jeopardy");
         */
     	for (Researcher r : researchers)
-    		r.research(question);
+			try {
+				r.research(question);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	
     	for (Researcher r : researchers)
     		r.complete();
     	
     	
-        learner.test(question);
+        try {
+			learner.test(question);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return question;
     }
 }

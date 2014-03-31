@@ -22,7 +22,7 @@ public class GuessRelatedWords {
 
 	public static void main(String[] args) throws SQLException {
 		SQLiteDB db = new SQLiteDB("sources");
-		ResultSet sql = db.prep("select text from documents limit 5000;").executeQuery();
+		ResultSet sql = db.prep("select text from documents where text like \"%Shakespeare%\" or text like \"%Austen%\" limit 50;").executeQuery();
 		
 		long runtime = System.nanoTime();
 		while (sql.next()) {
@@ -62,7 +62,7 @@ public class GuessRelatedWords {
 		for (String token : common_tokens) {
 			common += a_scores.get(token) + b_scores.get(token);
 		}
-		return common / (a_scores.size() + b_scores.size() - common_tokens.size());
+		return common;
 	}
 	
 	
@@ -105,17 +105,17 @@ public class GuessRelatedWords {
 		// String tokens ==> Vertex tokens
 		for (String token : text.toLowerCase().split("\\W+")) {
 			Vertex v = word_to_vertex.get(token);
-			if (v != null) frontier.add(new ImmutableEdge(null, v, 1.0));
+			if (v != null) frontier.add(new ImmutableEdge(null, v, 0.0));
 		}
 		
 		// Vertex ==> Edge ==> Vertex ==> ...
-		for (int relations=0; relations < 100 && !frontier.isEmpty(); relations++) {
+		for (int relations=0; relations < 500 && !frontier.isEmpty(); relations++) {
 			ImmutableEdge frontier_edge = frontier.poll();
 			Double existing_weight = inland.get(frontier_edge.dest);
 			if (existing_weight == null) {
 				inland.put(frontier_edge.dest, frontier_edge.weight);
 				for (Edge next_edge : frontier_edge.dest.edges) {
-					frontier.add(new ImmutableEdge(frontier_edge.dest, next_edge.dest, frontier_edge.weight * next_edge.weight()));
+					frontier.add(new ImmutableEdge(frontier_edge.dest, next_edge.dest, frontier_edge.weight + next_edge.weight()));
 				}
 			}
 		}
@@ -190,7 +190,7 @@ class CountIncrementable {
 
 class Vertex extends CountIncrementable {
 	static List<Vertex> all = new ArrayList<Vertex>();
-	static final int EDGE_LIMIT = 8;
+	static final int EDGE_LIMIT = 16;
 	String name;
 	ArrayList<Edge> edges = new ArrayList<Edge>(EDGE_LIMIT);
 	
@@ -208,6 +208,16 @@ class Vertex extends CountIncrementable {
 		return null;
 	}
 	
+	public boolean remove(Vertex dest) {
+		for (int i=0; i<edges.size(); i++) {
+			if (edges.get(i).dest == dest) { 
+				edges.remove(i);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void attach(Vertex other) {
 
 		Edge e = get(other);
@@ -223,7 +233,9 @@ class Vertex extends CountIncrementable {
 					lowest = i;
 				}
 			}
-			edges.set(0, new Edge(this, other));
+			other.remove(this);
+			edges.set(lowest, new Edge(this, other));
+			
 			// TODO: use e.score as a cutoff
 		}
 	}
@@ -254,6 +266,6 @@ class Edge extends CountIncrementable {
 	 * @return
 	 */
 	public double weight() {
-		return (probability() / (source.probability() * dest.probability())); 
+		return Math.log(probability() / (source.probability() * dest.probability())); 
 	}
 }

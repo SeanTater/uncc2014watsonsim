@@ -1,7 +1,5 @@
 package uncc2014watsonsim;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import uncc2014watsonsim.scoring.AllEnginesResultsScorer;
 import uncc2014watsonsim.scoring.QuestionResultsScorer;
 import uncc2014watsonsim.Score;
