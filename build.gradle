@@ -4,8 +4,8 @@ apply plugin: 'application'
 apply plugin: 'maven'
 
 // Meta information
-mainClassName = "uncc2014watsonsim.WatsonSim"
-version = "0.1.2"
+mainClassName = System.getProperty("mainClass")
+version = "0.2.0"
 group = "edu.uncc"
 
 // Meta-dependencies (what you need so as to run this buildscript)
