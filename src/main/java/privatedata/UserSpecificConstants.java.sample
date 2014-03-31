@@ -1,4 +1,3 @@
-
 package privatedata;
 
 public class UserSpecificConstants {
@@ -12,4 +11,5 @@ public class UserSpecificConstants {
 	public static final String luceneSearchField = "text";
 	public static final String indriResultsFilter = "#filrej(%s.title #combine(%s))"; 
 	public static final String luceneResultsFilter = " NOT title:*\\:*" + " NOT title:list*";
+	public static final String bingAPIKey = "aaaaaaaaaaa/aaaaaaaaaaa/aaaaaaaaaaaaaaaaaaa";
 }
