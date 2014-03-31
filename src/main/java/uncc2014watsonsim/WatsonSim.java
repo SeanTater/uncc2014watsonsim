@@ -2,7 +2,7 @@ package uncc2014watsonsim;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.HashSet;
+
 /**
  *
  * @author Phani Rahul
@@ -15,57 +15,29 @@ public class WatsonSim {
      */
     public static void main(String[] args) throws Exception {
 
-        //read from the command line
+        // Read a command from the console
         System.out.println("Enter the jeopardy text: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = br.readLine();
         
     	while (!command.isEmpty()) {
-            Question question = new Question(command);
-	        HashSet<String> ignoreSet = new HashSet<String>();
-	        ignoreSet.add("J! Archive");
-	        ignoreSet.add("Jeopardy");
+    		Question question = Pipeline.ask(command);
 	        
-	        //initialize indri and query
-        	//question.addAll(IndriSearch.runQuery(question.text));
-	
-	        //initialize and query lucene
-	        //question.addAll(LuceneSearch.runQuery(question.text));
-	
-	        //initialize google search engine and query.
-	        question.addAll(WebSearchGoogle.runQuery(question.text));
+	        System.out.println("This is a " + question.getType() + " Question");
 	        
-	        new AverageScorer().test(question);
-	        // Not a range-based for because we want the rank
+	        // Print out a simple one-line summary of each answer
 	        for (int i=0; i<question.size(); i++) {
-	        	ResultSet r = question.get(i);
-                        String title = r.getTitle();
-                        String aW[] = title.split(" ");
-                        String qW[] = question.text.split(" ");
-                        StringBuilder newTitle = new StringBuilder();
-                        for(String a : aW ){
-                            boolean there = false;
-                            for(String q:qW){
-                                if(q.equalsIgnoreCase(a)){
-                                    there = true;
-                                    break;
-                                }
-                            }
-                            if(!there){
-                                newTitle.append(a);
-                                newTitle.append(" ");
-                            }
-                        }
-                        r.setTitle(newTitle.toString());
+	        	Answer r = question.get(i);
+	        	// The merge researcher does what was once here.
 	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
 	        
 	
-	        //read from the command line
+	        // Read in the next command from the console
 	        System.out.println("Enter [0-9]+ to inspect full text, a question to search again, or enter to quit\n>>> ");
 	        command = br.readLine();
 	        while (command.matches("[0-9]+")) {
-	        	ResultSet rs = question.get(Integer.parseInt(command));
+	        	Answer rs = question.get(Integer.parseInt(command));
 	        	System.out.println("Full text for [" + rs.getTitle() + "]: \n" + rs.getFullText() + "\n");
 	        	command = br.readLine();
 	        }

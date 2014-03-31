@@ -3,37 +3,40 @@ uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watso
 
 Deep Question Answering System
 
-## Get started
+## Check out the video
+For Linux users, there is [a video walk-through](http://youtu.be/v8LOfA8trn8) taking you from a clean Fedora install to completed Google query homework. Even if you don't use Linux, you may want to refer to it.
 
-- Quick Start:
-  - [Download the zipfile](https://googledrive.com/host/0B8wOEC5-v5lXUUllV2stSGRRYTA/watsonsim-0.1.2.zip)
-  - libindri-jni.so is included in watsonsim-0.1.1/lib but it may not be appropriate for your platforim. If you get errors about `indri_jni`, find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
-  - Where you use `gradle` later, substitute `gradle-1.11/bin/gradle`
-- Slower Start:
-  - Install [gradle](http://gradle.org), Java (>=7)
-  - Compile Indri
-  - Find `libindri-jni.so` or `libindri-jni.dll` and copy it to uncc2014watsonsim/lib.
-  - `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
-- Then, either way:
-  - Setup Google Search (in src/main/.../PrivateGoogleCredentials.java)
-    - Make your own Google cloud app in the [Google console](https://cloud.google.com/console).
-      - Put the name into the source.
-      - Enable the Custom Search API
-      - Create a server Public API Key, put it in the source.
-    - Make your own custom search engine in the [Custom Search Console](https://www.google.com/cse/create/new)
-      - Search any site (but you have to pick a domain, maybe wikipedia.org would be good)
-      - Edit the custom search you just made. In "Sites to search", change "Search only included sites" to "Search the entire web but emphasize included sites"
-      - Get the search engine ID, put it in the source.
-    - To keep from publishing your API key to the world, have git ignore changes without deleting it:
-      - `git update-index --assume-unchanged src/main/java/privatedata/UserSpecificConstants.java`
-  - Setup local search engines
-    - Index Wikipedia Trec with Lucene and with Indri (otherwise you must disable them)
-    - Edit the paths in UserSpecificConstants.java to match your index locations
-  - `gradle assemble` to install dependencies (It's possible but complicated to skip this)
-  - `gradle cleanEclipse eclipse` to correct Eclipse classpaths (since it needs absolute paths)
-  - Change the lucene and indri index paths to match your needs in src/main/java/uncc2014watsonsim/watsonsim
-    - This will probably soon be a preference
-  - `gradle run` to get started playing and asking watsonsim questions
+## Get started
+- `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
+- Download and unzip [gradle](http://services.gradle.org/distributions/gradle-1.11-bin.zip) somewhere convenient to call from the command line. (Most Linux distros have a packaged version that may be easier, but may also be out of date.)
+- Install Java 7 or newer. Many Macs have only Java 6 by default.
+- Install Indri binaries:
+  - For Linux 64, pick the right library in uncc2012watsonsim/lib and copy it to libindri-jni.so
+  - For Windows 64, do the same but end it in .dll
+  - For others, or if the above doesn't work, compile indri on your own and copy `libindri-jni.so` or `libindri-jni.dll` to uncc2014watsonsim/lib.
+- Setup UserSpecificConstants (in src/main/java)
+  - Make a copy of the file without .sample at the end of the filename
+  - Make your own Google cloud app in the [Google console](https://cloud.google.com/console).
+    - Put the name into the source.
+    - Enable the Custom Search API
+    - Create a server Public API Key, put it in the source.
+  - Make your own custom search engine in the [Custom Search Console](https://www.google.com/cse/create/new)
+    - Search any site (but you have to pick a domain, maybe wikipedia.org would be good)
+    - Edit the custom search you just made. In "Sites to search", change "Search only included sites" to "Search the entire web but emphasize included sites"
+    - Get the search engine ID, put it in the source.
+- Have Gradle setup gobs of other stuff
+  - `/where/you/unzipped/gradle/bin/gradle cleanEclipse eclipse assemble`
+
+## Running Homework Google Queries
+- You do need an internet connection.
+- Follow 'Get started' above if you haven't already.
+- Find a question starting ID next to your name in the table linked to on Moodle ('Questions to Crawl'). Each person has multiple starting IDs so you can query a new set of questions each day to contribute more.
+- If you haven't run 'gradle assemble' recently, you will need to run that to get the new dependencies.  Note that if you're using Eclipse, you may need to run the full 'gradle cleanEclipse eclipse assemble'.
+- Open and run src/main/java/uncc2014watsonsim/sources/GenerateSearchResultDataset with your favorite IDE (Eclipse may be easier).
+  - When it asks, give your question starting ID.
+- If it's not working, submit an issue.
+- **If you are re-running this, make sure you have the latest version of the program first with `git pull`!**
+- One known issue is a "GoogleJsonResponseException: 500 Internal Server Error" "Backend Error".  To resolve, increase the Thread.sleep(1000) time in GenerateSearchResultDataset.java.  Try 2000 or 4000.  (10000 works but is slow.)
 
 ## Start developing
 

@@ -2,15 +2,17 @@ package uncc2014watsonsim;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Question extends ArrayList<ResultSet>{
+
+public class Question extends ArrayList<Answer>{
 	private static final long serialVersionUID = 1L;
-	int id; // Question ID comes from the database and is optional.
-	String text, answer, raw_text;
+	public int id; // Question ID comes from the database and is optional.
+	public String text;
+	String raw_text;
+	public Answer answer;
     private String category = "unknown";
     private QType type;
 
@@ -19,12 +21,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public Question(String text) {
         this.raw_text = text;
-        try {
-            this.text = StopFilter.filtered(text.replaceAll("[^0-9a-zA-Z ]+", "").trim());
-        } catch (IOException ex) {
-            Logger.getLogger(Question.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        this.text = StringUtils.filterRelevant(text);
         this.type = QClassDetection.detectType(this);
     }
 
@@ -42,7 +39,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public static Question known(String question, String answer) {
         Question q = new Question(question);
-        q.answer = answer;
+        q.answer = new Answer("answer", answer, answer, "");
         return q;
     }
 
@@ -51,7 +48,7 @@ public class Question extends ArrayList<ResultSet>{
      */
     public static Question known(String question, String answer, String category) {
         Question q = new Question(question);
-        q.answer = answer;
+        q.answer = new Answer("answer", answer, answer, "");
         q.setCategory(category);
         return q;
     }
@@ -71,36 +68,5 @@ public class Question extends ArrayList<ResultSet>{
     public void setType(QType type) {
         this.type = type;
     }
-
-    @Override
-    /**
-     * Add a new result candidate
-     */
-    public boolean add(ResultSet cand) {
-//		for (ResultSet existing : this) {
-//			if (existing.equals(cand)) {
-//				existing.merge(cand);
-//				return false;
-//			}
-//		}
-        String title = cand.getTitle();
-        String newTitle =NameRecognition.hasNoun(title);
-        if (!title.contains("Category:")
-                && !title.contains("List of")
-                &&(newTitle.length())>0) {
-            cand.setTitle(newTitle);
-            super.add(cand);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends ResultSet> c) {
-        boolean changed = false;
-        for (ResultSet rs : c) {
-            changed |= add(rs);
-        }
-        return changed;
-    }
-
 }
+

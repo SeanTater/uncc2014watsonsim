@@ -1,0 +1,8 @@
+@relation indri-question-results
+
+@attribute indrirank numeric
+@attribute indriscore numeric
+@attribute correct numeric
+
+@data
+

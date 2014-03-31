@@ -6,3 +6,11 @@ build/
 *.jar
 *.war
 *.ear
+.classpath
+.project
+.settings/*
+bin/*
+data/*
+lib/indri_jni.dll
+lib/indri_jni.so
+src/main/java/privatedata/UserSpecificConstants.java
