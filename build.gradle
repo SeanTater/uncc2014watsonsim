@@ -5,7 +5,6 @@ apply plugin: 'maven'
 apply plugin: 'download-task'
 
 // Meta information
-=======
 mainClassName = System.getProperty("mainClass")
 version = "0.2.0"
 group = "edu.uncc"
