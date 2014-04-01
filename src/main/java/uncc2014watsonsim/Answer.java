@@ -16,9 +16,11 @@ import org.json.simple.JSONObject;
 public class Answer implements Comparable<Answer> {
     public List<Document> docs = new ArrayList<Document>();
     public Map<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
-    // INDRI_RANK, INDRI_SCORE, LUCENE_RANK, LUCENE_SCORE, GOOGLE_RANK, BING_RANK, WORD_PROXIMITY, COMBINED, CORRECT
+    // INDRI_RANK, INDRI_SCORE, LUCENE_RANK, LUCENE_SCORE, GOOGLE_RANK, BING_RANK,
+    //   INDRI_PASSAGE_RETRIEVAL_RANK, INDRI_PASSAGE_RETRIEVAL_SCORE, WORD_PROXIMITY,
+    //   COMBINED, CORRECT
     private static final double[] defaults_scores = new double[]
-    		{20.0, -15.0, 20.0, -1.0, 20.0, 55.0, 10.0, 0.0, -1.0};
+    		{20.0, -15.0, 20.0, -1.0, 20.0, 55.0, 20.0, -15.0, 10.0, 0.0, -1.0};
 
     /** Create an Answer with one implicitly defined Document */
     public Answer(Document d) {

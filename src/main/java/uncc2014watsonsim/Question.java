@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import uncc2014watsonism.qAnalysis.FITBAnnotations;
+
 
 public class Question extends ArrayList<Answer>{
 	private static final long serialVersionUID = 1L;
@@ -15,7 +17,8 @@ public class Question extends ArrayList<Answer>{
 	public Answer answer;
     private String category = "unknown";
     private QType type;
-
+    private FITBAnnotations fitbAnnotations= null; //set by the FITB QType detector iff QType == FITB
+    
     /**
      * Create a question from it's raw text
      */
@@ -30,7 +33,7 @@ public class Question extends ArrayList<Answer>{
      */
     public Question(String question, String category) {
         this(question);
-        this.category = category;
+        this.setCategory(category);
     }
 
     /**
@@ -68,5 +71,24 @@ public class Question extends ArrayList<Answer>{
     public void setType(QType type) {
         this.type = type;
     }
-}
+    
+    public FITBAnnotations getFITBAnnotations() {
+    	if (fitbAnnotations == null) fitbAnnotations = new FITBAnnotations();
+    	return fitbAnnotations;
+    }
 
+	public String getRaw_text() {
+		return raw_text;
+	}
+
+	public void setRaw_text(String raw_text) {
+		this.raw_text = raw_text;
+	}
+    
+    //not sure if we should create this as we only need the object for FITB questions and
+    // the getter creates one if it doesn't exist (Ken Overholt)
+    //public void setFITBAnnotations(FITBAnnotations fitbAnnotations) {
+    //	this.fitbAnnotations = fitbAnnotations;
+    //}
+    
+}

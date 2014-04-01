@@ -1,5 +1,11 @@
 package uncc2014watsonsim;
 
+/**
+ * Enum representing the QType of the Question
+ * 
+ * @author Ken Overholt
+ *
+ */
 public enum QType {
 	FACTOID,
 	FITB,
