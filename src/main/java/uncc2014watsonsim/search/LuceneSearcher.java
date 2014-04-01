@@ -45,7 +45,11 @@ public class LuceneSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);*/
 	}
 
-	public synchronized List<Passage> runQuery(String question_text) throws Exception {
+	public List<Passage> runQuery(String question_text) throws Exception {
+		return runBaseQuery(Translation.getLuceneQuery(question_text));
+	}
+	
+	public synchronized List<Passage> runBaseQuery(String question_text) throws Exception {
 		
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
@@ -55,15 +59,7 @@ public class LuceneSearcher extends Searcher {
 		}
 		searcher = new IndexSearcher(reader);
 		
-		
-		String q = ""; 
-		for (String term : question_text.split("\\W+")) {
-			q += String.format("text:%s ", term, term);
-		}
-		
-		//ScoreDoc[] hits = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
-		
-		ScoreDoc[] hits = searcher.search(parser.parse(Translation.getLuceneQuery(question_text)), MAX_RESULTS).scoreDocs;
+		ScoreDoc[] hits = searcher.search(parser.parse(question_text), MAX_RESULTS).scoreDocs;
 		
 		List<Passage> results = new ArrayList<Passage>(); 
 		// This isn't range based because we need the rank

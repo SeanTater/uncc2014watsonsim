@@ -14,7 +14,7 @@ public class Pipeline {
 		//new GoogleSearcher()
 	};
 	
-	static final Searcher passageSearcher = new LuceneSearcher();
+	static final LuceneSearcher passageSearcher = new LuceneSearcher();
 	
 	static final Researcher[] researchers = {
 		new MergeResearcher(),
@@ -58,7 +58,10 @@ public class Pipeline {
 	        	sr = StringUtils.filterRelevant(sr);
 	        	// Query every engine
 	        	try {
-					a.passages.addAll(passageSearcher.runQuery(sr));
+					a.passages.addAll(passageSearcher.runBaseQuery(sr));
+					for (Passage p: a.passages) {
+						System.out.println(p.title);
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
