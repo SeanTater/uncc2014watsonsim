@@ -30,17 +30,29 @@ public class Pipeline {
 	}
 	
     /** Run the full standard pipeline */
-    public static Question ask(Question question) {
-        
-    	// Query every engine
-        for (Searcher s: searchers)
-			try {
-				question.addAll(s.runQuery(question.text));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public static Question ask(Question question) {
+		if (question.getType() == QType.FITB) {
+			for (Searcher s: searchers) {
+				if (s.getClass().getName().equals("uncc2014watsonsim.search.IndriSearcher")) {
+					//System.out.println("text: " + question.text); //for debugging
+					//System.out.println("raw_text: " + question.raw_text); //for debugging
+					try {
+						question.addAll(((IndriSearcher)s).runFitbQuery(question));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
-        
+		} else	{
+			// Query every engine
+			for (Searcher s: searchers)
+				try {
+					question.addAll(s.runQuery(question.text));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
+
         /* This is Jagan's quotes FITB code. I do not have quotes indexed separately so I can't do this.
         for (Searcher s : searchers){
         	// Query every engine
