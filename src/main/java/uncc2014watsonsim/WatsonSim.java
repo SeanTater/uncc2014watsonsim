@@ -3,16 +3,22 @@ package uncc2014watsonsim;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import java.util.HashSet;
+
+
+
 /**
  *
  * @author Phani Rahul
  */
+
 public class WatsonSim {
 
-    /**
-     * @param args the command line arguments
-     * @throws Exception 
-     */
+	
+	
+	
+	
+	
     public static void main(String[] args) throws Exception {
 
         // Read a command from the console

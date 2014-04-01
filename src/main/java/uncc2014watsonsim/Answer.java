@@ -1,3 +1,4 @@
+
 package uncc2014watsonsim;
 
 import java.util.ArrayList;
@@ -157,4 +158,5 @@ public class Answer implements Comparable<Answer> {
     	docs.addAll(other.docs);
     }
     
+
 }

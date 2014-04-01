@@ -44,6 +44,7 @@ public class IndriSearcher extends Searcher {
 		String main_query = Translation.getIndriQuery(query);
 		
 		ScoredExtentResult[] ser = IndriSearcher.q.runQuery(main_query, MAX_RESULTS);
+
 		// Fetch all titles, texts
 		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
 		
@@ -206,3 +207,4 @@ public class IndriSearcher extends Searcher {
 	}
 
 }
+

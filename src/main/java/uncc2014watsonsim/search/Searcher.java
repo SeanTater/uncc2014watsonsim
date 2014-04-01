@@ -46,7 +46,9 @@ public abstract class Searcher {
     /**
      * How many results should Lucene and Indri return?
      */
-    public final int MAX_RESULTS = 50;
+
+    public final int MAX_RESULTS = 10;
+
     
     public List<Answer> runFitbQuery(Question question) throws Exception {
     	return new ArrayList<Answer>(0);
