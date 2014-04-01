@@ -53,9 +53,10 @@ public class IndriSearcher extends Searcher {
 			List<Answer> results = new ArrayList<Answer>();
 			for (int i=0; i<ser.length; i++) {
 		    	results.add(new Answer(
-	    			"indri",         	// Engine
-	    			full_texts[i].text,	// Title
-					titles[i], // Full Text
+	    			"indri",
+	    			titles[i],
+	    			full_texts[i].text,	// Full Text
+					
 					docnos[i],          // Reference
 					i,                  // Rank
 					ser[i].score		// Score

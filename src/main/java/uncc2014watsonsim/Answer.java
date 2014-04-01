@@ -33,8 +33,8 @@ public class Answer implements Comparable<Answer> {
     /** Create an Answer (with engine) from JSON */
 	public Answer(String engine, JSONObject attr) {
         String title = (String) attr.get(engine+"_title");
-        scores.put(engine+"_rank", (double) attr.get(engine+"_rank"));
-        scores.put(engine+"_score", (double) attr.get(engine+"_score"));
+        scores.put(engine+"_rank", new Double(attr.get(engine+"_rank").toString()));
+        scores.put(engine+"_score", new Double(attr.get(engine+"_score").toString()));
         docs.add(new Document(engine, title, "", null));
 	}
 	
@@ -102,8 +102,7 @@ public class Answer implements Comparable<Answer> {
         return scores.get("combined");
     }
     
-    @Override
-	public int compareTo(Answer other) {
+    public int compareTo(Answer other) {
     	if (score() == null || other.score() == null)
     		// Comparing a resultset without a combined engine is undefined
     		return 0;

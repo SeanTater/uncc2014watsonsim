@@ -71,8 +71,8 @@ public class GenerateSearchResultDataset {
 class SingleTrainingResult extends Thread {
 	Question q;
 	static Searcher[] searchers = {
-		new LuceneSearcher(),
-		new IndriSearcher(),
+		new LuceneSearcher(true),
+		new IndriSearcher(true),
 		new GoogleSearcher()
 	};
 	
