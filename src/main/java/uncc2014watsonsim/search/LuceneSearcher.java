@@ -18,6 +18,7 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
 
 /**
@@ -29,7 +30,6 @@ public class LuceneSearcher extends Searcher {
 	private static IndexSearcher searcher = null;
 	private static Analyzer analyzer;
 	private static QueryParser parser;
-	private boolean includes_fulltext;
 	
 	static {
 		analyzer = new StandardAnalyzer(Version.LUCENE_46);
@@ -42,10 +42,6 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);*/
-	}
-	
-	public LuceneSearcher(boolean includes_fulltext) {
-		this.includes_fulltext = includes_fulltext;
 	}
 
 	public synchronized List<Answer> runQuery(String question_text) throws Exception {
@@ -75,17 +71,16 @@ public class LuceneSearcher extends Searcher {
 			Document doc = searcher.doc(s.doc);
 			results.add(new uncc2014watsonsim.Answer(
 					"lucene", 			// Engine
-					includes_fulltext ? doc.get("title") : null,	// Title
-					includes_fulltext ? doc.get("text") : null, 	// Text
-					doc.get("docno"),   // Reference
-					i,                	// Rank
-					s.score				// Source
-					));
+					doc.get("title"),	// Title
+					doc.get("text"), 	// Text
+					doc.get("docno"))   // Reference
+					.score(Score.LUCENE_RANK, (double) i)           // Rank
+					.score(Score.LUCENE_SCORE, (double) s.score)	// Source
+					);
 		}
-		if (includes_fulltext)
-			return results;
-		else
-			return fillFromSources(results);
+		
+		// Fill any missing full text from sources
+		return fillFromSources(results);
 	}
 
 }

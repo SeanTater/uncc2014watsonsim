@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+}
+
+
+header {
+    background: #4FA5C2;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 500;
+    display: block;
+}
+
+header form {
+    display: inline-block;
+}
+
+header .logo {
+    color: white;
+    font-size: 3.5em;
+    margin: 0 5em 0 2em;
+    vertical-align: middle;
+}
+
+header #note {
+    color: white;
+    margin-left: 3em;
+}
+
+header button {
+    border-radius: 4px;
+    height: 2em;
+    background: #055773;
+    color: white;
+    font-size: 11pt;
+    font-weight: 700;
+    transition: background-color 0.2s;
+}
+
+header button:hover {
+    background: #1F7513;
+}
+
+header input {
+    border-radius: 4px;
+    height: 2em;
+    width: 20em;
+    margin-right: 1em;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 500;
+    font-size: 11pt;
+}
+
+#results {
+    font-family: 'Share Tech Mono', sans-serif;
+    list-style-type: none;
+}
+
+#results li {
+    width: 80%;
+    margin: 1em auto;
+    padding: 1em;
+    background: #C8DAE0;
+    font-size: large;
+}

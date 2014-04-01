@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Wed Mar 19 16:56:45 EDT 2014
- * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
+ * Updated by JCasGen Thu Mar 27 09:59:58 EDT 2014
+ * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/LuceneDocumentSearch.xml
  * @generated */
 public class question extends TOP {
   /** @generated
@@ -111,7 +111,7 @@ public class question extends TOP {
   //*--------------*
   //* Feature: category
 
-  /** getter for category - gets Category of J! question	
+  /** getter for category - gets Category of J! question
    * @generated
    * @return value of the feature 
    */
@@ -120,7 +120,7 @@ public class question extends TOP {
       jcasType.jcas.throwFeatMissing("category", "uncc2014watsonsim.uima.types.question");
     return jcasType.ll_cas.ll_getStringValue(addr, ((question_Type)jcasType).casFeatCode_category);}
     
-  /** setter for category - sets Category of J! question	 
+  /** setter for category - sets Category of J! question 
    * @generated
    * @param v value to set into the feature 
    */

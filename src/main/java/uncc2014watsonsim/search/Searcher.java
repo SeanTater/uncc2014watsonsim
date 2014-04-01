@@ -45,32 +45,39 @@ public abstract class Searcher {
     /**
      * How many results should Lucene and Indri return?
      */
+
     public final int MAX_RESULTS = 10;
+
     
     
     /** Fill in the missing titles and full texts from Answers using sources.db
+     * This is a no-op if the sources database is missing.
      */
     List<Answer> fillFromSources(List<Answer> answers) {
-    	List<Answer> results = new ArrayList<Answer>();
-    	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?;");
-
-    	for (Answer a: answers) {
-    		Document d = a.docs.get(0);
-    		ResultSet doc_row;
-    		try {
-				fetcher.setString(1, d.reference);
-				doc_row = fetcher.executeQuery();
-	    		d.title = doc_row.getString("title");
-	    		if (d.title == null) d.title = "";
-	    		d.text = doc_row.getString("text");
-	    		if (d.text == null) d.text = "";
-			} catch (SQLException e) {
-				e.printStackTrace();
-				throw new RuntimeException("Failed to execute sources full text search. "
-						+ "Missing document? docno:"+d.reference);
-			}
-    		results.add(a);
-    	}
-    	return results;
+    	if (!db.sanityCheck()) {
+    		return answers;
+    	} else {
+	    	List<Answer> results = new ArrayList<Answer>();
+	    	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?;");
+	
+	    	for (Answer a: answers) {
+	    		Document d = a.docs.get(0);
+	    		ResultSet doc_row;
+	    		try {
+					fetcher.setString(1, d.reference);
+					doc_row = fetcher.executeQuery();
+		    		d.title = doc_row.getString("title");
+		    		if (d.title == null) d.title = "";
+		    		d.text = doc_row.getString("text");
+		    		if (d.text == null) d.text = "";
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new RuntimeException("Failed to execute sources full text search. "
+							+ "Missing document? docno:"+d.reference);
+				}
+	    		results.add(a);
+	    	}
+	    	return results;
+	    }
     }
 }

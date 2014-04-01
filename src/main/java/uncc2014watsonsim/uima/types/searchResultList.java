@@ -12,8 +12,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** Containing a list of search results
- * Updated by JCasGen Wed Mar 19 16:56:45 EDT 2014
- * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
+ * Updated by JCasGen Thu Mar 27 09:59:58 EDT 2014
+ * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/LuceneDocumentSearch.xml
  * @generated */
 public class searchResultList extends TOP {
   /** @generated
@@ -69,7 +69,6 @@ public class searchResultList extends TOP {
   //* Feature: list
 
   /** getter for list - gets The implementation of the list
-
    * @generated
    * @return value of the feature 
    */
@@ -78,8 +77,7 @@ public class searchResultList extends TOP {
       jcasType.jcas.throwFeatMissing("list", "uncc2014watsonsim.uima.types.searchResultList");
     return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((searchResultList_Type)jcasType).casFeatCode_list)));}
     
-  /** setter for list - sets The implementation of the list
- 
+  /** setter for list - sets The implementation of the list 
    * @generated
    * @param v value to set into the feature 
    */

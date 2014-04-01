@@ -14,6 +14,9 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
+import uncc2014watsonsim.research.MergeResearcher;
+import uncc2014watsonsim.research.PersonRecognitionResearcher;
+import uncc2014watsonsim.research.Researcher;
 import uncc2014watsonsim.search.CachingSearcher;
 import uncc2014watsonsim.search.GoogleSearcher;
 import uncc2014watsonsim.search.IndriSearcher;
@@ -24,7 +27,7 @@ public class StatisticsCollection {
 	
 	@Test
 	public void fitb() throws Exception {
-		new StatsGenerator("fitb", "where question glob '*_*' limit 20").run();
+		new StatsGenerator("fitb", "where question glob '*_*' limit 100").run();
 	}
 
 	@Test
@@ -37,7 +40,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 400").run();
+				+ "limit 100").run();
 	}
 	
 	@Test
@@ -78,17 +81,6 @@ class StatsGenerator {
 	int[] conf_correct = new int[100];
 	int[] conf_hist = new int[100];
 	
-	Searcher s = new CachingSearcher(new Searcher[]{
-			new IndriSearcher(),
-			new LuceneSearcher(),
-			//new GoogleSearcher()
-	});
-	Researcher[] researchers = new Researcher[]{
-			new MergeResearcher(),
-			new PersonRecognitionResearcher()
-	};
-	Learner learner = new WekaLearner();
-	
 	public StatsGenerator(String dataset, String question_query) throws Exception {
 		this.dataset = dataset;
 		questionsource = new DBQuestionSource(question_query);
@@ -97,18 +89,10 @@ class StatsGenerator {
 		System.out.println("Fetching Questions");
 		for (int i=0; i<questionsource.size(); i++) {
 			Question q = questionsource.get(i);
+			LocalPipeline.ask(q);
+			
 			System.out.print(" " + i);
 			if (i % 25 == 0) System.out.println();
-			
-			/// The basic pipeline
-			// Search
-
-			q.addAll(s.runQuery(q.text));
-			// Research
-			for (Researcher r: researchers)
-				r.research(q);
-			// Score
-			learner.test(q);
 		}
 		System.out.println();
 	}

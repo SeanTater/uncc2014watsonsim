@@ -10,8 +10,8 @@ public class PrebuiltLRLearner extends Learner {
 	@Override
     public void test_implementation(Question question) {
     	for (Answer result : question) {
-    		Double lucene = result.scores.get("lucene");
-    		Double indri = result.scores.get("indri");
+    		Double lucene = result.scores.get(Score.LUCENE_SCORE);
+    		Double indri = result.scores.get(Score.INDRI_SCORE);
     		Double combined = 0.0;
     		if (lucene != null && indri != null) {
     			combined = scoreBoth(indri, lucene);
@@ -22,7 +22,7 @@ public class PrebuiltLRLearner extends Learner {
     		}
     		// In any of the above three cases, but not the "else":
     		if (lucene != null || indri != null)
-    			result.scores.put("combined", combined);
+    			result.scores.put(Score.COMBINED, combined);
     	}
     }
     

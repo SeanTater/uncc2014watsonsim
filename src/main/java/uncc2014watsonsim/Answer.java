@@ -1,6 +1,8 @@
+
 package uncc2014watsonsim;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,12 @@ import org.json.simple.JSONObject;
  */
 public class Answer implements Comparable<Answer> {
     public List<Document> docs = new ArrayList<Document>();
-    public Map<String, Double> scores = new HashMap<String, Double>();
+    public Map<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
+    // INDRI_RANK, INDRI_SCORE, LUCENE_RANK, LUCENE_SCORE, GOOGLE_RANK, BING_RANK,
+    //   INDRI_PASSAGE_RETRIEVAL_RANK, INDRI_PASSAGE_RETRIEVAL_SCORE, WORD_PROXIMITY,
+    //   COMBINED, CORRECT
+    private static final double[] defaults_scores = new double[]
+    		{20.0, -15.0, 20.0, -1.0, 20.0, 55.0, 20.0, -15.0, 10.0, 0.0, -1.0};
 
     /** Create an Answer with one implicitly defined Document */
     public Answer(Document d) {
@@ -22,20 +29,20 @@ public class Answer implements Comparable<Answer> {
     }
     
     /** Create an Answer with one implicitly defined Document */
-    public Answer(String engine, String title, String full_text, String reference, double rank, double score) {
+    public Answer(String engine, String title, String full_text, String reference) {
     	this(new Document(engine, title, full_text, reference));
-    	
-    	scores.put(engine+"_rank", rank);
-    	scores.put(engine+"_score", score);
     }
     
     
     /** Create an Answer (with engine) from JSON */
 	public Answer(String engine, JSONObject attr) {
-        String title = (String) attr.get(engine+"_title");
-        scores.put(engine+"_rank", new Double(attr.get(engine+"_rank").toString()));
-        scores.put(engine+"_score", new Double(attr.get(engine+"_score").toString()));
-        docs.add(new Document(engine, title, "", null));
+		this(
+			engine,
+			(String) attr.get(engine+"_title"),
+			"",
+			"");
+		score(Score.valueOf(engine+"_RANK"), (double) attr.get(engine+"_rank"));
+		score(Score.valueOf(engine+"_SCORE"), (double) attr.get(engine+"_score"));
 	}
 	
     /** some discussion has to be made on how this has to work. Not finalized*/
@@ -97,12 +104,46 @@ public class Answer implements Comparable<Answer> {
     	return String.format("[%01f %-3s] %s", score(), engines, getTitle());
     }
     
-    /** Convenience method for returning the combined score for this answer */
-    public Double score() {
-        return scores.get("combined");
+    public String toJSON() {
+    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", score(), getTitle().replace("\"", "\\\""));
     }
     
-    public int compareTo(Answer other) {
+    /* Score retrieval */
+    
+    /** Return the combined score for the answer, or null */
+    public Double score() {
+        return scores.get(Score.COMBINED);
+    }
+    
+    /** Return the value of this Score for this answer, or null */
+    public Double score(Score name) {
+    	return scores.get(name);
+    }
+    
+    /** Set the value of this Score for this answer, returning the Answer.
+     * 
+     * The intended use is something like this:
+     * Answer a = new Answer(.......).score(Score.BING_RANK, 9.45).score(Score.INDRI_SCORE, -1.2)
+     * @param name
+     * @param value
+     */
+    public Answer score(Score name, Double value) {
+    	scores.put(name, value);
+    	return this;
+    }
+    
+    /** Convenience method for returning all of the answer's scores as a primitive double[].
+     * Intended for Weka, but it could be useful for any ML. */
+    public double[] scoresArray() {
+    	double[] out = defaults_scores.clone();
+		for (Score dimension : scores.keySet()) {
+			out[dimension.ordinal()] = score(dimension);
+		}
+		return out;
+    }
+    
+    @Override
+	public int compareTo(Answer other) {
     	if (score() == null || other.score() == null)
     		// Comparing a resultset without a combined engine is undefined
     		return 0;
@@ -115,4 +156,5 @@ public class Answer implements Comparable<Answer> {
     	docs.addAll(other.docs);
     }
     
+
 }

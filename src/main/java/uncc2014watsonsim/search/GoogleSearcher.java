@@ -12,6 +12,8 @@ import privatedata.UserSpecificConstants;
 
 import uncc2014watsonsim.Answer;
 
+import uncc2014watsonsim.Score;
+
 /*
  * Google API Imports
  */
@@ -78,10 +80,9 @@ public class GoogleSearcher extends Searcher {
 				"google",  // Title 
 				in_r.get(i).getTitle(),// "Full" Text
 				in_r.get(i).getSnippet(), // Reference
-				in_r.get(i).getFormattedUrl(),                // Engine
-				i,                       // Rank 
-				(double) i
-				));
+				in_r.get(i).getFormattedUrl())                // Engine
+				.score(Score.GOOGLE_RANK, (double) i)                       // Rank
+				);
 		}
 		return results; 
 	}
