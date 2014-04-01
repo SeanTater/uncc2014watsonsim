@@ -18,6 +18,7 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
 
@@ -44,7 +45,7 @@ public class LuceneSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);*/
 	}
 
-	public synchronized List<Answer> runQuery(String question_text) throws Exception {
+	public synchronized List<Passage> runQuery(String question_text) throws Exception {
 		
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
@@ -64,12 +65,12 @@ public class LuceneSearcher extends Searcher {
 		
 		ScoreDoc[] hits = searcher.search(parser.parse(Translation.getLuceneQuery(question_text)), MAX_RESULTS).scoreDocs;
 		
-		List<Answer> results = new ArrayList<Answer>(); 
+		List<Passage> results = new ArrayList<Passage>(); 
 		// This isn't range based because we need the rank
 		for (int i=0; i < MAX_RESULTS; i++) {
 			ScoreDoc s = hits[i];
 			Document doc = searcher.doc(s.doc);
-			results.add(new uncc2014watsonsim.Answer(
+			results.add(new uncc2014watsonsim.Passage(
 					"lucene", 			// Engine
 					doc.get("title"),	// Title
 					doc.get("text"), 	// Text

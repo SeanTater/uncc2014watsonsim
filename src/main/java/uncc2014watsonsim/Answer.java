@@ -14,22 +14,24 @@ import org.json.simple.JSONObject;
  * @author Sean Gallagher
  */
 public class Answer implements Comparable<Answer> {
-    public List<Document> docs = new ArrayList<Document>();
+    public List<Passage> docs = new ArrayList<Passage>();
     public Map<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
     // INDRI_RANK, INDRI_SCORE, LUCENE_RANK, LUCENE_SCORE, GOOGLE_RANK, BING_RANK,
     //   INDRI_PASSAGE_RETRIEVAL_RANK, INDRI_PASSAGE_RETRIEVAL_SCORE, WORD_PROXIMITY,
     //   COMBINED, CORRECT
     private static final double[] defaults_scores = new double[]
     		{20.0, -15.0, 20.0, -1.0, 20.0, 55.0, 20.0, -15.0, 10.0, 0.0, -1.0};
+    
+    public List<Passage> passages = new ArrayList<Passage>();
 
     /** Create an Answer with one implicitly defined Document */
-    public Answer(Document d) {
+    public Answer(Passage d) {
         this.docs.add(d);
     }
     
     /** Create an Answer with one implicitly defined Document */
     public Answer(String engine, String title, String full_text, String reference) {
-    	this(new Document(engine, title, full_text, reference));
+    	this(new Passage(engine, title, full_text, reference));
     }
     
     
@@ -53,7 +55,7 @@ public class Answer implements Comparable<Answer> {
     	// TODO: Consider a way of making a title from multiple titles
     	// NLP realm?
     	String shortest_title = docs.get(0).title;
-    	for (Document doc : docs)
+    	for (Passage doc : docs)
     		if (doc.title.length() < shortest_title.length())
     			shortest_title = doc.title;
         return shortest_title;
@@ -80,9 +82,9 @@ public class Answer implements Comparable<Answer> {
             return false;
         }
         
-        for (Document doc1 : this.docs) {
+        for (Passage doc1 : this.docs) {
         	String t1 = StringUtils.filterRelevant(doc1.title);
-        	for (Document doc2 : other.docs) {
+        	for (Passage doc2 : other.docs) {
         		String t2 = StringUtils.filterRelevant(doc2.title);
         		if (StringUtils.match_subset(t1, t2)) return true;
         	}
@@ -94,7 +96,7 @@ public class Answer implements Comparable<Answer> {
     public String toString() {
     	// Make a short view of the engines as single-letter abbreviations
     	String engines = "";
-    	for (Document e: this.docs) engines += e.engine_name.substring(0, 1);
+    	for (Passage e: this.docs) engines += e.engine_name.substring(0, 1);
     	
     	// ResultSet don't know if they are correct anymore..
     	//String correct = isCorrect() ? "✓" : "✗";

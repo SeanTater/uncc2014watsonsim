@@ -14,6 +14,8 @@ public class Pipeline {
 		//new GoogleSearcher()
 	};
 	
+	static final Searcher passageSearcher = new LuceneSearcher();
+	
 	static final Researcher[] researchers = {
 		new MergeResearcher(),
 		new PersonRecognitionResearcher(),
@@ -33,25 +35,41 @@ public class Pipeline {
 	public static Question ask(Question question) {
 		if (question.getType() == QType.FITB) {
 			for (Searcher s: searchers) {
-				if (s.getClass().getName().equals("uncc2014watsonsim.search.IndriSearcher")) {
-					//System.out.println("text: " + question.text); //for debugging
-					//System.out.println("raw_text: " + question.raw_text); //for debugging
-					try {
-						question.addAll(((IndriSearcher)s).runFitbQuery(question));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				try {
+					question.addAll(((IndriSearcher)s).runFitbQuery(question));
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		} else	{
 			// Query every engine
 			for (Searcher s: searchers)
 				try {
-					question.addAll(s.runQuery(question.text));
+					question.addPassages(s.runQuery(question.text));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 		}
+		
+        for (Answer a : question) {
+        	// The merge researcher does what was once here.
+	        	String sr = question.raw_text;
+	        	sr = sr.replaceFirst(sr.split(" ")[0], a.getTitle());
+	        	sr = StringUtils.filterRelevant(sr);
+	        	// Query every engine
+	        	try {
+					a.passages.addAll(passageSearcher.runQuery(sr));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        	
+	            /*for (int j =0 ; j< replaced.size(); j++){
+	            	Answer rr = replaced.get(j);
+	            	//bwr.write("\n passages.add(new Passage(\""+rr.getFullText().substring(0, 500).replace("\"", "").replace("\r","")+ "\","+j+",\""+rr.getTitle()+"\")");
+	            	bwr.write("<candans>"+rr.getTitle()+"</candans>"+"\n" +"<passage>"+rr.getFullText().substring(0,500)+"</passage>"+"\n");
+	            	}*/
+    	}
 
         /* This is Jagan's quotes FITB code. I do not have quotes indexed separately so I can't do this.
         for (Searcher s : searchers){

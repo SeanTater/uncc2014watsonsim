@@ -12,18 +12,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 
 public class BingSearcher extends Searcher {
 	
 	@Override
-	public List<Answer> runQuery(String query) throws Exception {
+	public List<Passage> runQuery(String query) throws Exception {
 		
 		//TODO: Should this be done in StringUtils?
 	    query = query.replaceAll(" ", "%20");
 	    String url = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27" + query + "%27&$top=50&$format=Atom";
 
-	    List<Answer> results = new ArrayList<Answer>();
+	    List<Passage> results = new ArrayList<Passage>();
 	    try {
 	    	String resp = Executor
 	    		.newInstance()
@@ -35,7 +36,7 @@ public class BingSearcher extends Searcher {
 	    	
 		    int i=0;
 	    	for (Element e : doc.select("entry")) {
-	    		results.add(new Answer(
+	    		results.add(new Passage(
 	        			"bing",         	// Engine
 	        			e.select("d|Title").text(),	        // Title
 	        			e.select("d|Description").text(), // Full Text

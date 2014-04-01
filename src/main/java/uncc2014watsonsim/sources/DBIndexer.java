@@ -87,7 +87,7 @@ public class DBIndexer {
 		
 		// Either add the Indri index or die.
 		try {
-			indri_index.create(UserSpecificConstants.indriIndex);
+			indri_index.open(UserSpecificConstants.indriIndex);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Can't create Indri index. Please check that you entered the right path in UserSpecificConstants.java.");
@@ -105,7 +105,7 @@ public class DBIndexer {
     	
         /** SQL setup */
 		java.sql.ResultSet sql = conn.createStatement().executeQuery(
-				"select rowid, docno, title, text from documents;");
+				"select rowid, docno, title, text from documents where source like 'shakespeare%';");
 		
 		Pattern splitter = Pattern.compile("\\w+");
 		try {

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonism.qAnalysis.FITBAnnotations;
 import uncc2014watsonsim.Answer;
-import uncc2014watsonsim.Document;
+import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
@@ -30,7 +30,7 @@ public class IndriSearcher extends Searcher {
 	}
 	
 
-	public List<Answer> runQuery(String query) throws Exception {
+	public List<Passage> runQuery(String query) throws Exception {
 		// Run the query
 		
 		// Either add the Indri index or die.
@@ -52,9 +52,9 @@ public class IndriSearcher extends Searcher {
 		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
 
 		// Compile them into a uniform format
-		List<Answer> results = new ArrayList<Answer>();
+		List<Passage> results = new ArrayList<Passage>();
 		for (int i=0; i<ser.length; i++) {
-	    	results.add(new Answer(
+	    	results.add(new Passage(
     			"indri",         	// Engine
     			titles[i],	        // Title
     			full_texts[i].text, // Full Text
