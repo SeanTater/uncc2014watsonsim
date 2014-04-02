@@ -9,34 +9,27 @@ import uncc2014watsonism.qAnalysis.FITBAnnotations;
 public class Translation {
 
     public static String getIndriQuery(String question) {
-        String indriResultsFilter = "#filrej( portal.title #filrej( "
+        String query = "#filrej( portal.title #filrej( "
                 + "template.title #filrej(index.title #filrej( "
                 + "list.title #filrej( wikipedia.title #combine("+question+"))))))";
 
         question = question.replaceAll("[^0-9a-zA-Z ]+", " ");
-        String processed = null;
-        processed = StringUtils.filterRelevant(question);
-        String words[] = processed.split(" ");
-        String query = indriResultsFilter;
+        String words[] = StringUtils.filterRelevant(question).split(" ");
 
         for (String word : words) {
-            query = "#filrej(" + word + ".title " + query + " )";
+            query = " #filrej(" + word + ".title " + query + " )";
         }
         return query;
     }
 
     public static String getLuceneQuery(String question) {
-        String luceneResultsFilter = question + " NOT title:*\\:*" + " NOT title:list*"
+        String query = question + " NOT title:*\\:*" + " NOT title:list*"
                 + " NOT title:index*" ;
         question = question.replaceAll("[^0-9a-zA-Z ]+", " ");
-        String processed = null;
-        processed = StringUtils.filterRelevant(question);
-        String words[] = processed.split(" ");
-
-        String query = luceneResultsFilter;
+        String[] words = StringUtils.filterRelevant(question).split(" ");
 
         for (String word : words) {
-            query = "NOT title:" + word + " " + query ;
+            query = " NOT title:" + word + " " + query ;
         }
         return query;
     }
