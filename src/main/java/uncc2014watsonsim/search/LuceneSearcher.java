@@ -35,22 +35,8 @@ public class LuceneSearcher extends Searcher {
 	static {
 		analyzer = new StandardAnalyzer(Version.LUCENE_46);
 		parser = new QueryParser(Version.LUCENE_46, UserSpecificConstants.luceneSearchField, analyzer);
-		parser.setAllowLeadingWildcard(true);		
-		/*try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
-		}
-		searcher = new IndexSearcher(reader);*/
-	}
+		parser.setAllowLeadingWildcard(true);	
 
-	public List<Passage> runQuery(String question_text) throws Exception {
-		return runBaseQuery(Translation.getLuceneQuery(question_text));
-	}
-	
-	public synchronized List<Passage> runBaseQuery(String question_text) throws Exception {
-		
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
 		} catch (IOException e) {
@@ -58,6 +44,13 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);
+	}
+
+	public List<Passage> runQuery(String question_text) throws Exception {
+		return runBaseQuery(Translation.getLuceneQuery(question_text));
+	}
+	
+	public synchronized List<Passage> runBaseQuery(String question_text) throws Exception {
 		
 		ScoreDoc[] hits = searcher.search(parser.parse(question_text), MAX_RESULTS).scoreDocs;
 		

@@ -7,6 +7,7 @@ import uncc2014watsonsim.search.*;
  *
  */
 public class Pipeline {
+	
 	static final Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
@@ -59,9 +60,7 @@ public class Pipeline {
 	        	// Query every engine
 	        	try {
 					a.passages.addAll(passageSearcher.runBaseQuery(sr));
-					for (Passage p: a.passages) {
-						System.out.println(p.title);
-					}
+					System.out.println("Found " + a.passages.size() + " passages.");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
