@@ -112,18 +112,6 @@ public class IndriSearcher extends Searcher {
 			.score(Score.INDRI_PASSAGE_RETRIEVAL_SCORE, ser[i].score));
 		}
 		setFitbTitles(question, results);
-		//TODO: find a better solution
-		//Provided the next statement as the StatisticsCollector seems to need at least one answer
-		if (results.isEmpty()) {
-			results.add(new Answer(
-				"indri",
-				"made-up title",
-				"the made-up full text",
-				"100")
-				.score(Score.INDRI_PASSAGE_RETRIEVAL_RANK, 0.1)
-				.score(Score.INDRI_PASSAGE_RETRIEVAL_SCORE, -1.0));
-		}
-		
 		return results;
 	}
 	

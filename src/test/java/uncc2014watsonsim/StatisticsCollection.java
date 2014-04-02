@@ -170,9 +170,6 @@ class StatsGenerator {
 		long start_time = System.nanoTime();
 		for (Question question : questionsource) {
 			if (question.size() == 0) continue;
-			Answer top_answer = question.get(0);
-			assertNotNull(top_answer);
-			assertThat(top_answer.getTitle().length(), not(0));
 	
 			for (int rank=0; rank<question.size(); rank++) {
 				Answer candidate = question.get(rank);
