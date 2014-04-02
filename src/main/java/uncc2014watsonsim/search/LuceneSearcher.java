@@ -34,7 +34,7 @@ public class LuceneSearcher extends Searcher {
 	
 	static {
 		analyzer = new StandardAnalyzer(Version.LUCENE_46);
-		parser = new QueryParser(Version.LUCENE_46, UserSpecificConstants.luceneSearchField, analyzer);
+		parser = new QueryParser(Version.LUCENE_46, "text", analyzer);
 		parser.setAllowLeadingWildcard(true);	
 
 		try {

@@ -27,13 +27,13 @@ public class StatisticsCollection {
 	
 	@Test
 	public void fitb() throws Exception {
-		new StatsGenerator("fitb", "where question glob '*_*' limit 100").run();
+		new StatsGenerator("fitb", "where question glob '*_*'").run();
 	}
 
 	@Test
 	public void factoid() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
-		new StatsGenerator("factoid_kstar", "where "
+		new StatsGenerator("factoid", "where "
 				+ "question not glob '*_*' "
 				+ "and category not glob '*COMMON BONDS*' "
 				+ "and category not glob '*BEFORE & AFTER*' "
