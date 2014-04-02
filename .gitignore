@@ -14,8 +14,4 @@ data/*
 lib/indri_jni.dll
 lib/indri_jni.so
 src/main/java/privatedata/UserSpecificConstants.java
-<<<<<<< HEAD
-.gitignore
-=======
->>>>>>> 3478b115e3a3191311f9969bb9901e6bb9b8bc5b
 /bin
