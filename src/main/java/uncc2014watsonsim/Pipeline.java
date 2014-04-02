@@ -36,7 +36,7 @@ public class Pipeline {
 		if (question.getType() == QType.FITB) {
 			for (Searcher s: searchers) {
 				try {
-					question.addAll(((IndriSearcher)s).runFitbQuery(question));
+					question.addAll(s.runFitbQuery(question));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

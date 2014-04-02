@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package uncc2014watsonsim;
 
 import uncc2014watsonism.qAnalysis.FITBAnnotations;
 
 /**
  *
- * @author rahul
+ * @author Phani Rahul
  */
 public class Translation {
 

@@ -28,7 +28,6 @@ public class IndriSearcher extends Searcher {
 		q = new QueryEnvironment();
 		
 	}
-	
 
 	public List<Passage> runQuery(String query) throws Exception {
 		// Run the query
