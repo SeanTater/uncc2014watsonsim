@@ -1,4 +1,4 @@
-package uncc2014watsonism.qAnalysis;
+package uncc2014watsonsim.qAnalysis;
 
 /**
  * Used by FITBAnnotations to store the locations of the blanks in the FITB question.

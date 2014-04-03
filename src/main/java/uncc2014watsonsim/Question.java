@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import uncc2014watsonism.qAnalysis.FITBAnnotations;
+import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 
 
 public class Question extends ArrayList<Answer> {

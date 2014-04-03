@@ -1,4 +1,4 @@
-package uncc2014watsonism.qAnalysis;
+package uncc2014watsonsim.qAnalysis;
 
 import java.util.ArrayList;
 import java.util.List;

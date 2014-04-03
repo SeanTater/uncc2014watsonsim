@@ -3,8 +3,8 @@ package uncc2014watsonsim;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import uncc2014watsonism.qAnalysis.BlankAnnotation;
-import uncc2014watsonism.qAnalysis.FITBAnnotations;
+import uncc2014watsonsim.qAnalysis.BlankAnnotation;
+import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 
 /**
  * Methods related to determining and returning the QType (or QClass) of the question
