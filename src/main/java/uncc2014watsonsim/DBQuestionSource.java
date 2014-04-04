@@ -53,8 +53,13 @@ public class DBQuestionSource extends QuestionSource {
 			//TODO: we need to generalize this
 			String engine = r.docs.get(0).engine_name;
 			bulk_insert.setString(4, engine);
-			bulk_insert.setDouble(5, r.scores.get(engine+"_rank"));
-			bulk_insert.setDouble(6, r.scores.get(engine+"_score"));
+			bulk_insert.setDouble(5, r.scores.get(Score.valueOf(engine.toUpperCase()+"_RANK")));
+			try {
+				bulk_insert.setDouble(6, r.scores.get(Score.valueOf(engine.toUpperCase()+"_SCORE")));
+			} catch(NullPointerException | IllegalArgumentException e) {
+				// ignore as google/bing don't have scores!
+				bulk_insert.setDouble(6, 0.0);
+			}
 			bulk_insert.setString(7, r.docs.get(0).reference);
 			bulk_insert.addBatch();
 		}
