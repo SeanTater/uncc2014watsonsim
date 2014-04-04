@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Thu Mar 27 09:59:58 EDT 2014
- * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/LuceneDocumentSearch.xml
+ * Updated by JCasGen Fri Apr 04 17:08:24 EDT 2014
+ * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/documentSearchApplicationDescriptor.xml
  * @generated */
 public class searchResult extends TOP {
   /** @generated
