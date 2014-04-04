@@ -1,3 +1,5 @@
+package uncc2014watsonsim.qAnalysis;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -12,12 +14,25 @@ import opennlp.tools.tokenize.WhitespaceTokenizer;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
+/**
+ * LAT Detection
+ * @author Dhaval Patel
+ *
+ */
 public class PersonPOS {
-
+	
+	//TODO: integrate this (by either 1. moving the entire functionality or 2. moving it piece-by-piece to a new class(s)
+	//TODO: store LAT as an Annotation in Question/CAS
+	//TODO: does this identify other useful info?  store as other Annotations such as parts of speech?
+	//        If so, store as Annotations.
+	//TODO: remove custom path to en-pos-maxent.bin
+	//DONE: added dependency to build.gradle
+	
 	public static void main(String[] args) throws IOException {
 		// Load the training model for POSTagging
 		POSModel model = new POSModelLoader().load(new File(
-				"C:/Users/Dhaval/Downloads/en-pos-maxent.bin"));
+//				"C:/Users/Dhaval/Downloads/en-pos-maxent.bin"));
+	"C:/Users/krove_000/workspace/uncc2014watsonsim/data/en-pos-maxent.bin"));
 		PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
 		POSTaggerME tagger = new POSTaggerME(model);
 		// Query sentence
