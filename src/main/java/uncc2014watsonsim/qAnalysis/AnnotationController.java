@@ -1,4 +1,4 @@
-package uncc2014watsonism.qAnalysis;
+package uncc2014watsonsim.qAnalysis;
 
 public class AnnotationController {
 	

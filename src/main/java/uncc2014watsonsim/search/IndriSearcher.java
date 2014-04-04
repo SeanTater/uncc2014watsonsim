@@ -6,12 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import privatedata.UserSpecificConstants;
-import uncc2014watsonism.qAnalysis.FITBAnnotations;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
+import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;

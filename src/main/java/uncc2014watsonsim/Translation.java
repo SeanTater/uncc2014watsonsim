@@ -1,6 +1,6 @@
 package uncc2014watsonsim;
 
-import uncc2014watsonism.qAnalysis.FITBAnnotations;
+import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 
 /**
  *
