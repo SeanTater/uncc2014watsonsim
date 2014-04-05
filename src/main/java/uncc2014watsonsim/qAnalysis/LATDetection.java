@@ -19,7 +19,7 @@ import opennlp.tools.util.PlainTextByLineStream;
  * @author Dhaval Patel
  *
  */
-public class PersonPOS {
+public class LATDetection {
 	
 	//TODO: integrate this (by either 1. moving the entire functionality or 2. moving it piece-by-piece to a new class(s)
 	//TODO: store LAT as an Annotation in Question/CAS
