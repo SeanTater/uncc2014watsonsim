@@ -25,14 +25,10 @@ public class PersonPOS {
 	//TODO: store LAT as an Annotation in Question/CAS
 	//TODO: does this identify other useful info?  store as other Annotations such as parts of speech?
 	//        If so, store as Annotations.
-	//TODO: remove custom path to en-pos-maxent.bin
-	//DONE: added dependency to build.gradle
 	
 	public static void main(String[] args) throws IOException {
 		// Load the training model for POSTagging
-		POSModel model = new POSModelLoader().load(new File(
-//				"C:/Users/Dhaval/Downloads/en-pos-maxent.bin"));
-	"C:/Users/krove_000/workspace/uncc2014watsonsim/data/en-pos-maxent.bin"));
+		POSModel model = new POSModelLoader().load(new File("data/en-pos-maxent.bin"));
 		PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
 		POSTaggerME tagger = new POSTaggerME(model);
 		// Query sentence
