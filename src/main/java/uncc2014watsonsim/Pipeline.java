@@ -1,5 +1,7 @@
 package uncc2014watsonsim;
 
+import java.util.regex.Matcher;
+
 import uncc2014watsonsim.research.*;
 import uncc2014watsonsim.search.*;
 
@@ -55,7 +57,8 @@ public class Pipeline {
         for (Answer a : question) {
         	// The merge researcher does what was once here.
 	        	String sr = question.raw_text;
-	        	sr = sr.replaceFirst(sr.split(" ")[0], a.getTitle());
+	        	String tempTitle = Matcher.quoteReplacement(a.getTitle());
+	        	sr = sr.replaceFirst(sr.split(" ")[0], tempTitle);
 	        	sr = StringUtils.filterRelevant(sr);
 	        	// Query every engine
 	        	try {
