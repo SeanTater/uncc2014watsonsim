@@ -17,12 +17,12 @@
 We will use it to access all the search engines and then push to a document analysis descriptor.</description>
     <version>1.0</version>
     <vendor>unccwatsonsim</vendor>
-    <configurationParameters/>
+    <configurationParameters searchStrategy="language_fallback"/>
     <configurationParameterSettings/>
     <flowConstraints>
       <fixedFlow>
-        <node>DocumentSearchCasMultiplier</node>
         <node>LuceneDocumentSearch</node>
+        <node>DocumentSearchCasMultiplier</node>
       </fixedFlow>
     </flowConstraints>
     <fsIndexCollection/>

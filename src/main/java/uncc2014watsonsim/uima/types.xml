@@ -4,11 +4,14 @@
     <description>Contains type information for queries, answers, search answers, etc.</description>
     <version>1.0</version>
     <vendor/>
+  <imports>
+    <import name="org.apache.uima.examples.SourceDocumentInformation"/>
+  </imports>
   <types>
     <typeDescription>
-      <name>uncc2014watsonsim.uima.types.queryString</name>
+      <name>uncc2014watsonsim.uima.types.QueryString</name>
       <description>A query string (question)</description>
-      <supertypeName>uima.cas.TOP</supertypeName>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
     <features>
         <featureDescription>
           <name>query</name>
@@ -18,7 +21,7 @@
       </features>
     </typeDescription>
     <typeDescription>
-      <name>uncc2014watsonsim.uima.types.searchResult</name>
+      <name>uncc2014watsonsim.uima.types.SearchResult</name>
       <description/>
       <supertypeName>uima.cas.TOP</supertypeName>
       <features>
@@ -49,8 +52,7 @@
         </featureDescription>
       <featureDescription>
           <name>score</name>
-          <description>The combined, or not combined, score of the result
-</description>
+          <description>The combined, or not combined, score of the result</description>
           <rangeTypeName>uima.cas.Double</rangeTypeName>
         </featureDescription>
       </features>
@@ -62,8 +64,7 @@
       <features>
         <featureDescription>
           <name>list</name>
-          <description>The implementation of the list
-</description>
+          <description>The implementation of the list</description>
           <rangeTypeName>uima.cas.FSList</rangeTypeName>
           <elementType>uncc2014watsonsim.uima.types.searchResult</elementType>
         </featureDescription>
@@ -77,7 +78,7 @@
         <featureDescription>
           <name>query</name>
           <description>The Query</description>
-          <rangeTypeName>uncc2014watsonsim.uima.types.queryString</rangeTypeName>
+          <rangeTypeName>uncc2014watsonsim.uima.types.QueryString</rangeTypeName>
         </featureDescription>
         <featureDescription>
           <name>answerList</name>
@@ -86,7 +87,7 @@
         </featureDescription>
         <featureDescription>
           <name>category</name>
-          <description>Category of J! question	</description>
+          <description>Category of J! question</description>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
         <featureDescription>

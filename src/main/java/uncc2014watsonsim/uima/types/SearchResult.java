@@ -11,15 +11,15 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Fri Apr 04 17:08:24 EDT 2014
- * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/documentSearchApplicationDescriptor.xml
+ * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
+ * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
-public class searchResult extends TOP {
+public class SearchResult extends TOP {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(searchResult.class);
+  public final static int typeIndexID = JCasRegistry.register(SearchResult.class);
   /** @generated
    * @ordered 
    */
@@ -33,14 +33,14 @@ public class searchResult extends TOP {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected searchResult() {/* intentionally empty block */}
+  protected SearchResult() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public searchResult(int addr, TOP_Type type) {
+  public SearchResult(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -48,7 +48,7 @@ public class searchResult extends TOP {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public searchResult(JCas jcas) {
+  public SearchResult(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -70,18 +70,18 @@ public class searchResult extends TOP {
    * @return value of the feature 
    */
   public String getTitle() {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_title == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_title == null)
       jcasType.jcas.throwFeatMissing("title", "uncc2014watsonsim.uima.types.searchResult");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((searchResult_Type)jcasType).casFeatCode_title);}
+    return jcasType.ll_cas.ll_getStringValue(addr, ((SearchResult_Type)jcasType).casFeatCode_title);}
     
   /** setter for title - sets Title of the retrieved article 
    * @generated
    * @param v value to set into the feature 
    */
   public void setTitle(String v) {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_title == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_title == null)
       jcasType.jcas.throwFeatMissing("title", "uncc2014watsonsim.uima.types.searchResult");
-    jcasType.ll_cas.ll_setStringValue(addr, ((searchResult_Type)jcasType).casFeatCode_title, v);}    
+    jcasType.ll_cas.ll_setStringValue(addr, ((SearchResult_Type)jcasType).casFeatCode_title, v);}    
    
     
   //*--------------*
@@ -92,18 +92,18 @@ public class searchResult extends TOP {
    * @return value of the feature 
    */
   public String getFullText() {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_fullText == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_fullText == null)
       jcasType.jcas.throwFeatMissing("fullText", "uncc2014watsonsim.uima.types.searchResult");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((searchResult_Type)jcasType).casFeatCode_fullText);}
+    return jcasType.ll_cas.ll_getStringValue(addr, ((SearchResult_Type)jcasType).casFeatCode_fullText);}
     
   /** setter for fullText - sets Text of this search result 
    * @generated
    * @param v value to set into the feature 
    */
   public void setFullText(String v) {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_fullText == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_fullText == null)
       jcasType.jcas.throwFeatMissing("fullText", "uncc2014watsonsim.uima.types.searchResult");
-    jcasType.ll_cas.ll_setStringValue(addr, ((searchResult_Type)jcasType).casFeatCode_fullText, v);}    
+    jcasType.ll_cas.ll_setStringValue(addr, ((SearchResult_Type)jcasType).casFeatCode_fullText, v);}    
    
     
   //*--------------*
@@ -114,18 +114,18 @@ public class searchResult extends TOP {
    * @return value of the feature 
    */
   public String getReference() {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_reference == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_reference == null)
       jcasType.jcas.throwFeatMissing("reference", "uncc2014watsonsim.uima.types.searchResult");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((searchResult_Type)jcasType).casFeatCode_reference);}
+    return jcasType.ll_cas.ll_getStringValue(addr, ((SearchResult_Type)jcasType).casFeatCode_reference);}
     
   /** setter for reference - sets A Reference 
    * @generated
    * @param v value to set into the feature 
    */
   public void setReference(String v) {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_reference == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_reference == null)
       jcasType.jcas.throwFeatMissing("reference", "uncc2014watsonsim.uima.types.searchResult");
-    jcasType.ll_cas.ll_setStringValue(addr, ((searchResult_Type)jcasType).casFeatCode_reference, v);}    
+    jcasType.ll_cas.ll_setStringValue(addr, ((SearchResult_Type)jcasType).casFeatCode_reference, v);}    
    
     
   //*--------------*
@@ -136,18 +136,18 @@ public class searchResult extends TOP {
    * @return value of the feature 
    */
   public long getRank() {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_rank == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_rank == null)
       jcasType.jcas.throwFeatMissing("rank", "uncc2014watsonsim.uima.types.searchResult");
-    return jcasType.ll_cas.ll_getLongValue(addr, ((searchResult_Type)jcasType).casFeatCode_rank);}
+    return jcasType.ll_cas.ll_getLongValue(addr, ((SearchResult_Type)jcasType).casFeatCode_rank);}
     
   /** setter for rank - sets Rank of this result from the engine 
    * @generated
    * @param v value to set into the feature 
    */
   public void setRank(long v) {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_rank == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_rank == null)
       jcasType.jcas.throwFeatMissing("rank", "uncc2014watsonsim.uima.types.searchResult");
-    jcasType.ll_cas.ll_setLongValue(addr, ((searchResult_Type)jcasType).casFeatCode_rank, v);}    
+    jcasType.ll_cas.ll_setLongValue(addr, ((SearchResult_Type)jcasType).casFeatCode_rank, v);}    
    
     
   //*--------------*
@@ -158,18 +158,18 @@ public class searchResult extends TOP {
    * @return value of the feature 
    */
   public String getEngine() {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_engine == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_engine == null)
       jcasType.jcas.throwFeatMissing("engine", "uncc2014watsonsim.uima.types.searchResult");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((searchResult_Type)jcasType).casFeatCode_engine);}
+    return jcasType.ll_cas.ll_getStringValue(addr, ((SearchResult_Type)jcasType).casFeatCode_engine);}
     
   /** setter for engine - sets Name of the search engine 
    * @generated
    * @param v value to set into the feature 
    */
   public void setEngine(String v) {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_engine == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_engine == null)
       jcasType.jcas.throwFeatMissing("engine", "uncc2014watsonsim.uima.types.searchResult");
-    jcasType.ll_cas.ll_setStringValue(addr, ((searchResult_Type)jcasType).casFeatCode_engine, v);}    
+    jcasType.ll_cas.ll_setStringValue(addr, ((SearchResult_Type)jcasType).casFeatCode_engine, v);}    
    
     
   //*--------------*
@@ -180,18 +180,18 @@ public class searchResult extends TOP {
    * @return value of the feature 
    */
   public double getScore() {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_score == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_score == null)
       jcasType.jcas.throwFeatMissing("score", "uncc2014watsonsim.uima.types.searchResult");
-    return jcasType.ll_cas.ll_getDoubleValue(addr, ((searchResult_Type)jcasType).casFeatCode_score);}
+    return jcasType.ll_cas.ll_getDoubleValue(addr, ((SearchResult_Type)jcasType).casFeatCode_score);}
     
   /** setter for score - sets The combined, or not combined, score of the result 
    * @generated
    * @param v value to set into the feature 
    */
   public void setScore(double v) {
-    if (searchResult_Type.featOkTst && ((searchResult_Type)jcasType).casFeat_score == null)
+    if (SearchResult_Type.featOkTst && ((SearchResult_Type)jcasType).casFeat_score == null)
       jcasType.jcas.throwFeatMissing("score", "uncc2014watsonsim.uima.types.searchResult");
-    jcasType.ll_cas.ll_setDoubleValue(addr, ((searchResult_Type)jcasType).casFeatCode_score, v);}    
+    jcasType.ll_cas.ll_setDoubleValue(addr, ((SearchResult_Type)jcasType).casFeatCode_score, v);}    
   }
 
     

@@ -1,25 +1,28 @@
 
 
-/* First created by JCasGen Wed Mar 19 16:41:59 EDT 2014 */
+/* First created by JCasGen Sun Apr 06 17:13:31 EDT 2014 */
 package uncc2014watsonsim.uima.types;
 
 import org.apache.uima.jcas.JCas; 
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
+import org.apache.uima.jcas.tcas.Annotation;
+
+
 import org.apache.uima.jcas.cas.TOP;
 
 
 /** A query string (question)
- * Updated by JCasGen Fri Apr 04 17:08:24 EDT 2014
- * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/documentSearchApplicationDescriptor.xml
+ * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
+ * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
-public class queryString extends TOP {
+public class QueryString extends Annotation {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(queryString.class);
+  public final static int typeIndexID = JCasRegistry.register(QueryString.class);
   /** @generated
    * @ordered 
    */
@@ -33,14 +36,14 @@ public class queryString extends TOP {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected queryString() {/* intentionally empty block */}
+  protected QueryString() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public queryString(int addr, TOP_Type type) {
+  public QueryString(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -48,10 +51,22 @@ public class queryString extends TOP {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public queryString(JCas jcas) {
+  public QueryString(JCas jcas) {
     super(jcas);
     readObject();   
   } 
+
+  /** @generated
+   * @param jcas JCas to which this Feature Structure belongs
+   * @param begin offset to the begin spot in the SofA
+   * @param end offset to the end spot in the SofA 
+  */  
+  public QueryString(JCas jcas, int begin, int end) {
+    super(jcas);
+    setBegin(begin);
+    setEnd(end);
+    readObject();
+  }   
 
   /** 
    * <!-- begin-user-doc -->
@@ -72,18 +87,18 @@ public class queryString extends TOP {
    * @return value of the feature 
    */
   public String getQuery() {
-    if (queryString_Type.featOkTst && ((queryString_Type)jcasType).casFeat_query == null)
-      jcasType.jcas.throwFeatMissing("query", "uncc2014watsonsim.uima.types.queryString");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((queryString_Type)jcasType).casFeatCode_query);}
+    if (QueryString_Type.featOkTst && ((QueryString_Type)jcasType).casFeat_query == null)
+      jcasType.jcas.throwFeatMissing("query", "uncc2014watsonsim.uima.types.QueryString");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((QueryString_Type)jcasType).casFeatCode_query);}
     
   /** setter for query - sets  
    * @generated
    * @param v value to set into the feature 
    */
   public void setQuery(String v) {
-    if (queryString_Type.featOkTst && ((queryString_Type)jcasType).casFeat_query == null)
-      jcasType.jcas.throwFeatMissing("query", "uncc2014watsonsim.uima.types.queryString");
-    jcasType.ll_cas.ll_setStringValue(addr, ((queryString_Type)jcasType).casFeatCode_query, v);}    
+    if (QueryString_Type.featOkTst && ((QueryString_Type)jcasType).casFeat_query == null)
+      jcasType.jcas.throwFeatMissing("query", "uncc2014watsonsim.uima.types.QueryString");
+    jcasType.ll_cas.ll_setStringValue(addr, ((QueryString_Type)jcasType).casFeatCode_query, v);}    
   }
 
     

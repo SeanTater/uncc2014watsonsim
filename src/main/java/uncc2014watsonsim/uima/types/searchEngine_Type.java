@@ -13,7 +13,7 @@ import org.apache.uima.cas.Type;
 /** Lucene, Google, Indri, etc
  * Updated by JCasGen Wed Mar 19 16:10:17 EDT 2014
  * @generated */
-public class searchEngine_Type extends searchResult_Type {
+public class searchEngine_Type extends SearchResult_Type {
   /** @generated 
    * @return the generator for this type
    */

@@ -78,10 +78,11 @@ public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
   public void process(JCas cas) throws AnalysisEngineProcessException {
 		JCas queryView;
 		searchResultList hits;
+		QueryString qString;
 		try {
 			queryView = cas.getView("QUERY");
 			if (queryView == null) throw new Exception("Expecting QUERY view in CAS for primary document search");
-			if (UimaTools.casContainsView(cas, "EXPANDED")) throw new Exception("Flow problem: found EXPANDED view in CAS; primary search CASes must not have EXPANDED view");
+			//if (UimaTools.casContainsView(cas, "EXPANDED")) throw new Exception("Flow problem: found EXPANDED view in CAS; primary search CASes must not have EXPANDED view");
 
 			hits = UimaTools.getSingleton(queryView, searchResultList.type);
 			if (hits == null) {
@@ -89,6 +90,8 @@ public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
 				hits.setList(new EmptyFSList(queryView));
 				hits.addToIndexes();
 			}
+			
+			qString = UimaTools.getSingleton(queryView, QueryString.type);
 		} catch (Exception e) {
 			throw new AnalysisEngineProcessException(e);
 		}
@@ -104,7 +107,7 @@ public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
 		
 		try{ 
 			String q = ""; 
-			for (String term : queryView.getDocumentText().split("\\W+")) {
+			for (String term : qString.getQuery().split("\\W+")) {
 				q += String.format("text:%s ", term, term);
 			}
 			
@@ -114,11 +117,13 @@ public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
 			int v = 0;
 			for (ScoreDoc scoreDoc : scoreDocs) {
 				Document doc = searcher.doc(scoreDoc.doc);
-				searchResult uimaResult = new searchResult(queryView);
+				SearchResult uimaResult = new SearchResult(queryView);
 				uimaResult.setEngine("lucene");
 				uimaResult.setRank(++v);
+				String title = doc.get("title");
 				String text = doc.get("text");  // this is the text field of the document
-				uimaResult.setFullText(doc.get("text"));
+				uimaResult.setFullText(text);
+				uimaResult.setTitle(title);
 				
 				FSList expandedList;
 				try {

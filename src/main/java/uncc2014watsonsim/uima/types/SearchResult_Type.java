@@ -14,9 +14,9 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 /** 
- * Updated by JCasGen Fri Apr 04 17:08:24 EDT 2014
+ * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
  * @generated */
-public class searchResult_Type extends TOP_Type {
+public class SearchResult_Type extends TOP_Type {
   /** @generated 
    * @return the generator for this type
    */
@@ -26,21 +26,21 @@ public class searchResult_Type extends TOP_Type {
   private final FSGenerator fsGenerator = 
     new FSGenerator() {
       public FeatureStructure createFS(int addr, CASImpl cas) {
-  			 if (searchResult_Type.this.useExistingInstance) {
+  			 if (SearchResult_Type.this.useExistingInstance) {
   			   // Return eq fs instance if already created
-  		     FeatureStructure fs = searchResult_Type.this.jcas.getJfsFromCaddr(addr);
+  		     FeatureStructure fs = SearchResult_Type.this.jcas.getJfsFromCaddr(addr);
   		     if (null == fs) {
-  		       fs = new searchResult(addr, searchResult_Type.this);
-  			   searchResult_Type.this.jcas.putJfsFromCaddr(addr, fs);
+  		       fs = new SearchResult(addr, SearchResult_Type.this);
+  			   SearchResult_Type.this.jcas.putJfsFromCaddr(addr, fs);
   			   return fs;
   		     }
   		     return fs;
-        } else return new searchResult(addr, searchResult_Type.this);
+        } else return new SearchResult(addr, SearchResult_Type.this);
   	  }
     };
   /** @generated */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = searchResult.typeIndexID;
+  public final static int typeIndexID = SearchResult.typeIndexID;
   /** @generated 
      @modifiable */
   @SuppressWarnings ("hiding")
@@ -199,7 +199,7 @@ public class searchResult_Type extends TOP_Type {
 	 * @param jcas JCas
 	 * @param casType Type 
 	 */
-  public searchResult_Type(JCas jcas, Type casType) {
+  public SearchResult_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 
