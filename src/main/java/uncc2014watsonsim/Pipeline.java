@@ -1,5 +1,6 @@
 package uncc2014watsonsim;
 
+import java.util.Collections;
 import java.util.regex.Matcher;
 
 import uncc2014watsonsim.research.*;
@@ -63,7 +64,7 @@ public class Pipeline {
 	        	// Query every engine
 	        	try {
 					a.passages.addAll(passageSearcher.runBaseQuery(sr));
-					System.out.println("Found " + a.passages.size() + " passages.");
+					//System.out.println("Found " + a.passages.size() + " passages.");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -111,6 +112,12 @@ public class Pipeline {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
+        //order answers by rank
+        if (question.getType() == QType.FITB) {
+        	Collections.sort(question,new RankOrder());
+        }
+        
         return question;
     }
 }
