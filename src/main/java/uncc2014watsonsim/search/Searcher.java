@@ -45,9 +45,10 @@ public abstract class Searcher {
 
     /**
      * How many results should Lucene and Indri return?
+     * This is also how many passages the scorers should expect.
      */
 
-    public final int MAX_RESULTS = 10;
+    public final static int MAX_RESULTS = 10;
 
     
     public List<Answer> runFitbQuery(Question question) throws Exception {

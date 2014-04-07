@@ -2,13 +2,16 @@
 package uncc2014watsonsim;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import org.json.simple.JSONObject;
+
+import uncc2014watsonsim.search.Searcher;
 
 /**
  * @author Phani Rahul
@@ -16,12 +19,7 @@ import org.json.simple.JSONObject;
  */
 public class Answer implements Comparable<Answer> {
     public List<Passage> docs = new ArrayList<Passage>();
-    public Map<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
-    // INDRI_RANK, INDRI_SCORE, LUCENE_RANK, LUCENE_SCORE, GOOGLE_RANK, BING_RANK,
-    //   INDRI_PASSAGE_RETRIEVAL_RANK, INDRI_PASSAGE_RETRIEVAL_SCORE, WORD_PROXIMITY,
-    //   COMBINED, CORRECT
-    private static final double[] defaults_scores = new double[]
-    		{20.0, -15.0, 20.0, -1.0, 20.0, 55.0, 20.0, -15.0, 10.0, 0.0, -1.0};
+    public EnumMap<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
     
     public List<Passage> passages = new ArrayList<Passage>();
 
@@ -43,8 +41,8 @@ public class Answer implements Comparable<Answer> {
 			(String) attr.get(engine+"_title"),
 			"",
 			"");
-		score(Score.valueOf(engine+"_RANK"), (double) attr.get(engine+"_rank"));
-		score(Score.valueOf(engine+"_SCORE"), (double) attr.get(engine+"_score"));
+		passages.get(0).score(Score.valueOf(engine+"_RANK"), (double) attr.get(engine+"_rank"));
+		passages.get(0).score(Score.valueOf(engine+"_SCORE"), (double) attr.get(engine+"_score"));
 	}
 	
     /** some discussion has to be made on how this has to work. Not finalized*/
@@ -117,29 +115,21 @@ public class Answer implements Comparable<Answer> {
         return scores.get(Score.COMBINED);
     }
     
-    /** Return the value of this Score for this answer, or null */
-    public Double score(Score name) {
-    	return scores.get(name);
-    }
-    
-    /** Set the value of this Score for this answer, returning the Answer.
-     * 
-     * The intended use is something like this:
-     * Answer a = new Answer(.......).score(Score.BING_RANK, 9.45).score(Score.INDRI_SCORE, -1.2)
-     * @param name
-     * @param value
-     */
-    public Answer score(Score name, Double value) {
-    	scores.put(name, value);
-    	return this;
-    }
-    
     /** Convenience method for returning all of the answer's scores as a primitive double[].
      * Intended for Weka, but it could be useful for any ML. */
     public double[] scoresArray() {
-    	double[] out = defaults_scores.clone();
-		for (Score dimension : scores.keySet()) {
-			out[dimension.ordinal()] = score(dimension);
+    	// First all of the answer's scores, followed by all of the scores from
+    	// all of the passages
+    	double[] out = new double[Searcher.MAX_RESULTS * Score.values().length];
+    	Arrays.fill(out, Double.NaN);
+		
+		// All the passage's scores
+		for (int pi=0; pi<passages.size(); pi++) {
+			int passage_offset = pi * Searcher.MAX_RESULTS;
+			Passage p = passages.get(pi);
+			for (Entry<Score, Double> dimension : p.scores.entrySet()) {
+				out[passage_offset + dimension.getKey().ordinal()] = dimension.getValue();
+			}
 		}
 		return out;
     }

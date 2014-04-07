@@ -1,5 +1,7 @@
 package uncc2014watsonsim;
 
+import java.util.concurrent.ForkJoinPool;
+
 import uncc2014watsonsim.research.*;
 import uncc2014watsonsim.search.*;
 
@@ -18,12 +20,16 @@ public class Pipeline {
 	static final LuceneSearcher passageSearcher = new LuceneSearcher();
 	
 	static final Researcher[] researchers = {
-		new MergeResearcher(),
-		new PersonRecognitionResearcher(),
-		new WordProximityResearcher(),
-		new CorrectResearcher(),
-		new WekaTeeResearcher(),
+		new Merge(),
+		new PersonRecognition(),
+		new WekaTee(),
 	};
+	
+	static final Scorer[] scorers = {
+		new WordProximity(),
+		//new Correct(),
+	};
+	
 	
 	static final Learner learner = new WekaLearner();
 
@@ -90,13 +96,13 @@ public class Pipeline {
         ignoreSet.add("J! Archive");
         ignoreSet.add("Jeopardy");
         */
+        
+        for (Scorer s: scorers) {
+        	s.question(question);
+        }
+        
     	for (Researcher r : researchers)
-			try {
-				r.research(question);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			r.question(question);
     	
     	for (Researcher r : researchers)
     		r.complete();
