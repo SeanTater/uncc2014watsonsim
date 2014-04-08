@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uncc2014watsonsim.Answer;
-import uncc2014watsonsim.Document;
+import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.Question;
 import uncc2014watsonsim.SQLiteDB;
 
 /*
@@ -40,42 +41,46 @@ public abstract class Searcher {
      * @throws Exception 
      */
     
-	public abstract List<Answer> runQuery(String query) throws Exception;
+	public abstract List<Passage> runQuery(String query) throws Exception;
 
     /**
      * How many results should Lucene and Indri return?
+     * This is also how many passages the scorers should expect.
      */
 
-    public final int MAX_RESULTS = 10;
+    public final static int MAX_RESULTS = 10;
 
+    
+    public List<Answer> runFitbQuery(Question question) throws Exception {
+    	return new ArrayList<Answer>(0);
+    }
     
     
     /** Fill in the missing titles and full texts from Answers using sources.db
      * This is a no-op if the sources database is missing.
      */
-    List<Answer> fillFromSources(List<Answer> answers) {
+    List<Passage> fillFromSources(List<Passage> passages) {
     	if (!db.sanityCheck()) {
-    		return answers;
+    		return passages;
     	} else {
-	    	List<Answer> results = new ArrayList<Answer>();
+	    	List<Passage> results = new ArrayList<Passage>();
 	    	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?;");
 	
-	    	for (Answer a: answers) {
-	    		Document d = a.docs.get(0);
+	    	for (Passage p: passages) {
 	    		ResultSet doc_row;
 	    		try {
-					fetcher.setString(1, d.reference);
+					fetcher.setString(1, p.reference);
 					doc_row = fetcher.executeQuery();
-		    		d.title = doc_row.getString("title");
-		    		if (d.title == null) d.title = "";
-		    		d.text = doc_row.getString("text");
-		    		if (d.text == null) d.text = "";
+		    		p.title = doc_row.getString("title");
+		    		if (p.title == null) p.title = "";
+		    		p.text = doc_row.getString("text");
+		    		if (p.text == null) p.text = "";
 				} catch (SQLException e) {
 					e.printStackTrace();
 					throw new RuntimeException("Failed to execute sources full text search. "
-							+ "Missing document? docno:"+d.reference);
+							+ "Missing document? docno:"+p.reference);
 				}
-	    		results.add(a);
+	    		results.add(p);
 	    	}
 	    	return results;
 	    }

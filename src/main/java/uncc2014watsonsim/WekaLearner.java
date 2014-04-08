@@ -8,11 +8,11 @@ import uncc2014watsonsim.Score;
 public class WekaLearner extends Learner {
 	
 	public void test_implementation(Question question) throws Exception {
-		QuestionResultsScorer q = new AllEnginesResultsScorer();
-		q.initialize();
+		QuestionResultsScorer weka_scorer = new AllEnginesResultsScorer();
+		weka_scorer.initialize();
 		
 		for (Answer a: question) {
-			a.scores.put(Score.COMBINED, q.score(a.scoresArray()));
+			a.scores.put(Score.COMBINED, weka_scorer.score(a.scoresArray()));
 		}
 		
 	}

@@ -7,4 +7,4 @@
  * @author Ken Overholt
  *
  */
-package uncc2014watsonism.qAnalysis;
+package uncc2014watsonsim.qAnalysis;

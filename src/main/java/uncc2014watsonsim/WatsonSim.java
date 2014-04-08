@@ -3,21 +3,8 @@ package uncc2014watsonsim;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import java.util.HashSet;
-
-
-
-/**
- *
- * @author Phani Rahul
- */
 
 public class WatsonSim {
-
-	
-	
-	
-	
 	
     public static void main(String[] args) throws Exception {
 
@@ -43,8 +30,8 @@ public class WatsonSim {
 	        System.out.println("Enter [0-9]+ to inspect full text, a question to search again, or enter to quit\n>>> ");
 	        command = br.readLine();
 	        while (command.matches("[0-9]+")) {
-	        	Answer rs = question.get(Integer.parseInt(command));
-	        	System.out.println("Full text for [" + rs.getTitle() + "]: \n" + rs.getFullText() + "\n");
+	        	Answer a = question.get(Integer.parseInt(command));
+	        	System.out.println("First full text for [" + a.candidate_text + "]: \n" + a.passages.get(0).text + "\n");
 	        	command = br.readLine();
 	        }
     	}

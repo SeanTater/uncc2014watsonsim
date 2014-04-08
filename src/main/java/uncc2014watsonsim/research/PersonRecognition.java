@@ -1,7 +1,6 @@
 package uncc2014watsonsim.research;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -9,7 +8,6 @@ import java.util.logging.Logger;
 
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.Span;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.QType;
@@ -20,13 +18,13 @@ import uncc2014watsonsim.SampleData;
  *
  * @author Phani Rahul
  */
-public class PersonRecognitionResearcher extends Researcher {
+public class PersonRecognition extends Researcher {
 
     private static TokenNameFinderModel model = null;
     private static NameFinderME nameFinder = null;
     private boolean enabled=true;
 
-    public PersonRecognitionResearcher() {
+    public PersonRecognition() {
         InputStream is;
 		try {
 			is = new FileInputStream(SampleData.get_filename("en-ner-person.bin"));
@@ -40,22 +38,22 @@ public class PersonRecognitionResearcher extends Researcher {
         try {
             nameFinder = new NameFinderME(model);
         } catch (Exception ex) {
-            Logger.getLogger(PersonRecognitionResearcher.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PersonRecognition.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    @Override
-    public void research(Question q) throws Exception {
+
+	@Override
+    public void question(Question q) {
     	if (q.getType() == QType.FITB && enabled){
-    		super.research(q);
+    		super.question(q);
     	}
     }
 
     @Override
-    public void research_answer(Answer answer) {
+    public void answer(Question q, Answer answer) {
         Span nameSpans[] = null;
         String[] sentence = null;
-        sentence = answer.getTitle().split("[,'()  ]+");
+        sentence = answer.candidate_text.split("[,'()  ]+");
 
         nameSpans = nameFinder.find(sentence);
         nameFinder.clearAdaptiveData();
@@ -69,7 +67,7 @@ public class PersonRecognitionResearcher extends Researcher {
             }
         }
         if (!ret.toString().isEmpty()){
-        	answer.setTitle(ret.toString());
+        	answer.candidate_text = ret.toString();
         }
         	
     }

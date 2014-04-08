@@ -1,5 +1,8 @@
 package uncc2014watsonsim;
 
+import java.util.Collections;
+import java.util.concurrent.ForkJoinPool;
+
 import uncc2014watsonsim.research.*;
 import uncc2014watsonsim.search.*;
 
@@ -7,22 +10,29 @@ import uncc2014watsonsim.search.*;
  *
  */
 public class Pipeline {
-	static final Searcher[] searchers = {
+	
+	private static final Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
 		new BingSearcher(),
 		//new GoogleSearcher()
 	};
 	
-	static final Researcher[] researchers = {
-		new MergeResearcher(),
-		new PersonRecognitionResearcher(),
-		new WordProximityResearcher(),
-		new CorrectResearcher(),
-		new WekaTeeResearcher(),
+	private static final Researcher[] researchers = {
+		new HyphenTrimmer(),
+		new Merge(),
+		new PassageRetrieval(),
+		new PersonRecognition(),
+		new WekaTee(),
 	};
 	
-	static final Learner learner = new WekaLearner();
+	private static final Scorer[] scorers = {
+		new WordProximity(),
+		new Correct(),
+	};
+	
+	
+	private static final Learner learner = new WekaLearner();
 
 	
 	public static Question ask(String qtext) {
@@ -33,21 +43,17 @@ public class Pipeline {
 	public static Question ask(Question question) {
 		if (question.getType() == QType.FITB) {
 			for (Searcher s: searchers) {
-				if (s.getClass().getName().equals("uncc2014watsonsim.search.IndriSearcher")) {
-					//System.out.println("text: " + question.text); //for debugging
-					//System.out.println("raw_text: " + question.raw_text); //for debugging
-					try {
-						question.addAll(((IndriSearcher)s).runFitbQuery(question));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				try {
+					question.addAll(s.runFitbQuery(question));
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		} else	{
 			// Query every engine
 			for (Searcher s: searchers)
 				try {
-					question.addAll(s.runQuery(question.text));
+					question.addPassages(s.runQuery(question.text));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -70,13 +76,13 @@ public class Pipeline {
         ignoreSet.add("J! Archive");
         ignoreSet.add("Jeopardy");
         */
+        
+        for (Scorer s: scorers) {
+        	s.question(question);
+        }
+        
     	for (Researcher r : researchers)
-			try {
-				r.research(question);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			r.question(question);
     	
     	for (Researcher r : researchers)
     		r.complete();
@@ -88,6 +94,12 @@ public class Pipeline {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
+        //order answers by rank
+        if (question.getType() == QType.FITB) {
+        	Collections.sort(question, new RankOrder());
+        }
+        
         return question;
     }
 }

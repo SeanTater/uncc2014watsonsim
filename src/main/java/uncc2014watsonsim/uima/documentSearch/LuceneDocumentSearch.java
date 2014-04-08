@@ -51,7 +51,7 @@ public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
 	
 	static {
 		analyzer = new StandardAnalyzer(Version.LUCENE_46);
-		parser = new QueryParser(Version.LUCENE_46, UserSpecificConstants.luceneSearchField, analyzer);
+		parser = new QueryParser(Version.LUCENE_46, "text", analyzer);
 		parser.setAllowLeadingWildcard(true);		
 		/*try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
@@ -108,7 +108,7 @@ public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
 				q += String.format("text:%s ", term, term);
 			}
 			
-			ScoreDoc[] scoreDocs = searcher.search(parser.parse(q+UserSpecificConstants.luceneResultsFilter), MAX_RESULTS).scoreDocs;
+			ScoreDoc[] scoreDocs = searcher.search(parser.parse(q), MAX_RESULTS).scoreDocs;
 			
 			// This isn't range based because we need the rank
 			int v = 0;

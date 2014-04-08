@@ -6,12 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import privatedata.UserSpecificConstants;
-import uncc2014watsonism.qAnalysis.FITBAnnotations;
 import uncc2014watsonsim.Answer;
-import uncc2014watsonsim.Document;
+import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
+import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
@@ -28,9 +28,8 @@ public class IndriSearcher extends Searcher {
 		q = new QueryEnvironment();
 		
 	}
-	
 
-	public List<Answer> runQuery(String query) throws Exception {
+	public List<Passage> runQuery(String query) throws Exception {
 		// Run the query
 		
 		// Either add the Indri index or die.
@@ -53,9 +52,9 @@ public class IndriSearcher extends Searcher {
 		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
 
 		// Compile them into a uniform format
-		List<Answer> results = new ArrayList<Answer>();
+		List<Passage> results = new ArrayList<Passage>();
 		for (int i=0; i<ser.length; i++) {
-	    	results.add(new Answer(
+	    	results.add(new Passage(
     			"indri",         	// Engine
     			titles[i],	        // Title
     			full_texts[i].text, // Full Text
@@ -104,27 +103,15 @@ public class IndriSearcher extends Searcher {
 		// Compile them into a uniform format
 		List<Answer> results = new ArrayList<Answer>();
 		for (int i=0; i<ser.length; i++) {
-	    	results.add(new Answer(
+	    	results.add(new Answer(new Passage(
     			"indri",         	// Engine
     			titles[i],	        // Title
     			full_texts[i].text, // Full Text
 				docnos[i])          // Reference
 			.score(Score.INDRI_PASSAGE_RETRIEVAL_RANK, (double) i)
-			.score(Score.INDRI_PASSAGE_RETRIEVAL_SCORE, ser[i].score));
+			.score(Score.INDRI_PASSAGE_RETRIEVAL_SCORE, ser[i].score)));
 		}
 		setFitbTitles(question, results);
-		//TODO: find a better solution
-		//Provided the next statement as the StatisticsCollector seems to need at least one answer
-		if (results.isEmpty()) {
-			results.add(new Answer(
-				"indri",
-				"made-up title",
-				"the made-up full text",
-				"100")
-				.score(Score.INDRI_PASSAGE_RETRIEVAL_RANK, 0.1)
-				.score(Score.INDRI_PASSAGE_RETRIEVAL_SCORE, -1.0));
-		}
-		
 		return results;
 	}
 	
@@ -167,11 +154,11 @@ public class IndriSearcher extends Searcher {
 		String result = null;
 		
 		for (Answer a: theList) {
-			matcher1 = pattern1.matcher(a.getFullText()); //title is the text to be searched
+			matcher1 = pattern1.matcher(a.passages.get(0).text); //title is the text to be searched
 			if (matcher1.find()) {	//find the question with blanks (str1) within the document (a.getFullText()); assign result as str1substring (question with blanks filled in)
 				docPatternStart = matcher1.start();
 				docPatternEnd = matcher1.end();
-				String str1substring = a.getFullText().substring(docPatternStart, docPatternEnd);
+				String str1substring = a.passages.get(0).text.substring(docPatternStart, docPatternEnd);
 				//System.out.println("found pattern in doc: " + str1substring + ": title: " + a.getTitle()); //for debug
 
 				answerStartLocation = 0;
@@ -195,10 +182,10 @@ public class IndriSearcher extends Searcher {
 				result = str1substring.substring(answerStartLocation,answerEndLocation);
 				//System.out.println("The answer: " + result); //for debug
 				if (result != null && !result.equals("")) {
-					a.setTitle(result);
+					a.candidate_text = result;
 				}
 				else {
-					a.setTitle("result was blank or null");
+					a.candidate_text = "result was blank or null";
 				}
 				
 			};

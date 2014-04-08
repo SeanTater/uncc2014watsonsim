@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import uncc2014watsonism.qAnalysis.FITBAnnotations;
+import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 
 
-public class Question extends ArrayList<Answer>{
+public class Question extends ArrayList<Answer> {
 	private static final long serialVersionUID = 1L;
 	public int id; // Question ID comes from the database and is optional.
 	public String text;
@@ -83,6 +83,18 @@ public class Question extends ArrayList<Answer>{
 
 	public void setRaw_text(String raw_text) {
 		this.raw_text = raw_text;
+	}
+	
+	public boolean add(Passage p) {
+		return add(new Answer(p));
+	}
+	
+	public boolean addPassages(Collection<Passage> ps) {
+		boolean added_any = false;
+		for (Passage p: ps) {
+			added_any |= add(new Answer(p));
+		}
+		return added_any;
 	}
     
     //not sure if we should create this as we only need the object for FITB questions and

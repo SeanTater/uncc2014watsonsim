@@ -10,30 +10,20 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.*;
 
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
-
-import uncc2014watsonsim.research.MergeResearcher;
-import uncc2014watsonsim.research.PersonRecognitionResearcher;
-import uncc2014watsonsim.research.Researcher;
-import uncc2014watsonsim.search.CachingSearcher;
-import uncc2014watsonsim.search.GoogleSearcher;
-import uncc2014watsonsim.search.IndriSearcher;
-import uncc2014watsonsim.search.LuceneSearcher;
-import uncc2014watsonsim.search.Searcher;
 
 public class StatisticsCollection {
 	
 	@Test
 	public void fitb() throws Exception {
-		new StatsGenerator("fitb", "where question glob '*_*' limit 100").run();
+		new StatsGenerator("fitb", "where question glob '*_*'").run();
 	}
 
 	@Test
 	public void factoid() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
-		new StatsGenerator("factoid_kstar", "where "
+		new StatsGenerator("factoid", "where "
 				+ "question not glob '*_*' "
 				+ "and category not glob '*COMMON BONDS*' "
 				+ "and category not glob '*BEFORE & AFTER*' "
@@ -170,9 +160,6 @@ class StatsGenerator {
 		long start_time = System.nanoTime();
 		for (Question question : questionsource) {
 			if (question.size() == 0) continue;
-			Answer top_answer = question.get(0);
-			assertNotNull(top_answer);
-			assertThat(top_answer.getTitle().length(), not(0));
 	
 			for (int rank=0; rank<question.size(); rank++) {
 				Answer candidate = question.get(rank);
@@ -188,6 +175,7 @@ class StatsGenerator {
 			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
 			//		"A[Actual:" + correct_answer_score + "]: "  + text.answer);
+			question.clear();
 		}
 	
 		// Only count the rank of questions that were actually there

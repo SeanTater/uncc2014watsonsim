@@ -44,7 +44,7 @@ public class PrebuiltLRLearner extends Learner {
     
     class AnswerTitleComparator implements Comparator<Answer> {
     	public int compare(Answer a, Answer b) {
-    		return a.getTitle().compareToIgnoreCase(b.getTitle());
+    		return a.candidate_text.compareToIgnoreCase(b.candidate_text);
     	}
     }
 }
