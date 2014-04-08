@@ -19,6 +19,7 @@ public class Pipeline {
 	};
 	
 	private static final Researcher[] researchers = {
+		new HyphenTrimmer(),
 		new Merge(),
 		new PassageRetrieval(),
 		new PersonRecognition(),

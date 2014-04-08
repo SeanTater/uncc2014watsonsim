@@ -30,7 +30,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 50").run();
+				+ "limit 100").run();
 	}
 	
 	@Test
@@ -175,6 +175,7 @@ class StatsGenerator {
 			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
 			//		"A[Actual:" + correct_answer_score + "]: "  + text.answer);
+			question.clear();
 		}
 	
 		// Only count the rank of questions that were actually there
