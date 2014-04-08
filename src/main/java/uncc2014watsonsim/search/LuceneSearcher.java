@@ -10,6 +10,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
@@ -50,23 +51,26 @@ public class LuceneSearcher extends Searcher {
 		return runBaseQuery(Translation.getLuceneQuery(question_text));
 	}
 	
-	public synchronized List<Passage> runBaseQuery(String question_text) throws Exception {
-		
-		ScoreDoc[] hits = searcher.search(parser.parse(question_text), MAX_RESULTS).scoreDocs;
-		
-		List<Passage> results = new ArrayList<Passage>(); 
-		// This isn't range based because we need the rank
-		for (int i=0; i < hits.length; i++) {
-					ScoreDoc s = hits[i];
-			Document doc = searcher.doc(s.doc);
-			results.add(new uncc2014watsonsim.Passage(
-					"lucene", 			// Engine
-					doc.get("title"),	// Title
-					doc.get("text"), 	// Text
-					doc.get("docno"))   // Reference
-					.score(Score.LUCENE_RANK, (double) i)           // Rank
-					.score(Score.LUCENE_SCORE, (double) s.score)	// Source
-					);
+	public synchronized List<Passage> runBaseQuery(String question_text) {
+		List<Passage> results = new ArrayList<Passage>();
+		try {
+			ScoreDoc[] hits = searcher.search(parser.parse(question_text), MAX_RESULTS).scoreDocs;
+			// This isn't range based because we need the rank
+			for (int i=0; i < hits.length; i++) {
+						ScoreDoc s = hits[i];
+				Document doc = searcher.doc(s.doc);
+				results.add(new uncc2014watsonsim.Passage(
+						"lucene", 			// Engine
+						doc.get("title"),	// Title
+						doc.get("text"), 	// Text
+						doc.get("docno"))   // Reference
+						.score(Score.LUCENE_RANK, (double) i)           // Rank
+						.score(Score.LUCENE_SCORE, (double) s.score)	// Source
+						);
+			}
+		} catch (IOException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		// Fill any missing full text from sources

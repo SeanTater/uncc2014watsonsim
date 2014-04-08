@@ -1,7 +1,6 @@
 package uncc2014watsonsim;
 
 import java.util.Collections;
-import java.util.regex.Matcher;
 import java.util.concurrent.ForkJoinPool;
 
 import uncc2014watsonsim.research.*;
@@ -12,28 +11,27 @@ import uncc2014watsonsim.search.*;
  */
 public class Pipeline {
 	
-	static final Searcher[] searchers = {
+	private static final Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
 		new BingSearcher(),
 		//new GoogleSearcher()
 	};
 	
-	static final LuceneSearcher passageSearcher = new LuceneSearcher();
-	
-	static final Researcher[] researchers = {
+	private static final Researcher[] researchers = {
 		new Merge(),
+		new PassageRetrieval(),
 		new PersonRecognition(),
 		new WekaTee(),
 	};
 	
-	static final Scorer[] scorers = {
+	private static final Scorer[] scorers = {
 		new WordProximity(),
-		//new Correct(),
+		new Correct(),
 	};
 	
 	
-	static final Learner learner = new WekaLearner();
+	private static final Learner learner = new WekaLearner();
 
 	
 	public static Question ask(String qtext) {
@@ -59,25 +57,6 @@ public class Pipeline {
 					e.printStackTrace();
 				}
 		}
-		
-        for (Answer a : question) {
-        	// The merge researcher does what was once here.
-	        	String sr = StringUtils.filterRelevant(question.raw_text + Matcher.quote_replacement(a.candidate_text));
-	        	// Query every engine
-	        	try {
-					a.passages.addAll(passageSearcher.runBaseQuery(sr));
-					//System.out.println("Found " + a.passages.size() + " passages.");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	        	
-	            /*for (int j =0 ; j< replaced.size(); j++){
-	            	Answer rr = replaced.get(j);
-	            	//bwr.write("\n passages.add(new Passage(\""+rr.getFullText().substring(0, 500).replace("\"", "").replace("\r","")+ "\","+j+",\""+rr.getTitle()+"\")");
-	            	bwr.write("<candans>"+rr.getTitle()+"</candans>"+"\n" +"<passage>"+rr.getFullText().substring(0,500)+"</passage>"+"\n");
-	            	}*/
-    	}
 
         /* This is Jagan's quotes FITB code. I do not have quotes indexed separately so I can't do this.
         for (Searcher s : searchers){
@@ -117,7 +96,7 @@ public class Pipeline {
         
         //order answers by rank
         if (question.getType() == QType.FITB) {
-        	Collections.sort(question,new RankOrder());
+        	Collections.sort(question, new RankOrder());
         }
         
         return question;

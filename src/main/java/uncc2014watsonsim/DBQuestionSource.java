@@ -51,7 +51,7 @@ public class DBQuestionSource extends QuestionSource {
 			bulk_insert.setString(2, r.candidate_text);
 			bulk_insert.setString(3, r.passages.get(0).text);
 			//TODO: we need to generalize this
-			String engine = r.docs.get(0).engine_name;
+			String engine = r.passages.get(0).engine_name;
 			bulk_insert.setString(4, engine);
 			bulk_insert.setDouble(5, r.scores.get(engine+"_rank"));
 			bulk_insert.setDouble(6, r.scores.get(engine+"_score"));

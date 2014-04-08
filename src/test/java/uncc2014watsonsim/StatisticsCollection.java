@@ -10,18 +10,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.*;
 
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
-
-import uncc2014watsonsim.research.Merge;
-import uncc2014watsonsim.research.PersonRecognition;
-import uncc2014watsonsim.research.Researcher;
-import uncc2014watsonsim.search.CachingSearcher;
-import uncc2014watsonsim.search.GoogleSearcher;
-import uncc2014watsonsim.search.IndriSearcher;
-import uncc2014watsonsim.search.LuceneSearcher;
-import uncc2014watsonsim.search.Searcher;
 
 public class StatisticsCollection {
 	
@@ -40,7 +30,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 100").run();
+				+ "limit 50").run();
 	}
 	
 	@Test
