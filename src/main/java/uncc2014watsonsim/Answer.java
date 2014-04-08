@@ -2,32 +2,30 @@
 package uncc2014watsonsim;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import org.json.simple.JSONObject;
+
+import uncc2014watsonsim.search.Searcher;
 
 /**
  * @author Phani Rahul
  * @author Sean Gallagher
  */
 public class Answer implements Comparable<Answer> {
-    public List<Passage> docs = new ArrayList<Passage>();
-    public Map<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
-    // INDRI_RANK, INDRI_SCORE, LUCENE_RANK, LUCENE_SCORE, GOOGLE_RANK, BING_RANK,
-    //   INDRI_PASSAGE_RETRIEVAL_RANK, INDRI_PASSAGE_RETRIEVAL_SCORE, WORD_PROXIMITY,
-    //   COMBINED, CORRECT
-    private static final double[] defaults_scores = new double[]
-    		{20.0, -15.0, 20.0, -1.0, 20.0, 55.0, 20.0, -15.0, 10.0, 0.0, -1.0};
-    
+    public EnumMap<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
     public List<Passage> passages = new ArrayList<Passage>();
+    public String candidate_text;
 
     /** Create an Answer with one implicitly defined Document */
     public Answer(Passage d) {
-        this.docs.add(d);
+        this.passages.add(d);
+        candidate_text = d.title;
     }
     
     /** Create an Answer with one implicitly defined Document */
@@ -43,35 +41,15 @@ public class Answer implements Comparable<Answer> {
 			(String) attr.get(engine+"_title"),
 			"",
 			"");
-		score(Score.valueOf(engine+"_RANK"), (double) attr.get(engine+"_rank"));
-		score(Score.valueOf(engine+"_SCORE"), (double) attr.get(engine+"_score"));
+		passages.get(0).score(Score.valueOf(engine+"_RANK"), (double) attr.get(engine+"_rank"));
+		passages.get(0).score(Score.valueOf(engine+"_SCORE"), (double) attr.get(engine+"_score"));
 	}
-	
-    /** some discussion has to be made on how this has to work. Not finalized*/
-    public void setTitle(String title) {
-    	docs.get(0).title = title;
-    }
-    /** Get the primary title for this record */
-    public String getTitle() {
-    	// TODO: Consider a way of making a title from multiple titles
-    	// NLP realm?
-    	String shortest_title = docs.get(0).title;
-    	for (Passage doc : docs)
-    		if (doc.title.length() < shortest_title.length())
-    			shortest_title = doc.title;
-        return shortest_title;
-    }
-    
-    /** Get the primary full text for this record */
-    public String getFullText() {
-    	return docs.get(0).text;
-    }
 
     @Override
     /** How to handle inexact matches this way?? */
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.getTitle());
+        hash = 41 * hash + Objects.hashCode(this.candidate_text);
         return hash;
     }
 
@@ -83,31 +61,35 @@ public class Answer implements Comparable<Answer> {
             return false;
         }
         
-        for (Passage doc1 : this.docs) {
+        return StringUtils.match_subset(other.candidate_text, candidate_text);
+        
+        /* The old method: any two passages match 
+        for (Passage doc1 : this.passages) {
         	String t1 = StringUtils.filterRelevant(doc1.title);
-        	for (Passage doc2 : other.docs) {
+        	for (Passage doc2 : other.passages) {
         		String t2 = StringUtils.filterRelevant(doc2.title);
         		if (StringUtils.match_subset(t1, t2)) return true;
         	}
-    	}
-        return false;
+    	}*/
     }
 
     @Override
     public String toString() {
     	// Make a short view of the engines as single-letter abbreviations
     	String engines = "";
-    	for (Passage e: this.docs) engines += e.engine_name.substring(0, 1);
+    	for (Passage e: this.passages)
+    		if (e.engine_name != null)
+    			engines += e.engine_name.substring(0, 1);
     	
     	// ResultSet don't know if they are correct anymore..
     	//String correct = isCorrect() ? "✓" : "✗";
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
-    	return String.format("[%01f %-3s] %s", score(), engines, getTitle());
+    	return String.format("[%01f %-3s] %s", score(), engines, candidate_text);
     }
     
     public String toJSON() {
-    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", score(), getTitle().replace("\"", "\\\""));
+    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", score(), candidate_text.replace("\"", "\\\""));
     }
     
     /* Score retrieval */
@@ -117,29 +99,30 @@ public class Answer implements Comparable<Answer> {
         return scores.get(Score.COMBINED);
     }
     
-    /** Return the value of this Score for this answer, or null */
-    public Double score(Score name) {
-    	return scores.get(name);
-    }
-    
-    /** Set the value of this Score for this answer, returning the Answer.
-     * 
-     * The intended use is something like this:
-     * Answer a = new Answer(.......).score(Score.BING_RANK, 9.45).score(Score.INDRI_SCORE, -1.2)
-     * @param name
-     * @param value
-     */
-    public Answer score(Score name, Double value) {
-    	scores.put(name, value);
-    	return this;
+    public static String[] scoreNames() {
+    	String[] names = new String[Searcher.MAX_RESULTS * Score.values().length];
+    	for (int a=0; a<Searcher.MAX_RESULTS; a++)
+    		for (int b=0; b<Score.values().length; b++)
+    			names[a*Score.values().length + b] = Score.values()[b].name() + "_" + a;
+    	return names;
     }
     
     /** Convenience method for returning all of the answer's scores as a primitive double[].
      * Intended for Weka, but it could be useful for any ML. */
     public double[] scoresArray() {
-    	double[] out = defaults_scores.clone();
-		for (Score dimension : scores.keySet()) {
-			out[dimension.ordinal()] = score(dimension);
+    	// First all of the answer's scores, followed by all of the scores from
+    	// all of the passages
+    	double[] out = new double[Searcher.MAX_RESULTS * Score.values().length];
+    	Arrays.fill(out, Double.NaN);
+		
+		// All the passage's scores
+    	// TODO: It's possible to have more than MAX_RESULTS passages because of merging.
+		for (int p_i=0; p_i<Searcher.MAX_RESULTS; p_i++) {
+			int passage_offset = p_i * Searcher.MAX_RESULTS;
+			Passage p = passages.get(p_i);
+			for (Entry<Score, Double> dimension : p.scores.entrySet()) {
+				out[passage_offset + dimension.getKey().ordinal()] = dimension.getValue();
+			}
 		}
 		return out;
     }
@@ -155,7 +138,7 @@ public class Answer implements Comparable<Answer> {
     /** Change this Answer to include all the information of another
      * TODO: What should we do to merge scores? */
     public void merge(Answer other) {
-    	docs.addAll(other.docs);
+    	passages.addAll(other.passages);
     }
     
 

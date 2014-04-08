@@ -2,6 +2,7 @@ package uncc2014watsonsim;
 
 import java.util.Collections;
 import java.util.regex.Matcher;
+import java.util.concurrent.ForkJoinPool;
 
 import uncc2014watsonsim.research.*;
 import uncc2014watsonsim.search.*;
@@ -21,12 +22,16 @@ public class Pipeline {
 	static final LuceneSearcher passageSearcher = new LuceneSearcher();
 	
 	static final Researcher[] researchers = {
-		new MergeResearcher(),
-		new PersonRecognitionResearcher(),
-		new WordProximityResearcher(),
-		new CorrectResearcher(),
-		new WekaTeeResearcher(),
+		new Merge(),
+		new PersonRecognition(),
+		new WekaTee(),
 	};
+	
+	static final Scorer[] scorers = {
+		new WordProximity(),
+		//new Correct(),
+	};
+	
 	
 	static final Learner learner = new WekaLearner();
 
@@ -57,10 +62,7 @@ public class Pipeline {
 		
         for (Answer a : question) {
         	// The merge researcher does what was once here.
-	        	String sr = question.raw_text;
-	        	String tempTitle = Matcher.quoteReplacement(a.getTitle());
-	        	sr = sr.replaceFirst(sr.split(" ")[0], tempTitle);
-	        	sr = StringUtils.filterRelevant(sr);
+	        	String sr = StringUtils.filterRelevant(question.raw_text + Matcher.quote_replacement(a.candidate_text));
 	        	// Query every engine
 	        	try {
 					a.passages.addAll(passageSearcher.runBaseQuery(sr));
@@ -94,13 +96,13 @@ public class Pipeline {
         ignoreSet.add("J! Archive");
         ignoreSet.add("Jeopardy");
         */
+        
+        for (Scorer s: scorers) {
+        	s.question(question);
+        }
+        
     	for (Researcher r : researchers)
-			try {
-				r.research(question);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			r.question(question);
     	
     	for (Researcher r : researchers)
     		r.complete();

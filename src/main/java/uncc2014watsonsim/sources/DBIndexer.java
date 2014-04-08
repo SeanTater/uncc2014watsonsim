@@ -4,35 +4,25 @@
  */
 package uncc2014watsonsim.sources;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lemurproject.indri.IndexEnvironment;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.ParsedDocument.TermExtent;
-import lemurproject.indri.QueryEnvironment;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -40,7 +30,6 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import privatedata.UserSpecificConstants;
-import uncc2014watsonsim.Question;
 
 /**
  *
@@ -105,7 +94,7 @@ public class DBIndexer {
     	
         /** SQL setup */
 		java.sql.ResultSet sql = conn.createStatement().executeQuery(
-				"select rowid, docno, title, text from documents where source like 'shakespeare%';");
+				"select rowid, docno, title, text from documents;");
 		
 		Pattern splitter = Pattern.compile("\\w+");
 		try {
