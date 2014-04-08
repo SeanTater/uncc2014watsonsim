@@ -61,7 +61,7 @@ public class Pipeline {
         for (Answer a : question) {
         	// The merge researcher does what was once here.
 	        	String sr = question.raw_text;
-	        	sr = sr.replaceFirst(sr.split(" ")[0], a.getTitle());
+	        	sr = sr.replaceFirst(sr.split(" ")[0], a.candidate_text);
 	        	sr = StringUtils.filterRelevant(sr);
 	        	// Query every engine
 	        	try {

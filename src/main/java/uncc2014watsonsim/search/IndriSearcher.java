@@ -103,13 +103,13 @@ public class IndriSearcher extends Searcher {
 		// Compile them into a uniform format
 		List<Answer> results = new ArrayList<Answer>();
 		for (int i=0; i<ser.length; i++) {
-	    	results.add(new Answer(
+	    	results.add(new Answer(new Passage(
     			"indri",         	// Engine
     			titles[i],	        // Title
     			full_texts[i].text, // Full Text
 				docnos[i])          // Reference
 			.score(Score.INDRI_PASSAGE_RETRIEVAL_RANK, (double) i)
-			.score(Score.INDRI_PASSAGE_RETRIEVAL_SCORE, ser[i].score));
+			.score(Score.INDRI_PASSAGE_RETRIEVAL_SCORE, ser[i].score)));
 		}
 		setFitbTitles(question, results);
 		return results;
@@ -154,11 +154,11 @@ public class IndriSearcher extends Searcher {
 		String result = null;
 		
 		for (Answer a: theList) {
-			matcher1 = pattern1.matcher(a.getFullText()); //title is the text to be searched
+			matcher1 = pattern1.matcher(a.passages.get(0).text); //title is the text to be searched
 			if (matcher1.find()) {	//find the question with blanks (str1) within the document (a.getFullText()); assign result as str1substring (question with blanks filled in)
 				docPatternStart = matcher1.start();
 				docPatternEnd = matcher1.end();
-				String str1substring = a.getFullText().substring(docPatternStart, docPatternEnd);
+				String str1substring = a.passages.get(0).text.substring(docPatternStart, docPatternEnd);
 				//System.out.println("found pattern in doc: " + str1substring + ": title: " + a.getTitle()); //for debug
 
 				answerStartLocation = 0;
@@ -182,10 +182,10 @@ public class IndriSearcher extends Searcher {
 				result = str1substring.substring(answerStartLocation,answerEndLocation);
 				//System.out.println("The answer: " + result); //for debug
 				if (result != null && !result.equals("")) {
-					a.setTitle(result);
+					a.candidate_text = result;
 				}
 				else {
-					a.setTitle("result was blank or null");
+					a.candidate_text = "result was blank or null";
 				}
 				
 			};

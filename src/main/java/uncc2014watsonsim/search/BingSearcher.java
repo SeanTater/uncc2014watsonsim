@@ -38,7 +38,7 @@ public class BingSearcher extends Searcher {
 	    	for (Element e : doc.select("entry")) {
 	    		results.add(new Passage(
 	        			"bing",         	// Engine
-	        			e.select("d|Title").text(),	        // Title
+	        			e.select("d|Title").text().split("[-:]")[0],	        // Title
 	        			e.select("d|Description").text(), // Full Text
 	        			e.select("d|Url").text())          // Reference
 	    				.score(Score.BING_RANK, (double) i) // Score
