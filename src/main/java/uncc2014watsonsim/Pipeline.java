@@ -60,9 +60,7 @@ public class Pipeline {
 		
         for (Answer a : question) {
         	// The merge researcher does what was once here.
-	        	String sr = question.raw_text;
-	        	sr = sr.replaceFirst(sr.split(" ")[0], a.candidate_text);
-	        	sr = StringUtils.filterRelevant(sr);
+	        	String sr = StringUtils.filterRelevant(question.raw_text + a.candidate_text);
 	        	// Query every engine
 	        	try {
 					a.passages.addAll(passageSearcher.runBaseQuery(sr));
