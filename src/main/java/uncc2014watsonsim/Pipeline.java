@@ -1,5 +1,8 @@
 package uncc2014watsonsim;
 
+import java.util.Collections;
+import java.util.regex.Matcher;
+
 import uncc2014watsonsim.research.*;
 import uncc2014watsonsim.search.*;
 
@@ -55,12 +58,13 @@ public class Pipeline {
         for (Answer a : question) {
         	// The merge researcher does what was once here.
 	        	String sr = question.raw_text;
-	        	sr = sr.replaceFirst(sr.split(" ")[0], a.getTitle());
+	        	String tempTitle = Matcher.quoteReplacement(a.getTitle());
+	        	sr = sr.replaceFirst(sr.split(" ")[0], tempTitle);
 	        	sr = StringUtils.filterRelevant(sr);
 	        	// Query every engine
 	        	try {
 					a.passages.addAll(passageSearcher.runBaseQuery(sr));
-					System.out.println("Found " + a.passages.size() + " passages.");
+					//System.out.println("Found " + a.passages.size() + " passages.");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -108,6 +112,12 @@ public class Pipeline {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
+        //order answers by rank
+        if (question.getType() == QType.FITB) {
+        	Collections.sort(question,new RankOrder());
+        }
+        
         return question;
     }
 }
