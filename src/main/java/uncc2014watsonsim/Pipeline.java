@@ -77,9 +77,6 @@ public class Pipeline {
         ignoreSet.add("Jeopardy");
         */
         
-        for (Scorer s: scorers) {
-        	s.scoreQuestion(question);
-        }
         
     	for (Researcher r : researchers)
 			r.question(question);
@@ -87,6 +84,10 @@ public class Pipeline {
     	for (Researcher r : researchers)
     		r.complete();
     	
+
+        for (Scorer s: scorers) {
+        	s.scoreQuestion(question);
+        }
     	
         try {
 			learner.test(question);

@@ -12,5 +12,5 @@ public enum Score {
 	WORD_PROXIMITY,
 	COMBINED,
 	CORRECT,
-	GARBAGE
+	GARBAGE,	
 }
