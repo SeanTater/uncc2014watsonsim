@@ -29,7 +29,6 @@ import uncc2014watsonsim.uima.types.QueryString;
  * This class implements a UIMA collection reader that reads in a file containing input queries for
  * the Semantic Search project pipeline.
  *
- * @author Siddharth Patwardhan <sidd@patwardhans.net>
  * @author Jonathan Shuman (unccwatsonsim repackage and edits)
  */
 public class QueryCollectionReader extends CollectionReader_ImplBase {
