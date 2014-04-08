@@ -36,19 +36,19 @@ public abstract class Scorer {
 	 * @param question
 	 * @throws Exception 
 	 */
-	public void question(Question q) {
+	public void scoreQuestion(Question q) {
 		for (Answer a : q)
 			for (Passage p: a.passages)
-				p.score(score_enum, passage(q, a, p));		
+				p.score(score_enum, scorePassage(q, a, p));		
 	}
 	
-	/** Default implementation for researching an answer.
+	/** Default implementation for researching a passage.
 	 * Does nothing by default. You don't need to override this if you don't
 	 * use it.
 	 * 
 	 * @param answer
 	 */
-	public double passage(Question q, Answer a, Passage p) {
+	public double scorePassage(Question q, Answer a, Passage p) {
 		return Double.NaN;
 	}
 	

@@ -6,7 +6,7 @@ import uncc2014watsonsim.Question;
 
 public class SkipBigram extends Scorer {
 	
-	public double passage(Question q, Answer a, Passage p) {
+	public double scorePassage(Question q, Answer a, Passage p) {
 		return Double.NaN;
 	}
 

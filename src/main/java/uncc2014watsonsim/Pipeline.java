@@ -78,7 +78,7 @@ public class Pipeline {
         */
         
         for (Scorer s: scorers) {
-        	s.question(question);
+        	s.scoreQuestion(question);
         }
         
     	for (Researcher r : researchers)
