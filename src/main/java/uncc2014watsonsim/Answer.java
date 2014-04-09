@@ -139,7 +139,29 @@ public class Answer implements Comparable<Answer> {
      * TODO: What should we do to merge scores? */
     public void merge(Answer other) {
     	passages.addAll(other.passages);
+    	// Merge scores
+    	Passage p_other = other.passages.get(0);
+    	for(Score s : p_other.scores.keySet()) {
+    		if(!passages.get(0).scores.containsKey(s)) {
+    			passages.get(0).scores.put(s, p_other.score(s));
+    		}
+    		else { // take highest score
+    			passages.get(0).scores.put(s, Math.max(passages.get(0).score(s), p_other.score(s)));
+    		}    			
+    	}
+    	/* TODO: merge internal passages? */
     }
+
+	public double[] SearchResultsArray() {
+		// TODO Auto-generated method stub
+		// array of scores for results returned from search engines
+		// first passage is result originally returned from search engine
+		double[] out = new double[Score.values().length];
+		Arrays.fill(out, 0.0);
+		for(Score s: passages.get(0).scores.keySet())
+			out[s.ordinal()] = passages.get(0).scores.get(s);
+		return out;
+	}
     
 
 }

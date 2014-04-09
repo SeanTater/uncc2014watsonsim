@@ -64,7 +64,7 @@ public class LuceneSearcher extends Searcher {
 						doc.get("title"),	// Title
 						doc.get("text"), 	// Text
 						doc.get("docno"))   // Reference
-						.score(Score.LUCENE_RANK, (double) i)           // Rank
+						.score(Score.LUCENE_RANK, (double) i+1)           // Rank (+1 to make it 1 based so ML will run properly)
 						.score(Score.LUCENE_SCORE, (double) s.score)	// Source
 						);
 			}

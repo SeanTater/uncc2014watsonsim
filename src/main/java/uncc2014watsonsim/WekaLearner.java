@@ -12,7 +12,7 @@ public class WekaLearner extends Learner {
 		weka_scorer.initialize();
 		
 		for (Answer a: question) {
-			a.scores.put(Score.COMBINED, weka_scorer.score(a.scoresArray()));
+			a.scores.put(Score.COMBINED, weka_scorer.score(a.SearchResultsArray()/*a.scoresArray()*/));
 		}
 		
 	}

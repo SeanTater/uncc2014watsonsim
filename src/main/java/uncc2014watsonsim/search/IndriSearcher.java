@@ -59,7 +59,7 @@ public class IndriSearcher extends Searcher {
     			titles[i],	        // Title
     			full_texts[i].text, // Full Text
 				docnos[i])          // Reference
-			.score(Score.INDRI_RANK, (double) i)
+			.score(Score.INDRI_RANK, (double) i+1)	// Rank (+1 to make it 1 based so ML will run properly)
 			.score(Score.INDRI_SCORE, ser[i].score));
 		}
 		// Indri's titles and full texts could be empty. If they are, fill them from sources.db
