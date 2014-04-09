@@ -26,6 +26,10 @@ public class IndriSearcher extends Searcher {
 	static {
 		// Only initialize the query environment and index once
 		q = new QueryEnvironment();
+		Score.register("INDRI_PASSAGE_RETRIEVAL_RANK");
+		Score.register("INDRI_PASSAGE_RETRIEVAL_SCORE");
+		Score.register("INDRI_RANK");
+		Score.register("INDRI_SCORE");
 		
 	}
 
@@ -59,8 +63,8 @@ public class IndriSearcher extends Searcher {
     			titles[i],	        // Title
     			full_texts[i].text, // Full Text
 				docnos[i])          // Reference
-			.score(Score.INDRI_RANK, (double) i)
-			.score(Score.INDRI_SCORE, ser[i].score));
+			.score("INDRI_RANK", (double) i)
+			.score("INDRI_SCORE", ser[i].score));
 		}
 		// Indri's titles and full texts could be empty. If they are, fill them from sources.db
 		return fillFromSources(results);
@@ -108,8 +112,8 @@ public class IndriSearcher extends Searcher {
     			titles[i],	        // Title
     			full_texts[i].text, // Full Text
 				docnos[i])          // Reference
-			.score(Score.INDRI_PASSAGE_RETRIEVAL_RANK, (double) i)
-			.score(Score.INDRI_PASSAGE_RETRIEVAL_SCORE, ser[i].score)));
+			.score("INDRI_PASSAGE_RETRIEVAL_RANK", (double) i)
+			.score("INDRI_PASSAGE_RETRIEVAL_SCORE", ser[i].score)));
 		}
 		setFitbTitles(question, results);
 		return results;

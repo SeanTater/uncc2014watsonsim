@@ -11,8 +11,10 @@ public class WekaLearner extends Learner {
 		QuestionResultsScorer weka_scorer = new AllEnginesResultsScorer();
 		weka_scorer.initialize();
 		
+		String[] LAST_MODEL_DIMENSIONS = new String[]{"INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_RANK"};
+		
 		for (Answer a: question) {
-			a.scores.put(Score.COMBINED, weka_scorer.score(a.scoresArray()));
+			a.scores.put("COMBINED", weka_scorer.score(a.scoresArray(LAST_MODEL_DIMENSIONS)));
 		}
 		
 	}

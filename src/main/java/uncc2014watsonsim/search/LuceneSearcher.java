@@ -45,6 +45,8 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);
+		Score.register("LUCENE_RANK");
+		Score.register("LUCENE_SCORE");
 	}
 
 	public List<Passage> runQuery(String question_text) throws Exception {
@@ -64,8 +66,8 @@ public class LuceneSearcher extends Searcher {
 						doc.get("title"),	// Title
 						doc.get("text"), 	// Text
 						doc.get("docno"))   // Reference
-						.score(Score.LUCENE_RANK, (double) i)           // Rank
-						.score(Score.LUCENE_SCORE, (double) s.score)	// Source
+						.score("LUCENE_RANK", (double) i)           // Rank
+						.score("LUCENE_SCORE", (double) s.score)	// Source
 						);
 			}
 		} catch (IOException | ParseException e) {

@@ -3,18 +3,16 @@ package uncc2014watsonsim.search;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.SQLiteDB;
-import uncc2014watsonsim.Score;
 
 //TODO: Enum scoring breaks this class.
 public class CachingSearcher extends Searcher {
 	Searcher[] searchers;
 	SQLiteDB db = new SQLiteDB("questions");
+	
 
 	public CachingSearcher(Searcher[] searchers) {
 		this.searchers = searchers;
@@ -38,10 +36,10 @@ public class CachingSearcher extends Searcher {
 					sql.getString("fulltext"),
 					sql.getString("reference"));
 			try {
-				p.score(Score.valueOf(sql.getString("engine").toUpperCase() + "_RANK"), sql.getDouble("rank"));
+				p.score(sql.getString("engine").toUpperCase() + "_RANK", sql.getDouble("rank"));
 			} catch (NullPointerException e) {}
 			try {
-				p.score(Score.valueOf(sql.getString("engine").toUpperCase() + "_SCORE"), sql.getDouble("score"));
+				p.score(sql.getString("engine").toUpperCase() + "_SCORE", sql.getDouble("score"));
 			} catch (NullPointerException e) {}
 		}
 		if (results.isEmpty()) {

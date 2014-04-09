@@ -17,6 +17,10 @@ import uncc2014watsonsim.Score;
 
 public class BingSearcher extends Searcher {
 	
+	static {
+		Score.register("BING_RANK");
+	}
+	
 	@Override
 	public List<Passage> runQuery(String query) throws Exception {
 		
@@ -41,7 +45,7 @@ public class BingSearcher extends Searcher {
 	        			e.select("d|Title").text(),	        // Title
 	        			e.select("d|Description").text(), // Full Text
 	        			e.select("d|Url").text())          // Reference
-	    				.score(Score.BING_RANK, (double) i) // Score
+	    				.score("BING_RANK", (double) i) // Score
 	    			);
 	    		i++;
 	    	}

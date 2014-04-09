@@ -1,6 +1,6 @@
 package uncc2014watsonsim;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Passage {
@@ -10,10 +10,10 @@ public class Passage {
 	public String engine_name;
 	public String title;
 
-    public Map<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
+    public Map<String, Double> scores = new HashMap<>();
     
     /** Return the value of this Score for this answer, or null */
-    public Double score(Score name) {
+    public Double score(String name) {
     	return scores.get(name);
     }
     
@@ -24,7 +24,7 @@ public class Passage {
      * @param name
      * @param value
      */
-    public Passage score(Score name, Double value) {
+    public Passage score(String name, Double value) {
     	scores.put(name, value);
     	return this;
     }
