@@ -9,6 +9,9 @@
     <delegateAnalysisEngine key="LuceneDocumentSearch">
       <import name="uncc2014watsonsim.uima.documentSearch.LuceneDocumentSearch"/>
     </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="IndriDocumentSearch">
+      <import name="uncc2014watsonsim.uima.documentSearch.IndriDocumentSearch"/>
+    </delegateAnalysisEngine>
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>documentSearchApplicationDescriptor</name>
@@ -22,9 +25,11 @@ We will use it to access all the search engines and then push to a document anal
     <flowConstraints>
       <fixedFlow>
         <node>LuceneDocumentSearch</node>
-        <node>DocumentSearchCasMultiplier</node>
+        <node>IndriDocumentSearch</node>
+      <node>DocumentSearchCasMultiplier</node>
       </fixedFlow>
     </flowConstraints>
+    <typePriorities/>
     <fsIndexCollection/>
     <capabilities>
       <capability>
