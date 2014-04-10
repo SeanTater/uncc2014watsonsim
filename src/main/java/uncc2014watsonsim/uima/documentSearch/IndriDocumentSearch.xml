@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
-  <primitive>true</primitive>  <annotatorImplementationName>uncc2014watsonsim.uima.documentSearch.LuceneDocumentSearch</annotatorImplementationName>
+  <primitive>true</primitive>  <annotatorImplementationName>uncc2014watsonsim.uima.documentSearch.IndriDocumentSearch</annotatorImplementationName>
   <analysisEngineMetaData>
     <name>LuceneDocumentSearch</name>
-    <description/>
+    <description>A descriptor for searching with Indri</description>
     <version>1.0</version>
     <vendor/>
     <configurationParameters/>

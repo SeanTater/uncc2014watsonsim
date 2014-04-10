@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Thu Mar 27 09:59:58 EDT 2014
- * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/documentSearch/LuceneDocumentSearch.xml
+ * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
+ * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
 public class question extends TOP {
   /** @generated
@@ -71,16 +71,16 @@ public class question extends TOP {
    * @generated
    * @return value of the feature 
    */
-  public queryString getQuery() {
+  public QueryString getQuery() {
     if (question_Type.featOkTst && ((question_Type)jcasType).casFeat_query == null)
       jcasType.jcas.throwFeatMissing("query", "uncc2014watsonsim.uima.types.question");
-    return (queryString)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((question_Type)jcasType).casFeatCode_query)));}
+    return (QueryString)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((question_Type)jcasType).casFeatCode_query)));}
     
   /** setter for query - sets The Query 
    * @generated
    * @param v value to set into the feature 
    */
-  public void setQuery(queryString v) {
+  public void setQuery(QueryString v) {
     if (question_Type.featOkTst && ((question_Type)jcasType).casFeat_query == null)
       jcasType.jcas.throwFeatMissing("query", "uncc2014watsonsim.uima.types.question");
     jcasType.ll_cas.ll_setRefValue(addr, ((question_Type)jcasType).casFeatCode_query, jcasType.ll_cas.ll_getFSRef(v));}    
