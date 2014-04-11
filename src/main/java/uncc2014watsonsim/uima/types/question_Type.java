@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 /** 
- * Updated by JCasGen Thu Mar 27 09:59:58 EDT 2014
+ * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
  * @generated */
 public class question_Type extends TOP_Type {
   /** @generated 
@@ -178,7 +178,7 @@ public class question_Type extends TOP_Type {
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 
  
-    casFeat_query = jcas.getRequiredFeatureDE(casType, "query", "uncc2014watsonsim.uima.types.queryString", featOkTst);
+    casFeat_query = jcas.getRequiredFeatureDE(casType, "query", "uncc2014watsonsim.uima.types.QueryString", featOkTst);
     casFeatCode_query  = (null == casFeat_query) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_query).getCode();
 
  

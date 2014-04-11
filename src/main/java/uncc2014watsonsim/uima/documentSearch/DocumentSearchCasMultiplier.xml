@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
-  <primitive>true</primitive>  <annotatorImplementationName>uncc2014watsonsim.uima.documentSearch.LuceneDocumentSearch</annotatorImplementationName>
+  <primitive>true</primitive>  <annotatorImplementationName>uncc2014watsonsim.uima.documentSearch.DocumentSearchCasMultiplier</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>LuceneDocumentSearch</name>
+    <name>DocumentSearchCasMultiplier</name>
     <description/>
     <version>1.0</version>
     <vendor/>
@@ -11,23 +11,21 @@
     <configurationParameterSettings/>
     <typeSystemDescription>
       <imports>
-        <import location="../types.xml"/>
+        <import name="uncc2014watsonsim.uima.types"/>
       </imports>
     </typeSystemDescription>
     <typePriorities/>
     <fsIndexCollection/>
     <capabilities>
       <capability>
-        <inputs>
-          <type allAnnotatorFeatures="true">uncc2014watsonsim.uima.types.queryString</type>
-        </inputs>
-        <outputs>
-          <type allAnnotatorFeatures="true">unccwatson2014.uima.question</type>
-          <type allAnnotatorFeatures="true">uncc2014watsonsim.uima.types.searchResultList</type>
-        </outputs>
+        <inputs/>
+        <outputs/>
         <inputSofas>
           <sofaName>QUERY</sofaName>
         </inputSofas>
+        <outputSofas>
+          <sofaName>DOCUMENT</sofaName>
+        </outputSofas>
         <languagesSupported/>
       </capability>
     </capabilities>

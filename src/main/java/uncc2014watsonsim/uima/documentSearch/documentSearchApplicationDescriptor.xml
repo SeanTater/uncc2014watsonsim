@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <primitive>false</primitive>  
+  <delegateAnalysisEngineSpecifiers>
+    <delegateAnalysisEngine key="DocumentSearchCasMultiplier">
+      <import name="uncc2014watsonsim.uima.documentSearch.DocumentSearchCasMultiplier"/>
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="LuceneDocumentSearch">
+      <import name="uncc2014watsonsim.uima.documentSearch.LuceneDocumentSearch"/>
+    </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="IndriDocumentSearch">
+      <import name="uncc2014watsonsim.uima.documentSearch.IndriDocumentSearch"/>
+    </delegateAnalysisEngine>
+  </delegateAnalysisEngineSpecifiers>
+  <analysisEngineMetaData>
+    <name>documentSearchApplicationDescriptor</name>
+    <description>This is a top-level descriptor for the document search pipeline.
+
+We will use it to access all the search engines and then push to a document analysis descriptor.</description>
+    <version>1.0</version>
+    <vendor>unccwatsonsim</vendor>
+    <configurationParameters searchStrategy="language_fallback"/>
+    <configurationParameterSettings/>
+    <flowConstraints>
+      <fixedFlow>
+        <node>LuceneDocumentSearch</node>
+        <node>IndriDocumentSearch</node>
+      <node>DocumentSearchCasMultiplier</node>
+      </fixedFlow>
+    </flowConstraints>
+    <typePriorities/>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs/>
+        <outputs/>
+        <inputSofas>
+          <sofaName>QUERY</sofaName>
+        </inputSofas>
+        <outputSofas>
+          <sofaName>DOCUMENT</sofaName>
+        </outputSofas>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+  <operationalProperties>
+      <modifiesCas>true</modifiesCas>
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <outputsNewCASes>true</outputsNewCASes>
+    </operationalProperties>
+  </analysisEngineMetaData>
+  <resourceManagerConfiguration/>
+</analysisEngineDescription>
