@@ -12,9 +12,9 @@ import uncc2014watsonsim.Question;
 import uncc2014watsonsim.SQLiteDB;
 
 /*
- * This interface might change; Please be ready to accomodate the changes.
+ * This interface might change; Please be ready to accommodate the changes.
  * This interface should be implemented by local search engines like 
- * Indri and Lucene, when querying them. Basically, it retreives the basic data 
+ * Indri and Lucene, when querying them. Basically, it retrieves the basic data 
  * from the queried result set.
  */
 
