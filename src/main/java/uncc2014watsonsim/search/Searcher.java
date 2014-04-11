@@ -41,7 +41,9 @@ public abstract class Searcher {
      * @throws Exception 
      */
     
-	public abstract List<Passage> runQuery(String query) throws Exception;
+	public abstract List<Passage> runTranslatedQuery(String query);
+	
+	public abstract List<Passage> runBaseQuery(String query);
 
     /**
      * How many results should Lucene and Indri return?

@@ -22,8 +22,11 @@ public class BingSearcher extends Searcher {
 	}
 	
 	@Override
-	public List<Passage> runQuery(String query) throws Exception {
-		
+	public List<Passage> runTranslatedQuery(String query) {
+		return runBaseQuery(query);
+	}
+	
+	public List<Passage> runBaseQuery(String query) {
 		//TODO: Should this be done in StringUtils?
 	    query = query.replaceAll(" ", "%20");
 	    String url = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27" + query + "%27&$top=50&$format=Atom";

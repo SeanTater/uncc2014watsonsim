@@ -25,8 +25,9 @@ public class WekaTee extends Researcher {
 		
 		ordered_names = Score.names.toArray(new String[Score.names.size()]);
 		Arrays.sort(ordered_names);
-		for (String name : ordered_names)
-			attributes.addElement(new Attribute(name));
+		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT; passage_i++)
+			for (String name : ordered_names)
+				attributes.addElement(new Attribute(name + "_" + passage_i));
 		data = new Instances("Watsonsim captured question stream", attributes, 0);
 	}
 	
@@ -37,8 +38,6 @@ public class WekaTee extends Researcher {
 
 	@Override
 	public void question(Question q) {
-		double[] scores = new double[ordered_names.length];
-		Arrays.fill(scores, Double.NaN);
 		
 		for (Answer a : q) {
 			data.add(new Instance(1.0, a.scoresArray(ordered_names)));

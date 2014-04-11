@@ -56,10 +56,15 @@ public class GoogleSearcher extends Searcher {
 		Score.register("GOOGLE_RANK");
 	}
 	
+	
+	public List<Passage> runTranslatedQuery(String query) {
+		return runBaseQuery(query);
+	}
+	
 	/* (non-Javadoc)
 	 * @see WebSearch#runQuery(java.lang.String)
 	 */
-	public List<Passage> runQuery(String query) throws IOException {
+	public List<Passage> runBaseQuery(String query) {
 		List<Passage> results = new ArrayList<Passage>();
 		//Check empty query
 		if (query.isEmpty())
@@ -72,11 +77,18 @@ public class GoogleSearcher extends Searcher {
 		*  the purpose of this project which essentially just searches the
 		*  entire web.
 		*/
-		Cse.List queryList = customsearchengine.list(query);
-		
-		queryList.setCx(UserSpecificConstants.googleCustomSearchID);
-        // To choose how many results: queryList.setNum(new Long((long)30));
-		List<Result> in_r = queryList.execute().getItems();
+		List<Result> in_r;
+		try {
+			Cse.List queryList = customsearchengine.list(query);
+			queryList.setCx(UserSpecificConstants.googleCustomSearchID);
+	        // To choose how many results: queryList.setNum(new Long((long)30));
+			in_r = queryList.execute().getItems();
+		} catch (IOException e) {
+			// If we fail to connect to Google, act as if Google gave no results.
+			System.out.println("Failed to fetch results from Google.");
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
 		// Not a range for because we need rank
 		for (int i=0; i<in_r.size(); i++) {
 			results.add(new Passage(

@@ -49,7 +49,7 @@ public class LuceneSearcher extends Searcher {
 		Score.register("LUCENE_SCORE");
 	}
 
-	public List<Passage> runQuery(String question_text) throws Exception {
+	public List<Passage> runTranslatedQuery(String question_text) {
 		return runBaseQuery(Translation.getLuceneQuery(question_text));
 	}
 	
@@ -71,7 +71,7 @@ public class LuceneSearcher extends Searcher {
 						);
 			}
 		} catch (IOException | ParseException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Failed to query Lucene. Is the index in the correct location?");
 			e.printStackTrace();
 		}
 		

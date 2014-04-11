@@ -12,23 +12,26 @@ import uncc2014watsonsim.search.*;
 public class Pipeline {
 	
 	private static final Searcher[] searchers = {
-		new LuceneSearcher(),
-		new IndriSearcher(),
-		new BingSearcher(),
-		//new GoogleSearcher()
+		new CachingSearcher(new LuceneSearcher(), "lucene"),
+		new CachingSearcher(new IndriSearcher(), "indri"),
+		new CachingSearcher(new BingSearcher(), "bing"),
+		//new CachingSearcher(new GoogleSearcher(), "google")
 	};
 	
-	private static final Researcher[] researchers = {
+	private static final Researcher[] early_researchers = {
 		new HyphenTrimmer(),
 		new Merge(),
 		new PassageRetrieval(),
 		new PersonRecognition(),
-		new WekaTee(),
 	};
 	
 	private static final Scorer[] scorers = {
 		new WordProximity(),
 		new Correct(),
+	};
+
+	private static final Researcher[] late_researchers = {
+		new WekaTee(),
 	};
 	
 	
@@ -52,11 +55,7 @@ public class Pipeline {
 		} else	{
 			// Query every engine
 			for (Searcher s: searchers)
-				try {
-					question.addPassages(s.runQuery(question.text));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				question.addPassages(s.runTranslatedQuery(question.text));
 		}
 
         /* This is Jagan's quotes FITB code. I do not have quotes indexed separately so I can't do this.
@@ -78,16 +77,22 @@ public class Pipeline {
         */
         
         
-    	for (Researcher r : researchers)
+    	for (Researcher r : early_researchers)
 			r.question(question);
     	
-    	for (Researcher r : researchers)
+    	for (Researcher r : early_researchers)
     		r.complete();
     	
 
         for (Scorer s: scorers) {
         	s.scoreQuestion(question);
         }
+        
+        for (Researcher r : late_researchers)
+			r.question(question);
+    	
+    	for (Researcher r : late_researchers)
+    		r.complete();
     	
         try {
 			learner.test(question);

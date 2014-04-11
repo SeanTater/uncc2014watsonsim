@@ -111,11 +111,12 @@ public class Answer implements Comparable<Answer> {
 		
 		// All the passage's scores
     	// TODO: It's possible to have more than MAX_RESULTS passages because of merging.
-		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT; passage_i++) {
+		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT && passage_i<passages.size(); passage_i++) {
 			int passage_offset = passage_i * dims;
 			Passage p = passages.get(passage_i);
 			for (int dim_i=0; dim_i<dims; dim_i++) {
-				out[passage_offset + dim_i] = p.scores.get(names[dim_i]);
+				Double value = p.scores.get(names[dim_i]);
+				out[passage_offset + dim_i] = value == null ? Double.NaN : value;
 			}
 		}
 		return out;

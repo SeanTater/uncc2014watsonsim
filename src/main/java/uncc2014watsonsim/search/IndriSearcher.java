@@ -32,28 +32,36 @@ public class IndriSearcher extends Searcher {
 		Score.register("INDRI_SCORE");
 		
 	}
+	
+	public List<Passage> runTranslatedQuery(String query) {
+		return runBaseQuery(Translation.getIndriQuery(query));
+	}
 
-	public List<Passage> runQuery(String query) throws Exception {
+	public List<Passage> runBaseQuery(String query) {
 		// Run the query
 		
-		// Either add the Indri index or die.
+
+		ScoredExtentResult[] ser;
+		// Fetch all titles, texts
+		String[] docnos;
+		// If they have them, get the titles and full texts
+		ParsedDocument[] full_texts;
+		String[] titles;
 		try {
 			q.addIndex(UserSpecificConstants.indriIndex);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Indri index is missing or corrupt. Please check that you entered the right path in UserSpecificConstants.java.");
-		}
 		
-		String main_query = Translation.getIndriQuery(query);
-		
-		ScoredExtentResult[] ser = IndriSearcher.q.runQuery(main_query, MAX_RESULTS);
+			ser = IndriSearcher.q.runQuery(query, MAX_RESULTS);
 
-		// Fetch all titles, texts
-		String[] docnos = IndriSearcher.q.documentMetadata(ser, "docno");
-		
-		// If they have them, get the titles and full texts
-		ParsedDocument[] full_texts = IndriSearcher.q.documents(ser);
-		String[] titles = IndriSearcher.q.documentMetadata(ser, "title");
+			docnos = IndriSearcher.q.documentMetadata(ser, "docno");
+			
+			full_texts = IndriSearcher.q.documents(ser);
+			titles = IndriSearcher.q.documentMetadata(ser, "title");
+		} catch (Exception e) {
+			// If any other step fails, give a more general message but don't die.
+			System.out.println("Querying Indri failed. Is the index in the correct location? Is indri_jni included?");
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
 
 		// Compile them into a uniform format
 		List<Passage> results = new ArrayList<Passage>();
