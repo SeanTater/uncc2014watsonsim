@@ -11,7 +11,7 @@ import uncc2014watsonsim.search.Searcher;
 
 public class PassageRetrieval extends Researcher {
 
-	private static final Searcher passageSearcher = new LuceneSearcher();
+	private static final Searcher passageSearcher = new CachingSearcher(new LuceneSearcher(), "lucene");
 	@Override
 	public void answer(Question q, Answer a) {
     	// The merge researcher does what was once here.
