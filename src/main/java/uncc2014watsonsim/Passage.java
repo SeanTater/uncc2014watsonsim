@@ -29,13 +29,9 @@ public class Passage {
     	return this;
     }
 	
-	/** Create a Document
-	 * @param engine name
-	 * @param title
-	 * @param text
-	 * @param reference
-	 * @param rank
-	 * @param score
+	/** 
+	 * Create a Document
+	 *
 	 */
 	public Passage(String engine_name, String title, String text, String reference) {
 		this.text = text;
