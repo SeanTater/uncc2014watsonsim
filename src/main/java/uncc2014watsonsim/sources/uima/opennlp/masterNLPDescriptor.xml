@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <primitive>true</primitive>  <annotatorImplementationName></annotatorImplementationName>
+  <analysisEngineMetaData>
+    <name>masterNLPDescriptor</name>
+    <description></description>
+    <version>1.0</version>
+    <vendor></vendor>
+    <configurationParameters></configurationParameters>
+    <configurationParameterSettings></configurationParameterSettings>
+    <typeSystemDescription></typeSystemDescription>
+    <typePriorities></typePriorities>
+    <fsIndexCollection></fsIndexCollection>
+    <capabilities>
+      <capability>
+        <inputs></inputs>
+        <outputs></outputs>
+        <languagesSupported></languagesSupported>
+      </capability>
+    </capabilities>
+  </analysisEngineMetaData>
+  <externalResourceDependencies></externalResourceDependencies>
+  <resourceManagerConfiguration></resourceManagerConfiguration>
+</analysisEngineDescription>
