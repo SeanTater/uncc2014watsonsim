@@ -34,7 +34,10 @@ public double scorePassage(Question q, Answer a, Passage p) {
 		{
 			distanceSum += distanceBetweenWords[i];
 		}
-		return (count/((double)q.text.length()))/((double)distanceSum/count);
+		if (count > 0)
+			return (count/((double)q.text.length()))/((double)distanceSum/count);
+		else
+			return 0;
 	}
 
 }
