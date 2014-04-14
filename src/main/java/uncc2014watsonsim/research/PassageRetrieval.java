@@ -5,11 +5,13 @@ import java.util.regex.Matcher;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.search.CachingSearcher;
 import uncc2014watsonsim.search.LuceneSearcher;
+import uncc2014watsonsim.search.Searcher;
 
 public class PassageRetrieval extends Researcher {
 
-	private static final LuceneSearcher passageSearcher = new LuceneSearcher();
+	private static final Searcher passageSearcher = new CachingSearcher(new LuceneSearcher(), "lucene");
 	@Override
 	public void answer(Question q, Answer a) {
     	// The merge researcher does what was once here.
