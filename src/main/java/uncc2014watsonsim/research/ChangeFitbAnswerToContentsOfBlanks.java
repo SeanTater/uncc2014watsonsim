@@ -5,9 +5,15 @@ import java.util.regex.Pattern;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.Score;
 import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 
 public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
+
+	
+	public ChangeFitbAnswerToContentsOfBlanks () {
+		Score.register("FITB_EXACT_MATCH_SCORE");
+	}
 	
 	@Override
 	public void question(Question question) {
