@@ -30,12 +30,12 @@ public abstract class Searcher {
      * Runs the <i>query</i>, populating a list of ResultSets
      * 
      * For each ResultSet:
-     * 1: Gets the score of the document from the search result. For different
+     * <p>1: Gets the score of the document from the search result. For different
      * search engines, the scoring methods are different. If the document is 
-     * in TREC text format or TREC web format, every <DOC></DOC> should be
+     * in TREC text format or TREC web format, every {@literal<DOC></DOC>} should be
      * considered as a separate document.
-     * 2: Gets the title of the document.
-     * 3: Gets the full text of the document.
+     * <p>2: Gets the title of the document.
+     * <p>3: Gets the full text of the document.
      *
      * @param query
      * @throws Exception 
@@ -52,12 +52,6 @@ public abstract class Searcher {
 
     public final static int MAX_RESULTS = 10;
 
-    
-    public List<Answer> runFitbQuery(Question question) throws Exception {
-    	return new ArrayList<Answer>(0);
-    }
-    
-    
     /** Fill in the missing titles and full texts from Answers using sources.db
      * This is a no-op if the sources database is missing.
      */
