@@ -77,10 +77,10 @@ public class QuestionResultsScorer {
 		// use logistic regression as default classifier
 		//String classifierName = "weka.classifiers.functions.SimpleLogistic";
 		//String[] classifierOptions = new String[]{"-I", "0", "-M", "500", "-H", "100", "-W", "0.0"};
-		//String classifierName = "weka.classifiers.functions.Logistic";
-		//String[] classifierOptions = new String[]{"-R", "1.0E-8", "-M", "-1"};
-		String classifierName = "weka.classifiers.lazy.KStar";
-		String[] classifierOptions = new String[]{"-B", "20", "-M", "a"};
+		String classifierName = "weka.classifiers.functions.Logistic";
+		String[] classifierOptions = new String[]{"-R", "1.0E-8", "-M", "-1"};
+		//String classifierName = "weka.classifiers.lazy.KStar";
+		//String[] classifierOptions = new String[]{"-B", "20", "-M", "a"};
 		buildScorerModel(inputpath, outputpath, modelpath, classifierName, classifierOptions, 
 				targetAttributeName, doEvaluate);
 	}

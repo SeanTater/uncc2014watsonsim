@@ -21,11 +21,12 @@ public class WekaLearner extends Learner {
 			throw new RuntimeException("Weka models appear to be missing. Do you have data/scorers? It is not possible to run without them.");
 		}
 		
-		String[] LAST_MODEL_DIMENSIONS = new String[]{"BING_RANK", "FITB_EXACT_MATCH_SCORE", "INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_SCORE", "PASSAGE_COUNT", "PASSAGE_TERM_MATCH", "SKIP_BIGRAM", "WORD_PROXIMITY"};
+		String[] MODEL_ANSWER_DIMENSIONS = new String[]{"PASSAGE_COUNT"};
+		String[] MODEL_PASSAGE_DIMENSIONS = new String[]{"BING_RANK", "FITB_EXACT_MATCH_SCORE", "INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_SCORE", "PASSAGE_TERM_MATCH", "SKIP_BIGRAM", "WORD_PROXIMITY"};
 		
 		for (Answer a: question) {
 			try {
-				a.scores.put("COMBINED", weka_scorer.score(a.scoresArray(LAST_MODEL_DIMENSIONS)));
+				a.scores.put("COMBINED", weka_scorer.score(a.scoresArray(MODEL_ANSWER_DIMENSIONS, MODEL_PASSAGE_DIMENSIONS)));
 			} catch (Exception e) {
 				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
 				e.printStackTrace();

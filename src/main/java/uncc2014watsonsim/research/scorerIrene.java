@@ -1,9 +1,14 @@
-//Irene Pate
+
 //Not sure if this is exactly what we were suppose to do 
 //also not sure if it actually will work the way its needed to 
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
+
+/**
+ * @author Irene Pate
+ *
+ */
 
 public class aScoreerWZ extends Scoreer 
 {

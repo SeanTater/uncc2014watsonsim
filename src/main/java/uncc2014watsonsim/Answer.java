@@ -102,20 +102,26 @@ public class Answer implements Comparable<Answer> {
     
     /** Convenience method for returning all of the answer's scores as a primitive double[].
      * Intended for Weka, but it could be useful for any ML. */
-    public double[] scoresArray(String[] names) {
+    public double[] scoresArray(String[] answer_dims, String[] passage_dims) {
     	// First all of the answer's scores, followed by all of the scores from
     	// all of the passages
-    	int dims = names.length; 
-    	double[] out = new double[names.length * Score.MAX_PASSAGE_COUNT];
+    	int dim_count = answer_dims.length + (passage_dims.length * Score.MAX_PASSAGE_COUNT); 
+    	double[] out = new double[dim_count];
     	Arrays.fill(out, Double.NaN);
+    	
+    	// Answer scores
+    	for (int dim_i=0; dim_i < answer_dims.length; dim_i++){
+			Double value = scores.get(answer_dims[dim_i]);
+    		out[dim_i] = value == null ? Double.NaN : value;
+    	}
 		
 		// All the passage's scores
     	// TODO: It's possible to have more than MAX_RESULTS passages because of merging.
 		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT && passage_i<passages.size(); passage_i++) {
-			int passage_offset = passage_i * dims;
+			int passage_offset = answer_dims.length + (passage_dims.length * passage_i);
 			Passage p = passages.get(passage_i);
-			for (int dim_i=0; dim_i<dims; dim_i++) {
-				Double value = p.scores.get(names[dim_i]);
+			for (int dim_i=0; dim_i<passage_dims.length; dim_i++) {
+				Double value = p.scores.get(passage_dims[dim_i]);
 				out[passage_offset + dim_i] = value == null ? Double.NaN : value;
 			}
 		}
