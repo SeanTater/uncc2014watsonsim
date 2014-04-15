@@ -19,7 +19,7 @@ import uncc2014watsonsim.StringUtils;
  * @author Jonathan Shuman
  *
  */
-public class PassageTermMatch extends Scorer { 
+public class PassageTermMatch extends PassageScorer { 
 	public double scorePassage(Question q, Answer a, Passage p) {
 		
 		// Jane Austen

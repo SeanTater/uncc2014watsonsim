@@ -5,7 +5,7 @@ import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 
 //Score is Percent of words in common / the average distance between the words
-public class PercentWordsInCommon extends Scorer {
+public class PercentWordsInCommon extends PassageScorer {
 	
 public double scorePassage(Question q, Answer a, Passage p) {
 		String[] questionTextArray = q.text.split(" ");

@@ -12,7 +12,7 @@ import uncc2014watsonsim.StringUtils;
  */
 
 //Score is Percent of words in common / the average distance between the words
-public class PercentFilteredWordsInCommon extends Scorer {
+public class PercentFilteredWordsInCommon extends PassageScorer {
 	
 	public double scorePassage(Question q, Passage p) {
 			String filteredQ = StringUtils.filterRelevant(q.text);

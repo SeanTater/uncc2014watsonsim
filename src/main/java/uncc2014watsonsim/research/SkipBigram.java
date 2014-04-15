@@ -14,7 +14,7 @@ import uncc2014watsonsim.StringUtils;
  *
  */
 
-public class SkipBigram extends Scorer {
+public class SkipBigram extends PassageScorer {
 	
 	public double scorePassage(Question q, Answer a, Passage p) {
 		

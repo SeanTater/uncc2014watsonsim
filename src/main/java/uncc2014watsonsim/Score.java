@@ -13,8 +13,9 @@ public class Score {
 	/** Register the answer score for automatically generated model data
 	 * @param name	The ANSWER_SCORE (uppercase, with underscores)
 	 * 
-	 * This uses n^2 insertion but efficient iteration, because iteration is
-	 * much more common.
+	 * This insertion is inefficient (n^2) but the retrieval is very efficient.
+	 * Make sure not to call this too often, such as in a scorer.
+	 * This function is idempotent.
 	 */
 	public static void registerAnswerScore(String name) {
 		int index = Collections.binarySearch(answer_score_names, name);
@@ -25,8 +26,9 @@ public class Score {
 	/** Register the passage score for automatically generated model data
 	 * @param name	The PASSAGE_SCORE (uppercase, with underscores)
 	 * 
-	 * This uses n^2 insertion but efficient iteration, because iteration is
-	 * much more common.
+	 * This insertion is inefficient (n^2) but the retrieval is very efficient.
+	 * Make sure not to call this too often, such as in a scorer.
+	 * This function is idempotent.
 	 */
 	public static void registerPassageScore(String name) {
 		int index = Collections.binarySearch(passage_score_names, name);

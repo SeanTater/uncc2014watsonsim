@@ -9,7 +9,7 @@ import uncc2014watsonsim.Question;
  * @author Ken Overholt
  *
  */
-public class QuestionInPassageScorer extends Scorer {
+public class QuestionInPassageScorer extends PassageScorer {
 	
 	@Override
 	public double scorePassage(Question q, Answer a, Passage p) {

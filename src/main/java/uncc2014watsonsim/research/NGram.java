@@ -11,7 +11,7 @@ import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
 
-public class NGram extends Scorer {
+public class NGram extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
 		// Jane Austen
 				Set<String> a_set = (Set<String>) generateNgrams(3,a.candidate_text);

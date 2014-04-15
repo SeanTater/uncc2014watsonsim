@@ -93,12 +93,22 @@ public class Answer implements Comparable<Answer> {
     	return String.format("{\"score\": %01f, \"title\": \"%s\"}", score(), candidate_text.replace("\"", "\\\""));
     }
     
-    /* Score retrieval */
-    
-    /** Return the combined score for the answer, or null */
+    /**
+     * Return the combined score for the answer, or null
+     * */
     public Double score() {
         return scores.get("COMBINED");
     }
+
+    /**
+     * Assign a score to this answer. If you want to automatically generate
+     * models to go with this score, remember to call Score.registerAnswerScore
+     * @param name		The name of the score 
+     * @param score		Double value of score (or NaN)
+     */
+	public void score(String name, double score) {
+		scores.put(name, score);
+	}
     
     /** Convenience method for returning all of the answer's scores as a primitive double[].
      * Intended for Weka, but it could be useful for any ML. */

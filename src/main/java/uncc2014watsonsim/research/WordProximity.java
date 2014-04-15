@@ -8,7 +8,7 @@ import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 
-public class WordProximity extends Scorer {
+public class WordProximity extends PassageScorer {
 	Set<String> q_words = new HashSet<String>();
 	
 	@Override
