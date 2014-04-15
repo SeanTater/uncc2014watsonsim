@@ -28,6 +28,7 @@ public class Pipeline {
 	private static final Scorer[] scorers = {
 		new WordProximity(),
 		new Correct(),
+		new SkipBigram(),
 	};
 
 	private static final Researcher[] late_researchers = {

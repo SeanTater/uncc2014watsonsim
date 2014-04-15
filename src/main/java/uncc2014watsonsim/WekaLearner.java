@@ -21,7 +21,7 @@ public class WekaLearner extends Learner {
 			throw new RuntimeException("Weka models appear to be missing. Do you have data/scorers? It is not possible to run without them.");
 		}
 		
-		String[] LAST_MODEL_DIMENSIONS = new String[]{"INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_RANK"};
+		String[] LAST_MODEL_DIMENSIONS = new String[]{"BING_RANK", "INDRI_PASSAGE_RETRIEVAL_RANK", "INDRI_PASSAGE_RETRIEVAL_SCORE", "INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_SCORE", "SKIP_BIGRAM", "WORD_PROXIMITY"};
 		
 		for (Answer a: question) {
 			try {

@@ -1,6 +1,7 @@
 package uncc2014watsonsim.research;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import uncc2014watsonsim.Answer;
@@ -24,14 +25,14 @@ public class SkipBigram extends Scorer {
 	}
 	
 	private Set<String> generateBigrams(String text) {
-		String[] terms = StringUtils.filterRelevant(text).split("\\W+");
+		List<String> terms = StringUtils.tokenize(text);
 		Set<String> bigrams = new HashSet<>();
-		for (int ti=0; ti<terms.length-1; ti++) {
+		for (int ti=0; ti<terms.size()-1; ti++) {
 			// First the bigram
-			bigrams.add(terms[ti] + terms[ti+1]);
-			if (ti < terms.length-2) {
+			bigrams.add(terms.get(ti) + terms.get(ti+1));
+			if (ti < terms.size()-2) {
 				// Maybe the skip bigram, if we are more than one word from end
-				bigrams.add(terms[ti] + terms[ti+1]);
+				bigrams.add(terms.get(ti) + terms.get(ti+1));
 			}
 		}
 		return bigrams;

@@ -30,7 +30,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 100").run();
+				+ "limit 160").run();
 	}
 	
 	@Test
@@ -93,7 +93,7 @@ class StatsGenerator {
 			// Supposing there is at least one answer
 			Answer a = question.get(0);
 			// Clamp to [0, 99]
-			int bin = (int)(a.score() * 100);
+			int bin = (int)(a.score() * 99);
 			if(a.equals(question.answer)) conf_correct[bin]++;
 			conf_hist[bin]++;
 		}
