@@ -14,6 +14,17 @@ import uncc2014watsonism.qAnalysis.FITBAnnotations;
 public class QClassDetection {
 
 	/**
+	 * detectType with strings to be used in UIMA Pipeline
+	 * @author Jacob Medd
+	 * @param questionText
+	 * @param category
+	 * @return Question's Type
+	 */
+	public static QType detectType(String questionText, String category) {
+		return detectType(new Question(questionText, category));
+	}
+	
+	/**
 	 * Determines the QType (or QClass) of the question
 	 * @param q Question object with the raw_text and category values set
 	 * @return a QType enum representing the QType (or QClass)

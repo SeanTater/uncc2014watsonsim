@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+    <name>exp_typesystem</name>
+    <description/>
+    <version>1.0</version>
+    <vendor/>
+  <imports>
+    <import name="uncc2014watsonsim.uima.types"/>
+  </imports>
+</typeSystemDescription>

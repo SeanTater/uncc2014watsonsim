@@ -71,15 +71,10 @@
       </features>
     </typeDescription>
     <typeDescription>
-      <name>uncc2014watsonsim.uima.types.question</name>
+      <name>uncc2014watsonsim.uima.types.UIMAQuestion</name>
       <description/>
       <supertypeName>uima.cas.TOP</supertypeName>
       <features>
-        <featureDescription>
-          <name>query</name>
-          <description>The Query</description>
-          <rangeTypeName>uncc2014watsonsim.uima.types.QueryString</rangeTypeName>
-        </featureDescription>
         <featureDescription>
           <name>answerList</name>
           <description>The list of possible answers, in order by rank</description>
@@ -99,6 +94,16 @@
           <name>id</name>
           <description>optional, an ID from the J! database</description>
           <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>filtered_text</name>
+          <description>The query text, filtered for stop words</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>raw_text</name>
+          <description>The raw query text, as given to the pipeline</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
       </features>
     </typeDescription>

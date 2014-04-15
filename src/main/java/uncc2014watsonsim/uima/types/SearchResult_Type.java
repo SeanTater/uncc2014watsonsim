@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 /** 
- * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
+ * Updated by JCasGen Tue Apr 15 07:00:09 EDT 2014
  * @generated */
 public class SearchResult_Type extends TOP_Type {
   /** @generated 
@@ -44,7 +44,7 @@ public class SearchResult_Type extends TOP_Type {
   /** @generated 
      @modifiable */
   @SuppressWarnings ("hiding")
-  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("uncc2014watsonsim.uima.types.searchResult");
+  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("uncc2014watsonsim.uima.types.SearchResult");
 
 
 
@@ -58,7 +58,7 @@ public class SearchResult_Type extends TOP_Type {
    */ 
   public String getTitle(int addr) {
         if (featOkTst && casFeat_title == null)
-      jcas.throwFeatMissing("title", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("title", "uncc2014watsonsim.uima.types.SearchResult");
     return ll_cas.ll_getStringValue(addr, casFeatCode_title);
   }
   /** @generated
@@ -67,7 +67,7 @@ public class SearchResult_Type extends TOP_Type {
    */    
   public void setTitle(int addr, String v) {
         if (featOkTst && casFeat_title == null)
-      jcas.throwFeatMissing("title", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("title", "uncc2014watsonsim.uima.types.SearchResult");
     ll_cas.ll_setStringValue(addr, casFeatCode_title, v);}
     
   
@@ -82,7 +82,7 @@ public class SearchResult_Type extends TOP_Type {
    */ 
   public String getFullText(int addr) {
         if (featOkTst && casFeat_fullText == null)
-      jcas.throwFeatMissing("fullText", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("fullText", "uncc2014watsonsim.uima.types.SearchResult");
     return ll_cas.ll_getStringValue(addr, casFeatCode_fullText);
   }
   /** @generated
@@ -91,7 +91,7 @@ public class SearchResult_Type extends TOP_Type {
    */    
   public void setFullText(int addr, String v) {
         if (featOkTst && casFeat_fullText == null)
-      jcas.throwFeatMissing("fullText", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("fullText", "uncc2014watsonsim.uima.types.SearchResult");
     ll_cas.ll_setStringValue(addr, casFeatCode_fullText, v);}
     
   
@@ -106,7 +106,7 @@ public class SearchResult_Type extends TOP_Type {
    */ 
   public String getReference(int addr) {
         if (featOkTst && casFeat_reference == null)
-      jcas.throwFeatMissing("reference", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("reference", "uncc2014watsonsim.uima.types.SearchResult");
     return ll_cas.ll_getStringValue(addr, casFeatCode_reference);
   }
   /** @generated
@@ -115,7 +115,7 @@ public class SearchResult_Type extends TOP_Type {
    */    
   public void setReference(int addr, String v) {
         if (featOkTst && casFeat_reference == null)
-      jcas.throwFeatMissing("reference", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("reference", "uncc2014watsonsim.uima.types.SearchResult");
     ll_cas.ll_setStringValue(addr, casFeatCode_reference, v);}
     
   
@@ -130,7 +130,7 @@ public class SearchResult_Type extends TOP_Type {
    */ 
   public long getRank(int addr) {
         if (featOkTst && casFeat_rank == null)
-      jcas.throwFeatMissing("rank", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("rank", "uncc2014watsonsim.uima.types.SearchResult");
     return ll_cas.ll_getLongValue(addr, casFeatCode_rank);
   }
   /** @generated
@@ -139,7 +139,7 @@ public class SearchResult_Type extends TOP_Type {
    */    
   public void setRank(int addr, long v) {
         if (featOkTst && casFeat_rank == null)
-      jcas.throwFeatMissing("rank", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("rank", "uncc2014watsonsim.uima.types.SearchResult");
     ll_cas.ll_setLongValue(addr, casFeatCode_rank, v);}
     
   
@@ -154,7 +154,7 @@ public class SearchResult_Type extends TOP_Type {
    */ 
   public String getEngine(int addr) {
         if (featOkTst && casFeat_engine == null)
-      jcas.throwFeatMissing("engine", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("engine", "uncc2014watsonsim.uima.types.SearchResult");
     return ll_cas.ll_getStringValue(addr, casFeatCode_engine);
   }
   /** @generated
@@ -163,7 +163,7 @@ public class SearchResult_Type extends TOP_Type {
    */    
   public void setEngine(int addr, String v) {
         if (featOkTst && casFeat_engine == null)
-      jcas.throwFeatMissing("engine", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("engine", "uncc2014watsonsim.uima.types.SearchResult");
     ll_cas.ll_setStringValue(addr, casFeatCode_engine, v);}
     
   
@@ -178,7 +178,7 @@ public class SearchResult_Type extends TOP_Type {
    */ 
   public double getScore(int addr) {
         if (featOkTst && casFeat_score == null)
-      jcas.throwFeatMissing("score", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("score", "uncc2014watsonsim.uima.types.SearchResult");
     return ll_cas.ll_getDoubleValue(addr, casFeatCode_score);
   }
   /** @generated
@@ -187,7 +187,7 @@ public class SearchResult_Type extends TOP_Type {
    */    
   public void setScore(int addr, double v) {
         if (featOkTst && casFeat_score == null)
-      jcas.throwFeatMissing("score", "uncc2014watsonsim.uima.types.searchResult");
+      jcas.throwFeatMissing("score", "uncc2014watsonsim.uima.types.SearchResult");
     ll_cas.ll_setDoubleValue(addr, casFeatCode_score, v);}
     
   

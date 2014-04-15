@@ -20,6 +20,13 @@ public class Question extends ArrayList<Answer>{
     private FITBAnnotations fitbAnnotations= null; //set by the FITB QType detector iff QType == FITB
     
     /**
+     * Creates a blank question. Used to translate between UIMA and the original pipeline
+     */
+    public Question() {
+    	
+    }
+    
+    /**
      * Create a question from it's raw text
      */
     public Question(String text) {
@@ -76,6 +83,10 @@ public class Question extends ArrayList<Answer>{
     	if (fitbAnnotations == null) fitbAnnotations = new FITBAnnotations();
     	return fitbAnnotations;
     }
+    
+    public void setFITBAnnotations(FITBAnnotations f) {
+    	this.fitbAnnotations = f;
+    }
 
 	public String getRaw_text() {
 		return raw_text;
@@ -83,6 +94,19 @@ public class Question extends ArrayList<Answer>{
 
 	public void setRaw_text(String raw_text) {
 		this.raw_text = raw_text;
+	}
+	
+	/**
+	 * getter and setter for the raw text of the query with stop words removed
+	 * @author Jacob Medd
+	 */
+	public String getText()
+	{
+		return this.text;
+	}
+	
+	public void setText(String text) {
+		this.text = text;
 	}
     
     //not sure if we should create this as we only need the object for FITB questions and

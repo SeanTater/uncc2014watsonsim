@@ -1,7 +1,20 @@
 package uncc2014watsonsim;
 
+import java.io.IOException;
+
+import org.apache.uima.UIMAFramework;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.resource.ResourceSpecifier;
+import org.apache.uima.util.InvalidXMLException;
+import org.apache.uima.util.XMLInputSource;
+
 import uncc2014watsonsim.research.*;
 import uncc2014watsonsim.search.*;
+import uncc2014watsonsim.uima.UimaTools;
+import uncc2014watsonsim.uima.types.UIMAQuestion;
 
 /** The standard Question Analysis pipeline
  *
@@ -10,7 +23,7 @@ public class Pipeline {
 	static final Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		new BingSearcher(),
+		//new BingSearcher(),
 		//new GoogleSearcher()
 	};
 	
@@ -25,8 +38,24 @@ public class Pipeline {
 	static final Learner learner = new WekaLearner();
 
 	
-	public static Question ask(String qtext) {
-	    return ask(new Question(qtext));
+	public static Question ask(String qtext) throws Exception {
+		try {
+			ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(new XMLInputSource("src/main/java/uncc2014watsonsim/uima/uimaexperiment/mainEngine.xml"));
+			AnalysisEngine main = UIMAFramework.produceAnalysisEngine(specifier);
+			JCas cas = main.newJCas();
+			cas.setDocumentText(qtext);
+			main.process(cas);
+			UIMAQuestion question = UimaTools.getSingleton(cas, UIMAQuestion.type);
+			Question q = new Question();
+			q.setCategory(q.getCategory());
+			q.setRaw_text(question.getRaw_text());
+			q.setText(question.getFiltered_text());
+			q.setType(QType.valueOf(question.getQtype()));
+			return ask(q);
+		}
+		catch (Exception e) {
+			throw e;
+		}
 	}
 	
     /** Run the full standard pipeline */

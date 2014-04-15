@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <primitive>true</primitive>  <annotatorImplementationName>uncc2014watsonsim.uima.uimaexperiment.findQuestionTypeEngine</annotatorImplementationName>
+  <analysisEngineMetaData>
+    <name>findQuestionTypeEngine</name>
+    <description>finds the question's type and filtered text</description>
+    <version>1.0</version>
+    <vendor/>
+    <configurationParameters/>
+    <configurationParameterSettings/>
+    <typeSystemDescription>
+      <imports>
+        <import name="uncc2014watsonsim.uima.uimaexperiment.exp_typesystem"/>
+      </imports>
+    </typeSystemDescription>
+    <typePriorities/>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs>
+          <type allAnnotatorFeatures="true">uncc2014watsonsim.uima.types.UIMAQuestion</type>
+          </inputs>
+        <outputs>
+          <type allAnnotatorFeatures="true">uncc2014watsonsim.uima.types.UIMAQuestion</type>
+          </outputs>
+        <languagesSupported>
+          <language>en</language>
+        </languagesSupported>
+      </capability>
+    </capabilities>
+  <operationalProperties>
+      <modifiesCas>true</modifiesCas>
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </analysisEngineMetaData>
+  <resourceManagerConfiguration/>
+</analysisEngineDescription>
