@@ -4,7 +4,7 @@ import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
 
-/*Author : Jagan Vujjini
+/*Author : Jacob Medd, Jagan Vujjini
  * 
  * Just Modified Jacob Medd's Scorer to ignore Stop Words.
  * Will be adding the Stemmed Words Functionality.
