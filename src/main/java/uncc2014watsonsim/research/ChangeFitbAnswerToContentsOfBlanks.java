@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.qAnalysis.FITBAnnotations;
@@ -17,6 +18,8 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 	
 	@Override
 	public void question(Question question) {
+		// only run this researcher for FITB questions
+		if (question.getType() != QType.FITB) return;
 		
     	FITBAnnotations annot = question.getFITBAnnotations(); //temp annotation holder
     	String theText = question.getRaw_text();
