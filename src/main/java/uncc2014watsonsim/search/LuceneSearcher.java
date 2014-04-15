@@ -45,8 +45,8 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);
-		Score.register("LUCENE_RANK");
-		Score.register("LUCENE_SCORE");
+		Score.registerPassageScore("LUCENE_RANK");
+		Score.registerPassageScore("LUCENE_SCORE");
 	}
 
 	public List<Passage> runTranslatedQuery(String question_text) {

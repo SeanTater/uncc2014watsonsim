@@ -18,15 +18,15 @@ import weka.core.converters.ArffSaver;
 /** Pipe Answer scores to an ARFF file for Weka */
 public class WekaTee extends Researcher {
 	private Instances data;
-	String[] ordered_names;
 	
 	public WekaTee() {
 		FastVector attributes = new FastVector();
-		
-		ordered_names = Score.names.toArray(new String[Score.names.size()]);
-		Arrays.sort(ordered_names);
+		// Answer score names
+		for (String name : Score.answer_score_names)
+			attributes.addElement(new Attribute(name));
+		// Passage score names
 		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT; passage_i++)
-			for (String name : ordered_names)
+			for (String name : Score.passage_score_names)
 				attributes.addElement(new Attribute(name + "_" + passage_i));
 		data = new Instances("Watsonsim captured question stream", attributes, 0);
 	}
@@ -40,7 +40,7 @@ public class WekaTee extends Researcher {
 	public void question(Question q) {
 		
 		for (Answer a : q) {
-			data.add(new Instance(1.0, a.scoresArray(ordered_names)));
+			data.add(new Instance(1.0, a.scoresArray(Score.answer_score_names, Score.passage_score_names)));
 		}
 	}
 	

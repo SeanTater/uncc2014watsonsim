@@ -52,7 +52,7 @@ public class GoogleSearcher extends Searcher {
 		.setApplicationName(UserSpecificConstants.googleApplicationName)
 		.setGoogleClientRequestInitializer(KEY_INITIALIZER)
 		.build().cse();
-		Score.register("GOOGLE_RANK");
+		Score.registerPassageScore("GOOGLE_RANK");
 	}
 	
 	

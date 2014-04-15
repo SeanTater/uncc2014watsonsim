@@ -18,7 +18,7 @@ public abstract class Scorer {
 	String name;
 	{
 		name = this.getClass().getSimpleName().replaceAll("([a-z])([A-Z]+)", "$1_$2").toUpperCase();
-		Score.register(name);
+		Score.registerPassageScore(name);
 	}
 
 	/** Default implementation of research for a question.
