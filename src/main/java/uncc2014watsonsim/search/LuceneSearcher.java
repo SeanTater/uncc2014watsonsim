@@ -59,7 +59,7 @@ public class LuceneSearcher extends Searcher {
 			ScoreDoc[] hits = searcher.search(parser.parse(question_text), MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
-						ScoreDoc s = hits[i];
+				ScoreDoc s = hits[i];
 				Document doc = searcher.doc(s.doc);
 				results.add(new uncc2014watsonsim.Passage(
 						"lucene", 			// Engine

@@ -10,7 +10,7 @@ public class AverageLearner extends Learner {
 		for (Answer result : question) {
 			double score = 0;
 			int count = 0;
-			for (Score dimension : result.scores.keySet()) {
+			for (String dimension : result.scores.keySet()) {
 				score += result.scores.get(dimension);
 				count++;
 			}
@@ -18,7 +18,7 @@ public class AverageLearner extends Learner {
 			score /= count;
 			// Logistic function
 			score = logistic(score);
-			result.scores.put(Score.COMBINED, score);
+			result.scores.put("COMBINED", score);
 		}
 	}
 	
