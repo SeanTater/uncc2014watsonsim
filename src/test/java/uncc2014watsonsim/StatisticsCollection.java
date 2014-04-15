@@ -50,7 +50,7 @@ public class StatisticsCollection {
 	@Test
 	public void all() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
-		new StatsGenerator("all", "limit 250").run();
+		new StatsGenerator("all", "limit 100").run();
 	}
 }
 
@@ -93,7 +93,7 @@ class StatsGenerator {
 			// Supposing there is at least one answer
 			Answer a = question.get(0);
 			// Clamp to [0, 99]
-			int bin = (int)(a.score() * 100);
+			int bin = (int)(a.score() * 99);
 			if(a.equals(question.answer)) conf_correct[bin]++;
 			conf_hist[bin]++;
 		}

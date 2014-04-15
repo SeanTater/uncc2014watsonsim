@@ -12,22 +12,34 @@ import uncc2014watsonsim.search.*;
 public class Pipeline {
 	
 	private static final Searcher[] searchers = {
-		new LuceneSearcher(),
-		new IndriSearcher(),
-		new BingSearcher(),
-		//new GoogleSearcher()
+		new CachingSearcher(new LuceneSearcher(), "lucene"),
+		new CachingSearcher(new IndriSearcher(), "indri"),
+		//new CachingSearcher(new BingSearcher(), "bing"),
+		//new CachingSearcher(new GoogleSearcher(), "google")
+// usage without CachingSearcher
+//		new LuceneSearcher(),
+//		new IndriSearcher(),
+//		new BingSearcher()
 	};
 	
-	private static final Researcher[] researchers = {
+	private static final Researcher[] early_researchers = {
+		new HyphenTrimmer(),
 		new Merge(),
+		new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),
 		new PersonRecognition(),
-		new WekaTee(),
 	};
 	
 	private static final Scorer[] scorers = {
 		new WordProximity(),
 		new Correct(),
+		new SkipBigram(),
+		new PassageTermMatch(),
+		new PassageCount(),
+	};
+
+	private static final Researcher[] late_researchers = {
+		new WekaTee(),
 	};
 	
 	
@@ -40,52 +52,32 @@ public class Pipeline {
 	
     /** Run the full standard pipeline */
 	public static Question ask(Question question) {
-		if (question.getType() == QType.FITB) {
-			for (Searcher s: searchers) {
-				try {
-					question.addAll(s.runFitbQuery(question));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} else	{
-			// Query every engine
-			for (Searcher s: searchers)
-				try {
-					question.addPassages(s.runQuery(question.text));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		}
-
-        /* This is Jagan's quotes FITB code. I do not have quotes indexed separately so I can't do this.
-        for (Searcher s : searchers){
-        	// Query every engine
-        	if(question.getType() == QType.FACTOID){
-        		question.addAll(s.runQuery(question.text, UserSpecificConstants.indriIndex, UserSpecificConstants.luceneIndex));
-        	} else if (question.getType() == QType.FITB) {
-        		question.addAll(s.runQuery(question.text, UserSpecificConstants.quotesIndriIndex, UserSpecificConstants.quotesLuceneIndex));
-        	} else {
-        		return;
-        	}
-        }*/
+		// Query every engine
+		for (Searcher s: searchers)
+			question.addPassages(s.runTranslatedQuery(question.text));
         
         /* TODO: filter strange results?
         HashSet<String> ignoreSet = new HashSet<String>();
         ignoreSet.add("J! Archive");
         ignoreSet.add("Jeopardy");
         */
-        
-        for (Scorer s: scorers) {
-        	s.question(question);
-        }
-        
-    	for (Researcher r : researchers)
+
+		for (Researcher r : early_researchers)
 			r.question(question);
     	
-    	for (Researcher r : researchers)
+    	for (Researcher r : early_researchers)
     		r.complete();
     	
+
+        for (Scorer s: scorers) {
+        	s.scoreQuestion(question);
+        }
+        
+        for (Researcher r : late_researchers)
+			r.question(question);
+    	
+    	for (Researcher r : late_researchers)
+    		r.complete();
     	
         try {
 			learner.test(question);
@@ -93,11 +85,6 @@ public class Pipeline {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        //order answers by rank
-        if (question.getType() == QType.FITB) {
-        	Collections.sort(question, new RankOrder());
-        }
         
         return question;
     }

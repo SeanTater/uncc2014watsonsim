@@ -1,26 +1,28 @@
 
 
-/* First created by JCasGen Wed Mar 19 16:41:59 EDT 2014 */
+/* First created by JCasGen Sun Apr 06 17:13:31 EDT 2014 */
 package uncc2014watsonsim.uima.types;
 
 import org.apache.uima.jcas.JCas; 
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
-import org.apache.uima.jcas.cas.FSList;
+import org.apache.uima.jcas.tcas.Annotation;
+
+
 import org.apache.uima.jcas.cas.TOP;
 
 
-/** Containing a list of search results
+/** A query string (question)
  * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
  * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
-public class searchResultList extends TOP {
+public class QueryString extends Annotation {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(searchResultList.class);
+  public final static int typeIndexID = JCasRegistry.register(QueryString.class);
   /** @generated
    * @ordered 
    */
@@ -34,14 +36,14 @@ public class searchResultList extends TOP {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected searchResultList() {/* intentionally empty block */}
+  protected QueryString() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public searchResultList(int addr, TOP_Type type) {
+  public QueryString(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -49,10 +51,22 @@ public class searchResultList extends TOP {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public searchResultList(JCas jcas) {
+  public QueryString(JCas jcas) {
     super(jcas);
     readObject();   
   } 
+
+  /** @generated
+   * @param jcas JCas to which this Feature Structure belongs
+   * @param begin offset to the begin spot in the SofA
+   * @param end offset to the end spot in the SofA 
+  */  
+  public QueryString(JCas jcas, int begin, int end) {
+    super(jcas);
+    setBegin(begin);
+    setEnd(end);
+    readObject();
+  }   
 
   /** 
    * <!-- begin-user-doc -->
@@ -66,25 +80,25 @@ public class searchResultList extends TOP {
  
     
   //*--------------*
-  //* Feature: list
+  //* Feature: query
 
-  /** getter for list - gets The implementation of the list
+  /** getter for query - gets 
    * @generated
    * @return value of the feature 
    */
-  public FSList getList() {
-    if (searchResultList_Type.featOkTst && ((searchResultList_Type)jcasType).casFeat_list == null)
-      jcasType.jcas.throwFeatMissing("list", "uncc2014watsonsim.uima.types.searchResultList");
-    return (FSList)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((searchResultList_Type)jcasType).casFeatCode_list)));}
+  public String getQuery() {
+    if (QueryString_Type.featOkTst && ((QueryString_Type)jcasType).casFeat_query == null)
+      jcasType.jcas.throwFeatMissing("query", "uncc2014watsonsim.uima.types.QueryString");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((QueryString_Type)jcasType).casFeatCode_query);}
     
-  /** setter for list - sets The implementation of the list 
+  /** setter for query - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setList(FSList v) {
-    if (searchResultList_Type.featOkTst && ((searchResultList_Type)jcasType).casFeat_list == null)
-      jcasType.jcas.throwFeatMissing("list", "uncc2014watsonsim.uima.types.searchResultList");
-    jcasType.ll_cas.ll_setRefValue(addr, ((searchResultList_Type)jcasType).casFeatCode_list, jcasType.ll_cas.ll_getFSRef(v));}    
+  public void setQuery(String v) {
+    if (QueryString_Type.featOkTst && ((QueryString_Type)jcasType).casFeat_query == null)
+      jcasType.jcas.throwFeatMissing("query", "uncc2014watsonsim.uima.types.QueryString");
+    jcasType.ll_cas.ll_setStringValue(addr, ((QueryString_Type)jcasType).casFeatCode_query, v);}    
   }
 
     

@@ -9,7 +9,7 @@ public class Correct extends Scorer {
 	/** Detect if the question matches the answer, score it appropriately
 	 * This is to ease machine learning*/
 	// TODO: Don't reassign for every passage
-	public double passage(Question q, Answer a, Passage p) {
+	public double scorePassage(Question q, Answer a, Passage p) {
 		return a.matches(q.answer) ? 1.0 : 0.0;
 	}
 }

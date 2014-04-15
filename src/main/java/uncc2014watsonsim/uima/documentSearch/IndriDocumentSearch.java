@@ -2,6 +2,12 @@ package uncc2014watsonsim.uima.documentSearch;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import lemurproject.indri.ParsedDocument;
+import lemurproject.indri.QueryEnvironment;
+import lemurproject.indri.ScoredExtentResult;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -22,6 +28,8 @@ import org.apache.uima.jcas.cas.FSList;
 import org.apache.uima.resource.ResourceInitializationException;
 
 import privatedata.UserSpecificConstants;
+import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.Translation;
 import uncc2014watsonsim.uima.types.*;
 import uncc2014watsonsim.uima.UimaTools;
 import uncc2014watsonsim.uima.UimaToolsException;
@@ -31,43 +39,28 @@ import uncc2014watsonsim.uima.UimaToolsException;
  * contents of the QUERY view to perform a document search. The output from this AE is a
  * SearchHitList added to the QUERY view of the CAS.
  * 
- * This is currently not doing anything, it is simply here so we can generate the rest of the xml files at this time (3/19/14)
+ * This one is currently not implemented for demoing purposes. It can be very easily integrated.
  *
  * @author Jonathan Shuman 
 
  */
-public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
+public class IndriDocumentSearch extends JCasAnnotator_ImplBase {
 
-  private static final String COMPONENT_ID = "LuceneDocumentSearch";
+  private static final String COMPONENT_ID = "IndriDocumentSearch";
 
   /**
    * How many results should Lucene and Indri return?
    */
   public final int MAX_RESULTS = 20;
-  	private static IndexReader reader;
-	private static IndexSearcher searcher = null;
-	private static Analyzer analyzer;
-	private static QueryParser parser;
+  public static QueryEnvironment q;
 	
-	static {
-		analyzer = new StandardAnalyzer(Version.LUCENE_46);
-		parser = new QueryParser(Version.LUCENE_46, "text", analyzer);
-		parser.setAllowLeadingWildcard(true);		
-		/*try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
-		}
-		searcher = new IndexSearcher(reader);*/
-	}
-
   /**
    * Any initializations of data structures/engines (e.g., a retrieval engine) would go into the
    * initialize method. In this dummy class, we don't actually use a retrieval engine.
    */
   @Override
   public void initialize(UimaContext aContext) throws ResourceInitializationException {
+	  q = new QueryEnvironment();
     super.initialize(aContext);
   }
 
@@ -76,10 +69,12 @@ public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
    */
   @Override
   public void process(JCas cas) throws AnalysisEngineProcessException {
-		JCas queryView;
+	  	JCas queryView;
 		searchResultList hits;
 		QueryString qString;
+	// Either add the Indri index or die.
 		try {
+			q.addIndex(UserSpecificConstants.indriIndex);
 			queryView = cas.getView("QUERY");
 			if (queryView == null) throw new Exception("Expecting QUERY view in CAS for primary document search");
 			//if (UimaTools.casContainsView(cas, "EXPANDED")) throw new Exception("Flow problem: found EXPANDED view in CAS; primary search CASes must not have EXPANDED view");
@@ -92,53 +87,41 @@ public class LuceneDocumentSearch extends JCasAnnotator_ImplBase {
 			}
 			
 			qString = UimaTools.getSingleton(queryView, QueryString.type);
-		} catch (Exception e) {
-			throw new AnalysisEngineProcessException(e);
-		}
-
-		// Code from LuceneSearcher.java
-		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
-		}
-		searcher = new IndexSearcher(reader);
 		
-		try{ 
-			String q = ""; 
-			for (String term : qString.getQuery().split("\\W+")) {
-				q += String.format("text:%s ", term, term);
-			}
+			String main_query = StringUtils.filterRelevant(qString.getQuery());
+			main_query = Translation.getIndriQuery(main_query);
 			
-			ScoreDoc[] scoreDocs = searcher.search(parser.parse(q), MAX_RESULTS).scoreDocs;
+			ScoredExtentResult[] ser = q.runQuery(main_query, MAX_RESULTS);
+	
+			// Fetch all titles, texts
+			String[] docnos = q.documentMetadata(ser, "docno");
 			
-			// This isn't range based because we need the rank
-			int v = 0;
-			for (ScoreDoc scoreDoc : scoreDocs) {
-				Document doc = searcher.doc(scoreDoc.doc);
+			// If they have them, get the titles and full texts
+			ParsedDocument[] full_texts = q.documents(ser);
+			String[] titles = q.documentMetadata(ser, "title");
+	
+			// Compile them into a uniform format
+			for (int i=0; i<ser.length; i++) {
 				SearchResult uimaResult = new SearchResult(queryView);
-				uimaResult.setEngine("lucene");
-				uimaResult.setRank(++v);
-				String title = doc.get("title");
-				String text = doc.get("text");  // this is the text field of the document
-				uimaResult.setFullText(text);
-				uimaResult.setTitle(title);
-				
-				FSList expandedList;
+		    	uimaResult.setEngine("indri");
+		    	uimaResult.setTitle(titles[i]);
+		    	uimaResult.setFullText(full_texts[i].text);
+		    	uimaResult.setRank((long) i);
+		    	uimaResult.setScore(ser[i].score);
+		    	
+		    	FSList expandedList;
 				try {
 					expandedList = UimaTools.addToFSList(hits.getList(), uimaResult);
 				} catch (UimaToolsException e) {
 					throw new AnalysisEngineProcessException(e);
 				}
 				hits.setList(expandedList);
-			}// for loop
-		// after getting all hits, we can close the reader
-					reader.close();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-		
+			}
+		// Indri's titles and full texts could be empty. If they are, fill them from sources.db TODO
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Indri Error!!");
+		}
 	}
 
   /**

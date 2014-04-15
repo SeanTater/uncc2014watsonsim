@@ -1,5 +1,7 @@
 package uncc2014watsonsim.research;
 
+import java.util.List;
+
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
@@ -39,9 +41,12 @@ public class PassageTermMatch extends Scorer {
 		/*
 		 * We will first separate the text of the query and passage into terms.
 		 * Note: The parameters are assumed to have stopwords removed.
-		 */
+		 
 		String[] qTerms = queryText.split("\\W+");
 		String[] pTerms = passageText.split("\\W+");
+		*/
+		List<String> qTerms = StringUtils.tokenize(queryText);
+		List<String> pTerms = StringUtils.tokenize(passageText);
 		
 		// Join the passage back together with stop words removed. 
 		// We will use the StringUtils function to remove the words.
@@ -49,9 +54,9 @@ public class PassageTermMatch extends Scorer {
 		
 		int matches = 0;
 		//Scan through each of the terms to get its number of occurances in the passage text.
-		for (int qi=0; qi<qTerms.length-1; qi++) {
+		for (String term : qTerms) {
 			// First the bigram
-			matches += StringUtils.countMatches(passageStopsRemoved, qTerms[qi]);
+			matches += StringUtils.countMatches(passageStopsRemoved, term);
 		}
 		return matches;
 	}

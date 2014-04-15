@@ -2,6 +2,8 @@ package uncc2014watsonsim.research;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
@@ -16,11 +18,16 @@ import weka.core.converters.ArffSaver;
 /** Pipe Answer scores to an ARFF file for Weka */
 public class WekaTee extends Researcher {
 	private Instances data;
+	String[] ordered_names;
 	
 	public WekaTee() {
 		FastVector attributes = new FastVector();
-		for (String name : Answer.scoreNames())
-			attributes.addElement(new Attribute(name));
+		
+		ordered_names = Score.names.toArray(new String[Score.names.size()]);
+		Arrays.sort(ordered_names);
+		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT; passage_i++)
+			for (String name : ordered_names)
+				attributes.addElement(new Attribute(name + "_" + passage_i));
 		data = new Instances("Watsonsim captured question stream", attributes, 0);
 	}
 	
@@ -31,8 +38,9 @@ public class WekaTee extends Researcher {
 
 	@Override
 	public void question(Question q) {
+		
 		for (Answer a : q) {
-			data.add(new Instance(1.0, a.scoresArray()));
+			data.add(new Instance(1.0, a.scoresArray(ordered_names)));
 		}
 	}
 	
