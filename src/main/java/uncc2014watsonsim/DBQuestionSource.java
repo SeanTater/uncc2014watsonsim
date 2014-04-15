@@ -40,18 +40,18 @@ public class DBQuestionSource extends QuestionSource {
 	/** Replace the cached results for a single question.
 	 * Every answer must have _one_ document. The database doesn't support more.
 	 * @throws SQLException */
-	public static void replace_cache(Question q, List<Answer> results) throws SQLException {
+	public static void replace_cache(Question q, List<Passage> results) throws SQLException {
 		// Get a list of results and populate the questions with them
 		PreparedStatement bulk_insert = db.prep(
 				"insert or replace into results(question, title, fulltext, engine, rank, score, reference) "
 				+ "values (?, ?, ?, ?, ?, ?, ?);");
 	    
-		for (Answer r : results) {
+		for (Passage r : results) {
 			bulk_insert.setLong(1, q.id);
-			bulk_insert.setString(2, r.candidate_text);
-			bulk_insert.setString(3, r.passages.get(0).text);
+			bulk_insert.setString(2, r.title);
+			bulk_insert.setString(3, r.text);
 			//TODO: we need to generalize this
-			String engine = r.passages.get(0).engine_name;
+			String engine = r.engine_name;
 			bulk_insert.setString(4, engine);
 			bulk_insert.setDouble(5, r.scores.get(Score.valueOf(engine.toUpperCase()+"_RANK")));
 			try {
@@ -60,7 +60,7 @@ public class DBQuestionSource extends QuestionSource {
 				// ignore as google/bing don't have scores!
 				bulk_insert.setDouble(6, 0.0);
 			}
-			bulk_insert.setString(7, r.passages.get(0).reference);
+			bulk_insert.setString(7, r.reference);
 			bulk_insert.addBatch();
 		}
 		bulk_insert.executeBatch();

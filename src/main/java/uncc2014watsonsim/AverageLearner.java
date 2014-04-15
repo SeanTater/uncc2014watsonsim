@@ -11,6 +11,8 @@ public class AverageLearner extends Learner {
 			double score = 0;
 			int count = 0;
 			for (Score dimension : result.scores.keySet()) {
+				if(dimension.compareTo(Score.CORRECT)==0)
+					continue;
 				score += result.scores.get(dimension);
 				count++;
 			}

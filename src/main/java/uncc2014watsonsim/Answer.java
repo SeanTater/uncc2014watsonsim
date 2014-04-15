@@ -156,10 +156,12 @@ public class Answer implements Comparable<Answer> {
 		// TODO Auto-generated method stub
 		// array of scores for results returned from search engines
 		// first passage is result originally returned from search engine
-		double[] out = new double[Score.values().length];
+		double[] out = new double[Score.values().length-1];
 		Arrays.fill(out, 0.0);
-		for(Score s: passages.get(0).scores.keySet())
-			out[s.ordinal()] = passages.get(0).scores.get(s);
+		for(Score s: passages.get(0).scores.keySet()) {
+			if(s.compareTo(Score.CORRECT)!=0)
+				out[s.ordinal()] = passages.get(0).scores.get(s);
+		}
 		return out;
 	}
     
