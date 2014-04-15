@@ -1,6 +1,8 @@
 package uncc2014watsonsim;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import uncc2014watsonsim.scoring.AllEnginesResultsScorer;
 import uncc2014watsonsim.scoring.QuestionResultsScorer;
@@ -21,8 +23,8 @@ public class WekaLearner extends Learner {
 			throw new RuntimeException("Weka models appear to be missing. Do you have data/scorers? It is not possible to run without them.");
 		}
 		
-		String[] MODEL_ANSWER_DIMENSIONS = new String[]{"PASSAGE_COUNT"};
-		String[] MODEL_PASSAGE_DIMENSIONS = new String[]{"BING_RANK", "FITB_EXACT_MATCH_SCORE", "INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_SCORE", "PASSAGE_TERM_MATCH", "SKIP_BIGRAM", "WORD_PROXIMITY"};
+		List<String> MODEL_ANSWER_DIMENSIONS = Arrays.asList(new String[]{"PASSAGE_COUNT"});
+		List<String> MODEL_PASSAGE_DIMENSIONS = Arrays.asList(new String[]{"BING_RANK", "FITB_EXACT_MATCH_SCORE", "INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_SCORE", "PASSAGE_TERM_MATCH", "SKIP_BIGRAM", "WORD_PROXIMITY"});
 		
 		for (Answer a: question) {
 			try {

@@ -18,7 +18,8 @@ public class Score {
 	 */
 	public static void registerAnswerScore(String name) {
 		int index = Collections.binarySearch(answer_score_names, name);
-		answer_score_names.add(index, name);
+		if (index < 0)
+			answer_score_names.add(-index-1, name);
 	}
 	
 	/** Register the passage score for automatically generated model data
@@ -29,6 +30,7 @@ public class Score {
 	 */
 	public static void registerPassageScore(String name) {
 		int index = Collections.binarySearch(passage_score_names, name);
-		passage_score_names.add(index, name);
+		if (index < 0)
+			passage_score_names.add(-index-1, name);
 	}
 }
