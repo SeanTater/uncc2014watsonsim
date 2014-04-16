@@ -12,7 +12,7 @@ import uncc2014watsonsim.Question;
 public class QuestionInPassageScorer extends PassageScorer {
 	
 	@Override
-	public double passage(Question q, Answer a, Passage p) {
+	public double scorePassage(Question q, Answer a, Passage p) {
 		String rawText = q.getRaw_text().toLowerCase();
 		String passageText = p.text;
 		
