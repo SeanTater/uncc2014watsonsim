@@ -14,14 +14,14 @@ import uncc2014watsonsim.StringUtils;
 public class NGram extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
 		// Jane Austen
-				Set<String> a_set = (Set<String>) generateNgrams(3,a.candidate_text);
-				
-				// Romantic novelist Jane Austen once wrote -the- book Emma.
-				Set<String> p_set = (Set<String>) generateNgrams(3,p.text);
-				
-				a_set.retainAll(p_set);
-				
-				return a_set.size();
+		Set<String> a_set = (Set<String>) generateNgrams(3,a.candidate_text);
+		
+		// Romantic novelist Jane Austen once wrote -the- book Emma.
+		Set<String> p_set = (Set<String>) generateNgrams(3,p.text);
+		
+		a_set.retainAll(p_set);
+		
+		return a_set.size();
 			
 	}
 	public static List<String> generateNgrams(int n, String str) {
