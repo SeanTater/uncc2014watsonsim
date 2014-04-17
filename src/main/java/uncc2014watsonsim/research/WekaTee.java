@@ -2,6 +2,8 @@ package uncc2014watsonsim.research;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
@@ -19,8 +21,13 @@ public class WekaTee extends Researcher {
 	
 	public WekaTee() {
 		FastVector attributes = new FastVector();
-		for (String name : Answer.scoreNames())
+		// Answer score names
+		for (String name : Score.answer_score_names)
 			attributes.addElement(new Attribute(name));
+		// Passage score names
+		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT; passage_i++)
+			for (String name : Score.passage_score_names)
+				attributes.addElement(new Attribute(name + "_" + passage_i));
 		data = new Instances("Watsonsim captured question stream", attributes, 0);
 	}
 	
@@ -31,8 +38,9 @@ public class WekaTee extends Researcher {
 
 	@Override
 	public void question(Question q) {
+		
 		for (Answer a : q) {
-			data.add(new Instance(1.0, a.scoresArray()));
+			data.add(new Instance(1.0, a.scoresArray(Score.answer_score_names, Score.passage_score_names)));
 		}
 	}
 	

@@ -13,7 +13,7 @@ import org.apache.uima.jcas.cas.TOP_Type;
  * Updated by JCasGen Wed Mar 19 16:10:17 EDT 2014
  * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
-public class searchEngine extends searchResult {
+public class searchEngine extends SearchResult {
   /** @generated
    * @ordered 
    */

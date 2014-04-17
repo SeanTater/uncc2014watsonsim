@@ -4,6 +4,7 @@ package uncc2014watsonsim;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,8 +19,8 @@ import uncc2014watsonsim.search.Searcher;
  * @author Sean Gallagher
  */
 public class Answer implements Comparable<Answer> {
-    public EnumMap<Score, Double> scores = new EnumMap<Score, Double>(Score.class);
-    public List<Passage> passages = new ArrayList<Passage>();
+    public Map<String, Double> scores = new HashMap<>();
+    public List<Passage> passages = new ArrayList<>();
     public String candidate_text;
 
     /** Create an Answer with one implicitly defined Document */
@@ -41,8 +42,8 @@ public class Answer implements Comparable<Answer> {
 			(String) attr.get(engine+"_title"),
 			"",
 			"");
-		passages.get(0).score(Score.valueOf(engine+"_RANK"), (double) attr.get(engine+"_rank"));
-		passages.get(0).score(Score.valueOf(engine+"_SCORE"), (double) attr.get(engine+"_score"));
+		passages.get(0).score(engine+"_RANK", (double) attr.get(engine+"_rank"));
+		passages.get(0).score(engine+"_SCORE", (double) attr.get(engine+"_score"));
 	}
 
     @Override
@@ -92,36 +93,46 @@ public class Answer implements Comparable<Answer> {
     	return String.format("{\"score\": %01f, \"title\": \"%s\"}", score(), candidate_text.replace("\"", "\\\""));
     }
     
-    /* Score retrieval */
-    
-    /** Return the combined score for the answer, or null */
+    /**
+     * Return the combined score for the answer, or null
+     * */
     public Double score() {
-        return scores.get(Score.COMBINED);
+        return scores.get("COMBINED");
     }
-    
-    public static String[] scoreNames() {
-    	String[] names = new String[Searcher.MAX_RESULTS * Score.values().length];
-    	for (int a=0; a<Searcher.MAX_RESULTS; a++)
-    		for (int b=0; b<Score.values().length; b++)
-    			names[a*Score.values().length + b] = Score.values()[b].name() + "_" + a;
-    	return names;
-    }
+
+    /**
+     * Assign a score to this answer. If you want to automatically generate
+     * models to go with this score, remember to call Score.registerAnswerScore
+     * @param name		The name of the score 
+     * @param score		Double value of score (or NaN)
+     */
+	public void score(String name, double score) {
+		scores.put(name, score);
+	}
     
     /** Convenience method for returning all of the answer's scores as a primitive double[].
      * Intended for Weka, but it could be useful for any ML. */
-    public double[] scoresArray() {
+    public double[] scoresArray(List<String> answerScoreNames, List<String> passageScoreNames) {
     	// First all of the answer's scores, followed by all of the scores from
     	// all of the passages
-    	double[] out = new double[Searcher.MAX_RESULTS * Score.values().length];
+    	int dim_count = answerScoreNames.size() + (passageScoreNames.size() * Score.MAX_PASSAGE_COUNT); 
+    	double[] out = new double[dim_count];
     	Arrays.fill(out, Double.NaN);
+    	
+    	// Answer scores
+    	for (int dim_i=0; dim_i < answerScoreNames.size(); dim_i++){
+			Double value = scores.get(answerScoreNames.get(dim_i));
+    		out[dim_i] = value == null ? Double.NaN : value;
+    	}
 		
 		// All the passage's scores
     	// TODO: It's possible to have more than MAX_RESULTS passages because of merging.
-		for (int p_i=0; p_i<Searcher.MAX_RESULTS; p_i++) {
-			int passage_offset = p_i * Searcher.MAX_RESULTS;
-			Passage p = passages.get(p_i);
-			for (Entry<Score, Double> dimension : p.scores.entrySet()) {
-				out[passage_offset + dimension.getKey().ordinal()] = dimension.getValue();
+		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT && passage_i<passages.size(); passage_i++) {
+			int passage_offset = answerScoreNames.size() + (passageScoreNames.size() * passage_i);
+			Passage p = passages.get(passage_i);
+			for (int dim_i=0; dim_i<passageScoreNames.size(); dim_i++) {
+				Double value = p.scores.get(passageScoreNames.get(dim_i));
+				out[passage_offset + dim_i] = value == null ? Double.NaN : value;
 			}
 		}
 		return out;

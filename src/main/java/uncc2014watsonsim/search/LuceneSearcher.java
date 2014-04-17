@@ -45,9 +45,11 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);
+		Score.registerPassageScore("LUCENE_RANK");
+		Score.registerPassageScore("LUCENE_SCORE");
 	}
 
-	public List<Passage> runQuery(String question_text) throws Exception {
+	public List<Passage> runTranslatedQuery(String question_text) {
 		return runBaseQuery(Translation.getLuceneQuery(question_text));
 	}
 	
@@ -57,19 +59,19 @@ public class LuceneSearcher extends Searcher {
 			ScoreDoc[] hits = searcher.search(parser.parse(question_text), MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
-						ScoreDoc s = hits[i];
+				ScoreDoc s = hits[i];
 				Document doc = searcher.doc(s.doc);
 				results.add(new uncc2014watsonsim.Passage(
 						"lucene", 			// Engine
 						doc.get("title"),	// Title
 						doc.get("text"), 	// Text
 						doc.get("docno"))   // Reference
-						.score(Score.LUCENE_RANK, (double) i)           // Rank
-						.score(Score.LUCENE_SCORE, (double) s.score)	// Source
+						.score("LUCENE_RANK", (double) i)           // Rank
+						.score("LUCENE_SCORE", (double) s.score)	// Source
 						);
 			}
 		} catch (IOException | ParseException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Failed to query Lucene. Is the index in the correct location?");
 			e.printStackTrace();
 		}
 		

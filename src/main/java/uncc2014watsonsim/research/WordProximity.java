@@ -8,18 +8,18 @@ import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 
-public class WordProximity extends Scorer {
+public class WordProximity extends PassageScorer {
 	Set<String> q_words = new HashSet<String>();
 	
 	@Override
-	public void question(Question q) {
+	public void scoreQuestion(Question q) {
 		q_words.clear();
 		q_words.addAll(Arrays.asList(q.text.split("\\W+")));
-		super.question(q);
+		super.scoreQuestion(q);
 	}
 	
 	@Override
-	public double passage(Question q, Answer a, Passage p) {
+	public double scorePassage(Question q, Answer a, Passage p) {
 		double distance = 1;
 		double average_log_distance = 0;
 		

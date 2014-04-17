@@ -1,6 +1,8 @@
 package uncc2014watsonsim.uima;
 
 import java.util.ArrayList;
+
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,6 +17,10 @@ import org.apache.uima.jcas.cas.FSList;
 import org.apache.uima.jcas.cas.NonEmptyFSList;
 import org.apache.uima.jcas.cas.TOP;
 
+/**
+ * @author Columbia Watson Team
+ *
+ */
 public class UimaTools {
   public static <T extends TOP> T getSingleton(JCas cas, int classTypeInt)
           throws UimaToolsException {

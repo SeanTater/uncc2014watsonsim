@@ -88,6 +88,10 @@ task downloadRequired << {
     gdrive_decompress("questions.db.tar.gz")
     download {
         src 'http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin'
+        dest "$projectDir/data"
+        onlyIfNewer true
+    }
+    download {
         src 'http://opennlp.sourceforge.net/models-1.5/en-pos-maxent.bin'
         dest "$projectDir/data"
         onlyIfNewer true

@@ -12,9 +12,15 @@ import uncc2014watsonsim.Question;
 import uncc2014watsonsim.SQLiteDB;
 
 /*
+<<<<<<< HEAD
  * This interface might change; Please be ready to accommodate the changes.
  * This interface should be implemented by local search engines like 
  * Indri and Lucene, when querying them. Basically, it retrieves the basic data 
+=======
+ * This interface might change; Please be ready to accomodate the changes.
+ * This interface should be implemented by local search engines like 
+ * Indri and Lucene, when querying them. Basically, it retreives the basic data 
+>>>>>>> master
  * from the queried result set.
  */
 
@@ -30,18 +36,20 @@ public abstract class Searcher {
      * Runs the <i>query</i>, populating a list of ResultSets
      * 
      * For each ResultSet:
-     * 1: Gets the score of the document from the search result. For different
+     * <p>1: Gets the score of the document from the search result. For different
      * search engines, the scoring methods are different. If the document is 
-     * in TREC text format or TREC web format, every <DOC></DOC> should be
+     * in TREC text format or TREC web format, every {@literal<DOC></DOC>} should be
      * considered as a separate document.
-     * 2: Gets the title of the document.
-     * 3: Gets the full text of the document.
+     * <p>2: Gets the title of the document.
+     * <p>3: Gets the full text of the document.
      *
      * @param query
      * @throws Exception 
      */
     
-	public abstract List<Passage> runQuery(String query) throws Exception;
+	public abstract List<Passage> runTranslatedQuery(String query);
+	
+	public abstract List<Passage> runBaseQuery(String query);
 
     /**
      * How many results should Lucene and Indri return?
