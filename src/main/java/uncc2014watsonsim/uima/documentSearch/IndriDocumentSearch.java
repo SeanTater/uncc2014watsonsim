@@ -28,6 +28,7 @@ import org.apache.uima.jcas.cas.FSList;
 import org.apache.uima.resource.ResourceInitializationException;
 
 import privatedata.UserSpecificConstants;
+import uncc2014watsonsim.StringUtils;
 import uncc2014watsonsim.Translation;
 import uncc2014watsonsim.uima.types.*;
 import uncc2014watsonsim.uima.UimaTools;
@@ -87,8 +88,8 @@ public class IndriDocumentSearch extends JCasAnnotator_ImplBase {
 			
 			qString = UimaTools.getSingleton(queryView, QueryString.type);
 		
-		
-			String main_query = Translation.getIndriQuery(qString.getQuery());
+			String main_query = StringUtils.filterRelevant(qString.getQuery());
+			main_query = Translation.getIndriQuery(main_query);
 			
 			ScoredExtentResult[] ser = q.runQuery(main_query, MAX_RESULTS);
 	

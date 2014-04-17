@@ -91,6 +91,11 @@ task downloadRequired << {
         dest "$projectDir/data"
         onlyIfNewer true
     }
+    download {
+        src 'http://opennlp.sourceforge.net/models-1.5/en-pos-maxent.bin'
+        dest "$projectDir/data"
+        onlyIfNewer true
+    }
 }
 assemble.dependsOn downloadRequired
 

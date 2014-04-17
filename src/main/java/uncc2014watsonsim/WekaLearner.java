@@ -1,5 +1,7 @@
 package uncc2014watsonsim;
 
+import java.io.IOException;
+
 import uncc2014watsonsim.scoring.AllEnginesResultsScorer;
 import uncc2014watsonsim.scoring.QuestionResultsScorer;
 import uncc2014watsonsim.Score;
@@ -7,12 +9,28 @@ import uncc2014watsonsim.Score;
 /** Combines scores using machine learning from Weka */
 public class WekaLearner extends Learner {
 	
-	public void test_implementation(Question question) throws Exception {
-		QuestionResultsScorer q = new AllEnginesResultsScorer();
-		q.initialize();
+	public void test_implementation(Question question) {
+		QuestionResultsScorer weka_scorer = new AllEnginesResultsScorer();
+		try {
+			weka_scorer.initialize();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Weka learners are missing. Did you install Weka correctly?");
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Weka models appear to be missing. Do you have data/scorers? It is not possible to run without them.");
+		}
+		
+		String[] LAST_MODEL_DIMENSIONS = new String[]{"INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_RANK"};
 		
 		for (Answer a: question) {
-			a.scores.put(Score.COMBINED, q.score(a.scoresArray()));
+			try {
+				a.scores.put("COMBINED", weka_scorer.score(a.scoresArray(LAST_MODEL_DIMENSIONS)));
+			} catch (Exception e) {
+				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
+				e.printStackTrace();
+				a.scores.put("COMBINED", 0.0);
+			}
 		}
 		
 	}

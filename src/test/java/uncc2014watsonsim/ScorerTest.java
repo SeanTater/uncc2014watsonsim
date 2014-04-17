@@ -55,9 +55,9 @@ public class ScorerTest {
 		q.add(bing1);
 		q.add(bing2);
 		ml.test(q);
-		assertEquals("Alligators", q.get(0).getTitle());
-		assertEquals("Eels", q.get(1).getTitle());
-		assertEquals("Elk", q.get(2).getTitle());
+		assertEquals("Alligators", q.get(0).candidate_text);
+		assertEquals("Eels", q.get(1).candidate_text);
+		assertEquals("Elk", q.get(2).candidate_text);
 	}
 
 }

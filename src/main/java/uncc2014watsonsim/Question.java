@@ -6,10 +6,11 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import uncc2014watsonism.qAnalysis.FITBAnnotations;
+import uncc2014watsonsim.qAnalysis.AnnotationController;
+import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 
 
-public class Question extends ArrayList<Answer>{
+public class Question extends ArrayList<Answer> {
 	private static final long serialVersionUID = 1L;
 	public int id; // Question ID comes from the database and is optional.
 	public String text;
@@ -17,7 +18,8 @@ public class Question extends ArrayList<Answer>{
 	public Answer answer;
     private String category = "unknown";
     private QType type;
-    private FITBAnnotations fitbAnnotations= null; //set by the FITB QType detector iff QType == FITB
+    private FITBAnnotations fitbAnnotations= null;
+    private AnnotationController ac = new AnnotationController();
     
     /**
      * Creates a blank question. Used to translate between UIMA and the original pipeline
@@ -33,9 +35,12 @@ public class Question extends ArrayList<Answer>{
         this.raw_text = text;
         this.text = StringUtils.filterRelevant(text);
         this.type = QClassDetection.detectType(this);
+        if (type == QType.FITB) {
+        	ac.createAnnotations(this);    	
+        }
     }
 
-    /**
+	/**
      * Create a question given it's raw text and category
      */
     public Question(String question, String category) {
@@ -80,7 +85,9 @@ public class Question extends ArrayList<Answer>{
     }
     
     public FITBAnnotations getFITBAnnotations() {
-    	if (fitbAnnotations == null) fitbAnnotations = new FITBAnnotations();
+    	if (fitbAnnotations == null) {
+    		fitbAnnotations = new FITBAnnotations();
+    	}
     	return fitbAnnotations;
     }
     
@@ -88,7 +95,7 @@ public class Question extends ArrayList<Answer>{
     	this.fitbAnnotations = f;
     }
 
-	public String getRaw_text() {
+ 	public String getRaw_text() {
 		return raw_text;
 	}
 
@@ -114,5 +121,16 @@ public class Question extends ArrayList<Answer>{
     //public void setFITBAnnotations(FITBAnnotations fitbAnnotations) {
     //	this.fitbAnnotations = fitbAnnotations;
     //}
-    
+	public boolean add(Passage p) {
+		return add(new Answer(p));
+	}
+	
+	public boolean addPassages(Collection<Passage> ps) {
+		boolean added_any = false;
+		for (Passage p: ps) {
+			added_any |= add(new Answer(p));
+		}
+		return added_any;
+	}
+        
 }

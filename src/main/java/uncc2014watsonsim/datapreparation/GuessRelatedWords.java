@@ -241,11 +241,12 @@ class Vertex extends CountIncrementable {
 	}
 	
 	public String toString() {
-		String s = "";
+		return name;
+		/*String s = "";
 		for (Edge e : edges) {
 			s += e.dest.name + ":" + e.count() + ";"; 
 		}
-		return s + "\n";
+		return s + "\n";*/
 	}
 }
 

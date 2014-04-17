@@ -3,11 +3,10 @@ package uncc2014watsonsim.research;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 
-public class MergeResearcher extends Researcher {
-	
+public class Merge extends Researcher {
 	@Override
 	/** Call merge on any two answers with the same title */
-	public void research(Question q) throws Exception {
+	public void question(Question q) {
 		// The left cursor moves right
 		for (int first_ai=0; first_ai<q.size(); first_ai++) {
 			// The right cursor moves left (so that we can delete safely)
