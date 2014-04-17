@@ -4,14 +4,30 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.Score;
 import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 
 public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
+
+	
+	public ChangeFitbAnswerToContentsOfBlanks () {
+		Score.register("FITB_EXACT_MATCH_SCORE");
+	}
 	
 	@Override
 	public void question(Question question) {
 		
+		// If the question is not FITB, set the value of each answer score to NaN and exit
+		if (question.getType() != QType.FITB) {
+			for (Answer a: question) {
+				a.scores.put("FITB_EXACT_MATCH_SCORE", Double.NaN);				
+			}
+			return;
+		}
+		
+		//else run the scorer on FITB questions
     	FITBAnnotations annot = question.getFITBAnnotations(); //temp annotation holder
     	String theText = question.getRaw_text();
     	String section1 = theText.substring(annot.getSection1Begin(), annot.getSection1End());
@@ -69,11 +85,11 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 				//System.out.println("The answer: " + result); //for debug
 				if (result != null && !result.equals("")) {
 					a.candidate_text = result;
-					//TODO: move this to a scorer?
 					a.scores.put("FITB_EXACT_MATCH_SCORE", 1.0);
 				}
 				else {
 					a.candidate_text = "result was blank or null";
+					a.scores.put("FITB_EXACT_MATCH_SCORE", Double.NaN);				
 				}
 				
 			};

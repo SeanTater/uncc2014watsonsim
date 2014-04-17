@@ -38,10 +38,10 @@ public class PassageTermMatch extends Scorer {
 	private int generateNumberTerms(String queryText, String passageText) {
 		/*
 		 * We will first separate the text of the query and passage into terms.
-		 * This method also removes stopwords for performance and accuracy.
+		 * Note: The parameters are assumed to have stopwords removed.
 		 */
-		String[] qTerms = StringUtils.filterRelevant(queryText).split("\\W+");
-		String[] pTerms = StringUtils.filterRelevant(passageText).split("\\W+");
+		String[] qTerms = queryText.split("\\W+");
+		String[] pTerms = passageText.split("\\W+");
 		
 		// Join the passage back together with stop words removed. 
 		// We will use the StringUtils function to remove the words.
