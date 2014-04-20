@@ -14,7 +14,7 @@ import uncc2014watsonsim.Pipeline;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
 
-public class NGram extends Scorer {
+public class NGram extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
 		// Jane Austen
 				ArrayList<String> a_set = generateNgrams(3,StringUtils.filterRelevant(a.candidate_text));

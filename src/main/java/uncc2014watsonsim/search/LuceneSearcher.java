@@ -50,10 +50,14 @@ public class LuceneSearcher extends Searcher {
 	}
 
 	public List<Passage> runTranslatedQuery(String question_text) {
-		return runBaseQuery(Translation.getLuceneQuery(question_text));
+		return runAnyQuery(Translation.getLuceneQuery(question_text));
 	}
 	
-	public synchronized List<Passage> runBaseQuery(String question_text) {
+	public List<Passage> runBaseQuery(String question_text) {
+		return runAnyQuery(QueryParser.escape(question_text));
+	}
+	
+	private synchronized List<Passage> runAnyQuery(String question_text) {
 		List<Passage> results = new ArrayList<Passage>();
 		try {
 			ScoreDoc[] hits = searcher.search(parser.parse(question_text), MAX_RESULTS).scoreDocs;

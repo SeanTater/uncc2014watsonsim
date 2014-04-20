@@ -39,8 +39,8 @@ public class Pipeline {
 		new PassageQuestionLengthRatio(),
 		new PercentFilteredWordsInCommon(),
 		new QuestionInPassageScorer(),
-		// new ScorerIrene(), // TODO: Doesn't compile
-		// new NGram(), // TODO: Throws cast errors; may need refactoring
+		//new ScorerIrene(), // TODO: Doesn't compile
+		new NGram(),
 	};
 
 	private static final Researcher[] late_researchers = {

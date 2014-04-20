@@ -11,12 +11,12 @@ public class PassageRetrieval extends Researcher {
 
 	private static final Searcher[] searchers = {
 		new CachingSearcher(new LuceneSearcher(), "lucene"),
-		new CachingSearcher(new BingSearcher(), "bing"),
+		//new CachingSearcher(new BingSearcher(), "bing"),
 	};
 	@Override
 	public void answer(Question q, Answer a) {
     	// The merge researcher does what was once here.
-    	String sr = StringUtils.filterRelevant(q.getRaw_text() + " " + Matcher.quoteReplacement(a.candidate_text));
+    	String sr = q.getRaw_text() + " " + Matcher.quoteReplacement(a.candidate_text);
     	// Query every engine
     	for (Searcher s : searchers)
     		a.passages.addAll(s.runBaseQuery(sr));

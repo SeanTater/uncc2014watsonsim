@@ -10,24 +10,17 @@ import uncc2014watsonsim.Question;
 
 public class PassageQuestionLengthRatio extends PassageScorer {
 	
-	public double passage(Question q, Answer a, Passage p) {
+	public double scorePassage(Question q, Answer a, Passage p) {
 		String qs = q.getRaw_text();
-		String qst= q.text; //processes question, stopwords, punctuation removed
-		String as= a.candidate_text;
-		String ps=p.text; // text is guaranteed to have content
-	//	ps.tokenize();
-		
+		//String qst= q.text; //processes question, stopwords, punctuation removed
+		//String as= a.candidate_text;
+		//String ps=p.text; // text is guaranteed to have content
+	    //ps.tokenize();
 		
 		int pl = p.text.length();
 		int ql = qs.length();
 		double sc=pl/ql;
 		return sc;
-		
-		
-		
-		
-		
-		//return Double.NaN; // has to return a Double
 	}
 
 }
