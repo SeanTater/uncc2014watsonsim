@@ -102,5 +102,20 @@
         </featureDescription>
       </features>
     </typeDescription>
+  <typeDescription>
+      <name>uncc2014watsonsim.uima.types.fitb.Blanks</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>uncc2014watsonsim.uima.types.fitb.Section1</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>uncc2014watsonsim.uima.types.fitb.Section2</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
   </types>
 </typeSystemDescription>

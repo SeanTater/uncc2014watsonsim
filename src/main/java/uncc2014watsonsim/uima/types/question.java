@@ -11,7 +11,7 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
+ * Updated by JCasGen Mon Apr 21 12:07:15 EDT 2014
  * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
 public class question extends TOP {
