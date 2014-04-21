@@ -1,66 +1,86 @@
 package uncc2014watsonsim.qAnalysis;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.uima.UIMAFramework;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.cas.CASException;
+import org.apache.uima.cas.text.AnnotationIndex;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.tcas.Annotation;
+import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.resource.ResourceSpecifier;
+import org.apache.uima.util.InvalidXMLException;
+import org.apache.uima.util.XMLInputSource;
 
 import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
 
 public class AnnotationController {
 	
+	boolean debug = true;
+	
 	private Question question = null;
+	private JCas queryCas = null;
+	/**
+	 * @return the queryCas
+	 */
+	public JCas getQueryCas() {
+		return queryCas;
+	}
+
+	AnalysisEngine ae = null;
 	
 	/**
 	 * Create annotations as needed for the Question's QType
 	 */
 	public void createAnnotations(Question question) {
 		
-		this.question = question;
-		
-		if (question.getType() == QType.FITB) {
-			createFitbAnnotations();
+		try {
+			XMLInputSource in = new XMLInputSource("src/main/java/uncc2014watsonsim/uima/qAnalysis/qAnalysisApplicationDescriptor.xml");
+			ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(in);
+			//Generate AE
+			ae = UIMAFramework.produceAnalysisEngine(specifier);
+			
+			JCas jcas = ae.newJCas();
+			jcas.setDocumentText(question.getRaw_text());
+			queryCas = jcas.createView("QUERY");
+			queryCas.setDocumentText(question.getRaw_text());
+			ae.process(jcas);
+			if(debug){
+				AnnotationIndex<Annotation> idx = jcas.getView("QUERY").getAnnotationIndex();
+				for(Annotation ann: idx){
+					System.out.println("Annotation Found: " + ann.getType().getName() + ": " + ann.getBegin() + " - " + ann.getEnd());
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidXMLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceInitializationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (AnalysisEngineProcessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		if(ae == null){
+			System.err.println("Running without any UIMA Annotations!!");
+		}
+
+		
 		
 	}
 	
-	private void createFitbAnnotations() {
 
-		FITBAnnotations annot = question.getFITBAnnotations(); //temporary holder to shorten calls to this
-		boolean result = false;
-		//find blanks and set their locations in the annotation (if they exist)
-		Pattern pattern = Pattern.compile("_+");
-		Matcher matcher = pattern.matcher(question.getRaw_text());
-		while (matcher.find()) {
-			annot.getBlanks().add( new BlankAnnotation(matcher.start(),matcher.end()) );
-			//System.out.print(" blank: " + question.raw_text.subSequence(matcher.start(), matcher.end())); //debug
-			result = true; //return will be true as a blank was found
-		}
-		
-		//if blanks were found, find and set locations of sections 1 & 2 in the annotations (if they exist)
-		if (result == true) {
-			pattern = Pattern.compile("\"");
-			matcher = pattern.matcher(question.getRaw_text());
-			int firstBlankBeginning = annot.getBlanks().get(0).getBegin();
-			annot.setSection1End(firstBlankBeginning);
-			
-			annot.setSection1Begin(0);
-			while (matcher.find() && matcher.start()< firstBlankBeginning) {
-				annot.setSection1Begin(matcher.start());
-			}
-
-			annot.setSection2Begin(annot.getBlanks().get(annot.getBlanks().size()-1).getEnd());
-			matcher.region(annot.getSection2Begin(), question.getRaw_text().length());
-			if (matcher.find()) {
-				annot.setSection2End(matcher.end());
-			}
-			else {
-				annot.setSection2End(question.getRaw_text().length());
-			}
-			
-			//System.out.println("current question: " + question.getRaw_text()); //for debug
-			//System.out.println(annot); //for debug
-		}
-
-	}
 	
 }

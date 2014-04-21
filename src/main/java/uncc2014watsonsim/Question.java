@@ -6,8 +6,9 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.uima.jcas.JCas;
+
 import uncc2014watsonsim.qAnalysis.AnnotationController;
-import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 
 
 public class Question extends ArrayList<Answer> {
@@ -18,7 +19,6 @@ public class Question extends ArrayList<Answer> {
 	public Answer answer;
     private String category = "unknown";
     private QType type;
-    private FITBAnnotations fitbAnnotations= null;
     private AnnotationController ac = new AnnotationController();
     
     /**
@@ -28,9 +28,10 @@ public class Question extends ArrayList<Answer> {
         this.raw_text = text;
         this.text = StringUtils.filterRelevant(text);
         this.type = QClassDetection.detectType(this);
-        if (type == QType.FITB) {
-        	ac.createAnnotations(this);    	
-        }
+       // if (type == QType.FITB) {
+        //All questions can run through UIMA Annotation Pipeline
+        ac.createAnnotations(this);    	
+        //}
     }
 
 	/**
@@ -76,13 +77,6 @@ public class Question extends ArrayList<Answer> {
     public void setType(QType type) {
         this.type = type;
     }
-    
-    public FITBAnnotations getFITBAnnotations() {
-    	if (fitbAnnotations == null) {
-    		fitbAnnotations = new FITBAnnotations();
-    	}
-    	return fitbAnnotations;
-    }
 
  	public String getRaw_text() {
 		return raw_text;
@@ -102,6 +96,11 @@ public class Question extends ArrayList<Answer> {
 			added_any |= add(new Answer(p));
 		}
 		return added_any;
+	}
+
+	public JCas getFITBAnnotations() {
+		
+		return ac.getQueryCas();
 	}
         
 }

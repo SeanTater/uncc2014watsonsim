@@ -3,11 +3,15 @@ package uncc2014watsonsim.research;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.uima.jcas.JCas;
+
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.qAnalysis.FITBAnnotations;
+import uncc2014watsonsim.uima.types.fitb.Section1;
+import uncc2014watsonsim.uima.types.fitb.Section2;
 
 public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 
@@ -28,10 +32,10 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 		}
 		
 		//else run the scorer on FITB questions
-    	FITBAnnotations annot = question.getFITBAnnotations(); //temp annotation holder
-    	String theText = question.getRaw_text();
-    	String section1 = theText.substring(annot.getSection1Begin(), annot.getSection1End());
-    	String section2 = theText.substring(annot.getSection2Begin(), annot.getSection2End());
+    	JCas annot = question.getFITBAnnotations(); // See if we can pull out the annotations from the cas
+    	
+    	String section1 = annot.getAnnotationIndex(Section1.type).iterator().next().getCoveredText();
+    	String section2 = annot.getAnnotationIndex(Section2.type).iterator().next().getCoveredText();
         section1 = section1.replaceAll("\"", ""); //remove quotes
         section2 = section2.replaceAll("\"", ""); //remove quotes
         //TODO: make search more flexible (such as removing punctuation)
