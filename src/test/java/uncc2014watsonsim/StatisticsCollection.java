@@ -30,7 +30,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 100").run();
+				+ "limit 1000").run();
 	}
 	
 	@Test
@@ -74,17 +74,6 @@ class StatsGenerator {
 	public StatsGenerator(String dataset, String question_query) throws Exception {
 		this.dataset = dataset;
 		questionsource = new DBQuestionSource(question_query);
-		
-		
-		System.out.println("Fetching Questions");
-		for (int i=0; i<questionsource.size(); i++) {
-			Question q = questionsource.get(i);
-			LocalPipeline.ask(q);
-			
-			System.out.print(" " + i);
-			if (i % 25 == 0) System.out.println();
-		}
-		System.out.println();
 	}
 	
 	/** Measure how accurate the top question is as a histogram across confidence */
@@ -158,24 +147,33 @@ class StatsGenerator {
 	/** Run statistics, then upload to the server */
 	public void run() throws Exception {
 		long start_time = System.nanoTime();
-		for (Question question : questionsource) {
-			if (question.size() == 0) continue;
+
+		
+		System.out.println("Asking Questions");
+		for (int i=0; i<questionsource.size(); i++) {
+			Question q = questionsource.get(i);
+			LocalPipeline.ask(q);
+			
+			System.out.print(" " + i);
+			if (i % 25 == 0) System.out.println();
+			
+			if (q.size() == 0) continue;
 	
-			for (int rank=0; rank<question.size(); rank++) {
-				Answer candidate = question.get(rank);
-				if (candidate.matches(question.answer)) {
-					onCorrectAnswer(question, candidate, rank);
+			for (int rank=0; rank<q.size(); rank++) {
+				Answer candidate = q.get(rank);
+				if (candidate.matches(q.answer)) {
+					onCorrectAnswer(q, candidate, rank);
 					break;
 				}
 			}
 			
-			calculateConfidenceHistogram(question);
+			calculateConfidenceHistogram(q);
 			
-			total_answers += question.size();
+			total_answers += q.size();
 			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
 			//		"A[Actual:" + correct_answer_score + "]: "  + text.answer);
-			question.clear();
+			q.clear();
 		}
 	
 		// Only count the rank of questions that were actually there

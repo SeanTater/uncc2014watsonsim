@@ -54,8 +54,8 @@ public class BingSearcher extends Searcher {
 	    	}
 		    
 	    } catch (IOException e) {
-	    	//System.out.println("Error while searching with Bing. Ignoring. Details follow.");
-	        //e.printStackTrace();
+	    	System.out.println("Error while searching with Bing. Ignoring. Details follow.");
+	        e.printStackTrace();
 	    }
 	    return results;
 	}
