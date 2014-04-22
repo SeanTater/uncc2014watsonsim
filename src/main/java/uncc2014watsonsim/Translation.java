@@ -32,12 +32,4 @@ public class Translation {
         return query;
     }
 
-    /**
-     * Returns the query needed to retrieve FITB results for the Indri engine.
-     * This is customized for FITB with consecutive blanks inside a double quotes section.
-     * Will need to modify (or create other queries for other types).
-     * @param question The Question object with the text to be queried
-     * @return the Indri query
-     * @author Ken Overholt
-     */
 }
