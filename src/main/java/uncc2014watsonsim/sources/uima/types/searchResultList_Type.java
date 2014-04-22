@@ -1,6 +1,6 @@
 
 /* First created by JCasGen Wed Mar 19 16:41:59 EDT 2014 */
-package uncc2014watsonsim.uima.types;
+package uncc2014watsonsim.sources.uima.types;
 
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;

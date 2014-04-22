@@ -1,24 +1,25 @@
 
 
-/* First created by JCasGen Wed Mar 19 16:09:32 EDT 2014 */
-package uncc2014watsonsim.sources.uima.types;
+/* First created by JCasGen Tue Apr 22 10:17:48 EDT 2014 */
+package uncc2014watsonsime.uima.types;
 
 import org.apache.uima.jcas.JCas; 
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
+import org.apache.uima.jcas.cas.TOP;
 
 
-/** Lucene, Google, Indri, etc
- * Updated by JCasGen Wed Mar 19 16:10:17 EDT 2014
- * XML source: C:/Users/ShumanLaptop/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
+/** The question processed through opennlp
+ * Updated by JCasGen Tue Apr 22 10:55:59 EDT 2014
+ * XML source: C:/Users/Jacob/Documents/GitHub/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/uimaexperiment/exp_typesystem.xml
  * @generated */
-public class searchEngine extends SearchResult {
+public class nlp extends TOP {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(searchEngine.class);
+  public final static int typeIndexID = JCasRegistry.register(nlp.class);
   /** @generated
    * @ordered 
    */
@@ -32,14 +33,14 @@ public class searchEngine extends SearchResult {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected searchEngine() {/* intentionally empty block */}
+  protected nlp() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public searchEngine(int addr, TOP_Type type) {
+  public nlp(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -47,7 +48,7 @@ public class searchEngine extends SearchResult {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public searchEngine(JCas jcas) {
+  public nlp(JCas jcas) {
     super(jcas);
     readObject();   
   } 

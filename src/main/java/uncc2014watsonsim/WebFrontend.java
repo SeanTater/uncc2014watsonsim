@@ -5,13 +5,18 @@ import spark.*;
 
 public class WebFrontend {
 
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		
 		externalStaticFileLocation("public");
 		get(new Route("/ask") {
 			@Override
 			public Object handle(Request request, Response response) {
-	    		Question question = Pipeline.ask(request.queryParams("query"));
+				Question question = null;
+				try {
+	    		question = Pipeline.ask(request.queryParams("query"));
+				}catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
 		        
 	    		String output = "";
 		        // Print out a simple one-line summary of each answer

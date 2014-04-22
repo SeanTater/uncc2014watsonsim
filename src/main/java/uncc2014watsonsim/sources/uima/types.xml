@@ -102,5 +102,10 @@
         </featureDescription>
       </features>
     </typeDescription>
+  <typeDescription>
+      <name>uncc2014watsonsime.uima.types.nlp</name>
+      <description>The question processed through opennlp</description>
+      <supertypeName>uima.cas.TOP</supertypeName>
+    </typeDescription>
   </types>
 </typeSystemDescription>

@@ -5,6 +5,6 @@
     <version>1.0</version>
     <vendor/>
   <imports>
-    <import name="uncc2014watsonsim.uima.types"/>
+    <import name="uncc2014watsonsim.sources.uima.types"/>
   </imports>
 </typeSystemDescription>

@@ -1,4 +1,4 @@
-package uncc2014watsonsim.uima.documentSearch;
+package uncc2014watsonsim.sources.uima.documentSearch;
 
 import java.io.File;
 import java.io.IOException;

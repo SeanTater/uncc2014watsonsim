@@ -16,7 +16,7 @@ import org.apache.uima.jcas.tcas.Annotation_Type;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 /** A query string (question)
- * Updated by JCasGen Tue Apr 15 07:00:09 EDT 2014
+ * Updated by JCasGen Tue Apr 22 10:55:59 EDT 2014
  * @generated */
 public class QueryString_Type extends Annotation_Type {
   /** @generated 

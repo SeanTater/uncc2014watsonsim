@@ -1,7 +1,7 @@
 
 
-/* First created by JCasGen Wed Mar 19 16:56:45 EDT 2014 */
-package uncc2014watsonsim.sources.uima.types;
+/* First created by JCasGen Tue Apr 22 10:17:48 EDT 2014 */
+package uncc2014watsonsim.uima.types;
 
 import org.apache.uima.jcas.JCas; 
 import org.apache.uima.jcas.JCasRegistry;
@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** 
- * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
- * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
+ * Updated by JCasGen Tue Apr 22 10:55:59 EDT 2014
+ * XML source: C:/Users/Jacob/Documents/GitHub/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/uimaexperiment/exp_typesystem.xml
  * @generated */
 public class question extends TOP {
   /** @generated

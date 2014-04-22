@@ -1,4 +1,4 @@
-package uncc2014watsonsim.uima;
+package uncc2014watsonsim.sources.uima;
 
 public class UimaToolsException extends Exception {
 

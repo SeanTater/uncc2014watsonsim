@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uncc2014watsonsim.uima.documentSearch;
+package uncc2014watsonsim.sources.uima.documentSearch;
 
 import java.util.ArrayList;
 import java.util.List;

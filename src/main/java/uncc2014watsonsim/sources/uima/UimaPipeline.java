@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uncc2014watsonsim.uima;
+package uncc2014watsonsim.sources.uima;
 
 import java.net.URL;
 import java.util.Collection;

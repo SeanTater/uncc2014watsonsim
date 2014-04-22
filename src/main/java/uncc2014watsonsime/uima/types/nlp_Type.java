@@ -1,6 +1,6 @@
 
-/* First created by JCasGen Wed Mar 19 16:09:32 EDT 2014 */
-package uncc2014watsonsim.sources.uima.types;
+/* First created by JCasGen Tue Apr 22 10:17:48 EDT 2014 */
+package uncc2014watsonsime.uima.types;
 
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
@@ -9,11 +9,12 @@ import org.apache.uima.cas.impl.FSGenerator;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.Type;
+import org.apache.uima.jcas.cas.TOP_Type;
 
-/** Lucene, Google, Indri, etc
- * Updated by JCasGen Wed Mar 19 16:10:17 EDT 2014
+/** The question processed through opennlp
+ * Updated by JCasGen Tue Apr 22 10:55:59 EDT 2014
  * @generated */
-public class searchEngine_Type extends SearchResult_Type {
+public class nlp_Type extends TOP_Type {
   /** @generated 
    * @return the generator for this type
    */
@@ -23,25 +24,25 @@ public class searchEngine_Type extends SearchResult_Type {
   private final FSGenerator fsGenerator = 
     new FSGenerator() {
       public FeatureStructure createFS(int addr, CASImpl cas) {
-  			 if (searchEngine_Type.this.useExistingInstance) {
+  			 if (nlp_Type.this.useExistingInstance) {
   			   // Return eq fs instance if already created
-  		     FeatureStructure fs = searchEngine_Type.this.jcas.getJfsFromCaddr(addr);
+  		     FeatureStructure fs = nlp_Type.this.jcas.getJfsFromCaddr(addr);
   		     if (null == fs) {
-  		       fs = new searchEngine(addr, searchEngine_Type.this);
-  			   searchEngine_Type.this.jcas.putJfsFromCaddr(addr, fs);
+  		       fs = new nlp(addr, nlp_Type.this);
+  			   nlp_Type.this.jcas.putJfsFromCaddr(addr, fs);
   			   return fs;
   		     }
   		     return fs;
-        } else return new searchEngine(addr, searchEngine_Type.this);
+        } else return new nlp(addr, nlp_Type.this);
   	  }
     };
   /** @generated */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = searchEngine.typeIndexID;
+  public final static int typeIndexID = nlp.typeIndexID;
   /** @generated 
      @modifiable */
   @SuppressWarnings ("hiding")
-  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("uncc2014watsonsim.uima.types.searchEngine");
+  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("uncc2014watsonsime.uima.types.nlp");
 
 
 
@@ -50,7 +51,7 @@ public class searchEngine_Type extends SearchResult_Type {
 	 * @param jcas JCas
 	 * @param casType Type 
 	 */
-  public searchEngine_Type(JCas jcas, Type casType) {
+  public nlp_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 
