@@ -1,6 +1,11 @@
 package uncc2014watsonsim.research;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
@@ -17,20 +22,45 @@ public abstract class PassageScorer implements Scorer {
 	// This is a constructor-less hack to give Researchers a convenient name
 	// It is used for assigning scores.
 	String name;
+	private String max_name, min_name, median_name, mean_name;
 	{
 		name = this.getClass().getSimpleName().replaceAll("([a-z])([A-Z]+)", "$1_$2").toUpperCase();
+		max_name = name+"_MAX";
+		min_name = name+"_MIN";
+		mean_name = name+"_MEAN";
+		median_name = name+"_MEDIAN";
 		Score.registerPassageScore(name);
+		Score.registerAnswerScore(max_name);
+		Score.registerAnswerScore(min_name);
+		Score.registerAnswerScore(mean_name);
+		Score.registerAnswerScore(median_name);
 	}
 
 	/** Default implementation of research for a question.
-	 * Simply calls research_answer for every Answer
+	 * Calls research_answer for every Answer, collecting the mean, median, max
+	 * and min of the results.
 	 * Override this if you need more power.
 	 * @param q		Question
 	 */
 	public void scoreQuestion(Question q) {
-		for (Answer a : q)
-			for (Passage p: a.passages)
-				p.score(name, scorePassage(q, a, p));		
+		for (Answer a : q) {
+			double sum = 0.0;
+			final int p_count = a.passages.size();
+			if (p_count > 0) {
+				double[] scores = new double[p_count];
+				for (int pi=0; pi<p_count; pi++) {
+					Passage p = a.passages.get(pi);
+					scores[pi] = scorePassage(q, a, p); 
+					sum += scores[pi];
+					p.score(name, scores[pi]);
+				}
+				Arrays.sort(scores);
+				a.score(max_name, scores[0]);
+				a.score(min_name, scores[p_count - 1]);
+				a.score(mean_name, sum/p_count);
+				a.score(median_name, scores[p_count / 2]);
+			}
+		}
 	}
 	
 	/** Default implementation for researching a passage.
