@@ -21,7 +21,7 @@ public class DBQuestionResultsSource extends QuestionSource {
 	public DBQuestionResultsSource(int start, int length) throws Exception {
 		// Get a list of questions, ordered so that it is consistent
 		PreparedStatement bulk_select_questions = db.prep(
-				"select q.question as raw_text, r.title as candidate_answer from questions q, results r where q.rowid=r.question and rowid > ? order by rowid limit ?;");
+				"select q.rowid as id, q.question as raw_text, r.title as candidate_answer from questions q, results r where q.rowid=r.question and rowid > ? order by rowid limit ?;");
 		bulk_select_questions.setInt(1, start);
 		bulk_select_questions.setInt(2, length);
 		load_results(bulk_select_questions.executeQuery());
@@ -31,7 +31,7 @@ public class DBQuestionResultsSource extends QuestionSource {
 	 */
 	public DBQuestionResultsSource(String conditions) throws Exception {
 		// Get a list of questions, ordered so that it is consistent
-		PreparedStatement query = db.prep("select q.rowid as id, q.question as raw_text, r.title as candidate_answer from questions q, results r where q.rowid=r.question  "
+		PreparedStatement query = db.prep("select q.rowid as id, q.question as raw_text, r.title as candidate_answer from questions q, results r where q.rowid=r.question and rowid>3234 "
 				+ conditions + " order by q.rowid;");
 		load_results(query.executeQuery());
 	}
