@@ -1,4 +1,4 @@
-Enter file contenpackage uncc2014watsonsim.research;
+package uncc2014watsonsim.research;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -296,4 +296,4 @@ public class OpenNlpTests {
 		//pt.testSentDetector(passage);
 	}
 }
-ts here
+
