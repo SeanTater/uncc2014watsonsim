@@ -9,7 +9,7 @@ import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.qAnalysis.FITBAnnotations;
+//import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 import uncc2014watsonsim.uima.types.fitb.Section1;
 import uncc2014watsonsim.uima.types.fitb.Section2;
 

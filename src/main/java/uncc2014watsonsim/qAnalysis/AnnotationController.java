@@ -51,9 +51,12 @@ public class AnnotationController {
 			queryCas.setDocumentText(question.getRaw_text());
 			ae.process(jcas);
 			if(debug){
+				String docText = jcas.getDocumentText();
+				System.out.println("The text that was analyzed: " + docText);
 				AnnotationIndex<Annotation> idx = jcas.getView("QUERY").getAnnotationIndex();
 				for(Annotation ann: idx){
-					System.out.println("Annotation Found: " + ann.getType().getName() + ": " + ann.getBegin() + " - " + ann.getEnd());
+					System.out.print("Annotation Found: " + ann.getType().getName() + ": " + ann.getBegin() + " - " + ann.getEnd());
+					System.out.println("  \'" + docText.substring(ann.getBegin(), ann.getEnd()) + "\'");
 				}
 			}
 		} catch (IOException e) {
