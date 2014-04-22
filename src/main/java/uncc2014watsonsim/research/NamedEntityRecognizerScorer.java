@@ -21,7 +21,7 @@ import uncc2014watsonsim.StringUtils;
  * @author Jonathan Shuman
  * 
  */
-public class NamedEntityRecognizerScorer extends Scorer {
+public class NamedEntityRecognizerScorer extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
 
 		// Jane Austen
