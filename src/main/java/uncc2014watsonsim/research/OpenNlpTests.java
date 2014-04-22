@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 public class OpenNlpTests {
 	private boolean modelsAreInitialized=false;	
 
-	public  String modelsPath="../opennlp-uima/target/OpenNlpTextAnalyzer/models/"; //models directory
+	public  String modelsPath="data/"; //models directory
 	private File parserMFile; 
 	private File sentDetectorMFile;
 	private File chunkerMFile;
