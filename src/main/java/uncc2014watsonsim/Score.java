@@ -1,29 +1,38 @@
 package uncc2014watsonsim;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 
 public class Score {
 	public static final int MAX_PASSAGE_COUNT = 50;
-	public static final Set<String> names = new HashSet<>();
+	public static final List<String> answer_score_names = new ArrayList<>();
+	public static final List<String> passage_score_names = new ArrayList<>();
 	
-	/** This is just a convenient synonym for add */
-	public static void register(String name) {
-		names.add(name);
+	/** Register the answer score for automatically generated model data
+	 * @param name	The ANSWER_SCORE (uppercase, with underscores)
+	 * 
+	 * This insertion is inefficient (n^2) but the retrieval is very efficient.
+	 * Make sure not to call this too often, such as in a scorer.
+	 * This function is idempotent.
+	 */
+	public static void registerAnswerScore(String name) {
+		int index = Collections.binarySearch(answer_score_names, name);
+		if (index < 0)
+			answer_score_names.add(-index-1, name);
 	}
-	/*
-	INDRI_RANK,
-	INDRI_SCORE,
-	LUCENE_RANK,
-	LUCENE_SCORE,
-	GOOGLE_RANK,
-	BING_RANK,
-	IS_FITB,
-	INDRI_PASSAGE_RETRIEVAL_RANK,
-	INDRI_PASSAGE_RETRIEVAL_SCORE,
-	WORD_PROXIMITY,
-	COMBINED,
-	CORRECT,
-	GARBAGE,
-	*/
+	
+	/** Register the passage score for automatically generated model data
+	 * @param name	The PASSAGE_SCORE (uppercase, with underscores)
+	 * 
+	 * This insertion is inefficient (n^2) but the retrieval is very efficient.
+	 * Make sure not to call this too often, such as in a scorer.
+	 * This function is idempotent.
+	 */
+	public static void registerPassageScore(String name) {
+		int index = Collections.binarySearch(passage_score_names, name);
+		if (index < 0)
+			passage_score_names.add(-index-1, name);
+	}
 }

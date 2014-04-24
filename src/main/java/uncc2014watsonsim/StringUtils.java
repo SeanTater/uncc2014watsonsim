@@ -2,11 +2,14 @@ package uncc2014watsonsim;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
@@ -17,33 +20,40 @@ import org.apache.lucene.util.Version;
 *@author Jagan Vujjini
 */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
+	private static Analyzer analyzer = new EnglishAnalyzer(Version.LUCENE_46);
 	
 	/** Filter out stop words from a string */
 	public static String filterRelevant(String text) {
 		String mQuestion="";
+		for (String token : tokenize(text))
+			mQuestion += token + " ";
+		return mQuestion.trim();
+	}
+	
+	/** Filter out stop words from a string */
+	public static List<String> tokenize(String text) {
+		List<String> tokens = new ArrayList<>();
 		
 		text = text.replaceAll("[^0-9a-zA-Z ]+", "").toLowerCase().trim();
-		TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_46, new StringReader(text));
-		tokenStream = new org.apache.lucene.analysis.core.StopFilter(Version.LUCENE_46, tokenStream, EnglishAnalyzer.getDefaultStopSet());
-		CharTermAttribute token = tokenStream.addAttribute(CharTermAttribute.class);
 		
-		try {
+		try (TokenStream tokenStream = analyzer.tokenStream("text", text)) {
+			//TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_46, new StringReader(text));
+			//tokenStream = new org.apache.lucene.analysis.core.StopFilter(Version.LUCENE_46, tokenStream, EnglishAnalyzer.getDefaultStopSet());
+			CharTermAttribute token = tokenStream.addAttribute(CharTermAttribute.class);
+			
 			// On the fence whether it is better to error here or not. Suggestions?
 			tokenStream.reset();
 		
 			while (tokenStream.incrementToken()) {
-				mQuestion += token.toString() + " ";
+				tokens.add(token.toString());
 			}
-			
-			tokenStream.close();
 
 		} catch (IOException e) {
 			// If we can't trim it, so what?
 			e.printStackTrace();
-			mQuestion = text;
 		}
 		
-		return mQuestion.trim();
+		return tokens;
 	}
 	
     /** Returns true if every non-stopword from candidate is found in reference */

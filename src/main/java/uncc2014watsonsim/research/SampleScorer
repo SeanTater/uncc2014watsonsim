@@ -1,0 +1,42 @@
+package uncc2014watsonsim.research;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.StringUtils;
+
+import uncc2014watsonsim.*;
+import uncc2014watsonsim.uima.types.question;
+
+public class SampleScorer extends Scorer {
+
+	@Override
+	public double scorePassage(Question q, Answer a, Passage p) {
+		// TODO Auto-generated method stub
+
+		// go through the passage to look for terms with the FITB question and
+		// answer in the blank
+
+		String original = a.candidate_text;
+
+		String ques = q.text;
+		String t = ques.substring(0, ques.indexOf('_')) + a.candidate_text
+				+ ques.indexOf("__");
+		int power = a.passages.size();
+		Pattern pattern = Pattern.compile(t);
+		Matcher matcher = null;
+		int count = 0;
+		for (Passage pass : a.passages) {
+
+			pattern.matcher(pass.text);
+
+			while (matcher.find())
+				count++;
+
+		}
+		// String modified = StringUtils.filterRelevant(original);
+
+		return count;
+	}
+
+}

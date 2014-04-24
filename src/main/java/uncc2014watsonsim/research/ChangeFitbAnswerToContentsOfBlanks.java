@@ -17,7 +17,7 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 
 	
 	public ChangeFitbAnswerToContentsOfBlanks () {
-		Score.register("FITB_EXACT_MATCH_SCORE");
+		Score.registerPassageScore("FITB_EXACT_MATCH_SCORE");
 	}
 	
 	@Override

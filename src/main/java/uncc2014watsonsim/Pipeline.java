@@ -12,14 +12,14 @@ import uncc2014watsonsim.search.*;
 public class Pipeline {
 	
 	private static final Searcher[] searchers = {
-		//new CachingSearcher(new LuceneSearcher(), "lucene"),
-		//new CachingSearcher(new IndriSearcher(), "indri"),
-		//new CachingSearcher(new BingSearcher(), "bing"),
+		new CachingSearcher(new LuceneSearcher(), "lucene"),
+		new CachingSearcher(new IndriSearcher(), "indri"),
+		new CachingSearcher(new BingSearcher(), "bing"),
 		//new CachingSearcher(new GoogleSearcher(), "google")
 // usage without CachingSearcher
-		new LuceneSearcher(),
-		new IndriSearcher(),
-		new BingSearcher()
+		//new LuceneSearcher(),
+		//new IndriSearcher(),
+		//new BingSearcher()
 	};
 	
 	private static final Researcher[] early_researchers = {
@@ -33,7 +33,14 @@ public class Pipeline {
 	private static final Scorer[] scorers = {
 		new WordProximity(),
 		new Correct(),
+		new SkipBigram(),
 		new PassageTermMatch(),
+		new PassageCount(),
+		new PassageQuestionLengthRatio(),
+		new PercentFilteredWordsInCommon(),
+		new QuestionInPassageScorer(),
+		//new ScorerIrene(), // TODO: Doesn't compile
+		new NGram(),
 	};
 
 	private static final Researcher[] late_researchers = {

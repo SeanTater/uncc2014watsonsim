@@ -18,7 +18,7 @@ import uncc2014watsonsim.Score;
 public class BingSearcher extends Searcher {
 	
 	static {
-		Score.register("BING_RANK");
+		Score.registerPassageScore("BING_RANK");
 	}
 	
 	@Override

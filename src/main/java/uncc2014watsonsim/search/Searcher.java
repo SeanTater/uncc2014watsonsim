@@ -12,9 +12,15 @@ import uncc2014watsonsim.Question;
 import uncc2014watsonsim.SQLiteDB;
 
 /*
+<<<<<<< HEAD
+ * This interface might change; Please be ready to accommodate the changes.
+ * This interface should be implemented by local search engines like 
+ * Indri and Lucene, when querying them. Basically, it retrieves the basic data 
+=======
  * This interface might change; Please be ready to accomodate the changes.
  * This interface should be implemented by local search engines like 
  * Indri and Lucene, when querying them. Basically, it retreives the basic data 
+>>>>>>> master
  * from the queried result set.
  */
 
@@ -52,6 +58,12 @@ public abstract class Searcher {
 
     public final static int MAX_RESULTS = 10;
 
+    
+    public List<Answer> runFitbQuery(Question question) throws Exception {
+    	return new ArrayList<Answer>(0);
+    }
+    
+    
     /** Fill in the missing titles and full texts from Answers using sources.db
      * This is a no-op if the sources database is missing.
      */

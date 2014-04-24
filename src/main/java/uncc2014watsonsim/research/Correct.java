@@ -4,12 +4,13 @@ import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 
-public class Correct extends Scorer {
+public class Correct extends AnswerScorer {
 	@Override
-	/** Detect if the question matches the answer, score it appropriately
-	 * This is to ease machine learning*/
-	// TODO: Don't reassign for every passage
-	public double scorePassage(Question q, Answer a, Passage p) {
+	/**
+	 * Generate the target attribute for Machine Learning.
+	 * @returns correctness		1.0 -> correct, 0.0 -> incorrect
+	 * */
+	public double scoreAnswer(Question q, Answer a) {
 		return a.matches(q.answer) ? 1.0 : 0.0;
 	}
 }
