@@ -26,6 +26,7 @@ public class SQLiteDB {
 		required_tables = new HashMap<String, String[]>();
 		required_tables.put("sources", new String[]{"documents"});
 		required_tables.put("questions", new String[]{"questions", "results", "cache"});
+		required_tables.put("dict", new String[]{"dictionary"});
 	}
 	
 	public SQLiteDB(String name) {

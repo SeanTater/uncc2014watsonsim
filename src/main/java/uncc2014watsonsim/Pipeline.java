@@ -23,6 +23,7 @@ public class Pipeline {
 	};
 	
 	private static final Researcher[] early_researchers = {
+		new MediaWikiTrimmer(),
 		new HyphenTrimmer(),
 		new Merge(),
 		new ChangeFitbAnswerToContentsOfBlanks(),
@@ -39,8 +40,11 @@ public class Pipeline {
 		new PassageQuestionLengthRatio(),
 		new PercentFilteredWordsInCommon(),
 		new QuestionInPassageScorer(),
-		//new ScorerIrene(), // TODO: Doesn't compile
+		//new ScorerIrene(), // TODO: Introduce something new
 		new NGram(),
+		//new ScorerAda(),      // TODO: Introduce something new
+		//new WShalabyScorer(), // TODO: Introduce something new
+		//new SentenceSimilarity(),
 	};
 
 	private static final Researcher[] late_researchers = {
