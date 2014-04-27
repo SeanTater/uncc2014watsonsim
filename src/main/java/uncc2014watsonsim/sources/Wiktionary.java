@@ -1,4 +1,4 @@
-package wiktionarysearch;
+package uncc2014watsonsim.sources;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
