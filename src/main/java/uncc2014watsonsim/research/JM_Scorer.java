@@ -59,7 +59,14 @@ public class JM_Scorer extends PassageScorer{
 		return score;
 	}
 	
-	public void scorePassage(Question q, Answer a, Passage p) {
-		p.score("JM_Scorer", scoreStructure(q.getRaw_text(), a.candidate_text, p.text, false));
+	public double scorePassage(Question q, Answer a, Passage p) {
+		try {
+			p.score("JM_Scorer", scoreStructure(q.getRaw_text(), a.candidate_text, p.text, false));
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return Double.NaN;
 	}
 }

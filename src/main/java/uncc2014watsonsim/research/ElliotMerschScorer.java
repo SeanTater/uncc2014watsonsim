@@ -1,8 +1,10 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.research;
 
-import uncc2014watsonsim.research.Scorer;
+import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.Question;
 
-public class ElliotMerschScorer extends Scorer{
+public class ElliotMerschScorer extends PassageScorer{
 	
 	public double Scorer (Question q, Answer a, Passage p){
 		
