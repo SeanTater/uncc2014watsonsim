@@ -13,7 +13,7 @@ public class ScorerP extends PassageScorer {
 	@Override
 	public double scorePassage(Question q, Answer a, Passage p)
 	{
-		String pt = p.text;
+		String pt = p.getText();
 		String qt = q.getRaw_text();
 			
 		int l1 = pt.length();

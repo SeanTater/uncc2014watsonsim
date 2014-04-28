@@ -61,7 +61,7 @@ public class JM_Scorer extends PassageScorer{
 	
 	public double scorePassage(Question q, Answer a, Passage p) {
 		try {
-			p.score("JM_Scorer", scoreStructure(q.getRaw_text(), a.candidate_text, p.text, false));
+			p.score("JM_Scorer", scoreStructure(q.getRaw_text(), a.candidate_text, p.getText(), false));
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
