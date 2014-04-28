@@ -9,8 +9,6 @@ import java.util.List;
 
 import privatedata.UserSpecificConstants;
 
-
-import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 
@@ -55,15 +53,7 @@ public class GoogleSearcher extends Searcher {
 		Score.registerPassageScore("GOOGLE_RANK");
 	}
 	
-	
-	public List<Passage> runTranslatedQuery(String query) {
-		return runBaseQuery(query);
-	}
-	
-	/* (non-Javadoc)
-	 * @see WebSearch#runQuery(java.lang.String)
-	 */
-	public List<Passage> runBaseQuery(String query) {
+	public List<Passage> query(String query) {
 		List<Passage> results = new ArrayList<Passage>();
 		//Check empty query
 		if (query.isEmpty())

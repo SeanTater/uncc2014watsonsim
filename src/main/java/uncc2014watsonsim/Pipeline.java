@@ -70,13 +70,7 @@ public class Pipeline {
 	public static Question ask(Question question) {
 		// Query every engine
 		for (Searcher s: searchers)
-			question.addPassages(s.runTranslatedQuery(question.text));
-        
-        /* TODO: filter strange results?
-        HashSet<String> ignoreSet = new HashSet<String>();
-        ignoreSet.add("J! Archive");
-        ignoreSet.add("Jeopardy");
-        */
+			question.addPassages(s.query(question.text));
 
 		for (Researcher r : early_researchers)
 			r.question(question);

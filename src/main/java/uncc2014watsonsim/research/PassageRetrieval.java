@@ -4,7 +4,6 @@ import java.util.regex.Matcher;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.StringUtils;
 import uncc2014watsonsim.search.*;
 
 public class PassageRetrieval extends Researcher {
@@ -19,7 +18,7 @@ public class PassageRetrieval extends Researcher {
     	String sr = getPassageQuery(q, a);
     	// Query every engine
     	for (Searcher s : searchers)
-    		a.passages.addAll(s.runBaseQuery(sr));
+    		a.passages.addAll(s.query(sr));
 	}
 	public static String getPassageQuery(Question q, Answer a) {
 		// TODO Auto-generated method stub

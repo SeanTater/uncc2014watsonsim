@@ -2,9 +2,7 @@ package uncc2014watsonsim.search;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -13,11 +11,9 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.DisjunctionMaxQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
@@ -27,8 +23,6 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
-import uncc2014watsonsim.Score;
-import uncc2014watsonsim.Translation;
 
 /**
  * @author Phani Rahul
@@ -52,16 +46,8 @@ public class LuceneSearcher extends Searcher {
 		}
 		searcher = new IndexSearcher(reader);
 	}
-
-	public List<Passage> runTranslatedQuery(String question_text) {
-		return runAnyQuery(QueryParser.escape(question_text));
-	}
 	
-	public List<Passage> runBaseQuery(String question_text) {
-		return runAnyQuery(QueryParser.escape(question_text));
-	}
-	
-	private synchronized List<Passage> runAnyQuery(String question_text) {
+	public synchronized List<Passage> query(String question_text) {
 		List<Passage> results = new ArrayList<Passage>();
 		try {
 			/*DisjunctionMaxQuery q = new DisjunctionMaxQuery((float) 0.1);

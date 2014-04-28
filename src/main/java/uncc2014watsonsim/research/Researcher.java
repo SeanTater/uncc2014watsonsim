@@ -1,11 +1,8 @@
 package uncc2014watsonsim.research;
 
-import java.util.Arrays;
-
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.Score;
 
 /** Researchers can modify questions and have the guarantee of running
  * sequentially. They also do not return double's because they are not expected
