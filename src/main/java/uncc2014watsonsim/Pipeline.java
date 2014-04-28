@@ -12,12 +12,12 @@ import uncc2014watsonsim.search.*;
 public class Pipeline {
 	
 	private static final Searcher[] searchers = {
-		new CachingSearcher(new LuceneSearcher(), "lucene"),
+		//new CachingSearcher(new LuceneSearcher(), "lucene"),
 		new CachingSearcher(new IndriSearcher(), "indri"),
 		//new CachingSearcher(new BingSearcher(), "bing"),
 		//new CachingSearcher(new GoogleSearcher(), "google")
 // usage without CachingSearcher
-//		new LuceneSearcher(),
+		new LuceneSearcher(),
 //		new IndriSearcher(),
 //		new BingSearcher()
 	};
