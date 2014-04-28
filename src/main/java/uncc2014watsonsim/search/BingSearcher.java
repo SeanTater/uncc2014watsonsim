@@ -17,10 +17,6 @@ import uncc2014watsonsim.Score;
 
 public class BingSearcher extends Searcher {
 	
-	static {
-		Score.registerPassageScore("BING_RANK");
-	}
-	
 	@Override
 	public List<Passage> runTranslatedQuery(String query) {
 		return runBaseQuery(query);

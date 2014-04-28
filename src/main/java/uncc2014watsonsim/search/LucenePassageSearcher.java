@@ -10,9 +10,11 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -25,7 +27,7 @@ import uncc2014watsonsim.Translation;
 /**
  * @author Phani Rahul
  */
-public class LuceneSearcher extends Searcher {
+public class LucenePassageSearcher extends Searcher {
 	private static IndexReader reader;
 	private static IndexSearcher searcher = null;
 	private static Analyzer analyzer;
@@ -34,7 +36,7 @@ public class LuceneSearcher extends Searcher {
 	static {
 		analyzer = new StandardAnalyzer(Version.LUCENE_46);
 		parser = new QueryParser(Version.LUCENE_46, "text", analyzer);
-		parser.setAllowLeadingWildcard(true);	
+		parser.setAllowLeadingWildcard(true);
 
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
@@ -56,7 +58,12 @@ public class LuceneSearcher extends Searcher {
 	private synchronized List<Passage> runAnyQuery(String question_text) {
 		List<Passage> results = new ArrayList<Passage>();
 		try {
-			ScoreDoc[] hits = searcher.search(parser.parse(question_text), MAX_RESULTS).scoreDocs;
+			PhraseQuery q = new PhraseQuery();
+			q.setSlop(2);
+			for (String word : question_text.split("\\W+")) {
+				q.add(new Term("text", word));
+			}
+			ScoreDoc[] hits = searcher.search(q, MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];
@@ -70,7 +77,7 @@ public class LuceneSearcher extends Searcher {
 						.score("LUCENE_SCORE", (double) s.score)	// Source
 						);
 			}
-		} catch (IOException | ParseException e) {
+		} catch (IOException e) {
 			System.out.println("Failed to query Lucene. Is the index in the correct location?");
 			e.printStackTrace();
 		}

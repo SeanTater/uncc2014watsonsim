@@ -1,10 +1,7 @@
 package uncc2014watsonsim.research;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
@@ -29,7 +26,7 @@ public abstract class PassageScorer implements Scorer {
 		min_name = name+"_MIN";
 		mean_name = name+"_MEAN";
 		median_name = name+"_MEDIAN";
-		Score.registerPassageScore(name);
+		//Score.registerPassageScore(name);
 		Score.registerAnswerScore(max_name);
 		Score.registerAnswerScore(min_name);
 		Score.registerAnswerScore(mean_name);

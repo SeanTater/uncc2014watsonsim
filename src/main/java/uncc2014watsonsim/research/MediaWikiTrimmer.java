@@ -17,13 +17,15 @@ public class MediaWikiTrimmer extends Researcher {
 	public void passage(Question q, Answer a, Passage p) {
 		// TODO: This should annotate instead of mutate really
 		// Get rid of citations and images
-		p.text = p.text.replaceAll("\\{\\{[^}]+\\}\\}", "");
-		// Take the only field of a [[Link]] or the last field of a [[http://example|Special Link]]
-		p.text = p.text.replaceAll("\\[\\[([^|\\]]+\\|)*([^|\\]]+)\\]\\]", "$2");
-		// Get rid of formatting (plain text)
-		p.text = p.text.replace("''", "").replace("===", "").replace("==", "");
-		// Get rid of references
-		p.text = p.text.replaceAll("<ref( name=(\"[^\"]+\"|\\w+))?>(([^<]|\n)*)</ref>", "");
+		p.setText(
+			p.getText()
+			.replaceAll("\\{\\{[^}]+\\}\\}", "")
+			.replaceAll("\\[\\[([^|\\]]+\\|)*([^|\\]]+)\\]\\]", "$2")
+			.replaceAll("<ref( name=(\"[^\"]+\"|\\w+))?>[^<]*</ref>", "")
+			.replace("''", "")
+			.replace("===", "")
+			.replace("==", "")
+		);
 	}
 
 }

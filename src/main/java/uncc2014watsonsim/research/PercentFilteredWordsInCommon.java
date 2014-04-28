@@ -20,7 +20,7 @@ public class PercentFilteredWordsInCommon extends PassageScorer {
 			int[] distanceBetweenWords = new int[filteredQ.length()];
 			int distanceIndex = 0;
 			int lastMatch = -1;
-			String passageText = StringUtils.filterRelevant(p.text);
+			String passageText = StringUtils.filterRelevant(p.getText());
 			int distanceSum = 0;
 			int count = 0;
 			for (int i = 0; i < questionTextArray.length; i++)

@@ -14,7 +14,7 @@ public class QuestionInPassageScorer extends PassageScorer {
 	@Override
 	public double scorePassage(Question q, Answer a, Passage p) {
 		String rawText = q.getRaw_text().toLowerCase();
-		String passageText = p.text;
+		String passageText = p.getText();
 		
 		if (passageText.contains(rawText.toLowerCase()))
 			return 1.0;

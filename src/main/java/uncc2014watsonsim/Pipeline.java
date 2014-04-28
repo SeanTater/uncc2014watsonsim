@@ -23,15 +23,22 @@ public class Pipeline {
 	};
 	
 	private static final Researcher[] early_researchers = {
-		new MediaWikiTrimmer(),
+		new MediaWikiTrimmer(), // Before passage retrieval
 		new HyphenTrimmer(),
 		new Merge(),
 		new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),
+		new MediaWikiTrimmer(), // Rerun after passage retrieval
 		new PersonRecognition(),
 	};
 	
 	private static final Scorer[] scorers = {
+		new LuceneRank(),
+		new LuceneScore(),
+		new IndriRank(),
+		new IndriScore(),
+		new BingRank(),
+		new GoogleRank(),
 		new WordProximity(),
 		new Correct(),
 		new SkipBigram(),

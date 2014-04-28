@@ -94,7 +94,7 @@ public class CachingSearcher extends Searcher {
 					set_cache.setString(2, query);
 					set_cache.setString(3, p.engine_name);
 					set_cache.setString(4, p.title);
-					set_cache.setString(5, p.text);
+					set_cache.setString(5, p.getText());
 					set_cache.setString(6, p.reference);
 					set_cache.addBatch();
 					setScores(p, id);

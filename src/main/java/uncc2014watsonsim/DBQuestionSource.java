@@ -49,7 +49,7 @@ public class DBQuestionSource extends QuestionSource {
 		for (Answer r : results) {
 			bulk_insert.setLong(1, q.id);
 			bulk_insert.setString(2, r.candidate_text);
-			bulk_insert.setString(3, r.passages.get(0).text);
+			bulk_insert.setString(3, r.passages.get(0).getText());
 			//TODO: we need to generalize this
 			String engine = r.passages.get(0).engine_name;
 			bulk_insert.setString(4, engine);

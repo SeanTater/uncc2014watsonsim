@@ -17,17 +17,16 @@ import uncc2014watsonsim.StringUtils;
 public class NGram extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
 		// Jane Austen
-		List<String> a_set = generateNgrams(3, a.candidate_text);
+		List<String> a_set = generateNgrams(3, StringUtils.tokenize(a.candidate_text));
 		
 		// Romantic novelist Jane Austen once wrote -the- book Emma.
-		List<String> p_set = generateNgrams(3, p.text);
+		List<String> p_set = generateNgrams(3, p.tokens());
 		
 		a_set.retainAll(p_set);
 		return a_set.size();
 			
 	}
-	public static List<String> generateNgrams(int n, String str) {
-		List<String> words = StringUtils.tokenize(str);
+	public static List<String> generateNgrams(int n, List<String> words) {
         List<String> ngrams = new ArrayList<String>();
         for (int i = 0; i < words.size() - n + 1; i++)
             ngrams.add(concat(words, i, i+n));

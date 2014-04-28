@@ -30,7 +30,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*ANAGRAM*' "
 				+ "and category not glob '*SCRAMBLED*' "
 				+ "and category not glob '*JUMBLED*' "
-				+ "limit 10").run();
+				+ "limit 100").run();
 	}
 	
 	@Test
@@ -50,7 +50,7 @@ public class StatisticsCollection {
 	@Test
 	public void all() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
-		new StatsGenerator("all", "limit 100").run();
+		new StatsGenerator("all", "limit 1000").run();
 	}
 }
 

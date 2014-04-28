@@ -25,8 +25,6 @@ public class IndriSearcher extends Searcher {
 	static {
 		// Only initialize the query environment and index once
 		q = new QueryEnvironment();
-		Score.registerPassageScore("INDRI_RANK");
-		Score.registerPassageScore("INDRI_SCORE");
 		
 	}
 	

@@ -81,8 +81,8 @@ public abstract class Searcher {
 					doc_row = fetcher.executeQuery();
 		    		p.title = doc_row.getString("title");
 		    		if (p.title == null) p.title = "";
-		    		p.text = doc_row.getString("text");
-		    		if (p.text == null) p.text = "";
+		    		p.setText(doc_row.getString("text"));
+		    		if (p.getText() == null) p.setText("");
 				} catch (SQLException e) {
 					e.printStackTrace();
 					throw new RuntimeException("Failed to execute sources full text search. "

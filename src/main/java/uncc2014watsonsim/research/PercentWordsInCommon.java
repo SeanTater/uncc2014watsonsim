@@ -12,7 +12,7 @@ public double scorePassage(Question q, Answer a, Passage p) {
 		int[] distanceBetweenWords = new int[q.text.length()];
 		int distanceIndex = 0;
 		int lastMatch = -1;
-		String passageText = p.text;
+		String passageText = p.getText();
 		int distanceSum = 0;
 		int count = 0;
 		for (int i = 0; i < questionTextArray.length; i++)

@@ -14,11 +14,11 @@ public class ScorerAda extends PassageScorer {
 		String qs = q.getRaw_text();
 		String qst= q.text; //processes question, stopwords, punctuation removed
 		String as= a.candidate_text;
-		String ps=p.text; // text is guaranteed to have content
+		String ps=p.getText(); // text is guaranteed to have content
 	//	ps.tokenize();
 
 
-		int pl = p.text.length();
+		int pl = p.getText().length();
 		int al = as.length();
 		double sc=pl/al;
 		return sc;
