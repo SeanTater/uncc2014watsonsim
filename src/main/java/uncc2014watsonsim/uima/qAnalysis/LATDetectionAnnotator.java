@@ -37,10 +37,11 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 	   * Any initializations of data structures/engines (e.g., dictionary) would go into the initialize
 	   * method. In this dummy class, we don't actually use an external resource.
 	   */
-	  private POSModel model;
+	  private POSTaggerME tagger;
 	  @Override
 	  public void initialize(UimaContext aContext) throws ResourceInitializationException {
-		model = new POSModelLoader().load(new File("data/en-pos-maxent.bin"));
+		POSModel model = new POSModelLoader().load(new File("data/en-pos-maxent.bin"));
+		tagger = new POSTaggerME(model);
 	    super.initialize(aContext);
 	  }
 
@@ -67,7 +68,7 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 	private String findLat(String text) throws AnalysisEngineProcessException{
 		// Load the training model for POSTagging
 				
-				POSTaggerME tagger = new POSTaggerME(model);
+				
 				// Query sentence
 				//String sample = "It is what Daedalus used to hold the feathers together in the wings he made for himself & his son .";
 

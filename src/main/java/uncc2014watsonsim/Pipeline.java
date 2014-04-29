@@ -1,7 +1,15 @@
 package uncc2014watsonsim;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.ForkJoinPool;
+
+import org.apache.uima.UIMAFramework;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.resource.ResourceSpecifier;
+import org.apache.uima.util.InvalidXMLException;
+import org.apache.uima.util.XMLInputSource;
 
 import uncc2014watsonsim.research.*;
 import uncc2014watsonsim.search.*;
@@ -47,6 +55,29 @@ public class Pipeline {
 		new WekaTee(),
 	};
 	
+	/*
+	 * Initialize UIMA. 
+	 * Why here? We do not want to reinstantiate the Analysis engine each time.
+	 * We also don't want to load the POS models each time we ask a new question. Here we can hold the AE for the 
+	 * entire duration of the Pipeline's life.
+	 */
+	public static AnalysisEngine uimaAE;
+	
+	static {
+		try{
+			XMLInputSource uimaAnnotatorXMLInputSource = new XMLInputSource("src/main/java/uncc2014watsonsim/uima/qAnalysis/qAnalysisApplicationDescriptor.xml");
+			final ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(uimaAnnotatorXMLInputSource);
+			//Generate AE
+			uimaAE = UIMAFramework.produceAnalysisEngine(specifier);
+		}catch(IOException e){
+			e.printStackTrace();
+		} catch (InvalidXMLException e) {
+			e.printStackTrace();
+		} catch (ResourceInitializationException e) {
+			e.printStackTrace();
+		}
+	}
+	/* End UIMA */
 	
 	private static final Learner learner = new WekaLearner();
 

@@ -16,6 +16,7 @@ import org.apache.uima.resource.ResourceSpecifier;
 import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
 
+import uncc2014watsonsim.Pipeline;
 import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.uima.UimaTools;
@@ -43,10 +44,7 @@ public class AnnotationController {
 	public void createAnnotations(Question question) {
 		
 		try {
-			XMLInputSource in = new XMLInputSource("src/main/java/uncc2014watsonsim/uima/qAnalysis/qAnalysisApplicationDescriptor.xml");
-			ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(in);
-			//Generate AE
-			ae = UIMAFramework.produceAnalysisEngine(specifier);
+			ae = Pipeline.uimaAE;
 			
 			JCas jcas = ae.newJCas();
 			jcas.setDocumentText(question.getRaw_text());
@@ -60,12 +58,6 @@ public class AnnotationController {
 				
 				System.out.println("Found LAT: " + uimaQuestion.getLAT());
 				}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidXMLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (ResourceInitializationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
