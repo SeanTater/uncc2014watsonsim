@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class StatisticsCollection {
-	
+
 	@Test
 	public void fitb() throws Exception {
 		new StatsGenerator("fitb", "where question glob '*_*'").run();
@@ -32,7 +32,7 @@ public class StatisticsCollection {
 				+ "and category not glob '*JUMBLED*' "
 				+ "limit 100").run();
 	}
-	
+
 	@Test
 	public void notfactfitb() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
@@ -45,8 +45,8 @@ public class StatisticsCollection {
 				+ "or category glob '*JUMBLED*' "
 				+ "limit 20").run();
 	}
-	
-	
+
+
 	@Test
 	public void all() throws Exception {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
@@ -66,16 +66,16 @@ class StatsGenerator {
 	int available = 0;
 	double total_inverse_rank = 0;
 	int total_answers = 0;
-	
+
 	double runtime;
 	int[] conf_correct = new int[100];
 	int[] conf_hist = new int[100];
-	
+
 	public StatsGenerator(String dataset, String question_query) throws Exception {
 		this.dataset = dataset;
 		questionsource = new DBQuestionSource(question_query);
 	}
-	
+
 	/** Measure how accurate the top question is as a histogram across confidence */
 	public void calculateConfidenceHistogram(Question question) {
 		if (question.size() >= 1) {
@@ -96,7 +96,7 @@ class StatsGenerator {
 		}
 		return out;
 	}
-	
+
 	/** Callback for every correct answer */
 	public void onCorrectAnswer(Question question, Answer candidate, int rank) {
 		total_inverse_rank += 1 / ((double)rank + 1);
@@ -104,7 +104,7 @@ class StatsGenerator {
 		// Clamp the rank to 100. Past that we don't have a histogram.
 		correct[rank < 100 ? rank : 99]++;
 	}
-	
+
 	/** Send Statistics to the server */
 	private void report() throws IOException {
 		// Gather git information
@@ -113,10 +113,10 @@ class StatsGenerator {
 			branch = System.getenv("TRAVIS_BRANCH");
 			commit = System.getenv("TRAVIS_COMMIT");
 		} else {
-		  	Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
-		   	commit = repo.resolve("HEAD").abbreviate(10).name();
-		   	if (commit == null)
-		   		fail("Problem finding git repository. Not submitting stats.");
+			Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
+			commit = repo.resolve("HEAD").abbreviate(10).name();
+			if (commit == null)
+				fail("Problem finding git repository. Not submitting stats.");
 			branch = repo.getBranch();
 		}
 
@@ -136,29 +136,29 @@ class StatsGenerator {
 				.add("run[runtime]", String.valueOf(runtime))
 				.build();
 		Request.Post("http://watsonsim.herokuapp.com/runs.json").bodyForm(response).execute();
-		
-	
+
+
 		System.out.println("" + correct[0] + " of " + questionsource.size() + " correct");
 		System.out.println("" + available + " of " + questionsource.size() + " could have been");
 		System.out.println("Mean Inverse Rank " + total_inverse_rank);
 	}
-	
-	
+
+
 	/** Run statistics, then upload to the server */
 	public void run() throws Exception {
 		long start_time = System.nanoTime();
 
-		
+
 		System.out.println("Asking Questions");
 		for (int i=0; i<questionsource.size(); i++) {
 			Question q = questionsource.get(i);
 			LocalPipeline.ask(q);
-			
+
 			System.out.print(" " + i);
 			if (i % 25 == 0) System.out.println();
-			
+
 			if (q.size() == 0) continue;
-	
+
 			for (int rank=0; rank<q.size(); rank++) {
 				Answer candidate = q.get(rank);
 				if (candidate.matches(q.answer)) {
@@ -166,16 +166,16 @@ class StatsGenerator {
 					break;
 				}
 			}
-			
+
 			calculateConfidenceHistogram(q);
-			
+
 			total_answers += q.size();
 			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
 			//		"A[Actual:" + correct_answer_score + "]: "  + text.answer);
 			q.clear();
 		}
-	
+
 		// Only count the rank of questions that were actually there
 		total_inverse_rank /= available;
 		// Finish the timing
