@@ -31,7 +31,7 @@ public class DBQuestionResultsSource extends QuestionSource {
 	 */
 	public DBQuestionResultsSource(String conditions) throws Exception {
 		// Get a list of questions, ordered so that it is consistent
-		PreparedStatement query = db.prep("select q.rowid as id, q.question as raw_text, r.title as candidate_answer from questions q, results r where q.rowid=r.question and rowid>3234 "
+		PreparedStatement query = db.prep("select q.rowid as id, q.question as raw_text, r.title as candidate_answer from questions q, results r where q.rowid=r.question and rowid>3321 "
 				+ conditions + " order by q.rowid;");
 		load_results(query.executeQuery());
 	}

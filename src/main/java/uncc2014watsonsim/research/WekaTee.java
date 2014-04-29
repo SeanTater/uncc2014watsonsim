@@ -23,7 +23,14 @@ public class WekaTee extends Researcher {
 		FastVector attributes = new FastVector();
 		// Answer score names
 		for (String name : Score.answer_score_names)
-			attributes.addElement(new Attribute(name));
+			/*if(name.equals("CORRECT")) {
+				FastVector v = new FastVector(2);
+				v.addElement("yes");
+				v.addElement("no");
+				attributes.addElement(new Attribute(name,v));
+			}
+			else*/
+				attributes.addElement(new Attribute(name));
 		// Passage score names
 		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT; passage_i++)
 			for (String name : Score.passage_score_names)
