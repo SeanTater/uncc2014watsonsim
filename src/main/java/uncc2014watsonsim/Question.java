@@ -98,7 +98,7 @@ public class Question extends ArrayList<Answer> {
 		return added_any;
 	}
 
-	public JCas getFITBAnnotations() {
+	public JCas getCAS() {
 		
 		return ac.getQueryCas();
 	}

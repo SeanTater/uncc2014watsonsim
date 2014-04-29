@@ -18,6 +18,9 @@ import org.apache.uima.util.XMLInputSource;
 
 import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.uima.UimaTools;
+import uncc2014watsonsim.uima.UimaToolsException;
+import uncc2014watsonsim.uima.types.UIMAQuestion;
 
 public class AnnotationController {
 	
@@ -53,12 +56,10 @@ public class AnnotationController {
 			if(debug){
 				String docText = jcas.getDocumentText();
 				System.out.println("The text that was analyzed: " + docText);
-				AnnotationIndex<Annotation> idx = jcas.getView("QUERY").getAnnotationIndex();
-				for(Annotation ann: idx){
-					System.out.print("Annotation Found: " + ann.getType().getName() + ": " + ann.getBegin() + " - " + ann.getEnd());
-					System.out.println("  \'" + docText.substring(ann.getBegin(), ann.getEnd()) + "\'");
+				UIMAQuestion uimaQuestion = UimaTools.getSingleton(jcas, UIMAQuestion.type);
+				
+				System.out.println("Found LAT: " + uimaQuestion.getLAT());
 				}
-			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,6 +73,9 @@ public class AnnotationController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UimaToolsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

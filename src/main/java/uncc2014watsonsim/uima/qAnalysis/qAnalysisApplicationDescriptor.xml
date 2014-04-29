@@ -6,6 +6,9 @@
     <delegateAnalysisEngine key="FITBAnnotator">
       <import name="uncc2014watsonsim.uima.qAnalysis.FITBAnnotator"/>
     </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="LATDetectionAnnotator">
+      <import name="uncc2014watsonsim.uima.qAnalysis.LATDetectionAnnotator"/>
+    </delegateAnalysisEngine>
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>QueryAnalysisComponents</name>
@@ -17,6 +20,7 @@
     <flowConstraints>
       <fixedFlow>
         <node>FITBAnnotator</node>
+      <node>LATDetectionAnnotator</node>
       </fixedFlow>
     </flowConstraints>
     <typePriorities/>

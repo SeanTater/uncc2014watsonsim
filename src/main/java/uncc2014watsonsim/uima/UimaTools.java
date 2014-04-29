@@ -26,7 +26,7 @@ public class UimaTools {
           throws UimaToolsException {
     FSIterator<? extends TOP> iterator = cas.getJFSIndexRepository().getAllIndexedFS(classTypeInt);
     if (!iterator.hasNext())
-      return null;
+      throw new UimaToolsException("Type not found in CAS");
     @SuppressWarnings("unchecked")
     T retObject = (T) iterator.next();
     if (iterator.hasNext())

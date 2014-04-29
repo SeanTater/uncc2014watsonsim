@@ -9,9 +9,9 @@ import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
-//import uncc2014watsonsim.qAnalysis.FITBAnnotations;
-import uncc2014watsonsim.uima.types.fitb.Section1;
-import uncc2014watsonsim.uima.types.fitb.Section2;
+import uncc2014watsonsim.uima.UimaTools;
+import uncc2014watsonsim.uima.UimaToolsException;
+import uncc2014watsonsim.uima.types.UIMAQuestion;
 
 public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 
@@ -32,10 +32,18 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 		}
 		
 		//else run the scorer on FITB questions
-    	JCas annot = question.getFITBAnnotations(); // See if we can pull out the annotations from the cas
+    	JCas annot = question.getCAS(); // See if we can pull out the annotations from the cas
+    	UIMAQuestion uimaQuestion;
+		try {
+			uimaQuestion = UimaTools.getSingleton(annot, UIMAQuestion.type);
+		} catch (UimaToolsException e) {
+			// On error, do not continue.
+			e.printStackTrace();
+			return;
+		}
     	
-    	String section1 = annot.getAnnotationIndex(Section1.type).iterator().next().getCoveredText();
-    	String section2 = annot.getAnnotationIndex(Section2.type).iterator().next().getCoveredText();
+    	String section1 = uimaQuestion.getFitbSection1().getCoveredText();
+    	String section2 = uimaQuestion.getFitbSection2().getCoveredText();
         section1 = section1.replaceAll("\"", ""); //remove quotes
         section2 = section2.replaceAll("\"", ""); //remove quotes
         //TODO: make search more flexible (such as removing punctuation)

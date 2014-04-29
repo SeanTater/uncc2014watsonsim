@@ -9,14 +9,13 @@ import java.util.regex.Pattern;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.cas.AbstractCas;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import uncc2014watsonsim.qAnalysis.BlankAnnotation;
-import uncc2014watsonsim.uima.types.fitb.Blanks;
-import uncc2014watsonsim.uima.types.fitb.Section1;
-import uncc2014watsonsim.uima.types.fitb.Section2;
+import uncc2014watsonsim.uima.UimaTools;
+import uncc2014watsonsim.uima.UimaToolsException;
+import uncc2014watsonsim.uima.types.UIMAQuestion;
 
 /**
  * A basic annotator which will add blanks and Sections to a CAS.
@@ -38,16 +37,25 @@ public class FITBAnnotator extends  JCasAnnotator_ImplBase {
 	public void process(JCas cas) throws AnalysisEngineProcessException {
 		//Get the document text
 		String text = cas.getDocumentText();
+		UIMAQuestion uimaQuestion;
+		//Get the existing question object, if we don't have it, then create it
+		try{
+			uimaQuestion = UimaTools.getSingleton(cas, UIMAQuestion.type);
+		}catch(UimaToolsException e){
+			System.out.println("Creating UIMA Question CAS");
+			uimaQuestion = new UIMAQuestion(cas);
+			uimaQuestion.addToIndexes();
+		}
 		
 		// See if this is a FITB Question
 		boolean result = false;
-		Blanks blanks = new Blanks(cas);
+		Annotation blanks = new Annotation(cas);
 		//find blanks and set their locations in the annotation (if they exist)
 		Pattern pattern = Pattern.compile("_+");
 		Matcher matcher = pattern.matcher(text);
 		while (matcher.find()) {
-			blanks = new Blanks(cas, matcher.start(),matcher.end());
-			blanks.addToIndexes();
+			blanks = new Annotation(cas, matcher.start(),matcher.end());
+			uimaQuestion.setFitbBlanks(blanks);
 			//System.out.print(" blank: " + question.raw_text.subSequence(matcher.start(), matcher.end())); //debug
 			result = true; //return will be true as a blank was found
 			break; //Stop running after we find a sequence of blanks
@@ -63,8 +71,7 @@ public class FITBAnnotator extends  JCasAnnotator_ImplBase {
 				section1Begin = matcher.start();
 			}
 
-			Section1 sec1 = new Section1(cas, section1Begin, firstBlankBeginning);
-			sec1.addToIndexes();
+			Annotation sec1 = new Annotation(cas, section1Begin, firstBlankBeginning);
 			
 			//Next we will setup section 2
 			int section2Begin = blanks.getEnd() + 1;
@@ -78,11 +85,13 @@ public class FITBAnnotator extends  JCasAnnotator_ImplBase {
 			else {
 				section2End =text.length();
 			}
-			Section2 sec2 = new Section2(cas, section2Begin, section2End);
-			sec2.addToIndexes();
+			Annotation sec2 = new Annotation(cas, section2Begin, section2End);
 			
 			//System.out.println("current question: " + question.getRaw_text()); //for debug
 			//System.out.println(annot); //for debug
+			
+			uimaQuestion.setFitbSection1(sec1);
+			uimaQuestion.setFitbSection2(sec2);
 		}
 		
 	}
