@@ -100,7 +100,7 @@ public class Question extends ArrayList<Answer> {
 
 	public JCas getCAS() {
 		
-		return ac.getQueryCas();
+		return ac.getCas();
 	}
         
 }

@@ -14,7 +14,7 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** A query string (question)
- * Updated by JCasGen Mon Apr 28 12:46:51 EDT 2014
+ * Updated by JCasGen Tue Apr 29 17:51:30 EDT 2014
  * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
 public class QueryString extends Annotation {

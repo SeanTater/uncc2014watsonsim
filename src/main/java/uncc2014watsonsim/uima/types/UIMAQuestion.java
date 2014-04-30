@@ -11,8 +11,11 @@ import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.jcas.cas.TOP;
 
 
+import org.apache.uima.jcas.cas.StringArray;
+
+
 /** 
- * Updated by JCasGen Mon Apr 28 12:46:51 EDT 2014
+ * Updated by JCasGen Tue Apr 29 17:51:30 EDT 2014
  * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
 public class UIMAQuestion extends TOP {
@@ -261,6 +264,50 @@ public class UIMAQuestion extends TOP {
     if (UIMAQuestion_Type.featOkTst && ((UIMAQuestion_Type)jcasType).casFeat_FitbSection2 == null)
       jcasType.jcas.throwFeatMissing("FitbSection2", "uncc2014watsonsim.uima.types.UIMAQuestion");
     jcasType.ll_cas.ll_setRefValue(addr, ((UIMAQuestion_Type)jcasType).casFeatCode_FitbSection2, jcasType.ll_cas.ll_getFSRef(v));}    
+   
+    
+  //*--------------*
+  //* Feature: queryParse
+
+  /** getter for queryParse - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public StringArray getQueryParse() {
+    if (UIMAQuestion_Type.featOkTst && ((UIMAQuestion_Type)jcasType).casFeat_queryParse == null)
+      jcasType.jcas.throwFeatMissing("queryParse", "uncc2014watsonsim.uima.types.UIMAQuestion");
+    return (StringArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((UIMAQuestion_Type)jcasType).casFeatCode_queryParse)));}
+    
+  /** setter for queryParse - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setQueryParse(StringArray v) {
+    if (UIMAQuestion_Type.featOkTst && ((UIMAQuestion_Type)jcasType).casFeat_queryParse == null)
+      jcasType.jcas.throwFeatMissing("queryParse", "uncc2014watsonsim.uima.types.UIMAQuestion");
+    jcasType.ll_cas.ll_setRefValue(addr, ((UIMAQuestion_Type)jcasType).casFeatCode_queryParse, jcasType.ll_cas.ll_getFSRef(v));}    
+    
+  /** indexed getter for queryParse - gets an indexed value - 
+   * @generated
+   * @param i index in the array to get
+   * @return value of the element at index i 
+   */
+  public String getQueryParse(int i) {
+    if (UIMAQuestion_Type.featOkTst && ((UIMAQuestion_Type)jcasType).casFeat_queryParse == null)
+      jcasType.jcas.throwFeatMissing("queryParse", "uncc2014watsonsim.uima.types.UIMAQuestion");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((UIMAQuestion_Type)jcasType).casFeatCode_queryParse), i);
+    return jcasType.ll_cas.ll_getStringArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((UIMAQuestion_Type)jcasType).casFeatCode_queryParse), i);}
+
+  /** indexed setter for queryParse - sets an indexed value - 
+   * @generated
+   * @param i index in the array to set
+   * @param v value to set into the array 
+   */
+  public void setQueryParse(int i, String v) { 
+    if (UIMAQuestion_Type.featOkTst && ((UIMAQuestion_Type)jcasType).casFeat_queryParse == null)
+      jcasType.jcas.throwFeatMissing("queryParse", "uncc2014watsonsim.uima.types.UIMAQuestion");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((UIMAQuestion_Type)jcasType).casFeatCode_queryParse), i);
+    jcasType.ll_cas.ll_setStringArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((UIMAQuestion_Type)jcasType).casFeatCode_queryParse), i, v);}
   }
 
     

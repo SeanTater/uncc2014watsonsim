@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 /** 
- * Updated by JCasGen Mon Apr 28 12:46:51 EDT 2014
+ * Updated by JCasGen Tue Apr 29 17:51:30 EDT 2014
  * @generated */
 public class UIMAQuestion_Type extends TOP_Type {
   /** @generated 
@@ -261,6 +261,57 @@ public class UIMAQuestion_Type extends TOP_Type {
     ll_cas.ll_setRefValue(addr, casFeatCode_FitbSection2, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_queryParse;
+  /** @generated */
+  final int     casFeatCode_queryParse;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public int getQueryParse(int addr) {
+        if (featOkTst && casFeat_queryParse == null)
+      jcas.throwFeatMissing("queryParse", "uncc2014watsonsim.uima.types.UIMAQuestion");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_queryParse);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setQueryParse(int addr, int v) {
+        if (featOkTst && casFeat_queryParse == null)
+      jcas.throwFeatMissing("queryParse", "uncc2014watsonsim.uima.types.UIMAQuestion");
+    ll_cas.ll_setRefValue(addr, casFeatCode_queryParse, v);}
+    
+   /** @generated
+   * @param addr low level Feature Structure reference
+   * @param i index of item in the array
+   * @return value at index i in the array 
+   */
+  public String getQueryParse(int addr, int i) {
+        if (featOkTst && casFeat_queryParse == null)
+      jcas.throwFeatMissing("queryParse", "uncc2014watsonsim.uima.types.UIMAQuestion");
+    if (lowLevelTypeChecks)
+      return ll_cas.ll_getStringArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_queryParse), i, true);
+    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_queryParse), i);
+  return ll_cas.ll_getStringArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_queryParse), i);
+  }
+   
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param i index of item in the array
+   * @param v value to set
+   */ 
+  public void setQueryParse(int addr, int i, String v) {
+        if (featOkTst && casFeat_queryParse == null)
+      jcas.throwFeatMissing("queryParse", "uncc2014watsonsim.uima.types.UIMAQuestion");
+    if (lowLevelTypeChecks)
+      ll_cas.ll_setStringArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_queryParse), i, v, true);
+    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_queryParse), i);
+    ll_cas.ll_setStringArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_queryParse), i, v);
+  }
+ 
 
 
 
@@ -308,6 +359,10 @@ public class UIMAQuestion_Type extends TOP_Type {
  
     casFeat_FitbSection2 = jcas.getRequiredFeatureDE(casType, "FitbSection2", "uima.tcas.Annotation", featOkTst);
     casFeatCode_FitbSection2  = (null == casFeat_FitbSection2) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_FitbSection2).getCode();
+
+ 
+    casFeat_queryParse = jcas.getRequiredFeatureDE(casType, "queryParse", "uima.cas.StringArray", featOkTst);
+    casFeatCode_queryParse  = (null == casFeat_queryParse) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_queryParse).getCode();
 
   }
 }

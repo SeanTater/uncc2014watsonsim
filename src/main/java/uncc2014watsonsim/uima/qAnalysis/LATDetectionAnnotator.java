@@ -20,7 +20,9 @@ import opennlp.tools.util.PlainTextByLineStream;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.cas.CASException;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.cas.StringArray;
 import org.apache.uima.resource.ResourceInitializationException;
 
 import uncc2014watsonsim.uima.UimaTools;
@@ -58,14 +60,11 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 			uimaQuestion = new UIMAQuestion(cas);
 			uimaQuestion.addToIndexes();
 		}
-		String lat = findLat(text);
-		if(lat == null)
-			lat = "null"; // No LAT Found.
-		uimaQuestion.setLAT(lat);
+		uimaQuestion = doLatDetection(uimaQuestion, text);
 	}
 	
 	//Do work
-	private String findLat(String text) throws AnalysisEngineProcessException{
+	private UIMAQuestion doLatDetection(UIMAQuestion uimaQuestion, String text) throws AnalysisEngineProcessException{
 		// Load the training model for POSTagging
 				
 				
@@ -87,6 +86,7 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 				boolean rule3Satisfied = false;
 				String ansShouldBe = null;
 				int sentenceLength = 0;
+				String[] tags = {};
 
 				int nounIndex = -1;
 				try {
@@ -94,7 +94,7 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 
 						String whitespaceTokenizerLine[] = WhitespaceTokenizer.INSTANCE
 								.tokenize(line);
-						String[] tags = tagger.tag(whitespaceTokenizerLine);
+						tags = tagger.tag(whitespaceTokenizerLine);
 
 						sentenceLength = whitespaceTokenizerLine.length;
 						// Rule 1 : 'this' Rule
@@ -103,14 +103,9 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 																	// all
 																	// tokens
 						{
-							if (whitespaceTokenizerLine[i].equals("this")
-									|| whitespaceTokenizerLine[i].equals("This")
-									|| whitespaceTokenizerLine[i].equals("these")
-									|| whitespaceTokenizerLine[i].equals("These")) // Check
-																					// if
-																					// 'this'
-																					// or
-																					// 'these'
+							if (whitespaceTokenizerLine[i].toLowerCase().equals("this")
+									|| whitespaceTokenizerLine[i].toLowerCase().equals("these")) 
+								// Check if 'this' or 'these'
 							{
 								if (tags[i].equals("DT")) // confirm they are DT-determiner
 								{
@@ -202,10 +197,7 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 							// all
 							// tokens
 							{
-								if (whitespaceTokenizerLine[i].equals("The")
-										|| whitespaceTokenizerLine[i].equals("the")) // Check
-																						// if
-																						// 'this'
+								if (whitespaceTokenizerLine[i].toLowerCase().equals("the"))
 								{
 									if (tags[i].equals("DT")) // confirm they are
 																// DT-determiner
@@ -267,8 +259,7 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 
 										if (nounThePlaces.get(i) != -1) {
 									
-											ansShouldBe = whitespaceTokenizerLine[nounThisPlaces
-													.get(i)];
+											ansShouldBe = whitespaceTokenizerLine[nounThePlaces.get(i)];
 											rule2Satisfied = true;
 										}
 									}
@@ -285,10 +276,7 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 							// tokens
 							{
 
-								if (whitespaceTokenizerLine[i].equals("It")
-										|| whitespaceTokenizerLine[i].equals("it")) // Check
-																					// if
-																					// 'this'
+								if (whitespaceTokenizerLine[i].toLowerCase().equals("it"))
 								{
 
 									if (tags[i].equals("PRP") || tags[i].equals("PRP$")) // confirm
@@ -319,15 +307,11 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 											|| tags[itPlaces.get(i) + 1].equals("VBZ")) {
 
 										if (whitespaceTokenizerLine[itPlaces.get(i) + 2]
-												.equals("where")
-												|| whitespaceTokenizerLine[itPlaces.get(i) + 2]
-														.equals("Where")) {
+												.toLowerCase().equals("where")) {
 											//System.out.println("Answer should be a'Place'");
 											ansShouldBe = "Place";
 										} else if (whitespaceTokenizerLine[itPlaces.get(i) + 2]
-												.equals("what")
-												|| whitespaceTokenizerLine[itPlaces.get(i) + 2]
-														.equals("What")) {
+												.toLowerCase().equals("what")) {
 
 											//System.out.println("Answer should be a'Noun'");
 											ansShouldBe = "Noun";
@@ -347,7 +331,21 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 				} catch (IOException e) {
 					throw new AnalysisEngineProcessException(e);
 				}
-				return ansShouldBe;
+				
+				if(ansShouldBe == null){
+					ansShouldBe = "null";
+				}
+				StringArray sArray;
+				try {
+					sArray = new StringArray(uimaQuestion.getCAS().getJCas(), tags.length);
+					sArray.copyFromArray(tags, 0, 0, tags.length);
+					uimaQuestion.setQueryParse(sArray);
+				} catch (CASException e) {
+					System.err.println("Cas Exception: The parse will not be saved.");
+				}
+				
+				uimaQuestion.setLAT(ansShouldBe);
+				return uimaQuestion;
 	}
 
 }

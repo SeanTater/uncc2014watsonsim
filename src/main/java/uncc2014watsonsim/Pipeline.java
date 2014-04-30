@@ -27,7 +27,7 @@ public class Pipeline {
 // usage without CachingSearcher
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		new BingSearcher()
+		//new BingSearcher()
 	};
 	
 	private static final Researcher[] early_researchers = {
@@ -49,6 +49,7 @@ public class Pipeline {
 		new QuestionInPassageScorer(),
 		//new ScorerIrene(), // TODO: Doesn't compile
 		new NGram(),
+		new LATTypeMatchScorer()
 	};
 
 	private static final Researcher[] late_researchers = {
