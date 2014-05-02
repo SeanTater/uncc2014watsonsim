@@ -11,8 +11,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import com.sun.xml.internal.ws.developer.MemberSubmissionEndpointReference.Elements;
-
 import uncc2014watsonsim.Passage;
 
 public class BingSearcher extends Searcher {
