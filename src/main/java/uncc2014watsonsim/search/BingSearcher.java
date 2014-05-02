@@ -11,6 +11,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import com.sun.xml.internal.ws.developer.MemberSubmissionEndpointReference.Elements;
+
 import uncc2014watsonsim.Passage;
 
 public class BingSearcher extends Searcher {
@@ -29,19 +31,19 @@ public class BingSearcher extends Searcher {
 	    		.returnContent().asString();
 	    	
 	    	Document doc = Jsoup.parse(resp);
-	    	
-		    int i=0;
-	    	for (Element e : doc.select("entry")) {
+	    	List<Element> elements = doc.select("entry");
+	    	// Perhaps limit to MAX_RESULTS?
+		    for (int i=0; i < elements.size(); i++) {
+		    	Element e = elements.get(i);
 	    		results.add(new Passage(
-	        			"bing",         	// Engine
-	        			e.select("d|Title").text(),	        // Title
-	        			e.select("d|Description").text(), // Full Text
-	        			e.select("d|Url").text())          // Reference
-	    				.score("BING_RANK", (double) i) // Score
-	    			);
-	    		i++;
+        			"bing",         	// Engine
+        			e.select("d|Title").text(),	        // Title
+        			e.select("d|Description").text(), // Full Text
+        			e.select("d|Url").text())          // Reference
+    				.score("BING_RANK", (double) i) // Score
+    			);
 	    	}
-		    
+		    System.out.print("B!");
 	    } catch (IOException e) {
 	    	System.out.println("Error while searching with Bing. Ignoring. Details follow.");
 	        e.printStackTrace();

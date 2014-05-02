@@ -16,8 +16,10 @@ buildscript {
     }
     dependencies {
         classpath 'de.undercouch:gradle-download-task:0.5'
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
     }
 }
+apply plugin: 'fatjar'
 
 // Dependencies and where to get them (some are nonstandard)
 repositories {
@@ -28,7 +30,6 @@ repositories {
 
 dependencies {
     // Machine learning
-    compile group: "org.apache.mahout",              name: "mahout-core",             version: "0.8"
     compile group: "com.googlecode.jcsv",            name: "jcsv",                    version: "1.4.0"
     compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.6'
     compile group: "com.github.spullara.cli-parser", name: "cli-parser",              version: "1.1"
@@ -42,6 +43,7 @@ dependencies {
     compile group: "org.apache.lucene",              name: "lucene-core",             version: "4.7.2"
     compile group: "org.apache.lucene",              name: "lucene-queryparser",      version: "4.7.2"
     compile group: "org.apache.lucene",              name: "lucene-analyzers-common", version: "4.7.2"
+    compile group: "org.apache.lucene",              name: "lucene-highlighter",      version: "4.7.2"
     compile group: "lemurproject.indri",             name: "indri",                   version: "5.6"
     compile group: "com.google.api-client",          name: "google-api-client",       version: "1.17.0-rc"
     compile 'com.google.apis:google-api-services-customsearch:v1-rev34-1.17.0-rc'
@@ -59,51 +61,20 @@ dependencies {
     
     // OpenNLP
     compile "org.apache.opennlp:opennlp-tools:1.5.3"
-    
+
+    // WebDAV 
     compile 'com.github.lookfirst:sardine:5.1'
     compile 'org.slf4j:slf4j-simple:1.6.1'
 	
-	// UIMA for Java
-	compile group:'org.apache.uima',					name: 'uimaj-core',			version: '2.3.1'
+    // UIMA for Java
+    compile group:'org.apache.uima',					name: 'uimaj-core',			version: '2.3.1'
 
     // lightweight web framework
     compile "com.sparkjava:spark-core:1.1.1"
+
+    // multimaps and many other tools
+    compile "com.google.guava:guava:17.0"
 }
-
-
-// Other Tasks
-def gdrive_decompress(filename) {
-    download {
-        src "https://googledrive.com/host/0B8wOEC5-v5lXTTg2cUZwQzJ6cWs/$filename"
-        dest "$projectDir/data"
-        onlyIfNewer true
-    }
-    copy {
-        from tarTree("$projectDir/data/$filename")
-        into "$projectDir/data"
-    }
-}
-
-task downloadRequired << {
-    gdrive_decompress("questions.db.tar.gz")
-    download {
-        src 'http://opennlp.sourceforge.net/models-1.5/en-ner-person.bin'
-        dest "$projectDir/data"
-        onlyIfNewer true
-    }
-    download {
-        src 'http://opennlp.sourceforge.net/models-1.5/en-pos-maxent.bin'
-        dest "$projectDir/data"
-        onlyIfNewer true
-    }
-}
-assemble.dependsOn downloadRequired
-
-task downloadOptional << {
-    gdrive_decompress("sources.db.tar.gz")
-}
-
-
 
 run {
     // Allow reading from stdin
@@ -113,7 +84,7 @@ run {
     main "uncc2014watsonsim.sources.DBIndexer"
 }
 
-task(run_cache_searches, dependsOn: downloadRequired, type: JavaExec) {
+task(run_cache_searches, type: JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
     main "uncc2014watsonsim.sources.GenerateSearchResultDataset"
@@ -147,13 +118,6 @@ distZip {
         exclude 'target/'
         exclude 'tmp/'
     }
-}
-
-task refreshQuickstart << { 
-    copy { 
-        from configurations.compile.allArtifactFiles 
-        into "$projectDir/quickstart-lib" 
-    } 
 }
 
 eclipse {

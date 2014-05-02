@@ -28,8 +28,9 @@ abstract public class Researcher {
 	 * @throws Exception 
 	 */
 	public void question(Question q) {
-		for (Answer a : q)
-			answer(q, a);
+		// Use counting instead of iteration to allow concurrent modification
+		for (int i=0; i < q.size(); i++)
+			answer(q, q.get(i));
 	}
 	
 	/** Default implementation for researching an answer.

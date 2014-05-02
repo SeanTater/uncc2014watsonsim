@@ -30,9 +30,13 @@ import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
 
-//@author Wlodek
-/* @author Sean Gallagher
- * initializes the OpenNLP pipeline models and shows how to compare two parse structures 
+/* @author Wlodek
+ * @author Sean Gallagher
+ * 
+ * Create a score based on how many parse trees the question, candidate answer
+ * and passage have in common.
+ * 
+ * This scorer can be very slow.
  */
 
 public class SentenceSimilarity extends PassageScorer {

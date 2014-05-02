@@ -13,18 +13,22 @@ public class Pipeline {
 	
 	private static final Searcher[] searchers = {
 		//new CachingSearcher(new LuceneSearcher(), "lucene"),
-		new CachingSearcher(new IndriSearcher(), "indri"),
-		//new CachingSearcher(new BingSearcher(), "bing"),
+		//new CachingSearcher(new IndriSearcher(), "indri"),
+		new CachingSearcher(new BingSearcher(), "bing"),
 		//new CachingSearcher(new GoogleSearcher(), "google")
 // usage without CachingSearcher
 		new LuceneSearcher(),
-//		new IndriSearcher(),
-//		new BingSearcher()
+		new IndriSearcher(),
+		//new BingSearcher()
 	};
 	
 	private static final Researcher[] early_researchers = {
 		new MediaWikiTrimmer(), // Before passage retrieval
 		new HyphenTrimmer(),
+		/* +0.06 recall
+		 * -0.30 MRR
+		 * new RedirectSynonyms(),
+		 */
 		new Merge(),
 		new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),

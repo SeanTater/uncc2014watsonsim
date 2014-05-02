@@ -9,7 +9,7 @@ public class ElliotMerschScorer extends PassageScorer{
 	public double Scorer (Question q, Answer a, Passage p){
 		
 				String Qraw = q.getRaw_text();
-				String Ptext = p.text;
+				String Ptext = p.getText();
 				String Ptitle = p.title;
 				
 				//test variables

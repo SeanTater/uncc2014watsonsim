@@ -73,7 +73,7 @@ public class CachingSearcher extends Searcher {
 		if (results.isEmpty()) {
 			// If the SQL search didn't return anything, then run the Searcher.
 			PreparedStatement set_cache = db.prep(
-					"insert into cache (id, query, engine, title, fulltext, reference, rank, score) values (?,?,?,?,?,?,?,?);");
+					"insert into cache (id, query, engine, title, fulltext, reference, rank, score, created_on) values (?,?,?,?,?,?,?,?,datetime('now'));");
 			for (Passage p : searcher.query(query)) {
 				// Add every Answer to the cache
 				results.add(p);

@@ -86,8 +86,8 @@ public class DBIndexer {
     	/** Lucene Setup */
         Directory dir = FSDirectory.open(new File(UserSpecificConstants.luceneIndex));
         //here we are using a standard analyzer, there are a lot of analyzers available to our use.
-        Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
-        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_46, analyzer);
+        Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_47);
+        IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_47, analyzer);
         //this mode by default overwrites the previous index, not a very good option in real usage
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
         IndexWriter writer = new IndexWriter(dir, iwc);

@@ -8,15 +8,23 @@ import java.util.List;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.FieldInfo.IndexOptions;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.postingshighlight.PostingsHighlighter;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
@@ -54,7 +62,7 @@ public class LucenePassageSearcher extends Searcher {
 			for (String word : question_text.split("\\W+")) {
 				/*if (last_word != null) {
 					PhraseQuery pq = new PhraseQuery();
-					pq.setSlop(1);
+					pq.setSlop(0);
 					pq.add(new Term("text", last_word));
 					pq.add(new Term("text", word));
 					q.add(pq, BooleanClause.Occur.SHOULD);
@@ -62,12 +70,21 @@ public class LucenePassageSearcher extends Searcher {
 				q.add(new TermQuery(new Term("text", word)), BooleanClause.Occur.SHOULD);
 				last_word = word;
 			}
-			/*PhraseQuery q = new PhraseQuery();
-			q.setSlop(2);
-			for (String word : question_text.split("\\W+")) {
-				q.add(new Term("title", word));
-			}*/
-			ScoreDoc[] hits = searcher.search(q, MAX_RESULTS).scoreDocs;
+			
+			/// Begin lucene reference code (from docs)
+			// configure field with offsets at index time
+			//FieldType offsetsType = new FieldType(TextField.TYPE_STORED);
+			//offsetsType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+			//Field body = new Field("body", "foobar", offsetsType);
+
+			// retrieve highlights at query time
+			//PostingsHighlighter highlighter = new PostingsHighlighter();
+			//Query query = new TermQuery(new Term("body", "highlighting"));
+			TopDocs topDocs = searcher.search(q, MAX_RESULTS);
+			//String[] highlights = highlighter.highlight("body", q, searcher, topDocs);
+			/// end Lucene reference code
+			
+			ScoreDoc[] hits = topDocs.scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];

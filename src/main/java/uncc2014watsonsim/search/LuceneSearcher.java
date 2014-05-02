@@ -36,7 +36,7 @@ public class LuceneSearcher extends Searcher {
 	static {
 		analyzer = new StandardAnalyzer(Version.LUCENE_46);
 		parser = new QueryParser(Version.LUCENE_46, "text", analyzer);
-		parser.setAllowLeadingWildcard(true);	
+		parser.setAllowLeadingWildcard(true);
 
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(UserSpecificConstants.luceneIndex)));
