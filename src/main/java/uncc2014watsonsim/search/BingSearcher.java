@@ -13,6 +13,21 @@ import org.jsoup.nodes.Element;
 
 import uncc2014watsonsim.Passage;
 
+/**
+ * Internet-enabled Searcher for Bing.
+ * 
+ * You will need a Bing api key, which you can (as of the time of this writing)
+ * get from <a href="http://datamarket.azure.com">Microsoft</a>
+ * 
+ * Bing gives around 5000 queries per month, which means that in most cases for
+ * sustained development you will need to use CachingSearcher.
+ * 
+ * @see CachingSearcher
+ * @see privatedata.bingAPIKey
+ * @author Sean Gallagher
+ * @author Stephen Stanton
+ * @author D Haval
+ */
 public class BingSearcher extends Searcher {
 	
 	public List<Passage> query(String query) {
