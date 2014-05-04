@@ -1,31 +1,8 @@
 package uncc2014watsonsim.sources;
 
-import com.github.sardine.Sardine;
-import com.github.sardine.SardineFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.DBQuestionResultsSource;
-import uncc2014watsonsim.DBQuestionSource;
-import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.research.PassageRetrieval;
-import uncc2014watsonsim.search.IndriSearcher;
-import uncc2014watsonsim.search.LuceneSearcher;
-import uncc2014watsonsim.search.GoogleSearcher;
-import uncc2014watsonsim.search.Searcher;
+import uncc2014watsonsim.researchers.PassageRetrieval;
 
 /**
  *

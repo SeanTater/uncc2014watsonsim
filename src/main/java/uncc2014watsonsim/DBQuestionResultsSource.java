@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import uncc2014watsonsim.research.PassageRetrieval;
+import uncc2014watsonsim.researchers.PassageRetrieval;
 
 /**
 *

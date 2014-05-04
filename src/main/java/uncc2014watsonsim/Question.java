@@ -1,10 +1,7 @@
 package uncc2014watsonsim;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 

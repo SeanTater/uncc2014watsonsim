@@ -1,9 +1,22 @@
 package uncc2014watsonsim;
 
-import java.util.Collections;
-import java.util.concurrent.ForkJoinPool;
-
-import uncc2014watsonsim.research.*;
+import uncc2014watsonsim.researchers.*;
+import uncc2014watsonsim.scorers.AnswerScorer;
+import uncc2014watsonsim.scorers.BingRank;
+import uncc2014watsonsim.scorers.Correct;
+import uncc2014watsonsim.scorers.GoogleRank;
+import uncc2014watsonsim.scorers.IndriRank;
+import uncc2014watsonsim.scorers.IndriScore;
+import uncc2014watsonsim.scorers.LuceneRank;
+import uncc2014watsonsim.scorers.LuceneScore;
+import uncc2014watsonsim.scorers.NGram;
+import uncc2014watsonsim.scorers.PassageScorer;
+import uncc2014watsonsim.scorers.PassageTermMatch;
+import uncc2014watsonsim.scorers.PercentFilteredWordsInCommon;
+import uncc2014watsonsim.scorers.QuestionInPassageScorer;
+import uncc2014watsonsim.scorers.Scorer;
+import uncc2014watsonsim.scorers.SkipBigram;
+import uncc2014watsonsim.scorers.WordProximity;
 import uncc2014watsonsim.search.*;
 
 /** The standard Question Analysis pipeline.
@@ -90,11 +103,8 @@ public class Pipeline {
 
 	private static final Researcher[] late_researchers = {
 		new WekaTee(),
+		new CombineScores()
 	};
-	
-	
-	private static final Learner learner = new WekaLearner();
-
 	
 	public static Question ask(String qtext) {
 	    return ask(new Question(qtext));
@@ -122,13 +132,6 @@ public class Pipeline {
     	
     	for (Researcher r : late_researchers)
     		r.complete();
-    	
-        try {
-			learner.test(question);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
         
         return question;
     }
