@@ -10,8 +10,7 @@ import uncc2014watsonsim.search.*;
  * 
  * The pipeline is central to the DeepQA framework.
  * It consists of {@link Searcher}s, {@link Researcher}s, {@link Scorer}s, and
- * a {@link Learner}.
- * 
+ * a {@link Learner}.<p>
  * 
  * Each step in the pipeline takes and possibly transforms a {@link Question}.
  * {@link Question}s aggregate {@link Answer}s, and a correct {@link Answer} (if it is
@@ -19,7 +18,7 @@ import uncc2014watsonsim.search.*;
  * {@link Answer}s aggregate scores (which are primitive doubles) and
  *     {@link Passage}s, and contain a candidate text.
  * {@link Passage}s aggregate more scores, and provide some utilities for
- *     processing the text they contain. 
+ *     processing the text they contain.<p>
  * 
  * A {@link Searcher} takes the {@link Question}, runs generic transformations
  *     on its text and runs a search engine on it. The Passages it creates are
@@ -27,16 +26,17 @@ import uncc2014watsonsim.search.*;
  *     {@link Answer} text and each {@link Answer} has one Passage. The passage
  *     Searchers do the same but are optimized for taking {@link Answer}s and
  *     finding supporting evidence as Passages. In that case, the resulting
- *     Passages are not promoted.
+ *     Passages are not promoted.<p>
  * 
  * A {@link Researcher} takes a {@link Question} and performs a transformation
  *     on it. There is no contract regarding what it can do to the
  *     {@link Question}, so they can't be safely run in parallel and the order
  *     of execution matters. Read the source for an idea of the intended order.
+ *     <p>
  * 
  * A {@link Scorer} takes a {@link Question} and generates scores for either
  *     {@link Answer}s or {@link Passage}s (inheriting from
- *     {@link AnswerScorer} or {@link PassageScorer} respectively.)
+ *     {@link AnswerScorer} or {@link PassageScorer} respectively.)<p>
  *
  */
 public class Pipeline {
