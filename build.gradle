@@ -74,6 +74,9 @@ dependencies {
 
     // multimaps and many other tools
     compile "com.google.guava:guava:17.0"
+
+    // Mahout provides nice Arrays utilities
+    compile group: "org.apache.mahout",              name: "mahout-core",             version: "0.8"
 }
 
 run {
