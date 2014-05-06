@@ -60,7 +60,11 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 			uimaQuestion = new UIMAQuestion(cas);
 			uimaQuestion.addToIndexes();
 		}
-		uimaQuestion = doLatDetection(uimaQuestion, text);
+		try{
+			uimaQuestion = doLatDetection(uimaQuestion, text);
+		}catch(AnalysisEngineProcessException e){
+			throw e;
+		}
 	}
 	
 	//Do work
@@ -328,7 +332,7 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 
 
 					}
-				} catch (IOException e) {
+				} catch (Exception e) {
 					throw new AnalysisEngineProcessException(e);
 				}
 				
