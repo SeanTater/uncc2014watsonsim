@@ -70,7 +70,7 @@ public class LuceneSearcher extends Searcher {
 						doc.get("title"),	// Title
 						doc.get("text"), 	// Text
 						doc.get("docno"))   // Reference
-						.score("LUCENE_RANK", (double) i)           // Rank
+						.score("LUCENE_RANK", (double) i+1)           // Rank+1 (1 based)
 						.score("LUCENE_SCORE", (double) s.score)	// Source
 						);
 			}

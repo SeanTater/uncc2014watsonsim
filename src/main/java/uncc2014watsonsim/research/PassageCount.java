@@ -8,7 +8,8 @@ import uncc2014watsonsim.Question;
  * @author Sean Gallagher
  */
 public class PassageCount extends AnswerScorer {
-	public double scorePassage(Question q, Answer a, Passage p) {
+	@Override
+	public double scoreAnswer(Question q, Answer a) {
 		return a.passages.size();
 	}
 }
