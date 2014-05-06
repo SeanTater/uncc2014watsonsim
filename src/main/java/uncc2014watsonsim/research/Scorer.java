@@ -17,6 +17,7 @@ public abstract class Scorer {
 	// This is a constructor-less hack to give Researchers a convenient name
 	// It is used for assigning scores.
 	String name;
+	
 	Score score_enum;
 	{
 		name = this.getClass().getSimpleName().replaceAll("([a-z])([A-Z]+)", "$1_$2").toUpperCase();
@@ -39,7 +40,7 @@ public abstract class Scorer {
 	public void question(Question q) {
 		for (Answer a : q)
 			for (Passage p: a.passages)
-				p.score(score_enum, passage(q, a, p));		
+				p.score(score_enum, passage(q, a, p));
 	}
 	
 	/** Default implementation for researching an answer.

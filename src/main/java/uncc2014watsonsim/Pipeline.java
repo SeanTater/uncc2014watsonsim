@@ -29,6 +29,7 @@ public class Pipeline {
 	private static final Scorer[] scorers = {
 		new WordProximity(),
 		new Correct(),
+//		new TestScorerSS()
 	};
 	
 	
@@ -87,7 +88,7 @@ public class Pipeline {
     	for (Researcher r : researchers)
     		r.complete();
     	
-    	
+
         try {
 			learner.test(question);
 		} catch (Exception e) {
