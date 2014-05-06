@@ -1,0 +1,172 @@
+package uncc2014watsonsim.research;
+
+import java.io.*;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.sun.media.sound.InvalidFormatException;
+
+import opennlp.tools.cmdline.parser.ParserTool;
+import opennlp.tools.parser.Parse;
+import opennlp.tools.parser.Parser;
+import opennlp.tools.parser.ParserFactory;
+import opennlp.tools.parser.ParserModel;
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
+import opennlp.tools.tokenize.SimpleTokenizer;
+
+//@author Anand Khurad
+
+public class NounVerbScorer {
+	
+	public static String modelsPath = "/home/anand/anand/gitrepo/uncc2014watsonsim/data"; // models directory
+	private static File parserMFile;
+	private static File sentDetectorMFile;
+	private static File posMFile;
+
+	public static SentenceModel sentenceModel; // sentence detection model
+	public static ParserModel parserModel; // parsing model
+	public static POSTaggerME tagger;
+	
+	public static String a="Jane Austen"; 
+	public static String q="Who wrote Emma?";
+	public static String passage="Jane Austen was very modest about her own genius.[7] She once famously described her work as "+
+			"the little bit (two Inches wide) of Ivory, on which I work with so fine a brush, " +
+			"as produces little effect after much labor [7]. " +
+			"When she was a girl she wrote stories. Her works were printed only after much revision. " +
+			"Only four of her novels were printed while she was alive. They were Sense and Sensibility (1811), " +
+			"Pride and Prejudice (1813), Mansfield Park (1814) and Emma (1816). " +
+			"Two other novels, Northanger Abbey and Persuasion, were printed in 1817 with " +
+			"a biographical notice by her brother, Henry Austen. Persuasion was written shortly before her death. " +
+			"She also wrote two earlier works, Lady Susan, and an unfinished novel, The Watsons. " +
+			"She had been working on a new novel, Sanditon, but she died before she could finish it.";
+	
+	public static String combinedQuery = a + " " + q;
+	public static int score = 0;
+	
+	
+	
+	public static void init() throws InvalidFormatException {
+		File modelsDir = new File(modelsPath);
+
+		parserMFile = new File(modelsDir, "en-parser-chunking.bin");
+		sentDetectorMFile = new File(modelsDir, "en-sent.bin");
+		posMFile = new File(modelsDir, "en-pos-maxent.bin");
+
+		InputStream sentModelIn = null;
+		FileInputStream parserStream;
+		try {
+			// for finding sentences
+			sentModelIn = new FileInputStream(sentDetectorMFile);
+			sentenceModel = new SentenceModel(sentModelIn);
+			// for finding POS
+			FileInputStream posModelStream = new FileInputStream(posMFile);
+			POSModel model = new POSModel(posModelStream);
+			tagger = new POSTaggerME(model);
+			// for parsing
+			parserStream = new FileInputStream(parserMFile);
+			parserModel = new ParserModel(parserStream);
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public Parse[] parsePassageText(String p) throws InvalidFormatException{
+		
+		init();
+		//initialize 	 
+		SentenceDetectorME sentenceDetector = new SentenceDetectorME(this.sentenceModel);
+		Parser parser = ParserFactory.create(
+				this.parserModel,
+				20, // beam size
+				0.95); // advance percentage
+		//find sentences, tokenize each, parse each, return top parse for each 	 	 
+		String[] sentences = sentenceDetector.sentDetect(p);
+		Parse[] results = new Parse[sentences.length];
+		for (int i=0;i<sentences.length;i++){
+			String[] tks = SimpleTokenizer.INSTANCE.tokenize(sentences[i]);
+			
+			//There are several tokenizers available. SimpleTokenizer works best
+
+			String sent= StringUtils.join(tks," ");
+			System.out.println("Found sentence " + sent);
+			Parse[] sentResults = ParserTool.parseLine(sent,parser, 1);
+			results[i]=sentResults[0];
+		}
+		return results;
+	}
+	
+	public String[] breakPassage(String p) throws InvalidFormatException{
+		init();
+		
+		SentenceDetectorME sentenceDetector = new SentenceDetectorME(this.sentenceModel);
+		String[] passageSentences = sentenceDetector.sentDetect(p);
+		
+		return passageSentences;
+	}
+	
+	public void taggerTest(){
+		String[] words = SimpleTokenizer.INSTANCE.tokenize(
+				"The quick, red fox jumped over the lazy, brown dogs.");
+		String[] result = tagger.tag(words);
+		for (int i=0 ; i < words.length; i++) {
+			System.err.print(words[i] + "/" + result[i] + " ");
+		}
+		System.err.println("n");
+	}
+	
+	public String[] tokenize(String q){
+		String[] result = SimpleTokenizer.INSTANCE.tokenize(q);
+		return result;
+	}
+	
+	
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		NounVerbScorer n = new NounVerbScorer();
+		String[] passageSentences = n.breakPassage(passage);
+		//n.taggerTest();
+		
+		String[] combinedWords = n.tokenize(combinedQuery);
+		String[] comboTags = tagger.tag(combinedWords);
+		
+		String noun = null;
+		String verb = null;
+		for (int i=0;i<combinedWords.length;i++){
+			if (comboTags[i].equals("NN") || comboTags[i].equals("NNS") || comboTags[i].equals("NNP") || comboTags[i].equals("NNPS"))
+				noun = combinedWords[i];
+			break;
+		}
+		
+		for (int i=0;i<combinedWords.length;i++){
+			if (comboTags[i].equals("VB") || comboTags[i].equals("VBD") || comboTags[i].equals("VBN") || comboTags[i].equals("VBG"))
+				verb = combinedWords[i];
+			break;
+		}
+		
+		for (int i=0;i<passageSentences.length;i++){
+			String[] lineWords = n.tokenize(passageSentences[i]);
+			String[] lineTags = tagger.tag(lineWords);
+			
+			
+			for (int j=0;j<lineWords.length;j++){
+				if (lineTags[j].equals("NN") || lineTags[j].equals("NNS") || lineTags[j].equals("NNP") || lineTags[j].equals("NNPS"))
+					if (lineWords[i].equals(noun))
+						score = score + 1;
+				if (lineTags[j].equals("VB") || lineTags[j].equals("VBD") || lineTags[j].equals("VBN") || lineTags[j].equals("VBG"))
+					if (lineWords[i].equals(verb))
+						score = score + 1;
+			}
+			
+		}
+		System.out.println(score);
+	}
+
+}
