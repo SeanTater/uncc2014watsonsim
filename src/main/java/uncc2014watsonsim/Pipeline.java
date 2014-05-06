@@ -29,7 +29,7 @@ public class Pipeline {
 	private static final Scorer[] scorers = {
 		new WordProximity(),
 		new Correct(),
-//		new TestScorerSS()
+		new TestScorerSS()
 	};
 	
 	
