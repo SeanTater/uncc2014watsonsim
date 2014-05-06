@@ -26,7 +26,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return mQuestion.trim();
 	}
 	
-	/** Filter out stop words from a string */
+	/** splits the given string into tokens */
 	public static List<String> tokenize(String text) {
 		List<String> tokens = new ArrayList<>();
 		text = text.replaceAll("[^0-9a-zA-Z ]+", "").toLowerCase().trim();
@@ -49,7 +49,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return tokens;
 	}
 	
-    /** Returns true if every non-stopword from candidate is found in reference */
+    /** Returns true if every token in candidate is a part of reference */
     public static boolean match_subset(String candidate, String reference){
         
             // Removing stop words and non-alphanumeric characters from the strings
