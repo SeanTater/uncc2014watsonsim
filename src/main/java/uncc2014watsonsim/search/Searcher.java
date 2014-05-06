@@ -6,21 +6,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
-import uncc2014watsonsim.Question;
 import uncc2014watsonsim.SQLiteDB;
 
 /*
-<<<<<<< HEAD
  * This interface might change; Please be ready to accommodate the changes.
  * This interface should be implemented by local search engines like 
- * Indri and Lucene, when querying them. Basically, it retrieves the basic data 
-=======
- * This interface might change; Please be ready to accomodate the changes.
- * This interface should be implemented by local search engines like 
- * Indri and Lucene, when querying them. Basically, it retreives the basic data 
->>>>>>> master
+ * Indri and Lucene, when querying them. Basically, it retrieves the basic data
  * from the queried result set.
  */
 
@@ -47,9 +39,7 @@ public abstract class Searcher {
      * @throws Exception 
      */
     
-	public abstract List<Passage> runTranslatedQuery(String query);
-	
-	public abstract List<Passage> runBaseQuery(String query);
+	public abstract List<Passage> query(String query);
 
     /**
      * How many results should Lucene and Indri return?
@@ -57,11 +47,6 @@ public abstract class Searcher {
      */
 
     public final static int MAX_RESULTS = 10;
-
-    
-    public List<Answer> runFitbQuery(Question question) throws Exception {
-    	return new ArrayList<Answer>(0);
-    }
     
     
     /** Fill in the missing titles and full texts from Answers using sources.db
@@ -81,8 +66,8 @@ public abstract class Searcher {
 					doc_row = fetcher.executeQuery();
 		    		p.title = doc_row.getString("title");
 		    		if (p.title == null) p.title = "";
-		    		p.text = doc_row.getString("text");
-		    		if (p.text == null) p.text = "";
+		    		p.setText(doc_row.getString("text"));
+		    		if (p.getText() == null) p.setText("");
 				} catch (SQLException e) {
 					e.printStackTrace();
 					throw new RuntimeException("Failed to execute sources full text search. "

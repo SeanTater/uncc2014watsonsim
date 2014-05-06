@@ -5,7 +5,6 @@
  */
 package uncc2014watsonsim.sources;
 
-import java.io.BufferedReader;
 import java.util.Scanner;
 
 /**

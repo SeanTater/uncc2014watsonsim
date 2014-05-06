@@ -2,16 +2,10 @@ package uncc2014watsonsim.search;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import privatedata.UserSpecificConstants;
-import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
-import uncc2014watsonsim.Question;
-import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
-import uncc2014watsonsim.qAnalysis.FITBAnnotations;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
@@ -24,18 +18,12 @@ public class IndriSearcher extends Searcher {
 	private static QueryEnvironment q;
 	static {
 		// Only initialize the query environment and index once
-		q = new QueryEnvironment();
-		Score.registerPassageScore("INDRI_RANK");
-		Score.registerPassageScore("INDRI_SCORE");
-		
+		q = new QueryEnvironment();	
 	}
 	
-	public List<Passage> runTranslatedQuery(String query) {
-		return runBaseQuery(Translation.getIndriQuery(query));
-	}
-
-	public List<Passage> runBaseQuery(String query) {
+	public List<Passage> query(String query) {
 		// Run the query
+		query = Translation.getIndriQuery(query);
 		
 		ScoredExtentResult[] ser;
 		// Fetch all titles, texts

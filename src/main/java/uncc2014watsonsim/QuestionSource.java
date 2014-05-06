@@ -1,11 +1,7 @@
 package uncc2014watsonsim;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import uncc2014watsonsim.search.IndriSearcher;
-import uncc2014watsonsim.search.LuceneSearcher;
 
 /**
  * @author Phani Rahul

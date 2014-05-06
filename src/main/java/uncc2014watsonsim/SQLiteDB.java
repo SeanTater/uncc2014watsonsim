@@ -1,13 +1,11 @@
 package uncc2014watsonsim;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,6 +24,7 @@ public class SQLiteDB {
 		required_tables = new HashMap<String, String[]>();
 		required_tables.put("sources", new String[]{"documents"});
 		required_tables.put("questions", new String[]{"questions", "results", "cache"});
+		required_tables.put("dict", new String[]{"dictionary"});
 	}
 	
 	public SQLiteDB(String name) {

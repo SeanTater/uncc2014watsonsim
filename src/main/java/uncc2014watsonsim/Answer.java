@@ -3,16 +3,12 @@ package uncc2014watsonsim;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 
 import org.json.simple.JSONObject;
-
-import uncc2014watsonsim.search.Searcher;
 
 /**
  * @author Phani Rahul
@@ -23,17 +19,27 @@ public class Answer implements Comparable<Answer> {
     public List<Passage> passages = new ArrayList<>();
     public String candidate_text;
 
-    /** Create an Answer with one implicitly defined Document */
+    /**
+     * Create an Answer with one implicitly defined Passage
+     */
     public Answer(Passage d) {
         this.passages.add(d);
-        candidate_text = d.title;
+        this.candidate_text = d.title;
     }
     
-    /** Create an Answer with one implicitly defined Document */
+    /**
+     * Create an Answer with one implicitly defined Passage
+     */
     public Answer(String engine, String title, String full_text, String reference) {
     	this(new Passage(engine, title, full_text, reference));
     }
     
+    /**
+     * Create an Answer without any passages
+     */
+    public Answer(String candidate_text) {
+    	this.candidate_text = candidate_text;
+    }
     
     /** Create an Answer (with engine) from JSON */
 	public Answer(String engine, JSONObject attr) {

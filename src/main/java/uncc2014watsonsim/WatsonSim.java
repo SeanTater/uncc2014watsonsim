@@ -31,7 +31,7 @@ public class WatsonSim {
 	        command = br.readLine();
 	        while (command.matches("[0-9]+")) {
 	        	Answer a = question.get(Integer.parseInt(command));
-	        	System.out.println("First full text for [" + a.candidate_text + "]: \n" + a.passages.get(0).text + "\n");
+	        	System.out.println("First full text for [" + a.candidate_text + "]: \n" + a.passages.get(0).getText() + "\n");
 	        	command = br.readLine();
 	        }
     	}
