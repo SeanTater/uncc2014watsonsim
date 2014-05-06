@@ -299,7 +299,7 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 							if (itPlaces.size() != 0) // check if 'this' detected
 							{
 
-								for (int i = 0; i < itPlaces.size(); i++) // for each
+								for (int i = 0; i < itPlaces.size() - 1; i++) // for each
 																			// 'this'
 								{
 
@@ -309,7 +309,9 @@ public class LATDetectionAnnotator extends  JCasAnnotator_ImplBase {
 											|| tags[itPlaces.get(i) + 1].equals("VBN")
 											|| tags[itPlaces.get(i) + 1].equals("VBP")
 											|| tags[itPlaces.get(i) + 1].equals("VBZ")) {
-
+										if(i == itPlaces.size() - 2){
+											break;
+										}
 										if (whitespaceTokenizerLine[itPlaces.get(i) + 2]
 												.toLowerCase().equals("where")) {
 											//System.out.println("Answer should be a'Place'");

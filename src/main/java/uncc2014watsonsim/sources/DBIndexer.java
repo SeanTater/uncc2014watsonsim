@@ -76,7 +76,9 @@ public class DBIndexer {
 		
 		// Either add the Indri index or die.
 		try {
-			indri_index.open(UserSpecificConstants.indriIndex);
+			// open means to append
+			// create means to replace
+			indri_index.create(UserSpecificConstants.indriIndex);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Can't create Indri index. Please check that you entered the right path in UserSpecificConstants.java.");
