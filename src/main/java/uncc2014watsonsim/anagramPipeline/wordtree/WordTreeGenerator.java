@@ -1,4 +1,4 @@
-package uncc2014watsonsim.anagramPipeline;
+package uncc2014watsonsim.anagramPipeline.wordtree;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -9,13 +9,14 @@ import java.io.ObjectOutputStream;
 
 
 public class WordTreeGenerator {
-	public static WordTree generateWordTreeFromDictionary(String filename) throws Exception {
-		WordTree results = new WordTree();
+	public static WordTree generateWordTreeFromDictionary(String filename, boolean useSmallWordMap) throws Exception {
+		WordTree results = new WordTree(useSmallWordMap);
 		BufferedReader file = new BufferedReader(new FileReader(filename));
-		String nextLine = file.readLine();
+		String nextLine = file.readLine().trim();
 		while (nextLine != null) {
-			
-			results.addWord(nextLine);
+			nextLine = nextLine.trim();
+			if (!nextLine.equals(""))
+				results.addWord(nextLine);
 			
 			nextLine = file.readLine();
 		}

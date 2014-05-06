@@ -12,6 +12,10 @@ public class Passage {
 
     public Map<String, Double> scores = new HashMap<>();
     
+    public Passage() {
+    	
+    }
+    
     /** Return the value of this Score for this answer, or null */
     public Double score(String name) {
     	return scores.get(name);

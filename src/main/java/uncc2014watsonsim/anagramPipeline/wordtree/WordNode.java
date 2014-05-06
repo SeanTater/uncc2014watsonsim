@@ -1,7 +1,7 @@
 /**
  * @author Jacob Medd
  */
-package uncc2014watsonsim.anagramPipeline;
+package uncc2014watsonsim.anagramPipeline.wordtree;
 
 import java.util.ArrayList;
 

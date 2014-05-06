@@ -1,6 +1,7 @@
-package uncc2014watsonsim.anagramPipeline;
+package uncc2014watsonsim.anagramPipeline.wordtree;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class WordTree implements java.io.Serializable {
 	/**
@@ -9,13 +10,22 @@ public class WordTree implements java.io.Serializable {
 	private static final long serialVersionUID = 7589483329747333951L;
 	private WordNode root;
 	private ArrayList<WordNode> nodes = new ArrayList<WordNode>();
+	private HashMap<String, String> smallWordMap = new HashMap<String, String>();
+	private int smallWordLimit = 3;
+	private boolean useSmallWordHash = true;
 	
 	public WordTree() {
 		root = new WordNode("~");
 	}
 	
-	public WordTree(WordNode root) {
+	public WordTree(boolean useSmallWordHash) {
+		root = new WordNode("~");
+		this.useSmallWordHash = useSmallWordHash;
+	}
+	
+	public WordTree(WordNode root, boolean useSmallWordHash) {
 		this.root = root;
+		this.useSmallWordHash = useSmallWordHash;
 	}
 	
 	/**
@@ -23,9 +33,14 @@ public class WordTree implements java.io.Serializable {
 	 * @author Jacob Medd
 	 * @param word
 	 */
-	public void addWord(String word) {
+	public void addWord(String passedWord) {
+		String word = passedWord.toLowerCase();
 		if (containsWord(word)) { return; }
-		addWordHelper(word+"=", root);
+		if (useSmallWordHash && word.length() <= smallWordLimit) {
+			smallWordMap.put(word, word);
+		}
+		else
+			addWordHelper(word+"=", root);
 	}
 	
 	/**
@@ -62,7 +77,12 @@ public class WordTree implements java.io.Serializable {
 	 */
 	public boolean containsWord(String word) {
 		String tempWord = word.toLowerCase();
-		return containsWordHelper(tempWord+"=", root);
+		if (useSmallWordHash && tempWord.length() <= smallWordLimit) {
+			return smallWordMap.get(tempWord) != null;
+		}
+		else
+			containsWordHelper(word+"=", root);
+		return false;
 	}
 	
 	private boolean containsWordHelper(String word, WordNode currentNode) {
@@ -98,11 +118,20 @@ public class WordTree implements java.io.Serializable {
 	}
 	
 	/**
+	 * Returns the maximum number of characters a word has to be to be considered small
+	 * @return
+	 */
+	public int getSmallWordLimit() {
+		return smallWordLimit;
+	}
+	
+	/**
 	 * @author Jacob Medd
 	 * @param value - the value that the child node should have
 	 * @return a subtree of the current tree whose root is the immediate child with the value
 	 * matching the passed value. Returns null if there is no child with the value 
 	 */
+	/**
 	public WordTree getChildWordTree(String value) {
 		WordTree result = null;
 		WordNode nextNode = root.getChildWithValue(value);
@@ -111,5 +140,5 @@ public class WordTree implements java.io.Serializable {
 		}
 		
 		return result;
-	}
+	}*/
 }

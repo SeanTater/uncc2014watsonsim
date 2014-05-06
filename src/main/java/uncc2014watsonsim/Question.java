@@ -15,11 +15,15 @@ public class Question extends ArrayList<Answer> {
 	private static final long serialVersionUID = 1L;
 	public int id; // Question ID comes from the database and is optional.
 	public String text;
-	String raw_text;
+	public String raw_text;
 	public Answer answer;
     private String category = "unknown";
     private QType type;
     private AnnotationController ac = new AnnotationController();
+    
+    public Question() {
+    	
+    }
     
     /**
      * Create a question from it's raw text

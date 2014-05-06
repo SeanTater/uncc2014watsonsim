@@ -22,7 +22,12 @@ public class Answer implements Comparable<Answer> {
     public Map<String, Double> scores = new HashMap<>();
     public List<Passage> passages = new ArrayList<>();
     public String candidate_text;
+    private double external_score; //Value that can be manually get or set for anagram pipeline
 
+    public Answer() {
+    	
+    }
+    
     /** Create an Answer with one implicitly defined Document */
     public Answer(Passage d) {
         this.passages.add(d);
@@ -34,6 +39,13 @@ public class Answer implements Comparable<Answer> {
     	this(new Passage(engine, title, full_text, reference));
     }
     
+    public double getExternalScore() {
+    	return external_score;
+    }
+    
+    public void setExternalScore(double d) {
+    	external_score = d;
+    }
     
     /** Create an Answer (with engine) from JSON */
 	public Answer(String engine, JSONObject attr) {

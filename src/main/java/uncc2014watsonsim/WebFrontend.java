@@ -6,7 +6,7 @@ import spark.*;
 public class WebFrontend {
 
 	public static void main(String[] args) {
-		
+		/**
 		externalStaticFileLocation("public");
 		get(new Route("/ask") {
 			@Override
@@ -21,7 +21,7 @@ public class WebFrontend {
 		        response.type("application/json");
 		        return String.format("{\"answers\": [%s]}", output.substring(0, output.length() - 1));
 			}
-		});
+		});*/
 
 	}
 

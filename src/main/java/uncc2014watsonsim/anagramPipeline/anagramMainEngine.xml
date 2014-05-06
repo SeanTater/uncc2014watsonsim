@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <primitive>false</primitive>  
+  <delegateAnalysisEngineSpecifiers>
+    <delegateAnalysisEngine key="parseQuestion">
+      <import name="uncc2014watsonsim.anagramPipeline.parseQuestion"/>
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="generateAnagramSolutions">
+      <import name="uncc2014watsonsim.anagramPipeline.generateAnagramSolutions"/>
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="AnagramSupportRetrievalAggregateEngine">
+      <import name="uncc2014watsonsim.anagramPipeline.AnagramSupportRetrievalAggregateEngine"/>
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="AnagramSupportingPassageScoreEngine">
+      <import name="uncc2014watsonsim.anagramPipeline.AnagramSupportingPassageScoreEngine"/>
+    </delegateAnalysisEngine>
+  </delegateAnalysisEngineSpecifiers>
+  <analysisEngineMetaData>
+    <name>anagramMainEngine</name>
+    <description/>
+    <version>1.0</version>
+    <vendor/>
+    <configurationParameters/>
+    <configurationParameterSettings/>
+    <flowConstraints>
+      <fixedFlow>
+        <node>parseQuestion</node>
+        <node>generateAnagramSolutions</node>
+        <node>AnagramSupportRetrievalAggregateEngine</node>
+        <node>AnagramSupportingPassageScoreEngine</node>
+      </fixedFlow>
+    </flowConstraints>
+    <typePriorities/>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs/>
+        <outputs>
+          <type allAnnotatorFeatures="true">uncc2014watsonsim.anagram.AnagramQuestion</type>
+        </outputs>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+  <operationalProperties>
+      <modifiesCas>true</modifiesCas>
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </analysisEngineMetaData>
+  <resourceManagerConfiguration/>
+</analysisEngineDescription>

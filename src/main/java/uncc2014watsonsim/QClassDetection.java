@@ -130,7 +130,7 @@ public class QClassDetection {
 	 * @param category
 	 * @return
 	 */
-	private static boolean isAnagram(String clue, String category) {
+	public static boolean isAnagram(String clue, String category) {
 		return category.toUpperCase().matches(".*ANAGRAM.*") ||
 				category.toUpperCase().matches(".*SCRAMBLED.*") ||
 				category.toUpperCase().matches(".*JUMBLED.*");

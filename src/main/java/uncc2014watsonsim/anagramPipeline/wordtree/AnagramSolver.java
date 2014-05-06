@@ -1,4 +1,4 @@
-package uncc2014watsonsim.anagramPipeline;
+package uncc2014watsonsim.anagramPipeline.wordtree;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,8 +23,18 @@ public class AnagramSolver {
 	private String[] generateCandidateHelper(WordNode currentNode, String partialPhrase, String partialSolution) {
 		ArrayList<String> solutions = new ArrayList<String>();
 		if (partialPhrase.equals("")) {
-			if (currentNode.getChildWithValue("=") != null) {
-				solutions.add(partialSolution);
+			if (partialSolution.length() > 1) {
+				if (currentNode.getChildWithValue("=") != null) {
+					solutions.add(partialSolution);
+				}
+			}
+		}
+		else if (partialSolution.isEmpty() && partialPhrase.length() <= wordTree.getSmallWordLimit()) {
+			String[] possiblities = generatePermutations(partialPhrase);
+			for (String str : possiblities) {
+				if (wordTree.containsWord(str)) {
+					solutions.add(str);
+				}
 			}
 		}
 		else {
@@ -54,8 +64,8 @@ public class AnagramSolver {
 				WordNode childNode = currentNode.getChildWithValue(c);
 				if (childNode != null) {
 					int charIndex = partialPhrase.indexOf(c);
-					String newPartialPhrase = partialPhrase.substring(0, charIndex) + partialPhrase.substring(charIndex+1, partialPhrase.length());
-					String[] returnedValues = generateCandidateHelper(childNode, newPartialPhrase, partialSolution + c);
+					StringBuilder strBuilder = new StringBuilder(partialPhrase);
+					String[] returnedValues = generateCandidateHelper(childNode, strBuilder.deleteCharAt(charIndex).toString(), partialSolution + c);
 					
 					if (returnedValues != null) {
 						for (String s : returnedValues) {
@@ -85,5 +95,22 @@ public class AnagramSolver {
 		}
 		
 		return charSet.toArray(new String[0]);
+	}
+	
+	private String[] generatePermutations(String chars) {
+		ArrayList<String> returnedValues = new ArrayList<String>();
+		if (chars.length() == 1) {
+			return new String[] {chars};
+		}
+		else {
+			String currentChar = chars.substring(0,1);
+			String[] previousResults = generatePermutations(chars.substring(1));
+			for (String str : previousResults) {
+				for (int i = 0; i < str.length()+1; i++) {
+					returnedValues.add(str.substring(0,i) + currentChar + str.substring(i, str.length()));
+				}
+			}
+			return returnedValues.toArray(new String[0]);
+		}
 	}
 }
