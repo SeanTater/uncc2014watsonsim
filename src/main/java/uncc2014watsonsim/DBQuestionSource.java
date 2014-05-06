@@ -1,15 +1,8 @@
 package uncc2014watsonsim;
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DBQuestionSource extends QuestionSource {
 	private static final long serialVersionUID = 1L;
@@ -19,7 +12,7 @@ public class DBQuestionSource extends QuestionSource {
 	/** Get length questions, starting with question id > (not >=) start
 	 * In hindsight >= would have been better but now it needs to be consistent.
 	 */
-	public DBQuestionSource(int start, int length) throws Exception {
+	public DBQuestionSource(int start, int length) throws SQLException {
 		// Get a list of questions, ordered so that it is consistent
 		PreparedStatement bulk_select_questions = db.prep(
 				"select * from questions where rowid > ? order by rowid limit ?;");
@@ -30,7 +23,7 @@ public class DBQuestionSource extends QuestionSource {
 	
 	/** Run an arbitrary query on the database to get questions.
 	 */
-	public DBQuestionSource(String conditions) throws Exception {
+	public DBQuestionSource(String conditions) throws SQLException {
 		// Get a list of questions, ordered so that it is consistent
 		PreparedStatement query = db.prep("select * from questions "
 				+ conditions + ";");
@@ -49,7 +42,7 @@ public class DBQuestionSource extends QuestionSource {
 		for (Answer r : results) {
 			bulk_insert.setLong(1, q.id);
 			bulk_insert.setString(2, r.candidate_text);
-			bulk_insert.setString(3, r.passages.get(0).text);
+			bulk_insert.setString(3, r.passages.get(0).getText());
 			//TODO: we need to generalize this
 			String engine = r.passages.get(0).engine_name;
 			bulk_insert.setString(4, engine);

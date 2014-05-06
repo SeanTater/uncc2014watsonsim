@@ -82,10 +82,10 @@ class SingleTrainingResult extends Thread {
 	
 	public void run() {
 		try {
-			List<Answer> uncollated_results = new ArrayList<Answer>(); 
+			List<Answer> uncollated_results = new ArrayList<Answer>();
 			for (Searcher searcher : searchers)
 				//TODO: fix the following line which is failing to compile
-				//uncollated_results.addAll(searcher.runQuery(q.text));
+				//uncollated_results.addAll(searcher.query(q.text));
 			//Thread.sleep(1000);
 			DBQuestionSource.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.

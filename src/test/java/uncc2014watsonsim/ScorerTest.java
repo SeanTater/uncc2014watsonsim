@@ -5,59 +5,37 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import uncc2014watsonsim.scorers.PercentWordsInCommon;
+import uncc2014watsonsim.scorers.Scorer;
+
 public class ScorerTest {
 
-	// Setup possible inputs
-	Answer yahoo1;
-	Answer yahoo2;
-	Answer bing1;
-	Answer bing2;
-	Learner ml;
+	Question question;
+	Answer a_is_question;
+	Answer a_like_question;
+	Answer a_unlike_question;
+	Answer a_unlike_all;
+	Passage p_is_question;
+	Passage p_like_question;
+	Passage p_unlike_question;
 	
 	@Before
-	public void setUp() {
-		// Setup possible inputs
-		//TODO: fix the following statements.  The constructors are invalid.
-		//yahoo1 = new Answer("yahoo", "Alligators", "text", "reference", 1, 0.75);
-		//yahoo2 = new Answer("yahoo", "Eels", "text", "reference", 2, 0.38);
-		//bing1 = new Answer("bing", "Alligators", "text", "reference", 1, 0.25);
-		//bing2 = new Answer("bing", "Elk", "text", "reference", 2, 0.19);
-		ml = new AverageLearner();
+	public void setUp() throws Exception {
+		question = new Question("This is the question.");
+		a_is_question = new Answer(p_is_question);
+		a_like_question = new Answer(p_like_question);
+		a_unlike_question = new Answer(p_unlike_question);
+		a_unlike_all = new Answer(new Passage("engine", "Mars", "39th planet from the sun, mod 7.", "http://nana.gov"));
+		p_is_question = new Passage("engine", "Question", "This is the question.", "http://question");
+		p_like_question = new Passage("engine", "Questionishness", "This is kinda like the question.", "http://questionishness");
+		p_unlike_question = new Passage("engine", "Cows", "Cows grow wings and fly on April 11.", "http://example.com");
 	}
 
 	@Test
-	public void testOne() throws Exception {
-		// Make an exact copy when there is 1 result
-		Question q = new Question("Fake Question?");
-		q.add(yahoo1);
-		ml.test(q);
-		assertEquals(q.get(0), yahoo1);
-		assertEquals(q.get(0).scores.get("combined"), AverageLearner.logistic(0.75), 0.001);
-	}
-	
-	@Test
-	public void testTwo() throws Exception {
-		// Average two results
-		Question q = new Question("Fake Question?");
-		q.add(yahoo1);
-		q.add(bing1);
-		ml.test(q);
-		assertEquals(q.get(0), yahoo1);
-		assertEquals(q.get(0).scores.get("combined"), AverageLearner.logistic(0.5), 0.001);
-	}
+	public void testScorePassage() {
+		PassageScorer s = new PercentWordsInCommon();
 		
-	@Test
-	public void testSort() throws Exception {
-		// Sort unique results
-		Question q = new Question("Fake Question?");
-		q.add(yahoo1);
-		q.add(yahoo2);
-		q.add(bing1);
-		q.add(bing2);
-		ml.test(q);
-		assertEquals("Alligators", q.get(0).candidate_text);
-		assertEquals("Eels", q.get(1).candidate_text);
-		assertEquals("Elk", q.get(2).candidate_text);
+		fail("Not yet implemented"); // TODO
 	}
 
 }

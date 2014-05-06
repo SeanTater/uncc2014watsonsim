@@ -1,4 +1,5 @@
 package uncc2014watsonsim;
+import java.util.List;
 
 /**
  *
@@ -24,7 +25,7 @@ public class Translation {
         String query = question + " NOT title:*\\:*" + " NOT title:list*"
                 + " NOT title:index*" ;
         question = question.replaceAll("[^0-9a-zA-Z ]+", " ");
-        String[] words = StringUtils.filterRelevant(question).split(" ");
+        List<String> words = StringUtils.tokenize(question);
 
         for (String word : words) {
             query = " NOT title:" + word + " " + query ;

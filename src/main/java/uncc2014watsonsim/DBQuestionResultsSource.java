@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import uncc2014watsonsim.research.PassageRetrieval;
+import uncc2014watsonsim.researchers.PassageRetrieval;
 
 /**
 *
@@ -49,7 +49,7 @@ public class DBQuestionResultsSource extends QuestionSource {
 		for (Passage r : results) {
 			bulk_insert.setLong(1, q.id);
 			bulk_insert.setString(2, r.title);
-			bulk_insert.setString(3, r.text);
+			bulk_insert.setString(3, r.getText());
 			//TODO: we need to generalize this
 			String engine = r.engine_name;
 			bulk_insert.setString(4, engine);

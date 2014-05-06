@@ -11,22 +11,26 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
-import uncc2014watsonsim.Score;
 
+/**
+ * Internet-enabled Searcher for Bing.
+ * 
+ * You will need a Bing api key, which you can (as of the time of this writing)
+ * get from <a href="http://datamarket.azure.com">Microsoft</a>
+ * 
+ * Bing gives around 5000 queries per month, which means that in most cases for
+ * sustained development you will need to use CachingSearcher.
+ * 
+ * @see CachingSearcher
+ * @see privatedata.bingAPIKey
+ * @author Sean Gallagher
+ * @author Stephen Stanton
+ * @author D Haval
+ */
 public class BingSearcher extends Searcher {
 	
-	static {
-		Score.registerPassageScore("BING_RANK");
-	}
-	
-	@Override
-	public List<Passage> runTranslatedQuery(String query) {
-		return runBaseQuery(query);
-	}
-	
-	public List<Passage> runBaseQuery(String query) {
+	public List<Passage> query(String query) {
 		//TODO: Should this be done in StringUtils?
 	    query = query.replaceAll(" ", "%20");
 	    String url = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27" + query + "%27&$top=50&$format=Atom";
@@ -40,19 +44,19 @@ public class BingSearcher extends Searcher {
 	    		.returnContent().asString();
 	    	
 	    	Document doc = Jsoup.parse(resp);
-	    	
-		    int i=0;
-	    	for (Element e : doc.select("entry")) {
+	    	List<Element> elements = doc.select("entry");
+	    	// Perhaps limit to MAX_RESULTS?
+		    for (int i=0; i < elements.size(); i++) {
+		    	Element e = elements.get(i);
 	    		results.add(new Passage(
-	        			"bing",         	// Engine
-	        			e.select("d|Title").text(),	        // Title
-	        			e.select("d|Description").text(), // Full Text
-	        			e.select("d|Url").text())          // Reference
-	    				.score("BING_RANK", (double) i) // Score
-	    			);
-	    		i++;
+        			"bing",         	// Engine
+        			e.select("d|Title").text(),	        // Title
+        			e.select("d|Description").text(), // Full Text
+        			e.select("d|Url").text())          // Reference
+    				.score("BING_RANK", (double) i) // Score
+    			);
 	    	}
-		    
+		    System.out.print("B!");
 	    } catch (IOException e) {
 	    	System.out.println("Error while searching with Bing. Ignoring. Details follow.");
 	        e.printStackTrace();

@@ -42,18 +42,8 @@ public class CachingSearcher extends Searcher {
 		}
 		cache.executeBatch();
 	}
-
-	@Override
-	public List<Passage> runTranslatedQuery(String query) {
-		return runAnyQuery(query, true);
-	}
-
-	@Override
-	public List<Passage> runBaseQuery(String query) {
-		return runAnyQuery(query, false);
-	}
 	
-	private List<Passage> runAnyQuery(String query, boolean translated) {
+	public List<Passage> query(String query) {
 		List<Passage> results = new ArrayList<Passage>();
 		
 		try {
@@ -83,9 +73,8 @@ public class CachingSearcher extends Searcher {
 		if (results.isEmpty()) {
 			// If the SQL search didn't return anything, then run the Searcher.
 			PreparedStatement set_cache = db.prep(
-					"insert into cache (id, query, engine, title, fulltext, reference, rank, score) values (?,?,?,?,?,?,?,?);");
-			List<Passage> passages = translated ? searcher.runTranslatedQuery(query) : searcher.runBaseQuery(query);
-			for (Passage p : passages) {
+					"insert into cache (id, query, engine, title, fulltext, reference, rank, score, created_on) values (?,?,?,?,?,?,?,?,datetime('now'));");
+			for (Passage p : searcher.query(query)) {
 				// Add every Answer to the cache
 				results.add(p);
 				long id = query.hashCode() ^ ((p.engine_name.hashCode() ^ p.reference.hashCode()) << 32);
@@ -94,7 +83,7 @@ public class CachingSearcher extends Searcher {
 					set_cache.setString(2, query);
 					set_cache.setString(3, p.engine_name);
 					set_cache.setString(4, p.title);
-					set_cache.setString(5, p.text);
+					set_cache.setString(5, p.getText());
 					set_cache.setString(6, p.reference);
 					set_cache.addBatch();
 					setScores(p, id);

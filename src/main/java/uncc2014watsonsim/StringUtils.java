@@ -1,18 +1,14 @@
 package uncc2014watsonsim;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
@@ -33,7 +29,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	/** Filter out stop words from a string */
 	public static List<String> tokenize(String text) {
 		List<String> tokens = new ArrayList<>();
-		
 		text = text.replaceAll("[^0-9a-zA-Z ]+", "").toLowerCase().trim();
 		
 		try (TokenStream tokenStream = analyzer.tokenStream("text", text)) {
@@ -47,12 +42,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			while (tokenStream.incrementToken()) {
 				tokens.add(token.toString());
 			}
-
 		} catch (IOException e) {
 			// If we can't trim it, so what?
 			e.printStackTrace();
 		}
-		
 		return tokens;
 	}
 	
@@ -75,5 +68,4 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         
         return StringUtils.getLevenshteinDistance(candidate.toLowerCase(), reference.toLowerCase()) < threshold;
     }
-
 }
