@@ -86,8 +86,9 @@ public class SQLiteDB {
 			// There was a problem executing the query
 			return false;
 		}
-
-		return existent_tables.containsAll(Arrays.asList(required_tables.get(name)));
+		
+		return required_tables.containsKey(name) &&
+				existent_tables.containsAll(Arrays.asList(required_tables.get(name)));
 	}
 
 }
