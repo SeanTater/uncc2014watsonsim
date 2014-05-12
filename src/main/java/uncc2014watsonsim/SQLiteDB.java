@@ -22,7 +22,7 @@ public class SQLiteDB {
 	/* Set which tables each database must have */
 	static {
 		required_tables = new HashMap<String, String[]>();
-		required_tables.put("sources", new String[]{"documents"});
+		required_tables.put("sources", new String[]{"meta", "content", "redirects"});
 		required_tables.put("questions", new String[]{"questions", "results", "cache"});
 		required_tables.put("dict", new String[]{"dictionary"});
 	}

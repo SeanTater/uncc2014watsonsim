@@ -5,29 +5,35 @@
  */
 PRAGMA journal_mode = WAL;
 PRAGMA synchronous = OFF;
+PRAGMA foreign_keys = ON;
 
-/* This is the main document store
- * It may be worthwhile to separate text from the other fields as it is very
- * large and slows down full scans
+/*
+ * meta and content are separate because the content is very large and makes
+ * routine changes slower otherwise.
  */
-DROP TABLE IF EXISTS documents;
-CREATE TABLE documents (
-    docno TEXT PRIMARY KEY,
+CREATE TABLE meta (
+    id INTEGER PRIMARY KEY,
     title TEXT,
-    text TEXT,
-    source TEXT
+    source TEXT,
+    reference TEXT,
+    pageviews INTEGER
 );
-CREATE INDEX IF NOT EXISTS documents_source ON documents(source);
-CREATE INDEX IF NOT EXISTS documents_title ON documents(title);
 
-DROP TABLE IF EXISTS redirect_documents;
-CREATE TABLE redirect_documents (
-    source_title TEXT,
-    target_docid TEXT,
-    target_title TEXT,
-    FOREIGN KEY(target_docid) REFERENCES documents(docid)
+CREATE TABLE content (
+    id INTEGER PRIMARY KEY,
+    text TEXT,
+    FOREIGN KEY(id) REFERENCES meta(id)
 );
-CREATE INDEX IF NOT EXISTS redirect_documents_tdocid ON redirect_documents(target_docid);
+
+CREATE INDEX meta_source ON meta(source);
+CREATE INDEX meta_title ON meta(title);
+
+CREATE TABLE redirects (
+    target_id INTEGER,
+    source_title TEXT,
+    FOREIGN KEY(target_id) REFERENCES meta(id)
+);
+CREATE INDEX redirects_id ON redirects(target_id);
 
 -- Used for an experimental scorer. (PhraseTokens)
 -- Should it be moved to another DB?
