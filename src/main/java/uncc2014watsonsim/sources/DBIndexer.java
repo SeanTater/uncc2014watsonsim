@@ -84,12 +84,12 @@ public class DBIndexer {
         IndexWriter lucene_index = new IndexWriter(dir, iwc);
     	
         /* SQL setup */
-		java.sql.ResultSet sql = db.prep("select docno, title, text from documents order by title;").executeQuery();
+		java.sql.ResultSet sql = db.prep("SELECT reference, title, text FROM meta INNER JOIN content ON meta.id=content.id ORDER BY title;").executeQuery();
 		
 		Pattern splitter = Pattern.compile("\\w+");
 		try {
 			while(sql.next()){
-				Passage p = new Passage("none", sql.getString("title"), sql.getString("text"), sql.getString("docno"));
+				Passage p = new Passage("none", sql.getString("title"), sql.getString("text"), sql.getString("reference"));
 	            System.out.println("Indexing: " + p.title);
 	            
 	            // Prepare the passage
