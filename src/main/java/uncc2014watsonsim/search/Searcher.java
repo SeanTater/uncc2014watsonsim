@@ -70,7 +70,7 @@ public abstract class Searcher {
 		    		if (p.getText() == null) p.setText("");
 				} catch (SQLException e) {
 					e.printStackTrace();
-					throw new RuntimeException("Failed to execute sources full text search. "
+					throw new RuntimeException("Failed to execute sources search. "
 							+ "Missing document? docno:"+p.reference);
 				}
 	    		results.add(p);
