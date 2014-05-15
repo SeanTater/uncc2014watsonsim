@@ -12,7 +12,6 @@ import uncc2014watsonsim.Question;
  *
  */
 public class MediaWikiTrimmer extends Researcher {
-
 	@Override
 	public void passage(Question q, Answer a, Passage p) {
 		// TODO: This should annotate instead of mutate really

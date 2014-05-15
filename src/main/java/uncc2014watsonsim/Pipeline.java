@@ -58,7 +58,7 @@ public class Pipeline {
 // usage without CachingSearcher
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		//new BingSearcher()
+//		new BingSearcher()
 	};
 	
 	private static final Researcher[] early_researchers = {

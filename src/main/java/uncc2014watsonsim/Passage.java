@@ -13,10 +13,14 @@ public class Passage {
 	public String title;
     public Map<String, Double> scores = new HashMap<>();
     
-
-	/** 
-	 * Create a Passage with all its required fields
-	 */
+    /**
+     * Create a new Passage
+     * 
+     * @param engine_name  A simple lowercase string
+     * @param title
+     * @param text
+     * @param reference   Specific to the engine, or a URL, for later lookup
+     */
 	public Passage(String engine_name, String title, String text, String reference) {
 		this.setText(text);
 		this.reference = reference;
