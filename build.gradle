@@ -6,7 +6,7 @@ apply plugin: 'download-task'
 
 // Meta information
 mainClassName = System.getProperty("mainClass")
-version = "0.2.0"
+version = "0.3.0"
 group = "edu.uncc"
 
 // Meta-dependencies (what you need so as to run this buildscript)
