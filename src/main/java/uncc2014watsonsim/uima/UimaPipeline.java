@@ -19,8 +19,6 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
 
-import com.google.api.services.customsearch.Customsearch.Cse.List;
-
 import uncc2014watsonsim.uima.QueryCollectionReader;
 import uncc2014watsonsim.uima.types.QueryString;
 import uncc2014watsonsim.uima.types.SearchResult;

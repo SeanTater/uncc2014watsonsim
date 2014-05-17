@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 
 
 public class WatsonSim {
-	
     public static void main(String[] args) throws Exception {
 
         // Read a command from the console

@@ -1,22 +1,18 @@
 package uncc2014watsonsim;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.concurrent.ForkJoinPool;
+
+import org.apache.uima.UIMAFramework;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.resource.ResourceSpecifier;
+import org.apache.uima.util.InvalidXMLException;
+import org.apache.uima.util.XMLInputSource;
+
 import uncc2014watsonsim.researchers.*;
-import uncc2014watsonsim.scorers.AnswerScorer;
-import uncc2014watsonsim.scorers.BingRank;
-import uncc2014watsonsim.scorers.Correct;
-import uncc2014watsonsim.scorers.GoogleRank;
-import uncc2014watsonsim.scorers.IndriRank;
-import uncc2014watsonsim.scorers.IndriScore;
-import uncc2014watsonsim.scorers.LuceneRank;
-import uncc2014watsonsim.scorers.LuceneScore;
-import uncc2014watsonsim.scorers.NGram;
-import uncc2014watsonsim.scorers.PassageScorer;
-import uncc2014watsonsim.scorers.PassageTermMatch;
-import uncc2014watsonsim.scorers.PercentFilteredWordsInCommon;
-import uncc2014watsonsim.scorers.QuestionInPassageScorer;
-import uncc2014watsonsim.scorers.Scorer;
-import uncc2014watsonsim.scorers.SkipBigram;
-import uncc2014watsonsim.scorers.WordProximity;
+import uncc2014watsonsim.scorers.*;
 import uncc2014watsonsim.search.*;
 
 /** The standard Question Analysis pipeline.
@@ -62,7 +58,7 @@ public class Pipeline {
 // usage without CachingSearcher
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		//new BingSearcher()
+//		new BingSearcher()
 	};
 	
 	private static final Researcher[] early_researchers = {
@@ -96,6 +92,7 @@ public class Pipeline {
 		new QuestionInPassageScorer(),
 		//new ScorerIrene(), // TODO: Introduce something new
 		new NGram(),
+		new LATTypeMatchScorer(),
 		//new ScorerAda(),      // TODO: Introduce something new
 		//new WShalabyScorer(), // TODO: Introduce something new
 		//new SentenceSimilarity(),
@@ -105,6 +102,30 @@ public class Pipeline {
 		new WekaTee(),
 		new CombineScores()
 	};
+	
+	/*
+	 * Initialize UIMA. 
+	 * Why here? We do not want to reinstantiate the Analysis engine each time.
+	 * We also don't want to load the POS models each time we ask a new question. Here we can hold the AE for the 
+	 * entire duration of the Pipeline's life.
+	 */
+	public static AnalysisEngine uimaAE;
+	
+	static {
+		try{
+			XMLInputSource uimaAnnotatorXMLInputSource = new XMLInputSource("src/main/java/uncc2014watsonsim/uima/qAnalysis/qAnalysisApplicationDescriptor.xml");
+			final ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(uimaAnnotatorXMLInputSource);
+			//Generate AE
+			uimaAE = UIMAFramework.produceAnalysisEngine(specifier);
+		}catch(IOException e){
+			e.printStackTrace();
+		} catch (InvalidXMLException e) {
+			e.printStackTrace();
+		} catch (ResourceInitializationException e) {
+			e.printStackTrace();
+		}
+	}
+	/* End UIMA */
 	
 	public static Question ask(String qtext) {
 	    return ask(new Question(qtext));

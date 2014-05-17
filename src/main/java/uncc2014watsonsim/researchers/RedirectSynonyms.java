@@ -19,8 +19,8 @@ public class RedirectSynonyms extends Researcher {
 
 	@Override
 	public void answer(Question q, Answer a) {
-		PreparedStatement s = db.prep("select source_title from redirect_documents inner join documents on docno=target_docid where title = ?;");
-		
+		PreparedStatement s = db.prep(
+			"SELECT source_title FROM redirects INNER JOIN meta ON target_id=id where title = ?;");
 		try {
 			s.setString(1, a.candidate_text);
 			ResultSet results = s.executeQuery();

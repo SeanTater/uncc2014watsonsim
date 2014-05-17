@@ -22,7 +22,7 @@ public class SQLiteDB {
 	/* Set which tables each database must have */
 	static {
 		required_tables = new HashMap<String, String[]>();
-		required_tables.put("sources", new String[]{"documents"});
+		required_tables.put("sources", new String[]{"meta", "content", "redirects"});
 		required_tables.put("questions", new String[]{"questions", "results", "cache"});
 		required_tables.put("dict", new String[]{"dictionary"});
 	}
@@ -86,8 +86,9 @@ public class SQLiteDB {
 			// There was a problem executing the query
 			return false;
 		}
-
-		return existent_tables.containsAll(Arrays.asList(required_tables.get(name)));
+		
+		return required_tables.containsKey(name) &&
+				existent_tables.containsAll(Arrays.asList(required_tables.get(name)));
 	}
 
 }

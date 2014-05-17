@@ -106,6 +106,16 @@ test {
     }
 }
 
+fatJar {
+    manifest {
+        attributes "Main-Class": "uncc2014watsonsim.WatsonSim"
+        // This prevents nested signatures (which will fail if included)
+        exclude 'META-INF/*.DSA'
+        exclude 'META-INF/*.RSA'
+        exclude 'META-INF/*.SF'
+    }
+}
+
 distZip {
     // Creates the zipfile distributed to class
     into(project.name + "-" + project.version) {

@@ -3,7 +3,9 @@ package uncc2014watsonsim;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import uncc2014watsonsim.qAnalysis.FITBAnnotations;
+import org.apache.uima.jcas.JCas;
+
+import uncc2014watsonsim.qAnalysis.AnnotationController;
 
 
 public class Question extends ArrayList<Answer> {
@@ -14,7 +16,7 @@ public class Question extends ArrayList<Answer> {
 	public Answer answer;
     private String category = "unknown";
     private QType type;
-    private FITBAnnotations fitbAnnotations= null; //set by the FITB QType detector iff QType == FITB
+    private AnnotationController ac = new AnnotationController();
     
     /**
      * Create a question from it's raw text
@@ -23,9 +25,13 @@ public class Question extends ArrayList<Answer> {
         this.raw_text = text;
         this.text = StringUtils.filterRelevant(text);
         this.type = QClassDetection.detectType(this);
+       // if (type == QType.FITB) {
+        //All questions can run through UIMA Annotation Pipeline
+        ac.createAnnotations(this);    	
+        //}
     }
 
-    /**
+	/**
      * Create a question given it's raw text and category
      */
     public Question(String question, String category) {
@@ -68,13 +74,8 @@ public class Question extends ArrayList<Answer> {
     public void setType(QType type) {
         this.type = type;
     }
-    
-    public FITBAnnotations getFITBAnnotations() {
-    	if (fitbAnnotations == null) fitbAnnotations = new FITBAnnotations();
-    	return fitbAnnotations;
-    }
 
-	public String getRaw_text() {
+ 	public String getRaw_text() {
 		return raw_text;
 	}
 
@@ -93,11 +94,10 @@ public class Question extends ArrayList<Answer> {
 		}
 		return added_any;
 	}
-    
-    //not sure if we should create this as we only need the object for FITB questions and
-    // the getter creates one if it doesn't exist (Ken Overholt)
-    //public void setFITBAnnotations(FITBAnnotations fitbAnnotations) {
-    //	this.fitbAnnotations = fitbAnnotations;
-    //}
-    
+
+	public JCas getCAS() {
+		
+		return ac.getCas();
+	}
+        
 }

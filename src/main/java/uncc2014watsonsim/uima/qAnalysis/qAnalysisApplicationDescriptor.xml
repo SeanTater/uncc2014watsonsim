@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <primitive>false</primitive>
+  <delegateAnalysisEngineSpecifiers>
+    <delegateAnalysisEngine key="FITBAnnotator">
+      <import name="uncc2014watsonsim.uima.qAnalysis.FITBAnnotator"/>
+    </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="LATDetectionAnnotator">
+      <import name="uncc2014watsonsim.uima.qAnalysis.LATDetectionAnnotator"/>
+    </delegateAnalysisEngine>
+  </delegateAnalysisEngineSpecifiers>
+  <analysisEngineMetaData>
+    <name>QueryAnalysisComponents</name>
+    <description/>
+    <version>1.0</version>
+    <vendor/>
+    <configurationParameters searchStrategy="language_fallback"/>
+    <configurationParameterSettings/>
+    <flowConstraints>
+      <fixedFlow>
+        <node>FITBAnnotator</node>
+      <node>LATDetectionAnnotator</node>
+      </fixedFlow>
+    </flowConstraints>
+    <typePriorities/>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs/>
+        <outputs/>
+        <inputSofas>
+          <sofaName>QUERY</sofaName>
+        </inputSofas>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+    <operationalProperties>
+      <modifiesCas>true</modifiesCas>
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </analysisEngineMetaData>
+  <resourceManagerConfiguration/>
+  <sofaMappings>
+    <sofaMapping>
+      <componentKey>FITBAnnotator</componentKey>
+      <aggregateSofaName>QUERY</aggregateSofaName>
+    </sofaMapping>
+  </sofaMappings>
+</analysisEngineDescription>

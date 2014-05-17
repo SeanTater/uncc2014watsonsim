@@ -57,7 +57,7 @@ public abstract class Searcher {
     		return passages;
     	} else {
 	    	List<Passage> results = new ArrayList<Passage>();
-	    	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?;");
+	    	PreparedStatement fetcher = db.prep("SELECT title, text FROM meta INNER JOIN content ON meta.id=content.id WHERE reference=?;");
 	
 	    	for (Passage p: passages) {
 	    		ResultSet doc_row;
@@ -70,7 +70,7 @@ public abstract class Searcher {
 		    		if (p.getText() == null) p.setText("");
 				} catch (SQLException e) {
 					e.printStackTrace();
-					throw new RuntimeException("Failed to execute sources full text search. "
+					throw new RuntimeException("Failed to execute sources search. "
 							+ "Missing document? docno:"+p.reference);
 				}
 	    		results.add(p);

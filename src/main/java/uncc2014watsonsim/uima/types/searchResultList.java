@@ -12,7 +12,7 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** Containing a list of search results
- * Updated by JCasGen Sun Apr 06 17:17:36 EDT 2014
+ * Updated by JCasGen Tue Apr 29 17:51:30 EDT 2014
  * XML source: /home/jonathan/workspace/uncc2014watsonsim/src/main/java/uncc2014watsonsim/uima/types.xml
  * @generated */
 public class searchResultList extends TOP {

@@ -3,11 +3,15 @@ package uncc2014watsonsim.researchers;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.uima.jcas.JCas;
+
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.qAnalysis.FITBAnnotations;
+import uncc2014watsonsim.uima.UimaTools;
+import uncc2014watsonsim.uima.UimaToolsException;
+import uncc2014watsonsim.uima.types.UIMAQuestion;
 
 public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 
@@ -18,13 +22,28 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 	
 	@Override
 	public void question(Question question) {
-		// only run this researcher for FITB questions
-		if (question.getType() != QType.FITB) return;
 		
-    	FITBAnnotations annot = question.getFITBAnnotations(); //temp annotation holder
-    	String theText = question.getRaw_text();
-    	String section1 = theText.substring(annot.getSection1Begin(), annot.getSection1End());
-    	String section2 = theText.substring(annot.getSection2Begin(), annot.getSection2End());
+		// If the question is not FITB, set the value of each answer score to NaN and exit
+		if (question.getType() != QType.FITB) {
+			for (Answer a: question) {
+				a.scores.put("FITB_EXACT_MATCH_SCORE", Double.NaN);				
+			}
+			return;
+		}
+		
+		//else run the scorer on FITB questions
+    	JCas annot = question.getCAS(); // See if we can pull out the annotations from the cas
+    	UIMAQuestion uimaQuestion;
+		try {
+			uimaQuestion = UimaTools.getSingleton(annot, UIMAQuestion.type);
+		} catch (UimaToolsException e) {
+			// On error, do not continue.
+			e.printStackTrace();
+			return;
+		}
+    	
+    	String section1 = uimaQuestion.getFitbSection1().getCoveredText();
+    	String section2 = uimaQuestion.getFitbSection2().getCoveredText();
         section1 = section1.replaceAll("\"", ""); //remove quotes
         section2 = section2.replaceAll("\"", ""); //remove quotes
         //TODO: make search more flexible (such as removing punctuation)
@@ -78,11 +97,11 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 				//System.out.println("The answer: " + result); //for debug
 				if (result != null && !result.equals("")) {
 					a.candidate_text = result;
-					//TODO: move this to a scorer?
 					a.scores.put("FITB_EXACT_MATCH_SCORE", 1.0);
 				}
 				else {
 					a.candidate_text = "result was blank or null";
+					a.scores.put("FITB_EXACT_MATCH_SCORE", Double.NaN);				
 				}
 				
 			};

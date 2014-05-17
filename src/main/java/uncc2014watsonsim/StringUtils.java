@@ -16,7 +16,7 @@ import org.apache.lucene.util.Version;
 *@author Jagan Vujjini
 */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
-	private static Analyzer analyzer = new EnglishAnalyzer(Version.LUCENE_46);
+	private static Analyzer analyzer = new EnglishAnalyzer(Version.LUCENE_47);
 	
 	/** Filter out stop words from a string */
 	public static String filterRelevant(String text) {
@@ -29,7 +29,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	/** Filter out stop words from a string */
 	public static List<String> tokenize(String text) {
 		List<String> tokens = new ArrayList<>();
-		text = text.replaceAll("[^0-9a-zA-Z ]+", "").toLowerCase().trim();
+		/* Do we really need to change tokens like this?
+		 * Seems like Lucene developers would have thought of this already.
+		 * text = text.replaceAll("[^0-9a-zA-Z ]+", "").toLowerCase().trim();
+		 */
 		
 		try (TokenStream tokenStream = analyzer.tokenStream("text", text)) {
 			//TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_46, new StringReader(text));
