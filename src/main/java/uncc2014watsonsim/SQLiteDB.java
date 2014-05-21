@@ -46,16 +46,19 @@ public class SQLiteDB {
 			}
 			connections.put(name, conn);
 		}
-		if (!sanityCheck()) {
-			System.out.println(String.format("Warning: Database \"%s\" missing or empty. Full texts will come from Indri and Lucene.", name));
-		}
 	}
 	
 	private void init_postgres() throws ClassNotFoundException, SQLException {
 		// Loads a postgresql driver, with no username/password
 	    Class.forName("org.postgresql.Driver");
-		conn = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/" + name);
-
+		conn = DriverManager.getConnection("jdbc:postgresql:" + name);
+		// PostgreSQL will buffer large queries if you autocommit.
+		conn.setAutoCommit(false);
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				commit();
+			}
+		});
 	}
 
 	private void init_sqlite() throws ClassNotFoundException, SQLException {
@@ -68,6 +71,19 @@ public class SQLiteDB {
 
 		// JDBC's SQLite uses autocommit (So commit() is redundant)
 		// Furthermore, close() is a no-op as long as the results are commit()'d
+
+		if (!sanityCheck()) {
+			System.out.println(String.format("Warning: Database \"%s\" missing or empty. Full texts will come from Indri and Lucene.", name));
+		}
+	}
+	
+	public void commit() {
+		try {
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.err.println("Could not commit to database! Data may have been lost!");
+		}
 	}
 	
 	/** Caching proxy for Connection.prepareStatement.
