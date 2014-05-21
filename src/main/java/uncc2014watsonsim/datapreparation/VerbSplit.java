@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
 import opennlp.tools.cmdline.parser.ParserTool;
@@ -34,6 +35,15 @@ import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.SQLiteDB;
 import uncc2014watsonsim.StringUtils;
+import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
+import edu.stanford.nlp.parser.dvparser.DVParser;
+import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import edu.stanford.nlp.semgraph.SemanticGraph;
+import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation;
+import edu.stanford.nlp.trees.Tree;
+import edu.stanford.nlp.util.CoreMap;
 
 /* @author Wlodek
  * @author Sean Gallagher
@@ -45,110 +55,22 @@ import uncc2014watsonsim.StringUtils;
  */
 
 public class VerbSplit {
-
-	public  String modelsPath="data/"; //models directory
-	private File parserMFile; 
-	private File sentDetectorMFile;
-	private File posMFile;
-
-	public SentenceModel sentenceModel; //sentence detection model 
-	public ParserModel parserModel; //parsing model
-	public POSTaggerME tagger;
-	
-	// Prevent unnecessary reinstantiation
-	SentenceDetectorME sentenceDetector;
-	Parser parser;
+	StanfordCoreNLP scn;
 
 	//initialize all models needed for processing a passage of text (multiple sentences)
-	//TODO: allow partial initialization parserInit() and chunkerInit()
 	public VerbSplit() {
-		File modelsDir = new File(this.modelsPath);
-
-		this.parserMFile = new File(modelsDir, "en-parser-chunking.bin");
-		this.sentDetectorMFile = new File(modelsDir, "en-sent.bin");
-		this.posMFile = new File(modelsDir,"en-pos-maxent.bin");
-
-		InputStream sentModelIn = null;
-		FileInputStream parserStream;
-		try {
-			//for finding sentences
-			sentModelIn = new FileInputStream(sentDetectorMFile);
-			this.sentenceModel = new SentenceModel(sentModelIn);
-			//for finding POS
-			FileInputStream posModelStream = new FileInputStream(posMFile);
-			POSModel model = new POSModel(posModelStream);
-			this.tagger = new POSTaggerME(model);
-			//for parsing
-			parserStream = new FileInputStream(parserMFile);
-			this.parserModel = new ParserModel(parserStream);
-		} catch (FileNotFoundException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		sentenceDetector = new SentenceDetectorME(this.sentenceModel);
-		parser = ParserFactory.create(
-				this.parserModel,
-				20, // beam size
-				0.95); // advance percentage
-	}
-
-	/** Turn one tokenized sentence into one top-ranked parse tree. */
-	public Parse parseSentence(List<String> tokens) throws InterruptedException {
-		//StringTokenizer st = new StringTokenizer(tks[i]); 
-		//There are several tokenizers available. SimpleTokenizer works best
-		System.out.print(";");
-		String sent= StringUtils.join(tokens," ");
-		return ParserTool.parseLine(sent,parser, 1)[0];
-	}
-	
-	/** Tokenize a paragraph into sentences, then into words. */
-	public List<List<String>> tokenizeParagraph(String paragraph) {
-		List<List<String>> results = new ArrayList<>();
-		// Find sentences, tokenize each, parse each, return top parse for each
-		for (String unsplit_sentence : sentenceDetector.sentDetect(paragraph)) {
-			results.add(Arrays.asList(
-					SimpleTokenizer.INSTANCE.tokenize(unsplit_sentence)
-					));
-		}
-		return results;
-	}
-	
-	/**
-	 * Get the highest tag on the tree with this type.
-	 * 
-	 * This uses a BFS.
-	 * @param type 
-	 * @return 
-	 */
-	public static Parse getTag(Parse parse, String type, boolean exact) {
-		ArrayDeque<Parse> pending = new ArrayDeque<>();
-		pending.add(parse);
-		while (!pending.isEmpty()) {
-			Parse p = pending.pop();
-
-			if (exact && p.getType().equals(type)
-					|| (!exact && p.getType().startsWith(type))) {
-				return p;
-			} else {
-				pending.addAll(Arrays.asList(p.getChildren()));
-			}
-		}
-		// Null Object Pattern
-		return new Parse("", new Span(0, 0), "UH", 0, 0);
+		Properties props = new Properties();
+		props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+		scn = new StanfordCoreNLP();
 	}
 	
 	public static void main(String[] args) throws SQLException {
 		VerbSplit v = new VerbSplit();
-		Heartbeat hb = new Heartbeat(Thread.currentThread());
-		hb.start();
 		
 		SQLiteDB db = new SQLiteDB("watsonsim");
 		// Fetch candidates
-		PreparedStatement candidate_stmt = db.prep("SELECT id, text FROM meta NATURAL JOIN content WHERE id NOT IN (SELECT doc FROM sentences) ORDER BY length(text) DESC LIMIT 100 OFFSET ?;");
+		//PreparedStatement candidate_stmt = db.prep("SELECT id, text FROM meta NATURAL JOIN content WHERE id NOT IN (SELECT doc FROM sentences) ORDER BY length(text) DESC LIMIT 100 OFFSET ?;");
+		PreparedStatement candidate_stmt = db.prep("SELECT id, text FROM meta NATURAL JOIN content WHERE id NOT IN (SELECT doc FROM sentences) ORDER BY pageviews DESC LIMIT 100 OFFSET ?;");
 		// Insert
 		PreparedStatement insert = db.prep("INSERT INTO sentences(doc, subject, verb, predicate) VALUES (?, ?, ?, ?);");
 		
@@ -156,17 +78,13 @@ public class VerbSplit {
 		candidate_stmt.setInt(1, r.nextInt(100));
 		ResultSet candidates = candidate_stmt.executeQuery();
 		while (candidates.next()) {
-			List<List<String>> paragraph = v.tokenizeParagraph(candidates.getString("text"));
-			for (List<String> sentence : paragraph) {
-				hb.beat();
-				Parse p = null;
-				try {
-					p = v.parseSentence(sentence);
-				} catch (InterruptedException e) {
-					hb.beat();
-					System.err.println("Stalled while parsing sentence. Moving on.");
-					continue;
-				}
+			String text = candidates.getString("text");
+			Annotation annot_doc = new Annotation(text);
+			v.scn.annotate(annot_doc);
+			for (CoreMap sentence : annot_doc.get(SentencesAnnotation.class)) {
+				// this is the Stanford dependency graph of the current sentence
+			    SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
+			    /*
 				Parse vp = VerbSplit.getTag(p, "VP", true);
 				
 				// Look for a very basic subject, verb, object pattern
@@ -181,6 +99,7 @@ public class VerbSplit {
 					insert.setString(4, VerbSplit.getTag(vp, "NP", true).getCoveredText());
 					insert.addBatch();
 				}
+				*/
 			}
 			insert.executeBatch();
 			db.commit();
@@ -192,37 +111,3 @@ public class VerbSplit {
 		}
 	}
 }
-
-class Heartbeat extends Thread {
-	private long last_heartbeat = new Date().getTime();
-	private boolean alive = true;
-	private Thread patient;
-	
-	public Heartbeat(Thread patient) {
-		this.patient = patient;
-	}
-	
-	public void run() {
-		while (alive) {
-			if (last_heartbeat + 30 < new Date().getTime()) {
-				// 30 seconds are up
-				patient.interrupt();
-				beat();
-			}
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				return;
-			}
-		}
-	}
-	
-	public void beat() {
-		last_heartbeat = new Date().getTime();
-	}
-	
-	public void done() {
-		alive = false;
-	}
-}
-
