@@ -51,7 +51,7 @@ public class DBIndexer {
      * TODO: Make this a separate API
      */
     static Researcher[] passage_transforms = {
-    	new MediaWikiTrimmer(),
+    //	new MediaWikiTrimmer(),
     };
 
     /**

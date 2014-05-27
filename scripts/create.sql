@@ -54,9 +54,16 @@ CREATE TABLE relate_links(
 
 -- merged from questions.db
 CREATE TABLE results (question int, rank int, score double, engine text, title text, fulltext text, correct boolean, reference text);
-CREATE TABLE questions (rowid int primary key, question text, answer text, category text, cached boolean);
+CREATE TABLE questions (rowid int primary key, question text, answer text, category text);
 CREATE INDEX results_fkey_question ON  results(question);
-CREATE TABLE cache (query text, rank int, score double, engine text, title text, fulltext text, reference text, id int, created_on integer);
+CREATE TABLE cache (
+    query TEXT,
+    engine TEXT,
+    title TEXT,
+    fulltext TEXT,
+    reference TEXT,
+    id BIGINT,
+    created_on INTEGER DEFAULT CURRENT_TIMESTAMP);
 CREATE INDEX cache_query ON cache(query);
 CREATE TABLE cache_scores(passage_id int, name text, value float);
 CREATE INDEX cache_scores_passage_id ON cache_scores(passage_id);

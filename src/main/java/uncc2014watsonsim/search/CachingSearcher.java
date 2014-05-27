@@ -62,18 +62,18 @@ public class CachingSearcher extends Searcher {
 						sql.getString("fulltext"),
 						sql.getString("reference"));
 				results.add(p);
-				getScores(p, sql.getInt("id"));
+				getScores(p, sql.getLong("id"));
 			}
 		} catch (SQLException e) {
 			// If retrieving fails, that is OK. We will simply revert to the searcher.
-			System.out.println("Failed to retrieve cache from SQLite cache. (DB missing?) Reverting to searcher.");
+			System.out.println("Failed to retrieve cache. (DB missing?) Reverting to searcher.");
 			e.printStackTrace();
 		}
 		
 		if (results.isEmpty()) {
 			// If the SQL search didn't return anything, then run the Searcher.
 			PreparedStatement set_cache = db.prep(
-					"insert into cache (id, query, engine, title, fulltext, reference, rank, score, created_on) values (?,?,?,?,?,?,?,?,datetime('now'));");
+					"insert into cache (id, query, engine, title, fulltext, reference) values (?,?,?,?,?,?);");
 			for (Passage p : searcher.query(query)) {
 				// Add every Answer to the cache
 				results.add(p);
