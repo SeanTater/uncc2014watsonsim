@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DBQuestionSource extends QuestionSource {
 	private static final long serialVersionUID = 1L;
-	private static final SQLiteDB db = new SQLiteDB("questions");
+	private static final Database db = new Database();
 
 	
 	/** Get length questions, starting with question id > (not >=) start

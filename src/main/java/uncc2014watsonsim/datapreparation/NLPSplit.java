@@ -14,7 +14,7 @@ import org.maltparser.concurrent.ConcurrentUtils;
 import org.maltparser.concurrent.graph.ConcurrentDependencyGraph;
 import org.maltparser.core.exception.MaltChainedException;
 
-import uncc2014watsonsim.SQLiteDB;
+import uncc2014watsonsim.Database;
 
 /**
  * This example shows how to parse a sentence with MaltParser by first initialize a parser model.
@@ -36,7 +36,7 @@ public class NLPSplit {
 	public static void main(String[] args) throws SQLException, MalformedURLException, MaltChainedException {
 		NLPSplit nps = new NLPSplit();
 		
-		SQLiteDB db = new SQLiteDB("watsonsim");
+		Database db = new Database();
 		ResultSet sql = db.prep("SELECT text FROM content LIMIT 5000;").executeQuery();
 		
 		while (sql.next()) {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uncc2014watsonsim.Passage;
-import uncc2014watsonsim.SQLiteDB;
+import uncc2014watsonsim.Database;
 
 /*
  * This interface might change; Please be ready to accommodate the changes.
@@ -22,7 +22,7 @@ import uncc2014watsonsim.SQLiteDB;
  */
 public abstract class Searcher {
 	
-	static final SQLiteDB db = new SQLiteDB("sources");
+	static final Database db = new Database();
 
     /**
      * Runs the <i>query</i>, populating a list of ResultSets

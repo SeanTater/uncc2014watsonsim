@@ -29,7 +29,7 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
-import uncc2014watsonsim.SQLiteDB;
+import uncc2014watsonsim.Database;
 import uncc2014watsonsim.researchers.*;
 
 /**
@@ -45,7 +45,7 @@ public class DBIndexer {
     /**
      * the input file which has to be indexed. This is a database made from TRECtext's
      */
-    static SQLiteDB db = new SQLiteDB("sources");
+    static Database db = new Database();
     
     /**
      * TODO: Make this a separate API

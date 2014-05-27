@@ -13,15 +13,15 @@ import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
 
-import uncc2014watsonsim.SQLiteDB;
+import uncc2014watsonsim.Database;
 
 public class GuessRelatedWords {
 	static Map<String, Vertex> word_to_vertex = new HashMap<String, Vertex>();
-	static SQLiteDB db = new SQLiteDB("sources");
+	static Database db = new Database();
 	static double count = 0;
 
 	public static void main(String[] args) throws SQLException {
-		SQLiteDB db = new SQLiteDB("sources");
+		Database db = new Database();
 		ResultSet sql = db.prep("select text from documents where text like \"%Shakespeare%\" or text like \"%Austen%\" limit 50;").executeQuery();
 		
 		long runtime = System.nanoTime();

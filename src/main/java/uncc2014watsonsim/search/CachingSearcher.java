@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import uncc2014watsonsim.Passage;
-import uncc2014watsonsim.SQLiteDB;
+import uncc2014watsonsim.Database;
 
 public class CachingSearcher extends Searcher {
 	Searcher searcher;
-	SQLiteDB db = new SQLiteDB("questions");
+	Database db = new Database();
 	String engine_name;
 	
 
