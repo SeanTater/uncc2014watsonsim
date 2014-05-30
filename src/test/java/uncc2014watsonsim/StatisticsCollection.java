@@ -94,14 +94,14 @@ public class StatisticsCollection {
 	public void notfactfitb() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("not_fact_fitb", "where "
-					+ "question not glob '*_*' "
-					+ "and category glob '*COMMON BONDS*' "
-					+ "or category glob '*BEFORE & AFTER*' "
-					+ "or category glob '*ANAGRAM*' "
-					+ "or category glob '*SCRAMBLED*' "
-					+ "or category glob '*JUMBLED*' "
-					+ "limit 20").run();
+			new StatsGenerator("not_fact_fitb", "WHERE "
+					+ "question NOT LIKE '%_%' "
+					+ "AND category LIKE '%COMMON BONDS%' "
+					+ "OR category LIKE '%BEFORE & AFTER%' "
+					+ "OR category LIKE '%ANAGRAM%' "
+					+ "OR category LIKE '%SCRAMBLED%' "
+					+ "OR category LIKE '%JUMBLED%' "
+					+ "LIMIT 20").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -121,7 +121,7 @@ public class StatisticsCollection {
 	public void all() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("all", "limit 100").run();
+			new StatsGenerator("all", "LIMIT 100").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
