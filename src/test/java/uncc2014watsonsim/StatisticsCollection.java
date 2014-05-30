@@ -121,7 +121,7 @@ public class StatisticsCollection {
 	public void all() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("all", "limit 1000").run();
+			new StatsGenerator("all", "limit 100").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -162,7 +162,7 @@ public class StatisticsCollection {
  */
 class StatsGenerator {
 	String dataset;
-	private QuestionSource questionsource;
+	private DBQuestionSource questionsource;
 	// correct[n] =def= number of correct answers at rank n 
 	int[] correct = new int[100];
 	int available = 0;
@@ -274,7 +274,7 @@ class StatsGenerator {
 		System.out.println("Asking Questions");
 		for (int i=0; i<questionsource.size(); i++) {
 			Question q = questionsource.get(i);
-			LocalPipeline.ask(q);
+			DefaultPipeline.ask(q);
 			
 			System.out.print(" " + i);
 			if (i % 25 == 0) System.out.println();

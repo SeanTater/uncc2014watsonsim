@@ -2,6 +2,7 @@ package uncc2014watsonsim;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import uncc2014watsonsim.researchers.PassageRetrieval;
@@ -10,7 +11,7 @@ import uncc2014watsonsim.researchers.PassageRetrieval;
 *
 * @author walid shalaby (adapted from DBQuestionResultsSource)
 */
-public class DBQuestionResultsSource extends QuestionSource {
+public class DBQuestionResultsSource extends ArrayList<Question> {
 	private static final long serialVersionUID = 1L;
 	private static final Database db = new Database();
 

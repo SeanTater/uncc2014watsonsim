@@ -5,7 +5,7 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.CASException;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
-import uncc2014watsonsim.Pipeline;
+import uncc2014watsonsim.DefaultPipeline;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.uima.UimaTools;
 import uncc2014watsonsim.uima.UimaToolsException;
@@ -38,7 +38,7 @@ public class AnnotationController {
 	public void createAnnotations(Question question) {
 		
 		try {
-			ae = Pipeline.uimaAE;
+			ae = DefaultPipeline.uimaAE;
 			
 			jcas = ae.newJCas();
 			jcas.setDocumentText(question.getRaw_text());

@@ -2,9 +2,10 @@ package uncc2014watsonsim;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DBQuestionSource extends QuestionSource {
+public class DBQuestionSource extends ArrayList<Question> {
 	private static final long serialVersionUID = 1L;
 	private static final Database db = new Database();
 

@@ -48,12 +48,12 @@ import uncc2014watsonsim.search.*;
  *     {@link AnswerScorer} or {@link PassageScorer} respectively.)<p>
  *
  */
-public class Pipeline {
+public class DefaultPipeline {
 	
 	private static final Searcher[] searchers = {
 		//new CachingSearcher(new LuceneSearcher(), "lucene"),
 		//new CachingSearcher(new IndriSearcher(), "indri"),
-		new CachingSearcher(new BingSearcher(), "bing"),
+//		new CachingSearcher(new BingSearcher(), "bing"),
 		//new CachingSearcher(new GoogleSearcher(), "google")
 // usage without CachingSearcher
 		new LuceneSearcher(),
