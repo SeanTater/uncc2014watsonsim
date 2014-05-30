@@ -93,6 +93,7 @@ public class DefaultPipeline {
 		//new ScorerIrene(), // TODO: Introduce something new
 		new NGram(),
 		new LATTypeMatchScorer(),
+		new WPPageViews(),
 		//new ScorerAda(),      // TODO: Introduce something new
 		//new WShalabyScorer(), // TODO: Introduce something new
 		//new SentenceSimilarity(),

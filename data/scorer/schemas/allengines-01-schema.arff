@@ -18,6 +18,7 @@
 @attribute INDRI_SCORE_MEAN numeric
 @attribute INDRI_SCORE_MEDIAN numeric
 @attribute INDRI_SCORE_MIN numeric
+@attribute LATTYPE_MATCH_SCORER numeric
 @attribute LUCENE_RANK_MAX numeric
 @attribute LUCENE_RANK_MEAN numeric
 @attribute LUCENE_RANK_MEDIAN numeric
