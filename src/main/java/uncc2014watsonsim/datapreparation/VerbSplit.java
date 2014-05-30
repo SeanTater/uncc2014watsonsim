@@ -66,6 +66,7 @@ import edu.stanford.nlp.util.CoreMap;
  */
 
 public class VerbSplit {
+	static Database db = new Database();
 	AnnotationPipeline pipeline;
 
 	//initialize all models needed for processing a passage of text (multiple sentences)
@@ -78,15 +79,38 @@ public class VerbSplit {
 		pipeline.addAnnotator(new DeterministicCorefAnnotator(new Properties()));
 	}
 	
+	static void storeCorefs(long doc_id, CoreMap sentence) throws SQLException {
+		// Insert
+		PreparedStatement insert = db.prep("INSERT INTO sentences(doc, subject, predicate) VALUES (?, ?, ?);");
+		// Get the coreferences
+	    Map<Integer, CorefChain> corefs = sentence.get(CorefChainAnnotation.class);
+		insert.setLong(1, doc_id);
+	    if (corefs == null) {
+	    	System.err.println("Uh oh. No corefs in" + sentence.toString());
+	    } else {
+		    for (CorefChain chain : corefs.values()) {
+		    	CorefMention representative = chain.getRepresentativeMention();
+			    insert.setString(2, representative.mentionSpan);
+			    System.out.println(chain.getMentionsInTextualOrder());
+		    	for (CorefMention ref : chain.getMentionsInTextualOrder()) {
+		    		if (!ref.equals(representative)
+		    			&& ref.mentionType != Dictionaries.MentionType.PRONOMINAL) {
+		    			insert.setString(3, ref.mentionSpan);
+		    			insert.addBatch();
+		    			System.out.println("Found " + sentence);
+		    		}
+		    	}
+		    }
+	    }
+		insert.executeBatch();
+	}
+	
 	public static void main(String[] args) throws SQLException {
 		VerbSplit v = new VerbSplit();
 		
-		Database db = new Database();
 		// Fetch candidates
 		//PreparedStatement candidate_stmt = db.prep("SELECT id, text FROM meta NATURAL JOIN content WHERE id NOT IN (SELECT doc FROM sentences) ORDER BY length(text) DESC LIMIT 100 OFFSET ?;");
 		PreparedStatement candidate_stmt = db.prep("SELECT id, text FROM meta NATURAL JOIN content WHERE id NOT IN (SELECT doc FROM sentences) ORDER BY pageviews DESC LIMIT 100 OFFSET ?;");
-		// Insert
-		PreparedStatement insert = db.prep("INSERT INTO sentences(doc, subject, predicate) VALUES (?, ?, ?);");
 		
 		Random r = new Random();
 		candidate_stmt.setInt(1, r.nextInt(100));
@@ -94,32 +118,13 @@ public class VerbSplit {
 		while (candidates.next()) {
 			// Get the doc text and annotate it.
 			String text = candidates.getString("text");
-			insert.setLong(1, candidates.getLong("id"));
 			Annotation annot_doc = new Annotation(text);
 			v.pipeline.annotate(annot_doc);
 			
 			// Process the annotated sentences
 			for (CoreMap sentence : annot_doc.get(SentencesAnnotation.class)) {
-				// Get the coreferences
-			    Map<Integer, CorefChain> corefs = sentence.get(CorefChainAnnotation.class);
-			    if (corefs == null) {
-			    	System.err.println("Uh oh. No corefs in" + sentence.toString());
-			    } else {
-				    for (CorefChain chain : corefs.values()) {
-				    	CorefMention representative = chain.getRepresentativeMention();
-					    insert.setString(2, representative.mentionSpan);
-				    	for (CorefMention ref : chain.getMentionsInTextualOrder()) {
-				    		if (!ref.equals(representative)
-				    			&& ref.mentionType != Dictionaries.MentionType.PRONOMINAL) {
-				    			insert.setString(3, ref.mentionSpan);
-				    			insert.addBatch();
-				    			System.out.println("Found " + sentence);
-				    		}
-				    	}
-				    }
-			    }
+				storeCorefs(candidates.getLong("id"), sentence);
 			}
-			insert.executeBatch();
 			db.commit();
 			
 			// Get the next random top-100 article
