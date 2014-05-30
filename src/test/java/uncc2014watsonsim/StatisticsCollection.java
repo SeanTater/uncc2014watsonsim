@@ -65,18 +65,18 @@ public class StatisticsCollection {
 	public void factoid() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("factoid", "where "
-					+ "question not glob '*_*' "
-					+ "and category not glob '*COMMON BONDS*' "
-					+ "and category not glob '*BEFORE & AFTER*' "
-					+ "and category not glob '*ANAGRAM*' "
-					+ "and category not glob '*SCRAMBLED*' "
-					+ "and category not glob '*JUMBLED*' "
-					+ "limit 1000").run();
+			new StatsGenerator("factoid", "WHERE "
+					+ "question NOT LIKE '%_%' "
+					+ "AND category NOT LIKE '%COMMON BONDS%' "
+					+ "AND category NOT LIKE '%BEFORE & AFTER%' "
+					+ "AND category NOT LIKE '%ANAGRAM%' "
+					+ "AND category NOT LIKE '%SCRAMBLED%' "
+					+ "AND category NOT LIKE '%JUMBLED%' "
+					+ "LIMIT 10").run();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.");
-			e.printStackTrace();
 		}
 	}
 	
@@ -103,9 +103,9 @@ public class StatisticsCollection {
 					+ "or category glob '*JUMBLED*' "
 					+ "limit 20").run();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.");
-			e.printStackTrace();
 		}
 	}
 	
@@ -123,9 +123,9 @@ public class StatisticsCollection {
 		try {
 			new StatsGenerator("all", "limit 1000").run();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.");
-			e.printStackTrace();
 		}
 	}
 }

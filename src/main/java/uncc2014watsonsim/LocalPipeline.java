@@ -6,6 +6,6 @@ public class LocalPipeline extends Pipeline {
 	static final Searcher[] searchers = {
 		new LuceneSearcher(),
 		new IndriSearcher(),
-		new BingSearcher()
+		//new BingSearcher()
 	};
 }

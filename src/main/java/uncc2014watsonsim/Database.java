@@ -78,6 +78,7 @@ public class Database {
 		if (ps == null) {
 			try {
 				ps = conn.prepareStatement(sql);
+				ps.setFetchSize(100);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException("Can't prepare an SQL statement \"" + sql + "\"");
