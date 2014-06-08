@@ -51,14 +51,11 @@ import uncc2014watsonsim.search.*;
 public class DefaultPipeline {
 	
 	private static final Searcher[] searchers = {
-		//new CachingSearcher(new LuceneSearcher(), "lucene"),
-		//new CachingSearcher(new IndriSearcher(), "indri"),
-//		new CachingSearcher(new BingSearcher(), "bing"),
-		//new CachingSearcher(new GoogleSearcher(), "google")
-// usage without CachingSearcher
 		new LuceneSearcher(),
 		new IndriSearcher(),
+// You may want to cache Bing results
 //		new BingSearcher()
+//		new CachingSearcher(new BingSearcher(), "bing"),
 	};
 	
 	private static final Researcher[] early_researchers = {

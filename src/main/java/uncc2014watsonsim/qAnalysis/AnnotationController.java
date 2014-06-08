@@ -12,11 +12,37 @@ import uncc2014watsonsim.uima.UimaToolsException;
 import uncc2014watsonsim.uima.types.UIMAQuestion;
 
 public class AnnotationController {
-	
+	boolean success = true;
 	boolean debug = true;
-	
+	AnalysisEngine ae;
 	private JCas queryCas = null;
-	private JCas jcas = null;
+	private JCas jcas;
+	
+	/**
+	 * Create a new blank AnnotationController
+	 */
+	public AnnotationController() {
+		 ae = DefaultPipeline.uimaAE;
+		 try {
+			 jcas = ae.newJCas();
+		 } catch (ResourceInitializationException e) {
+			 fail(e);
+		 }
+	}
+	
+	/**
+	 * Report failure, bringing UIMA analysis to a halt but not stopping the
+	 * system. Only reports the first error.
+	 * @param e  Any exception
+	 */
+	private void fail(Exception e) {
+		if (success) {
+			success = false;
+			e.printStackTrace();
+			System.err.println("Running without any UIMA Annotations!!");
+		}
+	}
+	
 	/**
 	 * @return the queryCas
 	 */
@@ -30,38 +56,27 @@ public class AnnotationController {
 		return jcas;
 	}
 
-	AnalysisEngine ae = null;
 	
 	/**
 	 * Create annotations as needed for the Question's QType
 	 */
 	public void createAnnotations(Question question) {
-		
+		String q_text = question.getRaw_text();
+		jcas.reset();
+		jcas.setDocumentText(q_text);
 		try {
-			ae = DefaultPipeline.uimaAE;
-			
-			jcas = ae.newJCas();
-			jcas.setDocumentText(question.getRaw_text());
 			queryCas = jcas.createView("QUERY");
-			queryCas.setDocumentText(question.getRaw_text());
+			queryCas.setDocumentText(q_text);
 			ae.process(jcas);
 			if(debug){
-				String docText = jcas.getDocumentText();
-				System.out.println("The text that was analyzed: " + docText);
+				System.out.println("The text that was analyzed: " + q_text);
 				UIMAQuestion uimaQuestion = UimaTools.getSingleton(jcas, UIMAQuestion.type);
 				
 				System.out.println("Found LAT: " + uimaQuestion.getLAT());
-				}
-		} catch (ResourceInitializationException | AnalysisEngineProcessException | CASException | UimaToolsException e) {
-			e.printStackTrace();
+			}
+		} catch (AnalysisEngineProcessException | CASException | UimaToolsException e) {
+			fail(e);
 		}
-		
-		if(ae == null){
-			System.err.println("Running without any UIMA Annotations!!");
-		}
-
-		
-		
 	}
 	
 
