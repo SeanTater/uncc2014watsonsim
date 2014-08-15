@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import uncc2014watsonsim.scorers.PercentWordsInCommon;
 import uncc2014watsonsim.scorers.Scorer;
+import uncc2014watsonsim.scorers.PassageScorer;
 
 public class ScorerTest {
 

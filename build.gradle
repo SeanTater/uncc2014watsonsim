@@ -93,7 +93,7 @@ run {
     standardInput = System.in
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
-    main "uncc2014watsonsim.sources.DBIndexer"
+    //main "uncc2014watsonsim.sources.DBIndexer"
 }
 
 task(run_cache_searches, type: JavaExec) {

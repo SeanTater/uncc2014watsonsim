@@ -84,7 +84,7 @@ public class DBIndexer {
         IndexWriter lucene_index = new IndexWriter(dir, iwc);
     	
         /* SQL setup */
-		java.sql.ResultSet sql = db.prep("SELECT reference, title, text FROM meta INNER JOIN content ON meta.id=content.id ORDER BY title;").executeQuery();
+		java.sql.ResultSet sql = db.prep("SELECT reference, title, text FROM content INNER JOIN meta ON meta.id=content.id;").executeQuery();
 		
 		Pattern splitter = Pattern.compile("\\w+");
 		try {
