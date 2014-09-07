@@ -2,7 +2,7 @@
  * Lucene library can do much more that what is being done in this program. 
  * Look at the lucene documentation to get more juice out of the library
  */
-package uncc2014watsonsim.sources;
+package scripts;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,4 +1,4 @@
-package uncc2014watsonsim.sources;
+package scripts;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class Wiktionary {
+public class WiktionaryParser {
 	public static void main (String[] args) throws IOException{
 	String title = "";
 	String def = "";

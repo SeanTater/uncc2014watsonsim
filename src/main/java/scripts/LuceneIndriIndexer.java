@@ -2,7 +2,7 @@
  * Lucene library can do much more that what is being done in this program. 
  * Look at the lucene documentation to get more juice out of the library
  */
-package uncc2014watsonsim.sources;
+package scripts;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import uncc2014watsonsim.researchers.*;
  * 				catch for one of the files in the short wikipedia which seems to have a formatting issue 
  * 				(and any others in the future which might)
  */
-public class DBIndexer {
+public class LuceneIndriIndexer {
     /**
      * the input file which has to be indexed. This is a database made from TRECtext's
      */

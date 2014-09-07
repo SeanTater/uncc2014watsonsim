@@ -5,7 +5,7 @@
  * Output is a series of text files with TREC formatted quotes.
  * Broken into a series of files with 1000 quote authors in ach file.
  */
-package uncc2014watsonsim.sources;
+package scripts;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,7 +24,7 @@ import java.util.Scanner;
  * @author ShumanLaptop
  * 
  */
-public class unccwatsonWikiquote {
+public class WikiquoteParser {
 
 	/**
 	 * @param args
@@ -37,7 +37,7 @@ public class unccwatsonWikiquote {
 		Writer out = null;
 		PrintWriter writer = null;
 
-		Quote curQuote = new Quote();
+		WikiquoteQuote curQuote = new WikiquoteQuote();
 
 		try {
 			File file = new File("enwikiquote-20140121-pages-articles.xml");

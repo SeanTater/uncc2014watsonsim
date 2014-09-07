@@ -58,31 +58,10 @@ public class LucenePassageSearcher extends Searcher {
 		List<Passage> results = new ArrayList<Passage>();
 		try {
 			BooleanQuery q = new BooleanQuery();
-			String last_word = null;
 			for (String word : question_text.split("\\W+")) {
-				/*if (last_word != null) {
-					PhraseQuery pq = new PhraseQuery();
-					pq.setSlop(0);
-					pq.add(new Term("text", last_word));
-					pq.add(new Term("text", word));
-					q.add(pq, BooleanClause.Occur.SHOULD);
-				}*/
 				q.add(new TermQuery(new Term("text", word)), BooleanClause.Occur.SHOULD);
-				last_word = word;
 			}
-			
-			/// Begin lucene reference code (from docs)
-			// configure field with offsets at index time
-			//FieldType offsetsType = new FieldType(TextField.TYPE_STORED);
-			//offsetsType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
-			//Field body = new Field("body", "foobar", offsetsType);
-
-			// retrieve highlights at query time
-			//PostingsHighlighter highlighter = new PostingsHighlighter();
-			//Query query = new TermQuery(new Term("body", "highlighting"));
 			TopDocs topDocs = searcher.search(q, MAX_RESULTS);
-			//String[] highlights = highlighter.highlight("body", q, searcher, topDocs);
-			/// end Lucene reference code
 			
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			// This isn't range based because we need the rank

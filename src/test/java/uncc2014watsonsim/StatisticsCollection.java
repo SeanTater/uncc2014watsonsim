@@ -121,7 +121,7 @@ public class StatisticsCollection {
 	public void all() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("all", "LIMIT 100 OFFSET 100").run();
+			new StatsGenerator("all", "LIMIT 200 OFFSET 1500").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
