@@ -19,31 +19,12 @@ public class Database {
 		// First, see if the database is already opened.
 		if (conn == null) {
 			try {
-				init_postgres();
-			} catch (SQLException | ClassNotFoundException e1) {
-			       e1.printStackTrace();
-			       System.err.println("Failed to connect to postgres; using sqlite.");
-			       try {
-			    	   init_sqlite();
-			       } catch (SQLException | ClassNotFoundException e2) {
-			    	   e2.printStackTrace();
-			    	   throw new RuntimeException("Can't run without a database.");
-			       }
+				init_sqlite();
+			} catch (SQLException | ClassNotFoundException e2) {
+				e2.printStackTrace();
+				throw new RuntimeException("Can't run without a database.");
 			}
 		}
-	}
-	
-	private void init_postgres() throws ClassNotFoundException, SQLException {
-		// Loads a postgresql driver, with no username/password
-	    Class.forName("org.postgresql.Driver");
-		conn = DriverManager.getConnection("jdbc:postgresql:watsonsim");
-		// PostgreSQL will buffer large queries if you autocommit.
-		conn.setAutoCommit(false);
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				commit();
-			}
-		});
 	}
 
 	private void init_sqlite() throws ClassNotFoundException, SQLException {
