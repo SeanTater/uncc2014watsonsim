@@ -10,7 +10,6 @@ import uncc2014watsonsim.qAnalysis.AnnotationController;
 
 public class Question extends ArrayList<Answer> {
 	private static final long serialVersionUID = 1L;
-	public int id; // Question ID comes from the database and is optional.
 	public String text;
 	String raw_text;
 	public Answer answer;

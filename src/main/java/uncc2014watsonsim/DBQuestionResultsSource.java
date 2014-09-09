@@ -48,7 +48,7 @@ public class DBQuestionResultsSource extends ArrayList<Question> {
 				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?);");
 	    
 		for (Passage r : results) {
-			bulk_insert.setLong(1, q.id);
+			bulk_insert.setString(1, q.getRaw_text());
 			bulk_insert.setString(2, r.title);
 			bulk_insert.setString(3, r.getText());
 			//TODO: we need to generalize this
@@ -71,7 +71,6 @@ public class DBQuestionResultsSource extends ArrayList<Question> {
 	public void load_results(ResultSet sql) throws SQLException {
 		while(sql.next()){
 			Question q = new Question(sql.getString("raw_text"));
-			q.id = sql.getInt("id");
 			q.answer = new Answer(new Passage("", sql.getString("candidate_answer"), "", ""));
 			add(q);
 		}

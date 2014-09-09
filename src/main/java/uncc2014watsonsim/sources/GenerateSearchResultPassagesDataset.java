@@ -15,16 +15,12 @@ public class GenerateSearchResultPassagesDataset {
      * @throws Exception 
      */
     public static void main(String[] args) throws Exception {
-    	int curq = -1;
     	DBQuestionResultsSource dbquestions = new DBQuestionResultsSource("");
+    	System.out.print("Processed question:");
+    	int qcount=0;
     	for (Question q : dbquestions) {
     		new PassageCollector(q).collect();
-    		if(curq!=q.id) {
-    			curq = q.id;
-    			System.out.print(""+ q.id + " ");
-    			// Somewhere around once in 80 times..
-    			if (q.id % 80 == 0) System.out.println();
-    		}    		
+    		System.out.println(++qcount);
     	}
         
         System.out.println("Done.");

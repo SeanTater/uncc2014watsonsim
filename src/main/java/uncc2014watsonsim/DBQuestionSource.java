@@ -8,19 +8,6 @@ import java.util.List;
 public class DBQuestionSource extends ArrayList<Question> {
 	private static final long serialVersionUID = 1L;
 	private static final Database db = new Database();
-
-	
-	/** Get length questions, starting with question id > (not >=) start
-	 * In hindsight >= would have been better but now it needs to be consistent.
-	 */
-	public DBQuestionSource(int start, int length) throws SQLException {
-		// Get a list of questions, ordered so that it is consistent
-		PreparedStatement bulk_select_questions = db.prep(
-				"select * from questions where rowid > ? order by rowid limit ?;");
-		bulk_select_questions.setInt(1, start);
-		bulk_select_questions.setInt(2, length);
-		read_results(bulk_select_questions.executeQuery());
-	}
 	
 	/** Run an arbitrary query on the database to get questions.
 	 */
@@ -41,7 +28,7 @@ public class DBQuestionSource extends ArrayList<Question> {
 				+ "values (?, ?, ?, ?, ?, ?, ?);");
 	    
 		for (Answer r : results) {
-			bulk_insert.setLong(1, q.id);
+			bulk_insert.setString(1, q.getRaw_text());
 			bulk_insert.setString(2, r.candidate_text);
 			bulk_insert.setString(3, r.passages.get(0).getText());
 			//TODO: we need to generalize this
@@ -67,7 +54,6 @@ public class DBQuestionSource extends ArrayList<Question> {
 					sql.getString("answer"),
 					sql.getString("category")
 				);
-			q.id = sql.getInt("rowid");
 			add(q);
 		}
 	}

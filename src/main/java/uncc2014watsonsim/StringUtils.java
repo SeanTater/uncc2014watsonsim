@@ -29,10 +29,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	/** Filter out stop words from a string */
 	public static List<String> tokenize(String text) {
 		List<String> tokens = new ArrayList<>();
-		/* Do we really need to change tokens like this?
-		 * Seems like Lucene developers would have thought of this already.
-		 * text = text.replaceAll("[^0-9a-zA-Z ]+", "").toLowerCase().trim();
-		 */
 		
 		try (TokenStream tokenStream = analyzer.tokenStream("text", text)) {
 			//TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_46, new StringReader(text));
@@ -54,21 +50,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	
     /** Returns true if every non-stopword from candidate is found in reference */
     public static boolean match_subset(String candidate, String reference){
-        
-            // Removing stop words and non-alphanumeric characters from the strings
-            candidate = StringUtils.filterRelevant(candidate);
-            reference = StringUtils.filterRelevant(reference);
-            
             // Match these two sets in linear (or linearithmic) time
             HashSet<String> reference_terms = new HashSet<String>();
-            reference_terms.addAll(Arrays.asList(reference.toLowerCase().split("\\W+")));
-            return reference_terms.containsAll(Arrays.asList(candidate.toLowerCase().split("\\W+")));
-    }
-    
-    /** Guess if one answer matches the other based on levenshtein distance */
-    public boolean match_levenshtein(String candidate, String reference) {
-        int threshold = Math.min(candidate.length(), reference.length()) / 2;
-        
-        return StringUtils.getLevenshteinDistance(candidate.toLowerCase(), reference.toLowerCase()) < threshold;
+            reference_terms.addAll(StringUtils.tokenize(candidate));
+            return reference_terms.containsAll(StringUtils.tokenize(reference));
     }
 }

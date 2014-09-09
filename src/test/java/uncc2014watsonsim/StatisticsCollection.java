@@ -46,7 +46,7 @@ public class StatisticsCollection {
 	@Test
 	public void fitb() {
 		try {
-			new StatsGenerator("fitb", "where question glob '*_*'").run();
+			new StatsGenerator("fitb", "where question glob '*_*' AND ml_block='test'").run();
 		} catch (SQLException e) {
 			fail("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.");
@@ -72,7 +72,7 @@ public class StatisticsCollection {
 					+ "AND category NOT LIKE '%ANAGRAM%' "
 					+ "AND category NOT LIKE '%SCRAMBLED%' "
 					+ "AND category NOT LIKE '%JUMBLED%' "
-					+ "LIMIT 10").run();
+					+ "AND ml_block='test' LIMIT 10").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -101,7 +101,7 @@ public class StatisticsCollection {
 					+ "OR category LIKE '%ANAGRAM%' "
 					+ "OR category LIKE '%SCRAMBLED%' "
 					+ "OR category LIKE '%JUMBLED%' "
-					+ "LIMIT 20").run();
+					+ "AND ml_block='test' LIMIT 20").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -121,7 +121,7 @@ public class StatisticsCollection {
 	public void all() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("all", "LIMIT 200 OFFSET 1500").run();
+			new StatsGenerator("all", "WHERE ml_block='test' LIMIT 200").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "

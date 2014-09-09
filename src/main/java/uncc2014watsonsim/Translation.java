@@ -7,25 +7,17 @@ import java.util.List;
  */
 public class Translation {
 
+	// Indri querying is excellent; just trimming out garbage to prevent parse errors is pretty good.
     public static String getIndriQuery(String question) {
-        String query = "#filrej( portal.title #filrej( "
-                + "template.title #filrej(index.title #filrej( "
-                + "list.title #filrej( wikipedia.title #combine("+question+"))))))";
-
-        question = question.replaceAll("[^0-9a-zA-Z ]+", " ");
-        String words[] = StringUtils.filterRelevant(question).split(" ");
-
-        for (String word : words) {
-            query = " #filrej(" + word + ".title " + query + " )";
-        }
-        return query;
+        return question.replaceAll("[^A-Za-z0-9 ]", "");
     }
 
     public static String getLuceneQuery(String question) {
+    	List<String> words = StringUtils.tokenize(question);
+    	question = StringUtils.join(words, ' ');
+
         String query = question + " NOT title:*\\:*" + " NOT title:list*"
                 + " NOT title:index*" ;
-        question = question.replaceAll("[^0-9a-zA-Z ]+", " ");
-        List<String> words = StringUtils.tokenize(question);
 
         for (String word : words) {
             query = " NOT title:" + word + " " + query ;
