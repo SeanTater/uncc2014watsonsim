@@ -10,6 +10,7 @@ public class PassageRetrieval extends Researcher {
 
 	private static final Searcher[] searchers = {
 		new LucenePassageSearcher(),
+		//new IndriSearcher(),
 		//new CachingSearcher(new LuceneSearcher(), "lucene"),
 		//new CachingSearcher(new BingSearcher(), "bing"),
 	};

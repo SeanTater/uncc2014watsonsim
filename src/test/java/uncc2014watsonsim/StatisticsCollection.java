@@ -28,7 +28,7 @@ import org.junit.Test;
  *    10 MB / Question of disk space. We're working on cutting that down.  
  * 3. You may have to fiddle with the LIMIT numbers if you are impatient.
  * 4. It will try to upload to the Internet collection server at
- *    http://watsonsim.herokuapp.com/runs so look there for dummaries later.
+ *    http://watsonsim.herokuapp.com/runs so look there for summaries later.
  * 
  * @author Sean Gallagher
  *
@@ -122,6 +122,23 @@ public class StatisticsCollection {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
 			new StatsGenerator("all", "WHERE ml_block='test' LIMIT 200").run();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail("Database missing, invalid, or out of date. Check that you "
+					+ "have the latest version.");
+		}
+	}
+	
+	/**
+	 * Train on 1000 questions _from a different set_!
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void train() {
+		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
+		try {
+			new StatsGenerator("train", "WHERE ml_block='train' LIMIT 1000").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "

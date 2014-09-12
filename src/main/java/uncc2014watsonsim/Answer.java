@@ -24,6 +24,7 @@ public class Answer implements Comparable<Answer> {
      */
     public Answer(Passage d) {
         this.passages.add(d);
+        this.scores = d.scores;
         this.candidate_text = d.title;
     }
     
@@ -118,11 +119,8 @@ public class Answer implements Comparable<Answer> {
     
     /** Convenience method for returning all of the answer's scores as a primitive double[].
      * Intended for Weka, but it could be useful for any ML. */
-    public double[] scoresArray(List<String> answerScoreNames, List<String> passageScoreNames) {
-    	// First all of the answer's scores, followed by all of the scores from
-    	// all of the passages
-    	int dim_count = answerScoreNames.size() + (passageScoreNames.size() * Score.MAX_PASSAGE_COUNT); 
-    	double[] out = new double[dim_count];
+    public double[] scoresArray(List<String> answerScoreNames) {
+    	double[] out = new double[answerScoreNames.size()];
     	Arrays.fill(out, Double.NaN);
     	
     	// Answer scores
@@ -130,17 +128,6 @@ public class Answer implements Comparable<Answer> {
 			Double value = scores.get(answerScoreNames.get(dim_i));
     		out[dim_i] = value == null ? Double.NaN : value;
     	}
-		
-		// All the passage's scores
-    	// TODO: It's possible to have more than MAX_RESULTS passages because of merging.
-		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT && passage_i<passages.size(); passage_i++) {
-			int passage_offset = answerScoreNames.size() + (passageScoreNames.size() * passage_i);
-			Passage p = passages.get(passage_i);
-			for (int dim_i=0; dim_i<passageScoreNames.size(); dim_i++) {
-				Double value = p.scores.get(passageScoreNames.get(dim_i));
-				out[passage_offset + dim_i] = value == null ? Double.NaN : value;
-			}
-		}
 		return out;
     }
     
@@ -156,6 +143,12 @@ public class Answer implements Comparable<Answer> {
      * TODO: What should we do to merge scores? */
     public void merge(Answer other) {
     	passages.addAll(other.passages);
+    	// Merge the scores
+    	for (Map.Entry<String, Double> sc : other.scores.entrySet()) {
+    		if (!scores.containsKey(sc.getKey())) {
+    			scores.put(sc.getKey(), sc.getValue());
+    		}
+    	}
     }
     
 

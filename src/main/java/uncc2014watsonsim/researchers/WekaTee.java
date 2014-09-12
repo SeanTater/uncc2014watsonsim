@@ -40,7 +40,7 @@ public class WekaTee extends Researcher {
 	public void question(Question q) {
 		
 		for (Answer a : q) {
-			data.add(new Instance(1.0, a.scoresArray(Score.answer_score_names, Score.passage_score_names)));
+			data.add(new Instance(1.0, a.scoresArray(Score.answer_score_names)));
 		}
 	}
 	

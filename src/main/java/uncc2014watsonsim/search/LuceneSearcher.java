@@ -23,6 +23,7 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.Score;
 
 /**
  * @author Phani Rahul
@@ -45,6 +46,8 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);
+		Score.registerAnswerScore("LUCENE_ANSWER_RANK");
+		Score.registerAnswerScore("LUCENE_ANSWER_SCORE");
 	}
 	
 	public synchronized List<Passage> query(String question_text) {
@@ -93,8 +96,8 @@ public class LuceneSearcher extends Searcher {
 						doc.get("title"),	// Title
 						doc.get("text"), 	// Text
 						doc.get("docno"))   // Reference
-						.score("LUCENE_RANK", (double) i)           // Rank
-						.score("LUCENE_SCORE", (double) s.score)	// Source
+						.score("LUCENE_ANSWER_RANK", (double) i)           // Rank
+						.score("LUCENE_ANSWER_SCORE", (double) s.score)	// Source
 						);
 			}
 		} catch (IOException e) {
