@@ -52,6 +52,7 @@
 @attribute QUESTION_IN_PASSAGE_SCORER_MEAN numeric
 @attribute QUESTION_IN_PASSAGE_SCORER_MEDIAN numeric
 @attribute QUESTION_IN_PASSAGE_SCORER_MIN numeric
+@attribute RANDOM_INDEXING_COSINE_SIMILARITY numeric
 @attribute SKIP_BIGRAM_MAX numeric
 @attribute SKIP_BIGRAM_MEAN numeric
 @attribute SKIP_BIGRAM_MEDIAN numeric

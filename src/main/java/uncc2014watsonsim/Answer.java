@@ -61,24 +61,26 @@ public class Answer implements Comparable<Answer> {
         return hash;
     }
 
-    /** Does `this` match `other`, where `this` is the candidate answer
-     *  and `other` is the reference. **Not Transitive or Commutative**!
+    /** 
+     * Return a threshold on distance
      */
     public boolean matches(Answer other) {
+        return distance(other) <= 2;
+    }
+    
+    /** 
+     * Return a Levenshtein distance between answers after stopword removal.
+     */
+    public double distance(Answer other) {
         if (other == null) {
-            return false;
+            return 10;
         }
+        int dist = StringUtils.getLevenshteinDistance(
+        		StringUtils.filterRelevant(candidate_text),
+        		StringUtils.filterRelevant(other.candidate_text),
+        		10);
         
-        return StringUtils.match_subset(other.candidate_text, candidate_text);
-        
-        /* The old method: any two passages match 
-        for (Passage doc1 : this.passages) {
-        	String t1 = StringUtils.filterRelevant(doc1.title);
-        	for (Passage doc2 : other.passages) {
-        		String t2 = StringUtils.filterRelevant(doc2.title);
-        		if (StringUtils.match_subset(t1, t2)) return true;
-        	}
-    	}*/
+        return (dist == -1) ? 10 : dist;
     }
 
     @Override

@@ -210,6 +210,7 @@ class StatsGenerator {
 			Answer a = question.get(0);
 			// Clamp to [0, 99]
 			int bin = (int)(a.score() * 99);
+			bin = Math.max(0, Math.min(bin, 99)); 
 			if(a.equals(question.answer)) conf_correct[bin]++;
 			conf_hist[bin]++;
 		}
