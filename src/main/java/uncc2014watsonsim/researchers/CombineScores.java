@@ -37,22 +37,8 @@ import weka.core.Utils;
  * @author Walid Shalaby
  */
 public class CombineScores extends Researcher {
-	// This is the question set intended for all engines
-	String scorerModelPath = "data/scorer/models/allengines.model";
-	String scorerDatasetPath = "data/scorer/schemas/allengines-01-schema.arff";
-	/* There are also models for several specific groups.
-	 * Google:
-	 * scorerModelPath = "data/scorer/models/google.model";
-	 * scorerDatasetPath = "data/scorer/schemas/google-schema.arff";
-	 * 
-	 * Indri:
-	 * scorerModelPath = "data/scorer/models/indri.model";
-	 * scorerDatasetPath = "data/scorer/schemas/indri-schema.arff";
-	 * 
-	 * Lucene:
-	 * scorerModelPath = "data/scorer/models/lucene.model";
-	 * scorerDatasetPath = "data/scorer/schemas/lucene-schema.arff";
-	 */
+	static String scorerModelPath = "data/scorer/models/allengines.model";
+	static String scorerDatasetPath = "data/scorer/schemas/allengines-01-schema.arff";
 	Classifier scorerModel = null;
 	Instances qResultsDataset = null;
 	
@@ -191,8 +177,10 @@ public class CombineScores extends Researcher {
 		// use logistic regression as default classifier
 		//String classifierName = "weka.classifiers.functions.SimpleLogistic";
 		//String[] classifierOptions = new String[]{"-I", "0", "-M", "500", "-H", "100", "-W", "0.0"};
-		String classifierName = "weka.classifiers.functions.Logistic";
-		String[] classifierOptions = new String[]{"-R", "1.0E-8", "-M", "-1"};
+		//String classifierName = "weka.classifiers.functions.Logistic";
+		//String[] classifierOptions = new String[]{"-R", "1.0E-8", "-M", "-1"};
+		String classifierName = "weka.classifiers.functions.MultilayerPerceptron";
+		String[] classifierOptions = new String[]{"-L", "0.3", "-M", "0.2", "-N", "500", "-V", "0", "-S", "0", "-E", "20", "-H", "a"};
 		//String classifierName = "weka.classifiers.lazy.KStar";
 		//String[] classifierOptions = new String[]{"-B", "20", "-M", "a"};
 		buildScorerModel(inputpath, outputpath, modelpath, classifierName, classifierOptions, 
@@ -287,5 +275,11 @@ public class CombineScores extends Researcher {
 		    }		    
 		}
 		writer.close();
+	}
+	
+	/** Train the classifier 
+	 * @throws Exception */
+	public static void main(String[] arguments) throws Exception {
+		buildScorerModel("data/weka-log.arff", "data/model.log", scorerModelPath, "CORRECT", false);
 	}
 }
