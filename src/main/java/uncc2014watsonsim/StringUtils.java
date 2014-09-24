@@ -1,6 +1,10 @@
 package uncc2014watsonsim;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,6 +21,9 @@ import org.apache.lucene.util.Version;
 */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	private static Analyzer analyzer = new EnglishAnalyzer(Version.LUCENE_47);
+	private static Database db = new Database(); // Used for semantic distribution
+	public static final int CONTEXT_LENGTH = 1000;
+	private static final int CONTEXT_HASH_COUNT = 20;
 	
 	/** Filter out stop words from a string */
 	public static String filterRelevant(String text) {
@@ -55,6 +62,35 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             reference_terms.addAll(StringUtils.tokenize(candidate));
             return reference_terms.containsAll(StringUtils.tokenize(reference));
     }
+    
+	/**
+	 * Fetch and merge the phrase contexts from a database.
+	 * @param phrase
+	 * @return
+	 * @throws SQLException
+	 */
+	public static int[] getPhraseContext(String phrase) throws SQLException {
+		// Filter repeated words
+		// word_set = S.toList $ S.fromList $ words phrase 
+		PreparedStatement context_retriever = db.prep("SELECT context FROM rindex WHERE word == ?;");
+		HashSet<String> word_set = new HashSet<String>();
+		word_set.addAll(StringUtils.tokenize(phrase));
+		
+		// Sum the context vectors
+		// foldl' (V.zipWith (+)) (V.replicate 1000) context_vectors
+		int[] merged_context = new int[CONTEXT_LENGTH];
+		for (String word : word_set) {
+			context_retriever.setString(1, word);
+			ResultSet sql_context = context_retriever.executeQuery();
+			if (sql_context.next()) {
+				java.nio.IntBuffer buffer = java.nio.ByteBuffer.wrap(sql_context.getBytes(1)).asIntBuffer();
+				for (int i=0; i<merged_context.length; i++) {
+					merged_context[i] += buffer.get(i);
+				}
+			}
+		}
+		return merged_context;
+	}
     
     
 }
