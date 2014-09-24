@@ -36,9 +36,6 @@ public class DistSemCosineSimilarity extends AnswerScorer {
 			// Fail silently
 			return Double.NaN;
 		}
-		// This turned out to be a bad idea
-		vectorScore(a, "QUESTION_CONTEXT_", q_context);
-		vectorScore(a, "ANSWER_CONTEXT_", a_context);
 		
 		double xy = 0;
 		double xsquared = 0;
@@ -51,28 +48,6 @@ public class DistSemCosineSimilarity extends AnswerScorer {
 			ysquared += y * y;
 		}
 		return xy / Math.max(Math.sqrt(Math.abs(xsquared)) * Math.sqrt(Math.abs(ysquared)), Double.MIN_NORMAL);
-	}
-	
-	/**
-	 * Concatenate the context vectors into the score list
-	 * @param a  The relevant answer
-	 * @param name  The name of the score, with trailing underscore
-	 * @param context  The list of scores to add.
-	 */
-	private void vectorScore(Answer a, String name, int[] context) {
-		// sum()
-		double sum = 0.0;
-		for (int i=0; i < context.length; i++) sum += context[i];
-		a.score(name + "MAGNITUDE", sum);
-		
-		// x[i] = y[i] / sum
-		double[] normalized_context = new double[context.length];
-		for (int i=0; i < context.length; i++) normalized_context[i] = context[i] / sum;
-		
-		// score each
-		for (int i=0; i < context.length; i++) {
-			a.score(name + i, normalized_context[i]);
-		}
 	}
 
 }
