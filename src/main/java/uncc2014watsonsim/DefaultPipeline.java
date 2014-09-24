@@ -73,28 +73,41 @@ public class DefaultPipeline {
 	};
 	
 	private static final Scorer[] scorers = {
+		// Search Engine Echoes
 		new LuceneRank(),
 		new LuceneScore(),
 		new IndriRank(),
 		new IndriScore(),
 		new BingRank(),
 		new GoogleRank(),
-		new WordProximity(),
+		
+		// Target label (emits NaN in test phase)
 		new Correct(),
+		
+		// N-gram family of scorers
+		new NGram(),
 		new SkipBigram(),
+		
+		// Word ratios
+		new WordProximity(),
 		new PassageTermMatch(),
-		new PassageCount(),
 		new PassageQuestionLengthRatio(),
 		new PercentFilteredWordsInCommon(),
 		new QuestionInPassageScorer(),
-		//new ScorerIrene(), // TODO: Introduce something new
-		new NGram(),
+		
+		// Specialized
+		new PassageCount(),
 		new LATTypeMatchScorer(),
 		new WPPageViews(),
-		new DistSemCosineSimilarity(),
-		//new ScorerAda(),      // TODO: Introduce something new
-		//new WShalabyScorer(), // TODO: Introduce something new
-		//new SentenceSimilarity(),
+		
+		// Distributional-Semantic
+		new DistSemCosQAScore(),
+		new DistSemCosAPScore(),
+		new DistSemCosQPScore(),
+		new DistSemCosQAPScore(),
+		
+		// NLP
+		//new SentenceSimilarity(), // Removed because of performance
 	};
 
 	private static final Researcher[] late_researchers = {
