@@ -65,11 +65,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     
 	/**
 	 * Fetch and merge the phrase contexts from a database.
+	 * The safe part about this is that it may give the wrong answer but not
+	 * an exception.
 	 * @param phrase
-	 * @return
-	 * @throws SQLException
+	 * @return the merged phrase vector, unless an error occurred.
 	 */
-	public static int[] getPhraseContext(String phrase) throws SQLException {
+	public static int[] getPhraseContextSafe(String phrase) {
 		// Filter repeated words
 		// word_set = S.toList $ S.fromList $ words phrase 
 		PreparedStatement context_retriever = db.prep("SELECT context FROM rindex WHERE word == ?;");
@@ -79,18 +80,42 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		// Sum the context vectors
 		// foldl' (V.zipWith (+)) (V.replicate 1000) context_vectors
 		int[] merged_context = new int[CONTEXT_LENGTH];
-		for (String word : word_set) {
-			context_retriever.setString(1, word);
-			ResultSet sql_context = context_retriever.executeQuery();
-			if (sql_context.next()) {
-				java.nio.IntBuffer buffer = java.nio.ByteBuffer.wrap(sql_context.getBytes(1)).asIntBuffer();
-				for (int i=0; i<merged_context.length; i++) {
-					merged_context[i] += buffer.get(i);
+		try {
+			for (String word : word_set) {
+				context_retriever.setString(1, word);
+				ResultSet sql_context = context_retriever.executeQuery();
+				if (sql_context.next()) {
+					java.nio.IntBuffer buffer = java.nio.ByteBuffer.wrap(sql_context.getBytes(1)).asIntBuffer();
+					for (int i=0; i<merged_context.length; i++) {
+						merged_context[i] += buffer.get(i);
+					}
 				}
 			}
-		}
+		} catch (SQLException e) {} // At worst, return what we have so far. Maybe nothing.
 		return merged_context;
 	}
     
+	/**
+	 * Find the cosine similarity between two vectors
+	 * 1 is identical, 0 is orthogonal
+	 * Synonyms are usually between 0.6 and 0.8.
+	 * @param vec1
+	 * @param vec2
+	 * @return double between 0 and 1
+	 */
+	public static double getCosineSimilarity(int[] vec1, int[] vec2) {
+		double xy = 0;
+		double xsquared = 0;
+		double ysquared = 0;
+		int length = Math.min(vec1.length, vec2.length);
+		for (int i=0; i<length; i++) {
+			int x = vec1[i];
+			int y = vec2[i];
+			xy += x * y;
+			xsquared += x * x;
+			ysquared += y * y;
+		}
+		return xy / Math.max(Math.sqrt(Math.abs(xsquared)) * Math.sqrt(Math.abs(ysquared)), Double.MIN_NORMAL);
+	}
     
 }
