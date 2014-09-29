@@ -5,6 +5,7 @@
 @attribute BING_RANK_MEDIAN numeric
 @attribute BING_RANK_MIN numeric
 @attribute CORRECT numeric
+@attribute DIST_SEM_COS_QASCORE numeric
 @attribute FITB_EXACT_MATCH_SCORE numeric
 @attribute GOOGLE_RANK_MAX numeric
 @attribute GOOGLE_RANK_MEAN numeric
@@ -52,7 +53,6 @@
 @attribute QUESTION_IN_PASSAGE_SCORER_MEAN numeric
 @attribute QUESTION_IN_PASSAGE_SCORER_MEDIAN numeric
 @attribute QUESTION_IN_PASSAGE_SCORER_MIN numeric
-@attribute RANDOM_INDEXING_COSINE_SIMILARITY numeric
 @attribute SKIP_BIGRAM_MAX numeric
 @attribute SKIP_BIGRAM_MEAN numeric
 @attribute SKIP_BIGRAM_MEDIAN numeric

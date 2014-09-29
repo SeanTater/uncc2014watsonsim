@@ -10,6 +10,6 @@ public class Correct extends AnswerScorer {
 	 * @returns correctness		0.0 -> correct, >= 2.0 -> incorrect
 	 * */
 	public double scoreAnswer(Question q, Answer a) {
-		return a.distance(q.answer);
+		return a.distance(q.answer) < 2 ? 1 : 0;
 	}
 }

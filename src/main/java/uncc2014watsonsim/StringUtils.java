@@ -8,13 +8,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
+
+import edu.stanford.nlp.util.CacheMap;
 
 /**
 *@author Jagan Vujjini
@@ -23,7 +27,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	private static Analyzer analyzer = new EnglishAnalyzer(Version.LUCENE_47);
 	private static Database db = new Database(); // Used for semantic distribution
 	public static final int CONTEXT_LENGTH = 1000;
+	
 	private static final int CONTEXT_HASH_COUNT = 20;
+	private static final int CACHE_SIZE = 256;
+	private static CacheMap<String, ArrayList<Integer>> context_cache_map = new CacheMap<String, ArrayList<Integer>>(CACHE_SIZE); 
 	
 	/** Filter out stop words from a string */
 	public static String filterRelevant(String text) {
@@ -70,28 +77,32 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @param phrase
 	 * @return the merged phrase vector, unless an error occurred.
 	 */
-	public static int[] getPhraseContextSafe(String phrase) {
-		// Filter repeated words
-		// word_set = S.toList $ S.fromList $ words phrase 
-		PreparedStatement context_retriever = db.prep("SELECT context FROM rindex WHERE word == ?;");
-		HashSet<String> word_set = new HashSet<String>();
-		word_set.addAll(StringUtils.tokenize(phrase));
-		
-		// Sum the context vectors
-		// foldl' (V.zipWith (+)) (V.replicate 1000) context_vectors
-		int[] merged_context = new int[CONTEXT_LENGTH];
-		try {
-			for (String word : word_set) {
-				context_retriever.setString(1, word);
-				ResultSet sql_context = context_retriever.executeQuery();
-				if (sql_context.next()) {
-					java.nio.IntBuffer buffer = java.nio.ByteBuffer.wrap(sql_context.getBytes(1)).asIntBuffer();
-					for (int i=0; i<merged_context.length; i++) {
-						merged_context[i] += buffer.get(i);
+	public static ArrayList<Integer> getPhraseContextSafe(String phrase) {
+		ArrayList<Integer> merged_context = context_cache_map.get(phrase);
+		if (merged_context == null) {
+			// Filter repeated words
+			// word_set = S.toList $ S.fromList $ words phrase 
+			PreparedStatement context_retriever = db.prep("SELECT context FROM rindex WHERE word == ?;");
+			HashSet<String> word_set = new HashSet<String>();
+			word_set.addAll(StringUtils.tokenize(phrase));
+			
+			// Sum the context vectors
+			// foldl' (V.zipWith (+)) (V.replicate 1000) context_vectors
+			merged_context = new ArrayList<>();
+			try {
+				for (String word : word_set) {
+					context_retriever.setString(1, word);
+					ResultSet sql_context = context_retriever.executeQuery();
+					if (sql_context.next()) {
+						java.nio.IntBuffer buffer = java.nio.ByteBuffer.wrap(sql_context.getBytes(1)).asIntBuffer();
+						for (int i=0; i<merged_context.size(); i++) {
+							merged_context.set(i, merged_context.get(i) + buffer.get(i));
+						}
 					}
 				}
-			}
-		} catch (SQLException e) {} // At worst, return what we have so far. Maybe nothing.
+			} catch (SQLException e) {} // At worst, return what we have so far. Maybe nothing.
+		}
+		context_cache_map.put(phrase, merged_context);
 		return merged_context;
 	}
     
@@ -103,14 +114,14 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @param vec2
 	 * @return double between 0 and 1
 	 */
-	public static double getCosineSimilarity(int[] vec1, int[] vec2) {
+	public static double getCosineSimilarity(ArrayList<Integer> vec1, ArrayList<Integer> vec2) {
 		double xy = 0;
 		double xsquared = 0;
 		double ysquared = 0;
-		int length = Math.min(vec1.length, vec2.length);
+		int length = Math.min(vec1.size(), vec2.size());
 		for (int i=0; i<length; i++) {
-			int x = vec1[i];
-			int y = vec2[i];
+			int x = vec1.get(i);
+			int y = vec2.get(i);
 			xy += x * y;
 			xsquared += x * x;
 			ysquared += y * y;

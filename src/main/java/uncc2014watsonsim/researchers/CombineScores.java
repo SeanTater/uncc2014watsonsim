@@ -115,7 +115,19 @@ public class CombineScores extends Researcher {
 			"QUESTION_IN_PASSAGE_SCORER_MEAN",
 			"QUESTION_IN_PASSAGE_SCORER_MEDIAN",
 			"QUESTION_IN_PASSAGE_SCORER_MIN",
-			"RANDOM_INDEXING_COSINE_SIMILARITY",
+			"DIST_SEM_COS_APSCORE_MAX",
+			"DIST_SEM_COS_APSCORE_MEAN",
+			"DIST_SEM_COS_APSCORE_MEDIAN",
+			"DIST_SEM_COS_APSCORE_MIN",
+			"DIST_SEM_COS_QAPSCORE_MAX",
+			"DIST_SEM_COS_QAPSCORE_MEAN",
+			"DIST_SEM_COS_QAPSCORE_MEDIAN",
+			"DIST_SEM_COS_QAPSCORE_MIN",
+			"DIST_SEM_COS_QASCORE",
+			"DIST_SEM_COS_QPSCORE_MAX",
+			"DIST_SEM_COS_QPSCORE_MEAN",
+			"DIST_SEM_COS_QPSCORE_MEDIAN",
+			"DIST_SEM_COS_QPSCORE_MIN",
 			"SKIP_BIGRAM_MAX",
 			"SKIP_BIGRAM_MEAN",
 			"SKIP_BIGRAM_MEDIAN",
@@ -138,7 +150,7 @@ public class CombineScores extends Researcher {
 		}
 
 		Collections.sort(question);
-		//Collections.reverse(question);
+		Collections.reverse(question);
 	}
 	
 	/*public static QuestionResultsScorer prepareGenericScorer(String schemapath, String modelpath) {
