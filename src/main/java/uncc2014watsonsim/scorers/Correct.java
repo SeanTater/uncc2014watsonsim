@@ -7,7 +7,7 @@ public class Correct extends AnswerScorer {
 	@Override
 	/**
 	 * Generate the target attribute for Machine Learning.
-	 * @returns correctness		0.0 -> correct, >= 2.0 -> incorrect
+	 * @returns correctness		0.0 -> incorrect,  1.0 -> correct
 	 * */
 	public double scoreAnswer(Question q, Answer a) {
 		return a.distance(q.answer) < 2 ? 1 : 0;
