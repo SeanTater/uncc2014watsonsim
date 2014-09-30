@@ -91,7 +91,8 @@ public class DefaultPipeline {
 		new NGram(),
 		new LATTypeMatchScorer(),
 		new WPPageViews(),
-		new RandomIndexingCosineSimilarity(),
+		//new RandomIndexingCosineSimilarity(),
+		new DistSemCosQAScore(),
 		//new ScorerAda(),      // TODO: Introduce something new
 		//new WShalabyScorer(), // TODO: Introduce something new
 		//new SentenceSimilarity(),
