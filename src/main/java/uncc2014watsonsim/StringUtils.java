@@ -83,7 +83,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @return the merged phrase vector, unless an error occurred.
 	 */
 	public static ArrayList<Double> getPhraseContextSafe(String phrase) {
-		ArrayList<Double> merged_context = context_cache_map.get(phrase);
+		ArrayList<Double> merged_context = context_cache_map.get(	phrase);
 		if (merged_context == null) {
 			merged_context = new ArrayList<>();
 			for (int i=0; i<CONTEXT_LENGTH; i++) merged_context.add(0.0);
