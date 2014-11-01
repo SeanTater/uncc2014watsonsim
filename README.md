@@ -27,17 +27,6 @@ For Linux users, there is [a video walk-through](http://youtu.be/v8LOfA8trn8) ta
 - Have Gradle setup gobs of other stuff
   - `/where/you/unzipped/gradle/bin/gradle cleanEclipse eclipse assemble`
 
-## Running Homework Google Queries
-- You do need an internet connection.
-- Follow 'Get started' above if you haven't already.
-- Find a question starting ID next to your name in the table linked to on Moodle ('Questions to Crawl'). Each person has multiple starting IDs so you can query a new set of questions each day to contribute more.
-- If you haven't run 'gradle assemble' recently, you will need to run that to get the new dependencies.  Note that if you're using Eclipse, you may need to run the full 'gradle cleanEclipse eclipse assemble'.
-- Open and run src/main/java/uncc2014watsonsim/sources/GenerateSearchResultDataset with your favorite IDE (Eclipse may be easier).
-  - When it asks, give your question starting ID.
-- If it's not working, submit an issue.
-- **If you are re-running this, make sure you have the latest version of the program first with `git pull`!**
-- One known issue is a "GoogleJsonResponseException: 500 Internal Server Error" "Backend Error".  To resolve, increase the Thread.sleep(1000) time in GenerateSearchResultDataset.java.  Try 2000 or 4000.  (10000 works but is slow.)
-
 ## Start developing
 
 - Make sure you are in the branch you want. Use (or google) `git branch` and `git checkout`
@@ -55,17 +44,9 @@ For Linux users, there is [a video walk-through](http://youtu.be/v8LOfA8trn8) ta
 ## Troubleshoot
 - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
 
-## Architecture {stub}
-Testing setup:
-- A large database of questions is run against predefined search engines.
-- The results are recorded as a large JSON file, saved, and later reopened.
-- The results are rescored (by an average or using hand built Logistic Regression)
-- The top result becomes the candidate answer, and statistics are generated
-
-Classes:
-- Question: Holds ResultSet's, collates similar results together (using Levenshtein distance)
-- ResultSet: Holds one candidate answer text (as title), and 1+ Engines.
-- Engine: Represents one search result, has a rank, a score, and an engine name.
+## Get the data
+- We parsed [the full Wikipedia](https://www.dropbox.com/s/xld5rchwf2iguxu/output_paragraphs.xml.xz?dl=0) as of October 2014 into TREC format, which may be very helpful for indexing. Note that we index one paragraph at a time rather than one article at a time, so the titles are not unique. We will submit an article-by-article format as well if that proves to be helpful.
+- Work is ongoing to place this in an SQLite database so that you do not need to index it yourself. We are working on using Lucene, Indri and Terrier for this.
 
 ### Tools
 
