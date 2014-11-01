@@ -52,6 +52,4 @@ Deep Question Answering System
 - [Find out how much better your code works than the last commit](http://watsonsim.herokuapp.com/runs)
 
 ## Deprecated Video
-
-## Check out the video
 For Linux users, there is [a video walk-through](http://youtu.be/v8LOfA8trn8) taking you from a clean Fedora install to completed Google query homework. Even if you don't use Linux, you may want to refer to it.
