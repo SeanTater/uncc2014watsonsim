@@ -42,7 +42,7 @@ Deep Question Answering System
 - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
 
 ## Get the data
-- We parsed [the full Wikipedia](https://www.dropbox.com/s/xld5rchwf2iguxu/output_paragraphs.xml.xz?dl=0) as of October 2014 into TREC format, which may be very helpful for indexing. Note that we index one paragraph at a time rather than one article at a time, so the titles are not unique. We will submit an article-by-article format as well if that proves to be helpful.
+- We parsed [the full Wikipedia](https://www.dropbox.com/s/hpse3kxsi5or5ba/wikipedia-full-paragraphs-trec.xml.xz?dl=0) as of October 2014 into TREC format, which may be very helpful for indexing. Note that we index one paragraph at a time rather than one article at a time, so the titles are not unique. We will submit an article-by-article format as well if that proves to be helpful.
 - Work is ongoing to place this in an SQLite database so that you do not need to index it yourself. We are working on using Lucene, Indri and Terrier for this.
 
 ## Tools
