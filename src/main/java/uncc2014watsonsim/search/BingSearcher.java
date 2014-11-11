@@ -1,12 +1,15 @@
 package uncc2014watsonsim.search;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import privatedata.UserSpecificConstants;
 
 import org.apache.http.client.fluent.*;
+import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -31,16 +34,31 @@ import uncc2014watsonsim.Passage;
 public class BingSearcher extends Searcher {
 	
 	public List<Passage> query(String query) {
-		//TODO: Should this be done in StringUtils?
-	    query = query.replaceAll(" ", "%20");
-	    String url = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27" + query + "%27&$top=50&$format=Atom";
+		
+	    URI uri = URI.create(""); // A bogus workaround for "may not have been initialized"
+		try {
+			uri = new URIBuilder()
+				.setScheme("https")
+				.setHost("api.datamarket.azure.com")
+				.setPath("/Data.ashx/Bing/Search/v1/Web")
+				.addParameter("Query", String.format("'%s'", query)).build(); // Should we place it in quotes?
+				//.addParameter("$top", "50")
+				//.addParameter("$format", "Atom").build();
+		} catch (URISyntaxException e1) {
+			/* This bogus block is required by Java,
+			 * but strictly speaking new URIBuilder() can't actually throw
+			 * this error because it has no input (so there can be no syntax
+			 * error). Hence, this block is unreachable.
+			 */
+			e1.printStackTrace();
+		}
 
 	    List<Passage> results = new ArrayList<Passage>();
 	    try {
 	    	String resp = Executor
 	    		.newInstance()
-	    		.auth(UserSpecificConstants.bingAPIKey, UserSpecificConstants.bingAPIKey)
-	    		.execute(Request.Get(url))
+				.auth(UserSpecificConstants.bingAPIKey, UserSpecificConstants.bingAPIKey)
+	    		.execute(Request.Get(uri))
 	    		.returnContent().asString();
 	    	
 	    	Document doc = Jsoup.parse(resp);

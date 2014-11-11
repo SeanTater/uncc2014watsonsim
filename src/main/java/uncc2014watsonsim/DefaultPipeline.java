@@ -55,7 +55,7 @@ public class DefaultPipeline {
 		new IndriSearcher(),
 // You may want to cache Bing results
 //		new BingSearcher()
-//		new CachingSearcher(new BingSearcher(), "bing"),
+		new CachingSearcher(new BingSearcher(), "bing"),
 	};
 	
 	private static final Researcher[] early_researchers = {
@@ -136,7 +136,7 @@ public class DefaultPipeline {
 	public static Question ask(Question question) {
 		// Query every engine
 		for (Searcher s: searchers)
-			question.addPassages(s.query(question.text));
+			question.addPassages(s.query(question.getRaw_text()));
 
 		for (Researcher r : early_researchers)
 			r.question(question);

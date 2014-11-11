@@ -121,7 +121,7 @@ public class StatisticsCollection {
 	public void all() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("all", "WHERE ml_block='test' LIMIT 200").run();
+			new StatsGenerator("all (with Bing)", "WHERE ml_block='test' LIMIT 200").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -138,7 +138,7 @@ public class StatisticsCollection {
 	public void train() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("train", "WHERE ml_block='train' LIMIT 1000").run();
+			new StatsGenerator("train (with Bing)", "WHERE ml_block='train' LIMIT 1000").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
