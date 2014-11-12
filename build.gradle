@@ -16,10 +16,8 @@ buildscript {
     }
     dependencies {
         classpath 'de.undercouch:gradle-download-task:0.5'
-        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
     }
 }
-apply plugin: 'fatjar'
 
 // Dependencies and where to get them (some are nonstandard)
 repositories {
