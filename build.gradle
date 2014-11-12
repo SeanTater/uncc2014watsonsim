@@ -16,10 +16,8 @@ buildscript {
     }
     dependencies {
         classpath 'de.undercouch:gradle-download-task:0.5'
-        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
     }
 }
-apply plugin: 'fatjar'
 
 // Dependencies and where to get them (some are nonstandard)
 repositories {
@@ -65,8 +63,8 @@ dependencies {
     compile "org.apache.opennlp:opennlp-tools:1.5.3"
 
     // Stanford CoreNLP
-    compile 'edu.stanford.nlp:stanford-corenlp:3.3.1'
-    compile 'edu.stanford.nlp:stanford-corenlp:3.3.1:models'
+    compile 'edu.stanford.nlp:stanford-corenlp:3.5.0'
+    compile 'edu.stanford.nlp:stanford-corenlp:3.5.0:models'
 
     // WebDAV 
     compile 'com.github.lookfirst:sardine:5.1'
@@ -112,16 +110,6 @@ test {
     systemProperty "java.library.path", file("$projectDir/lib")
     testLogging {
         exceptionFormat = 'full'
-    }
-}
-
-fatJar {
-    manifest {
-        attributes "Main-Class": "uncc2014watsonsim.WatsonSim"
-        // This prevents nested signatures (which will fail if included)
-        exclude 'META-INF/*.DSA'
-        exclude 'META-INF/*.RSA'
-        exclude 'META-INF/*.SF'
     }
 }
 
