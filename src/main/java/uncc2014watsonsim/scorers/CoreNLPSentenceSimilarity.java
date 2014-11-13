@@ -97,16 +97,17 @@ public class CoreNLPSentenceSimilarity extends PassageScorer {
 	public double scorePhrases(String s1, String s2) {
 		List<Tree> t1 = parseToTrees(s1);
 		List<Tree> t2 = parseToTrees(s2);
-		HashSet<Tree> common_subtrees = new HashSet<>();
-		common_subtrees.addAll(t1);
-		common_subtrees.retainAll(t2);
+		
+		HashSet<Tree> t1_subtrees = new HashSet<>();
+		HashSet<Tree> t2_subtrees = new HashSet<>();
+		for (Tree x : t1) t1_subtrees.addAll(x);
+		for (Tree y : t2) t2_subtrees.addAll(y);
+		t1_subtrees.retainAll(t2_subtrees);
 		
 		double score = 0.0;
-		for (Tree x : common_subtrees) {
-			// x.getLeaves().size() may also be a good idea.
-			// I don't have any intuition for which may be better.
-			score += x.size();
-		}
+		// x.getLeaves().size() may also be a good idea.
+		// I don't have any intuition for which may be better.
+		for (Tree x : t1_subtrees) score += x.size();
 		return score;
 	}
 		

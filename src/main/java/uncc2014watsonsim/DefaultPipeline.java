@@ -97,6 +97,7 @@ public class DefaultPipeline {
 		//new ScorerAda(),      // TODO: Introduce something new
 		//new WShalabyScorer(), // TODO: Introduce something new
 		//new SentenceSimilarity(),
+		new CoreNLPSentenceSimilarity(),
 	};
 
 	private static final Researcher[] late_researchers = {

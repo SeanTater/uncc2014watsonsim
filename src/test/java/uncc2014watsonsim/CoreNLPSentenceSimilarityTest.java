@@ -40,14 +40,16 @@ public class CoreNLPSentenceSimilarityTest {
 	@Test
 	public void testScorePhrases() {
 		CoreNLPSentenceSimilarity scorer = new CoreNLPSentenceSimilarity();
+		
+		// These are in large part to make sure that it does not accidentally change.
 		assertEquals(
 				6.0,
 				scorer.scorePhrases("My goat knows the bowling score.", "Michael rowed the boat ashore."),
 				0.01
 		);
 		assertEquals(
-				28.0,
-				scorer.scorePhrases("A tisket, a tasket, a green and yellow basket.", "A tisket, a tasket, what color is my basket?"),
+				12.0,
+				scorer.scorePhrases("A tisket. A tasket. A green and yellow basket.", "A tisket, a tasket, what color is my basket?"),
 				0.01
 		);
 	}
