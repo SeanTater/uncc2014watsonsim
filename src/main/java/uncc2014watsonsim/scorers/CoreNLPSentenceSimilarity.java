@@ -56,14 +56,17 @@ import uncc2014watsonsim.StringUtils;
  */
 
 public class CoreNLPSentenceSimilarity extends PassageScorer {
+	
+	Properties props;
+	StanfordCoreNLP pipeline;
 	public CoreNLPSentenceSimilarity() {
+		// creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution 
+	    props = new Properties();
+	    props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+	    pipeline = new StanfordCoreNLP(props);
 	}
 	
-	public Tree parseToTree(String text) {
-		// creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution 
-	    Properties props = new Properties();
-	    props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-	    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+	public List<Tree> parseToTrees(String text) {
 	    
 	    // create an empty Annotation just with the given text
 	    Annotation document = new Annotation(text);
@@ -74,160 +77,45 @@ public class CoreNLPSentenceSimilarity extends PassageScorer {
 	    // these are all the sentences in this document
 	    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
 	    List<CoreMap> sentences = document.get(SentencesAnnotation.class);
+	    List<Tree> trees = new ArrayList<>();
 	    
 	    for(CoreMap sentence: sentences) {
 	      // this is the parse tree of the current sentence
-	      return sentence.get(TreeAnnotation.class);
+	      trees.add(sentence.get(TreeAnnotation.class));
 	    }
-	    return Tree.valueOf("");
-	}
-	/** Turn one tokenized sentence into one top-ranked parse tree. */
-	public Parse parseSentence(List<String> tokens) {
-		//StringTokenizer st = new StringTokenizer(tks[i]); 
-		//There are several tokenizers available. SimpleTokenizer works best
-		System.out.print(";");
-		String sent= StringUtils.join(tokens," ");
-		return ParserTool.parseLine(sent,parser, 1)[0];
-	}
-	
-	/** Turn a tokenized paragraph into a list of parses */
-	public List<Parse> parseParagraph(List<List<String>> paragraph) {
-		//find sentences, tokenize each, parse each, return top parse for each
-		List<Parse> results = new ArrayList<>(paragraph.size());
-		for (List<String> sentence : paragraph) {
-			//StringTokenizer st = new StringTokenizer(tks[i]); 
-			//There are several tokenizers available. SimpleTokenizer works best
-			results.add(parseSentence(sentence));
-		}
-		return results;
-	}
-	
-	/** Tokenize a paragraph into sentences, then into words. */
-	public List<List<String>> tokenizeParagraph(String paragraph) {
-		List<List<String>> results = new ArrayList<>();
-		// Find sentences, tokenize each, parse each, return top parse for each
-		for (String unsplit_sentence : sentenceDetector.sentDetect(paragraph)) {
-			results.add(Arrays.asList(
-					SimpleTokenizer.INSTANCE.tokenize(unsplit_sentence)
-					));
-		}
-		return results;
-	}
-
-	/** Enumerate all of the child parses of a parse tree */
-	public List<Parse> getAllChildren(List<Parse> parses){
-		List<Parse> doneChildren = new ArrayList<>(parses.size());
-		Deque<Parse> nextChildren = new ArrayDeque<>(100);
-		nextChildren.addAll(parses);
-		while (!nextChildren.isEmpty()) {
-			Parse child = nextChildren.remove();
-			doneChildren.add(child);
-			nextChildren.addAll(Arrays.asList(child.getChildren()));
-		}
-		return doneChildren;		
-	}
-
-	/** Enumerate all the child parses of a single-root parse tree */
-	private List<Parse> getAllChildren(Parse parse){
-		List<Parse> p = new ArrayList<>(1);
-		p.add(parse);
-		return getAllChildren(p);
-	}
-
-    /** Compute the number of matches between two sets of parses
-     *  where a match means same label over the same string 
-     * @param pa1  One Parse forest
-     * @param pa2  Another parse forest
-     * @param verbose Whether to print progress to stdout
-     * @return score
-     */
-	public double compareParseChunks(List<Parse> pa1, List<Parse> pa2, boolean verbose){
-		
-		HashSet<String> bag1 = new HashSet<>();
-		HashSet<String> bag2 = new HashSet<>();
-		
-		for (Parse p : pa1) {
-			bag1.add(p.getCoveredText()+"\n"+p.getLabel());
-		}
-		for (Parse p : pa2) {
-			bag2.add(p.getCoveredText()+"\n"+p.getLabel());
-		}
-		
-		bag2.retainAll(bag1);
-		return bag2.size();
+	    return trees;
 	}
 	
 	/**
-	 * Flatten a paragraph into a set of unique tokens
-	 * @param paragraph
-	 * @return the flattened set
+	 * Score the similarity of two sentences according to
+	 * sum([ len(x) | x of X, y of Y, if x == y ])
+	 * where X and Y are the sets of subtrees of the parses of s1 and s2.  
+	 * @param x
+	 * @param y
+	 * @return
 	 */
-	public HashSet<String> flatten(List<List<String>> paragraph) {
-		HashSet<String> results = new HashSet<>();
-		for (List<String> sentence : paragraph)
-			for (String word : sentence)
-				results.add(word.toLowerCase());
-		return results;
+	public double scorePhrases(String s1, String s2) {
+		List<Tree> t1 = parseToTrees(s1);
+		List<Tree> t2 = parseToTrees(s2);
+		HashSet<Tree> common_subtrees = new HashSet<>();
+		common_subtrees.addAll(t1);
+		common_subtrees.retainAll(t2);
+		
+		double score = 0.0;
+		for (Tree x : common_subtrees) {
+			// x.getLeaves().size() may also be a good idea.
+			// I don't have any intuition for which may be better.
+			score += x.size();
+		}
+		return score;
 	}
-	
+		
 
-	/** Generare a normalized score.
+	/** Generate a simple score based on scorePhrases.
 	 * 
 	 */
-	//TODO divide by passage length containing the matches, not the full passage length
 	public double scorePassage(Question q, Answer a, Passage p) {
-		boolean verbose = true;
-		
-		// Tokenize the text, necessary for simple and NLP searches
-		List<List<String>> ca_sentences = tokenizeParagraph(a.candidate_text);
-		List<List<String>> q_sentences = tokenizeParagraph(q.getRaw_text());
-		List<List<String>> passage_sentences = tokenizeParagraph(p.getText());
-		
-		// Run NLP on the question and candidate answer
-		List<Parse> ca_children = getAllChildren(parseParagraph(ca_sentences));
-		List<Parse> q_children = getAllChildren(parseParagraph(q_sentences));
-		List<Parse> p_children = new ArrayList<>();
-		
-		// Speedup: Look for these tokens before running NLP
-		HashSet<String> target_tokens = flatten(ca_sentences);
-		//target_tokens.addAll(flatten(q_sentences));
-		// Free stop filtering (costs no more than what we were
-		//  already doing)
-		target_tokens.removeAll(Arrays.asList(new String[]{
-				"i", "me", "you", "he", "she", "him", "they", "them",
-				"his", "her", "hers", "my", "mine", "your", "yours", "their", "theirs",
-				"of", "a", "the",
-				"and", "or", "not", "but",
-				"this", "that",	"these", "those",
-				"on", "in", "from", "to", "over", "under", "with", "by", "for",
-				"without", "beside", "between",
-				"has", "have", "had", "will", "would", "gets", "get", "got",
-				"be", "am", "been", "was", "were", "being", "is", 
-				".", ",", ":", ";", "[", "{", "}", "]", "(", ")", "<", ">",
-				"?", "/", "\\", "-", "_", "=", "+", "~", "`", "@", "#", "$",
-				"%", "^", "&", "*"
-		}));
-		
-		for (List<String> sentence : passage_sentences) {
-			// Does it have the right tokens?
-			for (String word : sentence) {
-				if (target_tokens.contains(word.toLowerCase())) {
-					// Found a common word. Now compare the sentences.
-					p_children.addAll(getAllChildren(parseSentence(sentence)));
-					break;
-				}
-			}
-		}
-
-		double q_score = compareParseChunks(
-				q_children,
-				p_children,
-				verbose);
-		double ca_score = compareParseChunks(
-				ca_children,
-				p_children,
-				verbose);
-		return q_score*ca_score/p.getText().length();
+		return scorePhrases(p.getText(), a.candidate_text);
 	}
 }
 
