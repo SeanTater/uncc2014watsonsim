@@ -29,10 +29,10 @@ public class Passage {
 	}
     
     /** Return the value of this Score for this answer, or null */
-    public double score(String name) {
-    	Double s = scores.get(name);
-    	return s == null ? Double.NaN : s;
-    }
+    //public double score(String name) {
+    //	Double s = scores.get(name);
+    //	return s == null ? Double.NaN : s;
+    //}
     
     /** Set the value of this Score for this answer, returning the Answer.
      * 
@@ -41,10 +41,10 @@ public class Passage {
      * @param name
      * @param value
      */
-    public Passage score(String name, double value) {
-    	scores.put(name, value);
-    	return this;
-    }
+    //public Passage score(String name, double value) {
+    //	scores.put(name, value);
+    //	return this;
+    //}
     
     /**
      * Get a filtered list of tokens from the passage text

@@ -1,7 +1,14 @@
 package uncc2014watsonsim.scorers;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.DoubleSummaryStatistics;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.DoubleStream;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
@@ -15,7 +22,7 @@ import uncc2014watsonsim.Score;
  *  Scorers are expected to run in parallel. Try to avoid side effects.
  *  Otherwise use "synchronized".
  */
-public abstract class PassageScorer implements Scorer { 
+public abstract class PassageScorer extends Scorer { 
 	// This is a constructor-less hack to give Researchers a convenient name
 	// It is used for assigning scores.
 	String name;
@@ -38,25 +45,27 @@ public abstract class PassageScorer implements Scorer {
 	 * Override this if you need more power.
 	 * @param q		Question
 	 */
-	public void scoreQuestion(Question q) {
+	public QScore scoreQuestion(Question q) {
+		QScore answer_scores = new QScore();
+		
+		// Answers in sequence
 		for (Answer a : q) {
-			double sum = 0.0;
+			// Passages in parallel
+			DoubleStream scores = a.passages.parallelStream().mapToDouble(p->scorePassage(q,a,p));
+			
 			final int p_count = a.passages.size();
+			AScore answer_score = new AScore();
+			answer_scores.put(a, answer_score);
+			
 			if (p_count > 0) {
-				double[] scores = new double[p_count];
-				for (int pi=0; pi<p_count; pi++) {
-					Passage p = a.passages.get(pi);
-					scores[pi] = scorePassage(q, a, p); 
-					sum += scores[pi];
-					p.score(name, scores[pi]);
-				}
-				Arrays.sort(scores);
-				a.score(max_name, scores[0]);
-				a.score(min_name, scores[p_count - 1]);
-				a.score(mean_name, sum/p_count);
-				a.score(median_name, scores[p_count / 2]);
+				DoubleSummaryStatistics stats = scores.summaryStatistics();
+				answer_score.put(max_name, stats.getMax());
+				answer_score.put(min_name, stats.getMin());
+				answer_score.put(mean_name, stats.getAverage());
+				answer_score.put(median_name, scores.sorted().toArray()[p_count / 2]);
 			}
 		}
+		return answer_scores;
 	}
 	
 	/** Default implementation for researching a passage.

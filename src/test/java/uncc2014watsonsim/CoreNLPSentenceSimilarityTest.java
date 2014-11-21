@@ -22,10 +22,10 @@ public class CoreNLPSentenceSimilarityTest {
 		// Challenging case
 		// fails: "Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo."
 		// succeeds, or at least it looks generally right to me:
-		assertEquals(Tree.valueOf("(ROOT (S (NP (NNP Niel) (NNP Armstrong)) "
-				+ "(VP (VBD was) (NP (DT the) (JJ first) (NN man)"
-				+ "(S (VP (TO to) (VP (VB walk) "
-				+ "(PP (IN on) (NP (DT the) (NN moon)))))))) (. .)))"),
+		assertEquals(Tree.valueOf("(ROOT (S (NP (NNP Niel) (NNP Armstrong))"
+				+ "(VP (VBD was) (NP (NP (DT the) (JJ first) (NN man))"
+				+ "(SBAR (S (VP (TO to) (VP (VB walk) (PP (IN on) (NP (DT the) (NN moon))))))))) "
+				+ "(. .)))"),
 				scorer.parseToTrees("Niel Armstrong was the first man to walk on the moon.").get(0));
 		
 		assertEquals(

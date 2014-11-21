@@ -1,9 +1,13 @@
 package uncc2014watsonsim;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -50,15 +54,15 @@ import uncc2014watsonsim.search.*;
  */
 public class DefaultPipeline {
 	
-	private static final Searcher[] searchers = {
+	private static final List<Searcher> searchers = Arrays.asList(
 		new LuceneSearcher(),
 		new IndriSearcher(),
 // You may want to cache Bing results
 //		new BingSearcher()
-		new CachingSearcher(new BingSearcher(), "bing"),
-	};
+		new CachingSearcher(new BingSearcher(), "bing")
+	);
 	
-	private static final Researcher[] early_researchers = {
+	private static final List<Researcher> early_researchers = Arrays.asList(
 		new MediaWikiTrimmer(), // Before passage retrieval
 		new HyphenTrimmer(),
 		/* +0.06 recall
@@ -69,10 +73,10 @@ public class DefaultPipeline {
 		new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),
 		new MediaWikiTrimmer(), // Rerun after passage retrieval
-		new PersonRecognition(),
-	};
+		new PersonRecognition()
+	);
 	
-	private static final Scorer[] scorers = {
+	private static final List<Scorer> scorers = Arrays.asList(
 		new LuceneRank(),
 		new LuceneScore(),
 		new IndriRank(),
@@ -87,23 +91,19 @@ public class DefaultPipeline {
 		new PassageQuestionLengthRatio(),
 		new PercentFilteredWordsInCommon(),
 		new QuestionInPassageScorer(),
-		//new ScorerIrene(), // TODO: Introduce something new
 		new NGram(),
 		new LATTypeMatchScorer(),
 		new WPPageViews(),
 		//new RandomIndexingCosineSimilarity(),
 		new DistSemCosQAScore(),
 		//new DistSemCosQPScore(),
-		//new ScorerAda(),      // TODO: Introduce something new
 		//new WShalabyScorer(), // TODO: Introduce something new
 		//new SentenceSimilarity(),
-		new CoreNLPSentenceSimilarity(),
-	};
-
-	private static final Researcher[] late_researchers = {
-		new WekaTee(),
-		new CombineScores()
-	};
+		new CoreNLPSentenceSimilarity()
+	);
+	
+	private static WekaTee tee = new WekaTee();
+	private static CombineScores combiner = new CombineScores();
 	
 	/*
 	 * Initialize UIMA. 
@@ -134,7 +134,7 @@ public class DefaultPipeline {
 	}
 	
     /** Run the full standard pipeline */
-	public static Question ask(Question question) {
+	public static Pair<List<Answer>, QScore> ask(Question question) {
 		// Query every engine
 		for (Searcher s: searchers)
 			question.addPassages(s.query(question.getRaw_text()));
@@ -145,17 +145,13 @@ public class DefaultPipeline {
     	for (Researcher r : early_researchers)
     		r.complete();
     	
-
-        for (Scorer s: scorers) {
-        	s.scoreQuestion(question);
-        }
-        
-        for (Researcher r : late_researchers)
-			r.question(question);
+    	QScore scored_question = scorers.parallelStream()
+    		.map(s -> s.scoreQuestion(question))
+    		.reduce(new QScore(), QScore::mappend);
     	
-    	for (Researcher r : late_researchers)
-    		r.complete();
+    	tee.question(scored_question);
+    	List<Answer> ranked_answers = combiner.question(scored_question);
         
-        return question;
+        return Pair.of(ranked_answers, scored_question);
     }
 }

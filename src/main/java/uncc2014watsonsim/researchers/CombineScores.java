@@ -16,12 +16,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.scorers.AScore;
+import uncc2014watsonsim.scorers.QScore;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
@@ -36,7 +41,7 @@ import weka.core.Utils;
  * 
  * @author Walid Shalaby
  */
-public class CombineScores extends Researcher {
+public class CombineScores {
 	static String scorerModelPath = "data/scorer/models/allengines.model";
 	static String scorerDatasetPath = "data/scorer/schemas/allengines-01-schema.arff";
 	Classifier scorerModel = null;
@@ -60,85 +65,24 @@ public class CombineScores extends Researcher {
 		
 	}
 	
-	@Override
-	public void question(Question question) {
-		List<String> MODEL_ANSWER_DIMENSIONS = Arrays.asList(new String[]{
-			"BING_RANK_MAX",
-			"BING_RANK_MEAN",
-			"BING_RANK_MEDIAN",
-			"BING_RANK_MIN",
-			"CORRECT",
-			"DIST_SEM_COS_QASCORE",
-			"FITB_EXACT_MATCH_SCORE",
-			"GOOGLE_RANK_MAX",
-			"GOOGLE_RANK_MEAN",
-			"GOOGLE_RANK_MEDIAN",
-			"GOOGLE_RANK_MIN",
-			"INDRI_ANSWER_RANK",
-			"INDRI_ANSWER_SCORE",
-			"INDRI_RANK_MAX",
-			"INDRI_RANK_MEAN",
-			"INDRI_RANK_MEDIAN",
-			"INDRI_RANK_MIN",
-			"INDRI_SCORE_MAX",
-			"INDRI_SCORE_MEAN",
-			"INDRI_SCORE_MEDIAN",
-			"INDRI_SCORE_MIN",
-			"LATTYPE_MATCH_SCORER",
-			"LUCENE_ANSWER_RANK",
-			"LUCENE_ANSWER_SCORE",
-			"LUCENE_RANK_MAX",
-			"LUCENE_RANK_MEAN",
-			"LUCENE_RANK_MEDIAN",
-			"LUCENE_RANK_MIN",
-			"LUCENE_SCORE_MAX",
-			"LUCENE_SCORE_MEAN",
-			"LUCENE_SCORE_MEDIAN",
-			"LUCENE_SCORE_MIN",
-			"NGRAM_MAX",
-			"NGRAM_MEAN",
-			"NGRAM_MEDIAN",
-			"NGRAM_MIN",
-			"PASSAGE_COUNT",
-			"PASSAGE_QUESTION_LENGTH_RATIO_MAX",
-			"PASSAGE_QUESTION_LENGTH_RATIO_MEAN",
-			"PASSAGE_QUESTION_LENGTH_RATIO_MEDIAN",
-			"PASSAGE_QUESTION_LENGTH_RATIO_MIN",
-			"PASSAGE_TERM_MATCH_MAX",
-			"PASSAGE_TERM_MATCH_MEAN",
-			"PASSAGE_TERM_MATCH_MEDIAN",
-			"PASSAGE_TERM_MATCH_MIN",
-			"PERCENT_FILTERED_WORDS_IN_COMMON_MAX",
-			"PERCENT_FILTERED_WORDS_IN_COMMON_MEAN",
-			"PERCENT_FILTERED_WORDS_IN_COMMON_MEDIAN",
-			"PERCENT_FILTERED_WORDS_IN_COMMON_MIN",
-			"QUESTION_IN_PASSAGE_SCORER_MAX",
-			"QUESTION_IN_PASSAGE_SCORER_MEAN",
-			"QUESTION_IN_PASSAGE_SCORER_MEDIAN",
-			"QUESTION_IN_PASSAGE_SCORER_MIN",
-			"SKIP_BIGRAM_MAX",
-			"SKIP_BIGRAM_MEAN",
-			"SKIP_BIGRAM_MEDIAN",
-			"SKIP_BIGRAM_MIN",
-			"WORD_PROXIMITY_MAX",
-			"WORD_PROXIMITY_MEAN",
-			"WORD_PROXIMITY_MEDIAN",
-			"WORD_PROXIMITY_MIN",
-			"WPPAGE_VIEWS"
-		});
+	/** Combine the scores of one question, and present them in order */
+	public List<Answer> question(QScore scored_question) {
 		
-		for (Answer a: question) {
+		for (Entry<Answer, AScore> a: scored_question.entrySet()) {
 			try {
-				a.scores.put("COMBINED", score(a.scoresArray(MODEL_ANSWER_DIMENSIONS)));
+				a.getValue().put("COMBINED", score(a.getValue().orderedScores()));
 			} catch (Exception e) {
 				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
 				e.printStackTrace();
-				a.scores.put("COMBINED", 0.0);
+				a.getValue().put("COMBINED", 0.0);
 			}
 		}
-
-		Collections.sort(question);
-		Collections.reverse(question);
+		return scored_question.keySet()
+				.stream()
+				.sorted(
+						(Answer l, Answer r) -> scored_question.get(l).get("COMBINED").compareTo(scored_question.get(r).get("COMBINED")))
+				.collect(Collectors.toList());
+		//Collections.reverse(question);
 	}
 	
 	/*public static QuestionResultsScorer prepareGenericScorer(String schemapath, String modelpath) {

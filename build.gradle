@@ -78,6 +78,9 @@ dependencies {
 
     // multimaps and many other tools
     compile "com.google.guava:guava:17.0"
+    
+    // for tests
+    compile "junit:junit:4.11"
 }
 
 run {

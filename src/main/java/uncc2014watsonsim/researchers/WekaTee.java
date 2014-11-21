@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
+import uncc2014watsonsim.scorers.AScore;
+import uncc2014watsonsim.scorers.QScore;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
@@ -16,7 +19,7 @@ import weka.core.converters.ArffSaver;
 
 
 /** Pipe Answer scores to an ARFF file for Weka */
-public class WekaTee extends Researcher {
+public class WekaTee {
 	private Instances data;
 	
 	public WekaTee() {
@@ -31,21 +34,12 @@ public class WekaTee extends Researcher {
 		data = new Instances("Watsonsim captured question stream", attributes, 0);
 	}
 	
-	@Override
-	public void research(Question q) {
-		question(q);
-	}
-
-	@Override
-	public void question(Question q) {
-		
-		for (Answer a : q) {
-			data.add(new Instance(1.0, a.scoresArray(Score.answer_score_names)));
+	public void question(QScore q) {
+		// TODO: Maybe this should use (Score.answer_score_names) again
+		for (AScore a : q.values()) {
+			data.add(new Instance(1.0, a.orderedScores()));
 		}
-	}
-	
-	@Override
-	public void complete() {
+
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(data);
 		try {
