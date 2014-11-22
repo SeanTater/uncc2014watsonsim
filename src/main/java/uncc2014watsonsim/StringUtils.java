@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -28,7 +29,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	
 	private static final int CONTEXT_HASH_COUNT = 20;
 	private static final int CACHE_SIZE = 256;
-	private static CacheMap<String, ArrayList<Double>> context_cache_map = new CacheMap<String, ArrayList<Double>>(CACHE_SIZE);
+	private static Map<String, ArrayList<Double>> context_cache_map = Collections.synchronizedMap(new CacheMap<String, ArrayList<Double>>(CACHE_SIZE));
 	
 	/** Filter out stop words from a string */
 	public static String filterRelevant(String text) {
@@ -90,7 +91,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			
 			// Filter repeated words
 			// word_set = S.toList $ S.fromList $ words phrase 
-			PreparedStatement context_retriever = db.prep("SELECT context, count FROM rindex WHERE word == ?;");
+			PreparedStatement context_retriever = db.parPrep("SELECT context, count FROM rindex WHERE word == ?;");
 			HashSet<String> word_set = new HashSet<String>();
 			word_set.addAll(StringUtils.conservativeTokenize(phrase));
 			

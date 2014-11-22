@@ -11,6 +11,6 @@ import uncc2014watsonsim.Question;
  */
 public class GoogleRank extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
-		return p.score("Google_RANK");
+		return Double.NaN; // TODO: p.score("Google_RANK");
 	}
 }

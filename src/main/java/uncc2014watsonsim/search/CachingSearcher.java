@@ -27,7 +27,8 @@ public class CachingSearcher extends Searcher {
 		cache.setLong(1, passage_id);
 		ResultSet sql = cache.executeQuery();
 		while (sql.next()) {
-			p.score(sql.getString("name"), sql.getDouble("value"));
+			//TODO: Fix these scores
+			//p.score(sql.getString("name"), sql.getDouble("value"));
 		}
 	}
 	

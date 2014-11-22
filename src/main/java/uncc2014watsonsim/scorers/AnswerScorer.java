@@ -23,8 +23,8 @@ public abstract class AnswerScorer extends Scorer {
 	public QScore scoreQuestion(Question q) {
 		QScore answer_scores = new QScore();
 		q.parallelStream()
-			.map(a -> multiScoreAnswer(q, a))
-			.;
+			.map(a -> QScore.singleton(a, multiScoreAnswer(q, a)))
+			.reduce(QScore::mappend);
 		for (Answer a : q)
 			answer_scores.put(a, multiScoreAnswer(q, a));
 		return answer_scores;

@@ -69,6 +69,23 @@ public class Database {
 		return ps;
 	}
 	
+	/** Non-caching proxy for Connection.prepareStatement.
+	 * Repeated calls to this method are thread-safe.
+	 * This may later be cached in a thread-safe way if necessary.
+	 */
+	public PreparedStatement parPrep(String sql) {
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setFetchSize(100);
+		} catch (SQLException e) {
+			// It's a shame we can't make this a compile-time error.
+			e.printStackTrace();
+			throw new RuntimeException("Can't prepare an SQL statement \"" + sql + "\"");
+		}
+		return ps;
+	}
+	
 	/** Check that the SQLite DB we opened contains the right tables
 	 * You would do this rather than check if the file exists because SQLite
 	 * creates the file implicitly and it simply has no contents. 

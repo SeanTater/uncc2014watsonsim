@@ -11,6 +11,6 @@ import uncc2014watsonsim.Question;
  */
 public class IndriRank extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
-		return p.score("INDRI_RANK");
+		return Double.NaN; // TODO: p.score("INDRI_RANK");
 	}
 }

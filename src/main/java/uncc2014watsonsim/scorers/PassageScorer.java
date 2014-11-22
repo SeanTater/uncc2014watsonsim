@@ -58,11 +58,18 @@ public abstract class PassageScorer extends Scorer {
 			answer_scores.put(a, answer_score);
 			
 			if (p_count > 0) {
-				DoubleSummaryStatistics stats = scores.summaryStatistics();
-				answer_score.put(max_name, stats.getMax());
-				answer_score.put(min_name, stats.getMin());
-				answer_score.put(mean_name, stats.getAverage());
-				answer_score.put(median_name, scores.sorted().toArray()[p_count / 2]);
+				// summaryStatistics() from the streaming API consumes it
+				// but we need the median too, which it does not give
+				// so we wrote it out here
+				double[] scores_array = scores.toArray();
+				Arrays.sort(scores_array);
+				double sum=0.0;
+				for (int i=0; i<scores_array.length; i++) sum += scores_array[i];
+				sum /= scores_array.length;
+				answer_score.put(max_name, scores_array[scores_array.length-1]);
+				answer_score.put(min_name, scores_array[0]);
+				answer_score.put(mean_name, sum);
+				answer_score.put(median_name, scores_array[scores_array.length / 2]);
 			}
 		}
 		return answer_scores;

@@ -71,7 +71,8 @@ public class BingSearcher extends Searcher {
         			e.select("d|Title").text(),	        // Title
         			e.select("d|Description").text(), // Full Text
         			e.select("d|Url").text())          // Reference
-    				.score("BING_RANK", (double) i) // Score
+	    			// TODO: Fix these scores
+    				//.score("BING_RANK", (double) i) // Score
     			);
 	    	}
 		    System.out.print("B!");

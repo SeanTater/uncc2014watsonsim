@@ -96,8 +96,9 @@ public class LuceneSearcher extends Searcher {
 						doc.get("title"),	// Title
 						doc.get("text"), 	// Text
 						doc.get("docno"))   // Reference
-						.score("LUCENE_ANSWER_RANK", (double) i)           // Rank
-						.score("LUCENE_ANSWER_SCORE", (double) s.score)	// Source
+						// TODO: fix these scores
+						//.score("LUCENE_ANSWER_RANK", (double) i)           // Rank
+						//.score("LUCENE_ANSWER_SCORE", (double) s.score)	// Source
 						);
 			}
 		} catch (IOException e) {

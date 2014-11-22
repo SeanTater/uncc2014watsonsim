@@ -11,6 +11,6 @@ import uncc2014watsonsim.Question;
  */
 public class LuceneScore extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
-		return p.score("LUCENE_SCORE");
+		return Double.NaN; // TODO: p.score("LUCENE_SCORE");
 	}
 }
