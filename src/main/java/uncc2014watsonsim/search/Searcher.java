@@ -54,7 +54,7 @@ public abstract class Searcher {
      */
     List<Passage> fillFromSources(List<Passage> passages) {
     	List<Passage> results = new ArrayList<Passage>();
-    	PreparedStatement fetcher = db.prep("SELECT title, text FROM meta INNER JOIN content ON meta.id=content.id WHERE reference=?;");
+    	PreparedStatement fetcher = db.parPrep("SELECT title, text FROM meta INNER JOIN content ON meta.id=content.id WHERE reference=?;");
 
     	for (Passage p: passages) {
     		ResultSet doc_row;
