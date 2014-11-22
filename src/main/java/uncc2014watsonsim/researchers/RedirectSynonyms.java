@@ -26,7 +26,7 @@ public class RedirectSynonyms extends Researcher {
 			ResultSet results = s.executeQuery();
 			while (results.next()) {
 				Answer new_a = new Answer(results.getString("source_title"));
-				new_a.passages.addAll(a.passages);
+				new_a.direct_passages.addAll(a.direct_passages);
 				q.add(new_a);
 			}
 		} catch (SQLException e) {

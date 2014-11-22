@@ -33,7 +33,7 @@ public class WatsonSim {
 	        	int chosen_index = Integer.parseInt(command);
 	        	if (cands.size() < chosen_index) {
 		        	Answer a = cands.get(chosen_index);
-		        	System.out.println("First full text for [" + a.candidate_text + "]: \n" + a.passages.get(0).getText() + "\n");
+		        	System.out.println("First full text for [" + a.candidate_text + "]: \n" + a.direct_passages.get(0).getText() + "\n");
 		        	command = br.readLine();
 	        	} else {
 	        		System.out.printf("Sorry, there are only %d candidates.", chosen_index);

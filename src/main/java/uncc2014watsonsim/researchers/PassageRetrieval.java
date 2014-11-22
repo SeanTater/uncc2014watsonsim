@@ -21,7 +21,7 @@ public class PassageRetrieval extends Researcher {
     	String sr = getPassageQuery(q, a);
     	// Query every engine
     	for (Searcher s : searchers)
-    		a.passages.addAll(s.query(sr));
+    		a.direct_passages.addAll(s.query(sr));
 	}
 	
 	

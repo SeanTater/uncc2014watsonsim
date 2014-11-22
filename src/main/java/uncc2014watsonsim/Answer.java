@@ -16,14 +16,15 @@ import org.json.simple.JSONObject;
  */
 public class Answer implements Comparable<Answer> {
     public Map<String, Double> scores = new HashMap<>();
-    public List<Passage> passages = new ArrayList<>();
+    public List<Passage> direct_passages = new ArrayList<>();
+    public List<Passage> supporting_passages = new ArrayList<>();
     public String candidate_text;
 
     /**
-     * Create an Answer with one implicitly defined Passage
+     * Create an Answer with one direct Passage
      */
     public Answer(Passage d) {
-        this.passages.add(d);
+        this.direct_passages.add(d);
         this.scores = d.scores;
         this.candidate_text = d.title;
     }
@@ -41,17 +42,6 @@ public class Answer implements Comparable<Answer> {
     public Answer(String candidate_text) {
     	this.candidate_text = candidate_text;
     }
-    
-    /** Create an Answer (with engine) from JSON */
-	public Answer(String engine, JSONObject attr) {
-		this(
-			engine,
-			(String) attr.get(engine+"_title"),
-			"",
-			"");
-		passages.get(0).score(engine+"_RANK", (double) attr.get(engine+"_rank"));
-		passages.get(0).score(engine+"_SCORE", (double) attr.get(engine+"_score"));
-	}
 
     @Override
     /** How to handle inexact matches this way?? */
@@ -87,7 +77,7 @@ public class Answer implements Comparable<Answer> {
     public String toString() {
     	// Make a short view of the engines as single-letter abbreviations
     	String engines = "";
-    	for (Passage e: this.passages)
+    	for (Passage e: this.direct_passages)
     		if (e.engine_name != null)
     			engines += e.engine_name.substring(0, 1);
     	
@@ -119,20 +109,6 @@ public class Answer implements Comparable<Answer> {
 		scores.put(name, score);
 	}
     
-    /** Convenience method for returning all of the answer's scores as a primitive double[].
-     * Intended for Weka, but it could be useful for any ML. */
-    public double[] scoresArray(List<String> answerScoreNames) {
-    	double[] out = new double[answerScoreNames.size()];
-    	Arrays.fill(out, Double.NaN);
-    	
-    	// Answer scores
-    	for (int dim_i=0; dim_i < answerScoreNames.size(); dim_i++){
-			Double value = scores.get(answerScoreNames.get(dim_i));
-    		out[dim_i] = value == null ? Double.NaN : value;
-    	}
-		return out;
-    }
-    
     @Override
 	public int compareTo(Answer other) {
     	if (score() == null || other.score() == null)
@@ -144,7 +120,7 @@ public class Answer implements Comparable<Answer> {
     /** Change this Answer to include all the information of another
      * TODO: What should we do to merge scores? */
     public void merge(Answer other) {
-    	passages.addAll(other.passages);
+    	direct_passages.addAll(other.direct_passages);
     	// Merge the scores
     	for (Map.Entry<String, Double> sc : other.scores.entrySet()) {
     		if (!scores.containsKey(sc.getKey())) {

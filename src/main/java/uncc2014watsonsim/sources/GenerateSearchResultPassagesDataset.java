@@ -42,8 +42,8 @@ class PassageCollector extends Thread {
 			// set correct flag same as original result
 			
 			// remove first passage as it is already the search result
-			q.answer.passages.remove(0);
-			DBQuestionResultsSource.store_passages(q, q.answer.passages);
+			q.answer.direct_passages.remove(0);
+			DBQuestionResultsSource.store_passages(q, q.answer.direct_passages);
 		} catch (Exception e) {
 			// Eat exceptions
 			e.printStackTrace();

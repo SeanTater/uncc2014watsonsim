@@ -30,9 +30,9 @@ public class DBQuestionSource extends ArrayList<Question> {
 		for (Answer r : results) {
 			bulk_insert.setString(1, q.getRaw_text());
 			bulk_insert.setString(2, r.candidate_text);
-			bulk_insert.setString(3, r.passages.get(0).getText());
+			bulk_insert.setString(3, r.direct_passages.get(0).getText());
 			//TODO: we need to generalize this
-			String engine = r.passages.get(0).engine_name;
+			String engine = r.direct_passages.get(0).engine_name;
 			bulk_insert.setString(4, engine);
 			bulk_insert.setDouble(5, r.scores.get(engine.toUpperCase()+"_RANK"));
 			try {
@@ -41,7 +41,7 @@ public class DBQuestionSource extends ArrayList<Question> {
 				// ignore as google/bing don't have scores!
 				bulk_insert.setDouble(6, 0.0);
 			}
-			bulk_insert.setString(7, r.passages.get(0).reference);
+			bulk_insert.setString(7, r.direct_passages.get(0).reference);
 			bulk_insert.addBatch();
 		}
 		bulk_insert.executeBatch();

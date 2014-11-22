@@ -51,9 +51,9 @@ public abstract class PassageScorer extends Scorer {
 		// Answers in sequence
 		for (Answer a : q) {
 			// Passages in parallel
-			DoubleStream scores = a.passages.parallelStream().mapToDouble(p->scorePassage(q,a,p));
+			DoubleStream scores = a.direct_passages.parallelStream().mapToDouble(p->scorePassage(q,a,p));
 			
-			final int p_count = a.passages.size();
+			final int p_count = a.direct_passages.size();
 			AScore answer_score = new AScore();
 			answer_scores.put(a, answer_score);
 			

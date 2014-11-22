@@ -42,7 +42,7 @@ abstract public class Researcher {
 	 * @return TODO
 	 */
 	public void answer(Question q, Answer a) {
-		for (Passage p: a.passages)
+		for (Passage p: a.direct_passages)
 			passage(q, a, p);
 	}
 	

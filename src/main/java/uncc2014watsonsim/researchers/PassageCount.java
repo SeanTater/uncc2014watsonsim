@@ -9,7 +9,7 @@ import uncc2014watsonsim.scorers.AnswerScorer;
  */
 public class PassageCount extends AnswerScorer {
 	public double scoreAnswer(Question q, Answer a) {
-		return a.passages.size();
+		return a.direct_passages.size();
 	}
 }
 
