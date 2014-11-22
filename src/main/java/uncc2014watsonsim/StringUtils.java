@@ -29,7 +29,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	
 	private static final int CONTEXT_HASH_COUNT = 20;
 	private static final int CACHE_SIZE = 256;
-	private static Map<String, ArrayList<Double>> context_cache_map = Collections.synchronizedMap(new CacheMap<String, ArrayList<Double>>(CACHE_SIZE));
+	private static Map<String, double[]> context_cache_map = Collections.synchronizedMap(new CacheMap<String, double[]>(CACHE_SIZE));
 	
 	/** Filter out stop words from a string */
 	public static String filterRelevant(String text) {
@@ -83,11 +83,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @param phrase
 	 * @return the merged phrase vector, unless an error occurred.
 	 */
-	public static ArrayList<Double> getPhraseContextSafe(String phrase) {
-		ArrayList<Double> merged_context = context_cache_map.get(	phrase);
+	public static double[] getPhraseContextSafe(String phrase) {
+		double[] merged_context = context_cache_map.get(phrase);
 		if (merged_context == null) {
-			merged_context = new ArrayList<>();
-			for (int i=0; i<CONTEXT_LENGTH; i++) merged_context.add(0.0);
+			merged_context = new double[CONTEXT_LENGTH];
+			double[] buffer = new double[CONTEXT_LENGTH];
+			Arrays.fill(merged_context, 0);
 			
 			// Filter repeated words
 			// word_set = S.toList $ S.fromList $ words phrase 
@@ -102,13 +103,14 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 					context_retriever.setString(1, word);
 					ResultSet sql_context = context_retriever.executeQuery();
 					if (sql_context.next()) {
-						java.nio.DoubleBuffer buffer = java.nio.ByteBuffer.wrap(sql_context.getBytes(1)).asDoubleBuffer();
+						// Copy the buffer
+						java.nio.ByteBuffer.wrap(sql_context.getBytes(1)).asDoubleBuffer().get(buffer);
 						double total = 0;
 						// Normalize each word so that they have the same weight when combined
 						for (int i=0; i<CONTEXT_LENGTH; i++)
-							total += buffer.get(i);
+							total += buffer[i];
 						for (int i=0; i<CONTEXT_LENGTH; i++)
-							merged_context.set(i, merged_context.get(i) + (buffer.get(i) / total));
+							merged_context[i] = merged_context[i] + (buffer[i] / total);
 						
 					}
 				}
@@ -126,14 +128,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @param vec2
 	 * @return double between 0 and 1
 	 */
-	public static double getCosineSimilarity(ArrayList<Double> vec1, ArrayList<Double> vec2) {
+	public static double getCosineSimilarity(double[] vec1, double[] vec2) {
 		double xy = 0;
 		double xsquared = 0;
 		double ysquared = 0;
-		int length = Math.min(vec1.size(), vec2.size());
-		for (int i=0; i<length; i++) {
-			double x = vec1.get(i);
-			double y = vec2.get(i);
+		for (int i=0; i<CONTEXT_LENGTH; i++) {
+			double x = vec1[i];
+			double y = vec2[i];
 			// Ignore uncertain dimensions
 			// This little kludge makes a big difference
 			if (Math.max(Math.abs(x), Math.abs(y)) > 0.1) {
