@@ -129,12 +129,12 @@ public class DefaultPipeline {
 	}
 	/* End UIMA */
 	
-	public static Question ask(String qtext) {
+	public static FinalAnswer ask(String qtext) {
 	    return ask(new Question(qtext));
 	}
 	
     /** Run the full standard pipeline */
-	public static Pair<List<Answer>, QScore> ask(Question question) {
+	public static FinalAnswer ask(Question question) {
 		// Query every engine
 		for (Searcher s: searchers)
 			question.addPassages(s.query(question.getRaw_text()));
@@ -152,6 +152,6 @@ public class DefaultPipeline {
     	tee.question(scored_question);
     	List<Answer> ranked_answers = combiner.question(scored_question);
         
-        return Pair.of(ranked_answers, scored_question);
+        return new FinalAnswer(question, ranked_answers, scored_question);
     }
 }
