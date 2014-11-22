@@ -50,7 +50,7 @@ public class LuceneSearcher extends Searcher {
 		Score.registerAnswerScore("LUCENE_ANSWER_SCORE");
 	}
 	
-	public synchronized List<Passage> query(String question_text) {
+	public List<Passage> query(String question_text) {
 		List<Passage> results = new ArrayList<Passage>();
 		try {
 			/*DisjunctionMaxQuery q = new DisjunctionMaxQuery((float) 0.1);

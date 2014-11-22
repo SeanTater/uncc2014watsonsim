@@ -54,7 +54,7 @@ public class LucenePassageSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);
 	}
 	
-	public synchronized List<Passage> query(String question_text) {
+	public List<Passage> query(String question_text) {
 		List<Passage> results = new ArrayList<Passage>();
 		try {
 			BooleanQuery q = new BooleanQuery();
