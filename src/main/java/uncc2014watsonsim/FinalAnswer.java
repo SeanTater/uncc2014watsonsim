@@ -3,7 +3,7 @@ package uncc2014watsonsim;
 import java.util.List;
 import java.util.Optional;
 
-import uncc2014watsonsim.scorers.AScore;
+import uncc2014watsonsim.scorers.Scored;
 import uncc2014watsonsim.scorers.QScore;
 
 /**
@@ -56,7 +56,7 @@ public class FinalAnswer {
 	 * @return An optional answer with its scores. Never gives null, only
 	 * empty(), and never throws an exception.
 	 */
-	public Optional<AScore> getTopScores() {
+	public Optional<Scored> getTopScores() {
 		return getTopAnswer().map(scores::get);
 	}
 	

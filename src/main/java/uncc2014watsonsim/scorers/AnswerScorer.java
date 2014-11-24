@@ -43,8 +43,8 @@ public abstract class AnswerScorer extends Scorer {
 	/**
 	 * Wrapper for handling the whole map at once
 	 */
-	public AScore multiScoreAnswer(Question q, Answer a) {
-		AScore m = new AScore();
+	public Scored multiScoreAnswer(Question q, Answer a) {
+		Scored m = new Scored();
 		m.put(name, scoreAnswer(q, a));
 		return m;
 	}

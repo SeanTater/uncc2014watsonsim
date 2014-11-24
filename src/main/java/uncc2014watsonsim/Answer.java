@@ -81,9 +81,6 @@ public class Answer implements Comparable<Answer> {
     		if (e.engine_name != null)
     			engines += e.engine_name.substring(0, 1);
     	
-    	// ResultSet don't know if they are correct anymore..
-    	//String correct = isCorrect() ? "✓" : "✗";
-    	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
     	return String.format("[%01f %-3s] %s", score(), engines, candidate_text);
     }

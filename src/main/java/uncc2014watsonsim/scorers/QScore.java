@@ -6,11 +6,11 @@ import uncc2014watsonsim.Answer;
 
 /** Type alias for HashMap<Answer, AScore>.
  * This is just to improve static code analysis and programmer sanity. */
-public class QScore extends HashMap<Answer, AScore> {
+public class QScore extends HashMap<Answer, Scored> {
 	private static final long serialVersionUID = -6099128768170069764L;
 	public QScore() {super();}
 	
-	public static QScore singleton(Answer a, AScore as) {
+	public static QScore singleton(Answer a, Scored as) {
 		QScore qs = new QScore();
 		qs.put(a, as);
 		return qs;

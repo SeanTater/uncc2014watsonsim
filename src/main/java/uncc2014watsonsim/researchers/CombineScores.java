@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.scorers.AScore;
+import uncc2014watsonsim.scorers.Scored;
 import uncc2014watsonsim.scorers.QScore;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -68,9 +68,9 @@ public class CombineScores {
 	/** Combine the scores of one question, and present them in order */
 	public List<Answer> question(QScore scored_question) {
 		
-		for (Entry<Answer, AScore> a: scored_question.entrySet()) {
+		for (Entry<Answer, Scored> a: scored_question.entrySet()) {
 			try {
-				a.getValue().put("COMBINED", score(a.getValue().orderedScores()));
+				a.getValue().put("COMBINED", score(Scored.orderedScores(a.getValue())));
 			} catch (Exception e) {
 				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
 				e.printStackTrace();

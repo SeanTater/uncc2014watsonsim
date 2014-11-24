@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.scorers.AScore;
+import uncc2014watsonsim.scorers.Scored;
 import uncc2014watsonsim.scorers.QScore;
 import weka.core.Attribute;
 import weka.core.FastVector;
@@ -36,8 +36,8 @@ public class WekaTee {
 	
 	public void question(QScore q) {
 		// TODO: Maybe this should use (Score.answer_score_names) again
-		for (AScore a : q.values()) {
-			data.add(new Instance(1.0, a.orderedScores()));
+		for (Scored a : q.values()) {
+			data.add(new Instance(1.0, Scored.orderedScores(a)));
 		}
 
 		ArffSaver saver = new ArffSaver();
