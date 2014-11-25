@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -30,6 +31,7 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.PassageRef;
 
 /**
  * @author Phani Rahul
@@ -55,7 +57,7 @@ public class LucenePassageSearcher extends Searcher {
 	}
 	
 	public List<Passage> query(String question_text) {
-		List<Passage> results = new ArrayList<Passage>();
+		List<PassageRef> refs = new ArrayList<>();
 		try {
 			BooleanQuery q = new BooleanQuery();
 			for (String word : question_text.split("\\W+")) {
@@ -68,11 +70,12 @@ public class LucenePassageSearcher extends Searcher {
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];
 				Document doc = searcher.doc(s.doc);
-				results.add(new uncc2014watsonsim.Passage(
+				refs.add(new uncc2014watsonsim.PassageRef(
 						"lucene", 			// Engine
-						doc.get("title"),	// Title
-						doc.get("text"), 	// Text
-						doc.get("docno"))   // Reference
+						doc.get("docno"),   // Reference
+						Optional.ofNullable(doc.get("title")),	// Title
+						Optional.ofNullable(doc.get("text"))) 	// Text
+						
 						// TODO: Fix these scores
 						//.score("LUCENE_RANK", (double) i)           // Rank
 						//.score("LUCENE_SCORE", (double) s.score)	// Source
@@ -84,7 +87,7 @@ public class LucenePassageSearcher extends Searcher {
 		}
 		
 		// Fill any missing full text from sources
-		return fillFromSources(results);
+		return deref(refs);
 	}
 
 }

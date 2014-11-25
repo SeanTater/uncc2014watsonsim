@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -23,10 +24,14 @@ import org.apache.lucene.util.Version;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.PassageRef;
 import uncc2014watsonsim.Score;
 
 /**
+ * IR based Searcher based on Lucene. Generates candidate PassageRef's which
+ * are then automatically converted into Passages.
  * @author Phani Rahul
+ * @author Sean Gallagher
  */
 public class LuceneSearcher extends Searcher {
 	private static IndexReader reader;
@@ -51,7 +56,7 @@ public class LuceneSearcher extends Searcher {
 	}
 	
 	public List<Passage> query(String question_text) {
-		List<Passage> results = new ArrayList<Passage>();
+		List<PassageRef> refs = new ArrayList<>();
 		try {
 			/*DisjunctionMaxQuery q = new DisjunctionMaxQuery((float) 0.1);
 			
@@ -91,11 +96,11 @@ public class LuceneSearcher extends Searcher {
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];
 				Document doc = searcher.doc(s.doc);
-				results.add(new uncc2014watsonsim.Passage(
+				refs.add(new uncc2014watsonsim.PassageRef(
 						"lucene", 			// Engine
-						doc.get("title"),	// Title
-						doc.get("text"), 	// Text
-						doc.get("docno"))   // Reference
+						doc.get("docno"), 	// Reference
+						Optional.ofNullable(doc.get("title")),	// Title
+						Optional.empty()) 	// Text
 						// TODO: fix these scores
 						//.score("LUCENE_ANSWER_RANK", (double) i)           // Rank
 						//.score("LUCENE_ANSWER_SCORE", (double) s.score)	// Source
@@ -107,7 +112,7 @@ public class LuceneSearcher extends Searcher {
 		}
 		
 		// Fill any missing full text from sources
-		return fillFromSources(results);
+		return deref(refs);
 	}
 
 }

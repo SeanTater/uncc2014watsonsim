@@ -2,6 +2,13 @@ package uncc2014watsonsim;
 
 import java.util.List;
 
+/**
+ * A passage is a paragraph-length block a text with a title and reference.
+ * It can be tokenized (which will be cached).
+ * It is thread-safe.
+ * @author Sean Gallagher
+ *
+ */
 public class Passage {
 	// Which engine found this passage?
 	public final String reference;
@@ -47,8 +54,8 @@ public class Passage {
      * Wrapper for passage text
      * This is wrapped because it triggers on-the-fly calculations
      */
-	//public void setText(String text) {
-	//	this.text = text;
-    //	this._tokens = null;
-	//}
+	public void setText(String text) {
+		this.text = text;
+    	this._tokens = null;
+	}
 }
