@@ -20,6 +20,22 @@ import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 
 public class JM_Scorer extends PassageScorer{
+	private boolean enabled = true;
+	private Parser parser;
+	
+	public JM_Scorer() {
+		// These two seem to be unused
+		//POSTaggerME parserModel = new POSTaggerME(new POSModel(new FileInputStream(new File("en-pos-model.bin"))));
+		//Tokenizer tokenizer = new TokenizerME(new TokenizerModel(new FileInputStream(new File("en-token.bin"))));
+		try {
+			parser = ParserFactory.create(new ParserModel(new FileInputStream(new File("en-parser.bin"))));
+		} catch (IOException e) {
+			System.err.println("Unable to load OpenNLP models. JM_scorer is disabled.");
+			e.printStackTrace();
+			enabled=false;
+		}
+	}
+	
 	public double matchChildren(Parse pa1, Parse pa2) {
 		String p1NodeLabel = pa1.getLabel();
 		String p2NodeLabel = pa2.getLabel();
@@ -41,10 +57,8 @@ public class JM_Scorer extends PassageScorer{
 	}
 	
 	//a simple scorer based on the number of matches; requires the first string to be in the passage
-	public double scoreStructure(String ca, String q, String passage, boolean verbose) throws InvalidFormatException, IOException{
-		POSTaggerME parserModel = new POSTaggerME(new POSModel(new FileInputStream(new File("en-pos-model.bin"))));
-		Tokenizer tokenizer = new TokenizerME(new TokenizerModel(new FileInputStream(new File("en-token.bin"))));
-		Parser parser = ParserFactory.create(new ParserModel(new FileInputStream(new File("en-parser.bin"))));
+	public double scoreStructure(String ca, String q, String passage, boolean verbose) {
+		
 		double score = 0;
 		
 		Parse[] questionParse = ParserTool.parseLine(q, parser, 1);
@@ -60,13 +74,9 @@ public class JM_Scorer extends PassageScorer{
 	}
 	
 	public double scorePassage(Question q, Answer a, Passage p) {
-		try {
-			p.score("JM_Scorer", scoreStructure(q.getRaw_text(), a.candidate_text, p.getText(), false));
-		} catch (InvalidFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return Double.NaN;
+		if (enabled)
+			return scoreStructure(q.getRaw_text(), a.candidate_text, p.getText(), false);
+		else
+			return Double.NaN;
 	}
 }

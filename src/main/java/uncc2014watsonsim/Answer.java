@@ -14,8 +14,7 @@ import org.json.simple.JSONObject;
  * @author Phani Rahul
  * @author Sean Gallagher
  */
-public class Answer implements Comparable<Answer> {
-    public Map<String, Double> scores = new HashMap<>();
+public class Answer {
     public List<Passage> direct_passages = new ArrayList<>();
     public List<Passage> supporting_passages = new ArrayList<>();
     public String candidate_text;
@@ -25,7 +24,6 @@ public class Answer implements Comparable<Answer> {
      */
     public Answer(Passage d) {
         this.direct_passages.add(d);
-        this.scores = d.scores;
         this.candidate_text = d.title;
     }
     
@@ -82,18 +80,7 @@ public class Answer implements Comparable<Answer> {
     			engines += e.engine_name.substring(0, 1);
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
-    	return String.format("[%01f %-3s] %s", score(), engines, candidate_text);
-    }
-    
-    public String toJSON() {
-    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", score(), candidate_text.replace("\"", "\\\""));
-    }
-    
-    /**
-     * Return the combined score for the answer, or null
-     * */
-    public Double score() {
-        return scores.get("COMBINED");
+    	return String.format("[%-3s] %s", engines, candidate_text);
     }
 
     /**
@@ -106,24 +93,9 @@ public class Answer implements Comparable<Answer> {
 		scores.put(name, score);
 	}
     
-    @Override
-	public int compareTo(Answer other) {
-    	if (score() == null || other.score() == null)
-    		// Comparing a resultset without a combined engine is undefined
-    		return 0;
-    	return score().compareTo(other.score());
-	}
-    
-    /** Change this Answer to include all the information of another
-     * TODO: What should we do to merge scores? */
+    /** Change this Answer to include all the information of another */
     public void merge(Answer other) {
     	direct_passages.addAll(other.direct_passages);
-    	// Merge the scores
-    	for (Map.Entry<String, Double> sc : other.scores.entrySet()) {
-    		if (!scores.containsKey(sc.getKey())) {
-    			scores.put(sc.getKey(), sc.getValue());
-    		}
-    	}
     }
     
 

@@ -19,6 +19,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -79,8 +80,7 @@ public class CombineScores {
 		}
 		return scored_question.keySet()
 				.stream()
-				.sorted(
-						(Answer l, Answer r) -> scored_question.get(l).get("COMBINED").compareTo(scored_question.get(r).get("COMBINED")))
+				.sorted(Comparator.comparing((Answer a) -> scored_question.get(a).get("COMBINED")))
 				.collect(Collectors.toList());
 		//Collections.reverse(question);
 	}

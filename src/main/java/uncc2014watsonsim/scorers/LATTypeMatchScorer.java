@@ -1,6 +1,7 @@
 package uncc2014watsonsim.scorers;
 
 import java.io.File;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import opennlp.tools.cmdline.postag.POSModelLoader;
@@ -8,6 +9,7 @@ import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.WhitespaceTokenizer;
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.uima.UimaTools;
 import uncc2014watsonsim.uima.UimaToolsException;
@@ -40,7 +42,7 @@ public class LATTypeMatchScorer extends AnswerScorer {
 	 * @return The score for this answer, or NaN if not applicable.
 	 */
 	@Override
-	public double scoreAnswer(Question q, Answer a) {
+	public double scoreAnswer(Question q, Answer a, List<Passage> passages) {
 		double retVal = 0;
 		try {
 			UIMAQuestion uimaQuestion = UimaTools.getSingleton(q.getCAS(),

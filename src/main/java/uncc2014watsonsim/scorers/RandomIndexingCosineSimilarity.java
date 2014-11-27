@@ -10,6 +10,7 @@ import org.apache.mahout.math.Arrays;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Database;
+import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
@@ -19,7 +20,7 @@ public class RandomIndexingCosineSimilarity extends AnswerScorer {
 	private static final int CONTEXT_LENGTH = 1000;
 	
 	@Override
-	public double scoreAnswer(Question q, Answer a) {
+	public double scoreAnswer(Question q, Answer a, List<Passage> passages) {
 		int[] q_context;
 		int[] a_context;
 		try {

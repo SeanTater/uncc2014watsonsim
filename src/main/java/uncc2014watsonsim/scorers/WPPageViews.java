@@ -3,9 +3,11 @@ package uncc2014watsonsim.scorers;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Database;
+import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 
 public class WPPageViews extends AnswerScorer {
@@ -14,7 +16,7 @@ public class WPPageViews extends AnswerScorer {
 			"SELECT pageviews FROM meta WHERE title = ? LIMIT 1;");
 
 	@Override
-	public double scoreAnswer(Question q, Answer a) {
+	public double scoreAnswer(Question q, Answer a, List<Passage> passages) {
 		try {
 			popularity_statement.setString(1, a.candidate_text);
 			ResultSet rs = popularity_statement.executeQuery();

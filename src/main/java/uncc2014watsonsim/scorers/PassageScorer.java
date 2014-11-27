@@ -45,43 +45,38 @@ public abstract class PassageScorer extends Scorer {
 	 * Override this if you need more power.
 	 * @param q		Question
 	 */
-	public QScore scoreQuestion(Question q) {
-		QScore answer_scores = new QScore();
+	public Scored<Answer> scoreAnswer(Question q, Answer a, List<Passage> passages) {
+		Scored<Answer> answer_score = new Scored<>(a);
 		
-		// Answers in sequence
-		for (Answer a : q) {
-			// Passages in parallel
-			DoubleStream scores = a.direct_passages.parallelStream().mapToDouble(p->scorePassage(q,a,p));
-			
-			final int p_count = a.direct_passages.size();
-			Scored answer_score = new Scored();
-			answer_scores.put(a, answer_score);
-			
-			if (p_count > 0) {
-				// summaryStatistics() from the streaming API consumes it
-				// but we need the median too, which it does not give
-				// so we wrote it out here
-				double[] scores_array = scores.toArray();
-				Arrays.sort(scores_array);
-				double sum=0.0;
-				for (int i=0; i<scores_array.length; i++) sum += scores_array[i];
-				sum /= scores_array.length;
-				answer_score.put(max_name, scores_array[scores_array.length-1]);
-				answer_score.put(min_name, scores_array[0]);
-				answer_score.put(mean_name, sum);
-				answer_score.put(median_name, scores_array[scores_array.length / 2]);
-			}
+		// Passages in parallel
+		DoubleStream scores = a.direct_passages.parallelStream().mapToDouble(p->scorePassage(q,a,p));
+		
+		final int p_count = a.direct_passages.size();
+		
+		if (p_count > 0) {
+			// summaryStatistics() from the streaming API consumes it
+			// but we need the median too, which it does not give
+			// so we wrote it out here
+			double[] scores_array = scores.toArray();
+			Arrays.sort(scores_array);
+			double sum=0.0;
+			for (int i=0; i<scores_array.length; i++) sum += scores_array[i];
+			sum /= scores_array.length;
+			answer_score.put(max_name, scores_array[scores_array.length-1]);
+			answer_score.put(min_name, scores_array[0]);
+			answer_score.put(mean_name, sum);
+			answer_score.put(median_name, scores_array[scores_array.length / 2]);
 		}
-		return answer_scores;
+		return answer_score;
 	}
 	
 	/** Default implementation for researching a passage.
 	 * Does nothing by default. You don't need to override this if you don't
 	 * use it.
 	 * 
-	 * @param q		Input Question, varies slowest
-	 * @param a		Input Answer, varies medium
-	 * @param p		Input Passage, varies fastest
+	 * @param q		Input Question
+	 * @param a		Input Answer
+	 * @param p		Input Passage
 	 */
 	public double scorePassage(Question q, Answer a, Passage p) {
 		return Double.NaN;

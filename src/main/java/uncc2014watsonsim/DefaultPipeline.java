@@ -63,7 +63,6 @@ public class DefaultPipeline {
 	);
 	
 	private static final List<Researcher> early_researchers = Arrays.asList(
-		new MediaWikiTrimmer(), // Before passage retrieval
 		new HyphenTrimmer(),
 		/* +0.06 recall
 		 * -0.30 MRR
@@ -72,7 +71,6 @@ public class DefaultPipeline {
 		new Merge(),
 		new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),
-		new MediaWikiTrimmer(), // Rerun after passage retrieval
 		new PersonRecognition()
 	);
 	
@@ -145,9 +143,9 @@ public class DefaultPipeline {
     	for (Researcher r : early_researchers)
     		r.complete();
     	
-    	QScore scored_question = scorers.parallelStream()
+    	Scored<Question> scored_question = scorers.parallelStream()
     		.map(s -> s.scoreQuestion(question))
-    		.reduce(new QScore(), QScore::mappend);
+    		.reduce(new Scored<Question>(question), Scored::mappend);
     	
     	tee.question(scored_question);
     	List<Answer> ranked_answers = combiner.question(scored_question);
