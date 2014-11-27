@@ -17,14 +17,25 @@ import lemurproject.indri.ScoredExtentResult;
  */
 public class IndriSearcher extends Searcher {
 	private static QueryEnvironment q;
+	private static boolean enabled = true;
 	static {
 		// Only initialize the query environment and index once
 		q = new QueryEnvironment();	
+		try {
+			q.addIndex(UserSpecificConstants.indriIndex);
+		} catch (Exception e) {
+			System.out.println("Setting up the Indri index failed."
+					+ " Is the index in the correct location?"
+					+ " Is indri_jni included?");
+			e.printStackTrace();
+			enabled=false;
+		}
 		Score.registerAnswerScore("INDRI_ANSWER_SCORE");
 		Score.registerAnswerScore("INDRI_ANSWER_RANK");
 	}
 	
 	public List<Passage> query(String query) {
+		if (!enabled) return new ArrayList<>();
 		// Run the query
 		query = Translation.getIndriQuery(query);
 		
@@ -35,7 +46,6 @@ public class IndriSearcher extends Searcher {
 		ParsedDocument[] full_texts;
 		String[] titles;
 		try {
-			q.addIndex(UserSpecificConstants.indriIndex);
 			ser = IndriSearcher.q.runQuery(query, MAX_RESULTS);
 			docnos = IndriSearcher.q.documentMetadata(ser, "docno");
 			full_texts = IndriSearcher.q.documents(ser);
