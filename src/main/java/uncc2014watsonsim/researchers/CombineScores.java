@@ -67,20 +67,20 @@ public class CombineScores {
 	}
 	
 	/** Combine the scores of one question, and present them in order */
-	public List<Answer> question(QScore scored_question) {
+	public List<Scored<Answer>> question(Question scored_question,
+			List<Scored<Answer>> answers) {
 		
-		for (Entry<Answer, Scored> a: scored_question.entrySet()) {
+		for (Scored<Answer> a: answers) {
 			try {
-				a.getValue().put("COMBINED", score(Scored.orderedScores(a.getValue())));
+				a.put("COMBINED", score(Scored.orderedScores(a)));
 			} catch (Exception e) {
 				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
 				e.printStackTrace();
-				a.getValue().put("COMBINED", 0.0);
+				a.put("COMBINED", 0.0);
 			}
 		}
-		return scored_question.keySet()
-				.stream()
-				.sorted(Comparator.comparing((Answer a) -> scored_question.get(a).get("COMBINED")))
+		return answers.stream()
+				.sorted(Comparator.comparing((Scored<Answer> a) -> a.get("COMBINED")))
 				.collect(Collectors.toList());
 		//Collections.reverse(question);
 	}

@@ -20,7 +20,7 @@ public class RandomIndexingCosineSimilarity extends AnswerScorer {
 	private static final int CONTEXT_LENGTH = 1000;
 	
 	@Override
-	public double scoreAnswer(Question q, Answer a, List<Passage> passages) {
+	public Scored<Answer> scoreAnswer(Question q, Answer a, List<Passage> passages) {
 		int[] q_context;
 		int[] a_context;
 		try {

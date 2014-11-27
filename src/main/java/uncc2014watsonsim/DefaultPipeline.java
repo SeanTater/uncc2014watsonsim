@@ -1,11 +1,14 @@
 package uncc2014watsonsim;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.uima.UIMAFramework;
@@ -133,22 +136,30 @@ public class DefaultPipeline {
 	
     /** Run the full standard pipeline */
 	public static FinalAnswer ask(Question question) {
-		// Query every engine
-		for (Searcher s: searchers)
-			question.addPassages(s.query(question.getRaw_text()));
+		// Query every engine at once
+		List<Answer> answers = searchers.parallelStream()
+				.flatMap((Searcher s) -> s.query(question.getRaw_text()).stream())
+				.map(Answer::new)
+				.collect(Collectors.toList());
 
+		// Run each researcher in sequence
 		for (Researcher r : early_researchers)
-			r.question(question);
+			r.question(question, answers);
     	
     	for (Researcher r : early_researchers)
     		r.complete();
     	
-    	Scored<Question> scored_question = scorers.parallelStream()
-    		.map(s -> s.scoreQuestion(question))
+    	// Run all the scorers in sequence
+    	// (because they handle the answers in parallel)
+    	Scored<Answer> scored_answers = scorers.stream()
+    		.map(s -> 
+    			answers.parallelStream()
+    				.map(a -> s.scoreAnswer(question, a))
+			)
     		.reduce(new Scored<Question>(question), Scored::mappend);
     	
-    	tee.question(scored_question);
-    	List<Answer> ranked_answers = combiner.question(scored_question);
+    	tee.question(question, scored_answers);
+    	List<Answer> ranked_answers = combiner.question(question, scored_answers);
         
         return new FinalAnswer(question, ranked_answers, scored_question);
     }

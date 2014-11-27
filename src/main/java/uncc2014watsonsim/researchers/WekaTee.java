@@ -34,9 +34,9 @@ public class WekaTee {
 		data = new Instances("Watsonsim captured question stream", attributes, 0);
 	}
 	
-	public void question(QScore q) {
+	public void question(Question q, List<Scored<Answer>> answers) {
 		// TODO: Maybe this should use (Score.answer_score_names) again
-		for (Scored a : q.values()) {
+		for (Scored<Answer> a : answers) {
 			data.add(new Instance(1.0, Scored.orderedScores(a)));
 		}
 

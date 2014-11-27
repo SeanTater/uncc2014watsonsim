@@ -38,13 +38,17 @@ public abstract class PassageScorer extends Scorer {
 	 * Calls research_answer for every Answer, collecting the mean, median, max
 	 * and min of the results.
 	 * Override this if you need more power.
-	 * @param q		Question
+	 * @param q		     Question
+	 * @param a 	     Answer
+	 * @param passages   The passages supporting this answer.
 	 */
 	public Scored<Answer> scoreAnswer(Question q, Answer a, List<Passage> passages) {
 		Scored<Answer> answer_score = new Scored<>(a);
 		
 		// Passages in parallel
-		DoubleStream scores = a.direct_passages.parallelStream().mapToDouble(p->scorePassage(q,a,p));
+		DoubleStream scores = a.direct_passages
+				.parallelStream()
+				.mapToDouble(p->scorePassage(q,a,p));
 		
 		final int p_count = a.direct_passages.size();
 		

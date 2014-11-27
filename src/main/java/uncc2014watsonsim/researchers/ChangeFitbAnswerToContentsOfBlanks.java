@@ -1,5 +1,6 @@
 package uncc2014watsonsim.researchers;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +22,7 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 	}
 	
 	@Override
-	public void question(Question question) {
+	public void question(Question question, List<Answer> answers) {
 		
 		// If the question is not FITB, set the value of each answer score to NaN and exit
 		if (question.getType() != QType.FITB) {

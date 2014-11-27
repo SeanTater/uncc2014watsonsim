@@ -42,7 +42,7 @@ public class LATTypeMatchScorer extends AnswerScorer {
 	 * @return The score for this answer, or NaN if not applicable.
 	 */
 	@Override
-	public double scoreAnswer(Question q, Answer a, List<Passage> passages) {
+	public Scored<Answer> scoreAnswer(Question q, Answer a, List<Passage> passages) {
 		double retVal = 0;
 		try {
 			UIMAQuestion uimaQuestion = UimaTools.getSingleton(q.getCAS(),

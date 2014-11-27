@@ -3,6 +3,7 @@ package uncc2014watsonsim.researchers;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,9 +43,9 @@ public class PersonRecognition extends Researcher {
     }
 
 	@Override
-    public void question(Question q) {
+    public void question(Question q, List<Answer> answers) {
     	if (q.getType() == QType.FITB && enabled){
-    		super.question(q);
+    		super.question(q, answers);
     	}
     }
 
