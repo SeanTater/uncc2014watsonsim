@@ -82,16 +82,6 @@ public class Answer {
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
     	return String.format("[%-3s] %s", engines, candidate_text);
     }
-
-    /**
-     * Assign a score to this answer. If you want to automatically generate
-     * models to go with this score, remember to call Score.registerAnswerScore
-     * @param name		The name of the score 
-     * @param score		Double value of score (or NaN)
-     */
-	public void score(String name, double score) {
-		scores.put(name, score);
-	}
     
     /** Change this Answer to include all the information of another */
     public void merge(Answer other) {

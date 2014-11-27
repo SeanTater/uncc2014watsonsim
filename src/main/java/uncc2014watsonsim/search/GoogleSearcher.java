@@ -85,7 +85,7 @@ public class GoogleSearcher extends Searcher {
 				in_r.get(i).getTitle(),// "Full" Text
 				in_r.get(i).getSnippet(), // Reference
 				in_r.get(i).getFormattedUrl())                // Engine
-				.score("GOOGLE_RANK", (double) i)                       // Rank
+				//.score("GOOGLE_RANK", (double) i)                       // Rank
 				);
 		}
 		return results; 

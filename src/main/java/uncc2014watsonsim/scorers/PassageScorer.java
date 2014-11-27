@@ -1,13 +1,8 @@
 package uncc2014watsonsim.scorers;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.DoubleSummaryStatistics;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.DoubleStream;
 
 import uncc2014watsonsim.Answer;
