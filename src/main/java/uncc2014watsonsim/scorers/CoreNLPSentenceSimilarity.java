@@ -62,7 +62,8 @@ public class CoreNLPSentenceSimilarity extends PassageScorer {
 	public CoreNLPSentenceSimilarity() {
 		// creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution 
 	    props = new Properties();
-	    props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+	    props.put("annotators", "tokenize, ssplit, pos, parse");
+	    props.put("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
 	    pipeline = new StanfordCoreNLP(props);
 	}
 	

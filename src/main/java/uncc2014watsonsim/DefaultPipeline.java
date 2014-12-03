@@ -66,7 +66,7 @@ public class DefaultPipeline {
 		 * new RedirectSynonyms(),
 		 */
 		new Merge(),
-		new ChangeFitbAnswerToContentsOfBlanks(),
+		//new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),
 		new MediaWikiTrimmer(), // Rerun after passage retrieval
 		new PersonRecognition(),
@@ -97,7 +97,7 @@ public class DefaultPipeline {
 		//new ScorerAda(),      // TODO: Introduce something new
 		//new WShalabyScorer(), // TODO: Introduce something new
 		//new SentenceSimilarity(),
-		new CoreNLPSentenceSimilarity(),
+		//new CoreNLPSentenceSimilarity(),
 	};
 
 	private static final Researcher[] late_researchers = {

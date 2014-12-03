@@ -115,13 +115,11 @@ public class StatisticsCollection {
 	 * This test will be very similar to the factoid set because most of the
 	 * questions are factoids.
 	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public void all() {
-		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("all (with Bing)", "WHERE ml_block='test' LIMIT 200").run();
+			new StatsGenerator("all (with Bing)", "ORDER BY random() LIMIT 10").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -130,15 +128,13 @@ public class StatisticsCollection {
 	}
 	
 	/**
-	 * Train on 1000 questions _from a different set_!
+	 * Train on 1000 randomly selected questions!
 	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public void train() {
-		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("train (with Bing)", "WHERE ml_block='train' LIMIT 1000").run();
+			new StatsGenerator("train (with Bing)", "ORDER BY random() LIMIT 1000").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "

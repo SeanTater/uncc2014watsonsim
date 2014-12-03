@@ -109,7 +109,6 @@ public class LuceneIndriIndexer {
 	             * ourselves. (Indri still does indexing, stemming, etc.)
 	             */
 	    		// Split for indri
-	            // TODO: Replace this with the new annotater code
 	    		Matcher matcher = splitter.matcher(p.getText());
 	    		List<TermExtent> positions = new ArrayList<TermExtent>();
 	    		ArrayList<String> terms = new ArrayList<String>();

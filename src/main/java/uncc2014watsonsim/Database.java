@@ -9,62 +9,41 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 public class Database {
-	private static Connection conn;
-	private static final Map<String, PreparedStatement> statements = new HashMap<String, PreparedStatement>();
+	private Connection conn;
 	
 	public Database() {
-		// First, see if the database is already opened.
-		if (conn == null) {
-			try {
-				init_sqlite();
-			} catch (SQLException | ClassNotFoundException e2) {
-				e2.printStackTrace();
-				throw new RuntimeException("Can't run without a database.");
+		try {
+			Class.forName("org.sqlite.JDBC");
+		    Properties props = new Properties();
+		    props.put("busy_timeout", "30000");
+			conn = DriverManager.getConnection("jdbc:sqlite:data/watsonsim.db", props);
+			conn.createStatement().execute("PRAGMA journal_mode = WAL;");
+			conn.createStatement().execute("PRAGMA synchronous = OFF;");
+			// JDBC's SQLite uses autocommit (So commit() is redundant)
+			// Furthermore, close() is a no-op as long as the results are commit()'d
+
+			if (!sanityCheck()) {
+				System.out.println(String.format("Warning: Database missing or malformed."));
 			}
-		}
-	}
-
-	private void init_sqlite() throws ClassNotFoundException, SQLException {
-	    // Load the sqlite-JDBC driver using the current class loader
-	    Class.forName("org.sqlite.JDBC");
-		conn = DriverManager.getConnection("jdbc:sqlite:data/watsonsim.db");
-		conn.createStatement().execute("PRAGMA journal_mode = TRUNCATE;");
-		conn.createStatement().execute("PRAGMA synchronous = OFF;");
-		conn.createStatement().execute("PRAGMA busy_timeout = 30000;");
-
-		// JDBC's SQLite uses autocommit (So commit() is redundant)
-		// Furthermore, close() is a no-op as long as the results are commit()'d
-
-		if (!sanityCheck()) {
-			System.out.println(String.format("Warning: Database missing or empty. Full texts will come from Indri and Lucene."));
+		} catch (SQLException | ClassNotFoundException e2) {
+			e2.printStackTrace();
+			throw new RuntimeException("Can't run without a database.");
 		}
 	}
 	
-	public void commit() {
+	/** Simple wrapper for creating an SQL statement */
+	public PreparedStatement prep(String sql) {
+		PreparedStatement ps;
 		try {
-			conn.commit();
+			ps = conn.prepareStatement(sql);
+			ps.setFetchSize(100);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.err.println("Could not commit to database! Data may have been lost!");
-		}
-	}
-	
-	/** Caching proxy for Connection.prepareStatement.
-	 * Repeated calls to this method are efficient. */
-	public PreparedStatement prep(String sql) {
-		PreparedStatement ps = statements.get(sql);
-		if (ps == null) {
-			try {
-				ps = conn.prepareStatement(sql);
-				ps.setFetchSize(100);
-			} catch (SQLException e) {
-				e.printStackTrace();
-				throw new RuntimeException("Can't prepare an SQL statement \"" + sql + "\"");
-			}
-			statements.put(sql, ps);
+			throw new RuntimeException("Can't prepare an SQL statement \"" + sql + "\"");
 		}
 		return ps;
 	}

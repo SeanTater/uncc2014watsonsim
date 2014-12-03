@@ -138,7 +138,7 @@ public class CombineScores extends Researcher {
 		}
 
 		Collections.sort(question);
-		Collections.reverse(question);
+		//Collections.reverse(question);
 	}
 	
 	/*public static QuestionResultsScorer prepareGenericScorer(String schemapath, String modelpath) {
