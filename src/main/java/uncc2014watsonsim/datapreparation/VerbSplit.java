@@ -125,7 +125,6 @@ public class VerbSplit {
 			for (CoreMap sentence : annot_doc.get(SentencesAnnotation.class)) {
 				storeCorefs(candidates.getLong("id"), sentence);
 			}
-			db.commit();
 			
 			// Get the next random top-100 article
 			candidate_stmt.setInt(1, r.nextInt(100));

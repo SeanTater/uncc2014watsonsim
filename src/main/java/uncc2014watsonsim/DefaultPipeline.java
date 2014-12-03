@@ -72,7 +72,7 @@ public class DefaultPipeline {
 		 * new RedirectSynonyms(),
 		 */
 		new Merge(),
-		new ChangeFitbAnswerToContentsOfBlanks(),
+		//new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),
 		new PersonRecognition()
 	);

@@ -24,7 +24,7 @@ public class IndriSearcher extends Searcher {
 	private static boolean enabled = true;
 	static {
 		// Only initialize the query environment and index once
-		q = new QueryEnvironment();	
+		q = new QueryEnvironment();
 		try {
 			q.addIndex(UserSpecificConstants.indriIndex);
 		} catch (Exception e) {
@@ -47,12 +47,12 @@ public class IndriSearcher extends Searcher {
 		// Fetch all titles, texts
 		String[] docnos;
 		// If they have them, get the titles and full texts
-		ParsedDocument[] full_texts;
+		//ParsedDocument[] full_texts;
 		String[] titles;
 		try {
 			ser = IndriSearcher.q.runQuery(query, MAX_RESULTS);
 			docnos = IndriSearcher.q.documentMetadata(ser, "docno");
-			full_texts = IndriSearcher.q.documents(ser);
+			//full_texts = IndriSearcher.q.documents(ser);
 			titles = IndriSearcher.q.documentMetadata(ser, "title");
 		} catch (Exception e) {
 			// If any other step fails, give a more general message but don't die.
@@ -68,7 +68,7 @@ public class IndriSearcher extends Searcher {
     			"indri",         	// Engine
 				docnos[i],          // Reference
     			Optional.ofNullable(titles[i]),	        // Title
-    			Optional.ofNullable(full_texts[i].text)) // Full Text
+    			Optional.empty()) // Full Text
 	    	//TODO: Fix these scores.
 			//.score("INDRI_ANSWER_RANK", (double) i)
 			//.score("INDRI_ANSWER_SCORE", ser[i].score)

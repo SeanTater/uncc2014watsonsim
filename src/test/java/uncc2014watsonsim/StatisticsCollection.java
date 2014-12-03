@@ -115,11 +115,9 @@ public class StatisticsCollection {
 	 * This test will be very similar to the factoid set because most of the
 	 * questions are factoids.
 	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public void all() {
-		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
 			new StatsGenerator("all (with Bing)", "ORDER BY random() LIMIT 200").run();
 		} catch (SQLException e) {
@@ -130,13 +128,11 @@ public class StatisticsCollection {
 	}
 	
 	/**
-	 * Train on 1000 questions _from a different set_!
+	 * Train on 1000 randomly selected questions!
 	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public void train() {
-		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
 			new StatsGenerator("train (with Bing)", "ORDER BY random() LIMIT 1000").run();
 		} catch (SQLException e) {
