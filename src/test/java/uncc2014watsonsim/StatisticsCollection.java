@@ -119,7 +119,7 @@ public class StatisticsCollection {
 	@Test
 	public void all() {
 		try {
-			new StatsGenerator("all (with Bing)", "ORDER BY random() LIMIT 10").run();
+			new StatsGenerator("all (with Bing)", "ORDER BY random() LIMIT 200").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
