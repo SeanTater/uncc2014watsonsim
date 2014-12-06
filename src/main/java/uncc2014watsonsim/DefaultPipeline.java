@@ -73,9 +73,10 @@ public class DefaultPipeline {
 		 */
 		new Merge(),
 		//new ChangeFitbAnswerToContentsOfBlanks(),
-		new PassageRetrieval(),
 		new PersonRecognition()
 	);
+	
+	PassageRetrieval passage_retrieval = new PassageRetrieval();
 	
 	private static final List<Scorer> scorers = Arrays.asList(
 		new LuceneRank(),
@@ -148,6 +149,10 @@ public class DefaultPipeline {
     	
     	for (Researcher r : early_researchers)
     		r.complete();
+    	
+    	// Retrieve all of the supporting evidence
+    	answers.parallelStream()
+    		.map(a -> )
     	
     	// Run all the scorers in sequence
     	// (because they handle the answers in parallel)

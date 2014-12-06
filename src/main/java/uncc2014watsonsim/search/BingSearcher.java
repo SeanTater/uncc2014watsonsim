@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import privatedata.UserSpecificConstants;
 
@@ -14,7 +15,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.PassageRef;
+import uncc2014watsonsim.scorers.Scored;
 
 /**
  * Internet-enabled Searcher for Bing.
@@ -33,7 +35,7 @@ import uncc2014watsonsim.Passage;
  */
 public class BingSearcher extends Searcher {
 	
-	public List<Passage> query(String query) {
+	public List<Scored<PassageRef>> query(String query) {
 		
 	    URI uri = URI.create(""); // A bogus workaround for "may not have been initialized"
 		try {
@@ -53,7 +55,7 @@ public class BingSearcher extends Searcher {
 			e1.printStackTrace();
 		}
 
-	    List<Passage> results = new ArrayList<Passage>();
+	    List<Scored<PassageRef>> results = new ArrayList<>();
 	    try {
 	    	String resp = Executor
 	    		.newInstance()
@@ -66,14 +68,14 @@ public class BingSearcher extends Searcher {
 	    	// Perhaps limit to MAX_RESULTS?
 		    for (int i=0; i < elements.size(); i++) {
 		    	Element e = elements.get(i);
-	    		results.add(new Passage(
+	    		Scored<PassageRef> sref = Scored.mzero(new PassageRef(
         			"bing",         	// Engine
-        			e.select("d|Title").text(),	        // Title
-        			e.select("d|Description").text(), // Full Text
-        			e.select("d|Url").text())          // Reference
-	    			// TODO: Fix these scores
-    				//.score("BING_RANK", (double) i) // Score
-    			);
+        			"URL:" + e.select("d|Url").text(), // Reference
+        			Optional.of(e.select("d|Title").text()),	        // Title
+        			Optional.of(e.select("d|Description").text()) // Full Text
+        			));
+    			sref.put("BING_RANK", (double) i);
+	    		results.add(sref);
 	    	}
 		    System.out.print("B!");
 	    } catch (IOException e) {

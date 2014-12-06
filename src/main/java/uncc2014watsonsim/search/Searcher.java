@@ -1,15 +1,10 @@
 package uncc2014watsonsim.search;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Database;
 import uncc2014watsonsim.PassageRef;
+import uncc2014watsonsim.scorers.Scored;
 
 /*
  * This interface might change; Please be ready to accommodate the changes.
@@ -41,7 +36,7 @@ public abstract class Searcher {
      * @throws Exception 
      */
     
-	public abstract List<Passage> query(String query);
+	public abstract List<Scored<PassageRef>> query(String query);
 
     /**
      * How many results should Lucene and Indri return?
@@ -49,40 +44,4 @@ public abstract class Searcher {
      */
 
     public final static int MAX_RESULTS = 20;
-    
-    
-    /**
-     * Dereference a PassageRef.
-     * 
-     * TODO: It only dereferences DOCNO's not but it could easily also do web
-     * based dereferencing too.
-     */
-    List<Passage> deref(List<PassageRef> refs) {
-    	List<Passage> results = new ArrayList<Passage>();
-    	PreparedStatement fetcher = db.parPrep("SELECT title, text FROM meta INNER JOIN content ON meta.id=content.id WHERE reference=?;");
-
-    	for (PassageRef ref: refs) {
-    		ResultSet doc_row;
-    		try {
-				fetcher.setString(1, ref.reference);
-				doc_row = fetcher.executeQuery();
-				
-				String title = Optional.ofNullable(doc_row.getString("title")).orElse("");
-				String text = Optional.ofNullable(doc_row.getString("text")).orElse("");
-				if (doc_row.next()) {
-					results.add(new Passage(
-							ref.engine_name,
-							title,
-							text,
-							ref.reference
-							));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				throw new RuntimeException("Failed to execute sources search. "
-						+ "Missing document? docno:"+ref.reference);
-			}
-    	}
-    	return results;
-    }
 }

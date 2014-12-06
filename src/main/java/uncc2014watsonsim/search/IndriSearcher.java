@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import privatedata.UserSpecificConstants;
-import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.PassageRef;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.Translation;
+import uncc2014watsonsim.scorers.Scored;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
@@ -38,7 +38,7 @@ public class IndriSearcher extends Searcher {
 		Score.registerAnswerScore("INDRI_ANSWER_RANK");
 	}
 	
-	public List<Passage> query(String query) {
+	public List<Scored<PassageRef>> query(String query) {
 		if (!enabled) return new ArrayList<>();
 		// Run the query
 		query = Translation.getIndriQuery(query);
@@ -62,20 +62,20 @@ public class IndriSearcher extends Searcher {
 		}
 
 		// Compile them into a uniform format
-		List<PassageRef> refs = new ArrayList<>();
+		List<Scored<PassageRef>> refs = new ArrayList<>();
 		for (int i=0; i<ser.length; i++) {
-	    	refs.add(new PassageRef(
+	    	Scored<PassageRef> sref = Scored.mzero(new PassageRef(
     			"indri",         	// Engine
-				docnos[i],          // Reference
+				"DOC:" + docnos[i], // Reference
     			Optional.ofNullable(titles[i]),	        // Title
-    			Optional.empty()) // Full Text
-	    	//TODO: Fix these scores.
-			//.score("INDRI_ANSWER_RANK", (double) i)
-			//.score("INDRI_ANSWER_SCORE", ser[i].score)
-	    	);
+    			Optional.empty())); // Full Text
+	    	
+			sref.put("INDRI_ANSWER_RANK", (double) i);
+			sref.put("INDRI_ANSWER_SCORE", ser[i].score);
+	    	refs.add(sref);
 		}
 		// Indri's titles and full texts could be empty. If they are, fill them from sources.db
-		return deref(refs);
+		return refs;
 	}
 	
 }

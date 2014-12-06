@@ -32,6 +32,7 @@ import org.apache.lucene.util.Version;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.PassageRef;
+import uncc2014watsonsim.scorers.Scored;
 
 /**
  * @author Phani Rahul
@@ -56,8 +57,8 @@ public class LucenePassageSearcher extends Searcher {
 		searcher = new IndexSearcher(reader);
 	}
 	
-	public List<Passage> query(String question_text) {
-		List<PassageRef> refs = new ArrayList<>();
+	public List<Scored<PassageRef>> query(String question_text) {
+		List<Scored<PassageRef>> refs = new ArrayList<>();
 		try {
 			BooleanQuery q = new BooleanQuery();
 			for (String word : question_text.split("\\W+")) {
@@ -70,16 +71,16 @@ public class LucenePassageSearcher extends Searcher {
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];
 				Document doc = searcher.doc(s.doc);
-				refs.add(new uncc2014watsonsim.PassageRef(
-						"lucene", 			// Engine
-						doc.get("docno"),   // Reference
-						Optional.ofNullable(doc.get("title")),	// Title
-						Optional.ofNullable(doc.get("text"))) 	// Text
-						
-						// TODO: Fix these scores
-						//.score("LUCENE_RANK", (double) i)           // Rank
-						//.score("LUCENE_SCORE", (double) s.score)	// Source
-						);
+				Scored<PassageRef> ref = Scored.mzero(
+						new uncc2014watsonsim.PassageRef(
+								"lucene", 			// Engine
+								"DOC:" + doc.get("docno"),   // Reference
+								Optional.ofNullable(doc.get("title")),	// Title
+								Optional.ofNullable(doc.get("text")))); // Text
+				
+				ref.put("LUCENE_RANK", (double) i);
+				ref.put("LUCENE_SCORE", (double) s.score);
+				refs.add(ref);
 			}
 		} catch (IOException e) {
 			System.out.println("Failed to query Lucene. Is the index in the correct location?");
@@ -87,7 +88,7 @@ public class LucenePassageSearcher extends Searcher {
 		}
 		
 		// Fill any missing full text from sources
-		return deref(refs);
+		return refs;
 	}
 
 }

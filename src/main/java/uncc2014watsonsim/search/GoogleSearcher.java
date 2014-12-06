@@ -6,11 +6,13 @@ package uncc2014watsonsim.search;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import privatedata.UserSpecificConstants;
-
-import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.PassageRef;
 import uncc2014watsonsim.Score;
+import uncc2014watsonsim.scorers.Scored;
+
 
 
 /*
@@ -53,8 +55,8 @@ public class GoogleSearcher extends Searcher {
 		Score.registerPassageScore("GOOGLE_RANK");
 	}
 	
-	public List<Passage> query(String query) {
-		List<Passage> results = new ArrayList<Passage>();
+	public List<Scored<PassageRef>> query(String query) {
+		List<Scored<PassageRef>> results = new ArrayList<>();
 		//Check empty query
 		if (query.isEmpty())
 			return results;
@@ -80,13 +82,14 @@ public class GoogleSearcher extends Searcher {
 		}
 		// Not a range for because we need rank
 		for (int i=0; i<in_r.size(); i++) {
-			results.add(new Passage(
-				"google",  // Title 
-				in_r.get(i).getTitle(),// "Full" Text
-				in_r.get(i).getSnippet(), // Reference
-				in_r.get(i).getFormattedUrl())                // Engine
-				//.score("GOOGLE_RANK", (double) i)                       // Rank
-				);
+			Scored<PassageRef> sref = Scored.mzero(new PassageRef(
+				"google",  // Engine
+				"URL:" + in_r.get(i).getFormattedUrl(), // Reference
+				Optional.of(in_r.get(i).getTitle()),  // Title
+				Optional.of(in_r.get(i).getSnippet()) // "Full" Text
+				));
+			sref.put("GOOGLE_RANK", (double) i); // Rank
+			results.add(sref);
 		}
 		return results; 
 	}
