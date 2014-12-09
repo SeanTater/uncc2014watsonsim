@@ -46,13 +46,6 @@ public class LuceneIndriIndexer {
      * the input file which has to be indexed. This is a database made from TRECtext's
      */
     static Database db = new Database();
-    
-    /**
-     * TODO: Make this a separate API
-     */
-    static Researcher[] passage_transforms = {
-    //	new MediaWikiTrimmer(),
-    };
 
     /**
      * @param args the command line arguments
@@ -84,17 +77,13 @@ public class LuceneIndriIndexer {
         IndexWriter lucene_index = new IndexWriter(dir, iwc);
     	
         /* SQL setup */
-		java.sql.ResultSet sql = db.prep("SELECT reference, title, text FROM meta INNER JOIN content ON meta.id=content.id ORDER BY title;").executeQuery();
+		java.sql.ResultSet sql = db.prep("SELECT reference, title, text FROM meta INNER JOIN content ON meta.id=content.id WHERE source != 'wiktionary-01' ORDER BY title;").executeQuery();
 		
 		Pattern splitter = Pattern.compile("\\w+");
 		try {
 			while(sql.next()){
 				Passage p = new Passage("none", sql.getString("title"), sql.getString("text"), sql.getString("reference"));
 	            System.out.println("Indexing: " + p.title);
-	            
-	            // Prepare the passage
-	            for (Researcher r : passage_transforms)
-	            	r.passage(null, null, p);
 	            
 				// Index with Lucene
 	            Document doc = new Document();

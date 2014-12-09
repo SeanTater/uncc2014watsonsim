@@ -5,7 +5,7 @@
 @attribute BING_RANK_MEDIAN numeric
 @attribute BING_RANK_MIN numeric
 @attribute CORRECT numeric
-@attribute FITB_EXACT_MATCH_SCORE numeric
+%@attribute FITB_EXACT_MATCH_SCORE numeric
 @attribute GOOGLE_RANK_MAX numeric
 @attribute GOOGLE_RANK_MEAN numeric
 @attribute GOOGLE_RANK_MEDIAN numeric

@@ -69,7 +69,7 @@ public class CombineScores extends Researcher {
 			"BING_RANK_MIN",
 			"CORRECT",
 			"DIST_SEM_COS_QASCORE",
-			"FITB_EXACT_MATCH_SCORE",
+			//"FITB_EXACT_MATCH_SCORE",
 			"GOOGLE_RANK_MAX",
 			"GOOGLE_RANK_MEAN",
 			"GOOGLE_RANK_MEDIAN",

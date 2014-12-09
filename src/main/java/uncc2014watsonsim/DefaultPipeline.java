@@ -52,7 +52,7 @@ public class DefaultPipeline {
 	
 	private static final Searcher[] searchers = {
 		new LuceneSearcher(),
-		new IndriSearcher(),
+		//new IndriSearcher(),
 // You may want to cache Bing results
 //		new BingSearcher()
 		new CachingSearcher(new BingSearcher(), "bing"),

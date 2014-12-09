@@ -13,7 +13,7 @@ public class DBQuestionSource extends ArrayList<Question> {
 	 */
 	public DBQuestionSource(String conditions) throws SQLException {
 		// Get a list of questions, ordered so that it is consistent
-		PreparedStatement query = db.prep("select * from questions "
+		PreparedStatement query = db.prep("select question, answer, category from questions "
 				+ conditions + ";");
 		read_results(query.executeQuery());
 	}

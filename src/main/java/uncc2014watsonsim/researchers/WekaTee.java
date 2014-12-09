@@ -3,6 +3,7 @@ package uncc2014watsonsim.researchers;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import uncc2014watsonsim.Answer;
@@ -49,7 +50,8 @@ public class WekaTee extends Researcher {
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(data);
 		try {
-			saver.setFile(new File("data/weka-log.arff"));
+			
+			saver.setFile(new File("data/weka-log." + new Date() + ".arff"));
 			saver.writeBatch();
 		} catch (IOException e) {
 			System.out.println("Failed to write Weka log. Ignoring.");
