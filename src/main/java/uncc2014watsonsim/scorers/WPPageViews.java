@@ -14,7 +14,7 @@ public class WPPageViews extends AnswerScorer {
 			"SELECT pageviews FROM meta WHERE title = ? LIMIT 1;");
 
 	@Override
-	public double scoreAnswer(Question q, Answer a) {
+	public synchronized double scoreAnswer(Question q, Answer a) {
 		try {
 			popularity_statement.setString(1, a.candidate_text);
 			ResultSet rs = popularity_statement.executeQuery();

@@ -119,7 +119,7 @@ public class StatisticsCollection {
 	@Test
 	public void all() {
 		try {
-			new StatsGenerator("all (with Bing)", "INNER JOIN cache ON query = question GROUP BY question ORDER BY random() LIMIT 1000").run();
+			new StatsGenerator("noindri-nobing-nowk-wp", "INNER JOIN cache ON query = question GROUP BY question LIMIT 5000").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "

@@ -55,7 +55,7 @@ public class DefaultPipeline {
 		//new IndriSearcher(),
 // You may want to cache Bing results
 //		new BingSearcher()
-		new CachingSearcher(new BingSearcher(), "bing"),
+//		new CachingSearcher(new BingSearcher(), "bing"),
 	};
 	
 	private static final Researcher[] early_researchers = {
@@ -89,7 +89,7 @@ public class DefaultPipeline {
 		new QuestionInPassageScorer(),
 		//new ScorerIrene(), // TODO: Introduce something new
 		new NGram(),
-		new LATTypeMatchScorer(),
+		//new LATTypeMatchScorer(),
 		new WPPageViews(),
 		//new RandomIndexingCosineSimilarity(),
 		new DistSemCosQAScore(),
@@ -101,7 +101,7 @@ public class DefaultPipeline {
 	};
 
 	private static final Researcher[] late_researchers = {
-		new WekaTee(),
+		// WekaTee(),
 		new CombineScores()
 	};
 	
@@ -113,7 +113,7 @@ public class DefaultPipeline {
 	 */
 	public static AnalysisEngine uimaAE;
 	
-	static {
+	/*static {
 		try{
 			XMLInputSource uimaAnnotatorXMLInputSource = new XMLInputSource("src/main/java/uncc2014watsonsim/uima/qAnalysis/qAnalysisApplicationDescriptor.xml");
 			final ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(uimaAnnotatorXMLInputSource);
@@ -126,7 +126,7 @@ public class DefaultPipeline {
 		} catch (ResourceInitializationException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	/* End UIMA */
 	
 	public static Question ask(String qtext) {
