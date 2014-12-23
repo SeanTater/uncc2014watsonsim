@@ -72,7 +72,7 @@ prefix = None
 ##
 # Whether to preseve links in output
 #
-keepLinks = True
+keepLinks = False
 
 ##
 # Whether to transform sections into HTML
@@ -116,7 +116,7 @@ discardElements = set([
 version = '2.7'
 
 def open_database(database_filename):
-    db_conn = sqlite3.connect("wordcounts.db")
+    db_conn = sqlite3.connect(database_filename)
     db_cursor = db_conn.cursor()
     db_cursor.execute("PRAGMA synchronous=off;")
     db_cursor.execute("PRAGMA busy_timeout=10000000;")
@@ -127,12 +127,15 @@ def WikiDocument(id, title, text, source_tag, db):
     paragraph_index = 0
     
     for paragraph in compact(clean(text)):
-        content_id = random.getrandbits(63)
-	db.execute("INSERT INTO content (id, text) VALUES (?, ?);",
-		(content_id, paragraph))
-        db.execute("INSERT INTO meta (id, title, source, paragraph, reference)
-		VALUES (?, ?, ?, ?, ?);",
-            (content_id, title, source_tag, paragraph_index, "WDB:%i" % content_id))
+	# Cut out the section headers. They don't help for text search really.
+	# And we are not advanced enough to get anything from it if we tried.
+	if paragraph.count(' '):
+            content_id = random.getrandbits(63)
+            db.execute("INSERT INTO content (id, text) VALUES (?, ?);",
+                (content_id, paragraph))
+            db.execute("INSERT INTO meta (id, title, source, paragraph, reference) "
+                "VALUES (?, ?, ?, ?, ?);",
+                (content_id, title, source_tag, paragraph_index, "WDB:%i" % content_id))
         
         paragraph_index += 1
         
@@ -267,6 +270,10 @@ spaces = re.compile(r' {2,}')
 # Matches dots
 dots = re.compile(r'\.{4,}')
 
+# Matches one specific Wiktionary template
+wiktLink = re.compile(r'\{\{m\|[^|]+\|([^\}|]+)[^\}]+\}\}')
+wiktComp = re.compile(r'\{\{term\|([^\|]+)\|[^\}]+\}\}')
+
 # A matching function for nested expressions, e.g. namespaces and tables.
 def dropNested(text, openDelim, closeDelim):
     openRE = re.compile(openDelim)
@@ -363,6 +370,9 @@ def make_anchor_tag(match):
         return anchor
 
 def clean(text):
+    # Make an exception to the no-templates rule
+    text = wiktLink.sub(r'\1', text)
+    text = wiktComp.sub(r'\1', text)
 
     # FIXME: templates should be expanded
     # Drop transclusions (template, parser functions)

@@ -5,6 +5,9 @@
 package scripts;
 
 import java.io.File;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +49,7 @@ public class LuceneIndriIndexer {
      * the input file which has to be indexed. This is a database made from TRECtext's
      */
     static Database db = new Database();
+	static Pattern splitter = Pattern.compile("\\w+");
 
     /**
      * @param args the command line arguments
@@ -76,50 +80,78 @@ public class LuceneIndriIndexer {
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
         IndexWriter lucene_index = new IndexWriter(dir, iwc);
     	
-        /* SQL setup */
-		java.sql.ResultSet sql = db.prep("SELECT reference, title, text FROM meta INNER JOIN content ON meta.id=content.id WHERE source != 'wiktionary-01' ORDER BY title;").executeQuery();
-		
-		Pattern splitter = Pattern.compile("\\w+");
-		try {
-			while(sql.next()){
-				Passage p = new Passage("none", sql.getString("title"), sql.getString("text"), sql.getString("reference"));
-	            System.out.println("Indexing: " + p.title);
-	            
-				// Index with Lucene
-	            Document doc = new Document();
-	            doc.add(new TextField("title", p.title, Field.Store.NO));
-	            doc.add(new TextField("text", p.getText(), Field.Store.NO));
-	            doc.add(new StoredField("docno", p.reference));
-	            lucene_index.addDocument(doc);
-	            
-	            /* Index with Indri
-	             * Indri has rather poor Java bindings in that addString is not
-	             * completely functional and thus we must parse the document
-	             * ourselves. (Indri still does indexing, stemming, etc.)
-	             */
-	    		// Split for indri
-	    		Matcher matcher = splitter.matcher(p.getText());
-	    		List<TermExtent> positions = new ArrayList<TermExtent>();
-	    		ArrayList<String> terms = new ArrayList<String>();
-	    		while (matcher.find()) {
-	    			positions.add(new TermExtent(matcher.start(), matcher.end()));
-	    			terms.add(matcher.group());
-	    		}
-
-	    		ParsedDocument pd = new ParsedDocument();
-	    		pd.text = "";
-	    		pd.content = "";
-	    		pd.terms = terms.toArray(new String[terms.size()]);
-	    		pd.positions = positions.toArray(new TermExtent[]{});
-	    		pd.metadata = new HashMap<String, String>();
-	    		pd.metadata.put("docno", p.reference);
-	    		indri_index.addParsedDocument(pd);
-			}
+        try {
+	        indexAll("SELECT reference, title, text FROM meta "
+					+ "INNER JOIN content ON meta.id=content.id "
+					+ "ORDER BY title;",
+					lucene_index,
+					indri_index);
+	        
+	        indexAll("SELECT "
+	        			+ "min(reference) as reference, "
+	        			+ "title, "
+	        			+ "group_concat(text) as text "
+	    			+ "FROM meta "
+					+ "INNER JOIN content ON meta.id=content.id "
+					+ "GROUP BY title "
+					+ "ORDER BY title;",
+					lucene_index,
+					indri_index);
 		} finally {
 			// Even if the process is interrupted, save the indices!
 			indri_index.close();
 			lucene_index.close();
 		}
         System.out.println("Done indexing.");
+    }
+    
+    private static void indexAll(
+    		String query,
+    		IndexWriter lucene_index,
+    		IndexEnvironment indri_index) throws Exception {
+    	/* SQL setup */
+		java.sql.ResultSet sql = db.prep(query).executeQuery();
+		
+		while(sql.next()){
+			Passage p = new Passage("none", sql.getString("title"), sql.getString("text"), sql.getString("reference"));
+            System.out.println("Indexing: " + p.title);
+            
+            indexLuceneDoc(lucene_index, p);
+            indexIndriDoc(indri_index, p);
+		}
+    }
+    
+    private static void indexLuceneDoc(IndexWriter lucene_index, Passage p) throws IOException {
+		// Index with Lucene
+        Document doc = new Document();
+        doc.add(new TextField("title", p.title, Field.Store.NO));
+        doc.add(new TextField("text", p.getText(), Field.Store.NO));
+        doc.add(new StoredField("docno", p.reference));
+        lucene_index.addDocument(doc);
+    }
+    
+    private static void indexIndriDoc(IndexEnvironment indri_index, Passage p) throws Exception {
+    	/* Index with Indri
+         * Indri has rather poor Java bindings in that addString is not
+         * completely functional and thus we must parse the document
+         * ourselves. (Indri still does indexing, stemming, etc.)
+         */
+		// Split for indri
+		Matcher matcher = splitter.matcher(p.getText());
+		List<TermExtent> positions = new ArrayList<TermExtent>();
+		ArrayList<String> terms = new ArrayList<String>();
+		while (matcher.find()) {
+			positions.add(new TermExtent(matcher.start(), matcher.end()));
+			terms.add(matcher.group());
+		}
+
+		ParsedDocument pd = new ParsedDocument();
+		pd.text = "";
+		pd.content = "";
+		pd.terms = terms.toArray(new String[terms.size()]);
+		pd.positions = positions.toArray(new TermExtent[]{});
+		pd.metadata = new HashMap<String, String>();
+		pd.metadata.put("docno", p.reference);
+		indri_index.addParsedDocument(pd);
     }
 }

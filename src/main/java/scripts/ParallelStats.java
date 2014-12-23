@@ -66,7 +66,7 @@ class SingleTrainingResult extends Thread {
 	public void run() {
 		String sql = String.format("INNER JOIN cache ON query = question GROUP BY question LIMIT 100 OFFSET %d", offset);
 		try {
-			new StatsGenerator("with-wiktionary", sql).run();
+			new StatsGenerator("-indri+bing", sql).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
