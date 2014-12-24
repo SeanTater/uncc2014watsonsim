@@ -63,6 +63,7 @@ from htmlentitydefs import name2codepoint
 import sqlite3
 import nltk
 import random
+from collections import Counter
 
 ### PARAMS ####################################################################
 
@@ -125,8 +126,8 @@ def open_database(database_filename):
 ##### Main function ###########################################################
 def WikiDocument(id, title, text, source_tag, db):
     paragraph_index = 0
-    
-    for paragraph in compact(clean(text)):
+    outlinks = []
+    for paragraph in compact(clean(outlinks, text)):
 	# Cut out the section headers. They don't help for text search really.
 	# And we are not advanced enough to get anything from it if we tried.
 	if paragraph.count(' '):
@@ -138,8 +139,13 @@ def WikiDocument(id, title, text, source_tag, db):
                 (content_id, title, source_tag, paragraph_index, "WDB:%i" % content_id))
         
         paragraph_index += 1
-        
-    db.commit()
+    
+    link_counts = Counter(outlinks)
+    db.executemany("INSERT INTO wiki_links(tag, source, target, count) VALUES"
+               " (?, ?, ?, ?);",
+               [(source_tag, title, target, count)
+                   for target, count in link_counts.items()])
+    if random.random() < 0.001: db.commit()
 
 def get_url(id, prefix):
     return "%s?curid=%s" % (prefix, id)
@@ -343,7 +349,7 @@ def dropSpans(matches, text):
 
 # Match interwiki links, | separates parameters.
 # First parameter is displayed, also trailing concatenated text included
-# in display, e.g. s for plural).
+# ini display, e.g. s for plural).
 #
 # Can be nested [[File:..|..[[..]]..|..]], [[Category:...]], etc.
 # We first expand inner ones, than remove enclosing ones.
@@ -353,23 +359,29 @@ wikiLink = re.compile(r'\[\[([^[]*?)(?:\|([^[]*?))?\]\](\w*)')
 parametrizedLink = re.compile(r'\[\[.*?\]\]')
 
 # Function applied to wikiLinks
-def make_anchor_tag(match):
-    global keepLinks
-    link = match.group(1)
-    colon = link.find(':')
-    if colon > 0 and link[:colon] not in acceptedNamespaces:
-        return ''
-    trail = match.group(3)
-    anchor = match.group(2)
-    if not anchor:
-        anchor = link
-    anchor += trail
-    if keepLinks:
-        return '<a href="%s">%s</a>' % (link, anchor)
-    else:
-        return anchor
 
-def clean(text):
+# linkpairs: [(String, String)]
+def get_tag_maker(linkpairs):
+    def make_anchor_tag(match):
+        global keepLinks
+        link = match.group(1)
+        colon = link.find(':')
+        if colon > 0 and link[:colon] not in acceptedNamespaces:
+            return ''
+        trail = match.group(3)
+        anchor = match.group(2)
+        if not anchor:
+            anchor = link
+        anchor += trail
+	linkpairs.append(anchor)
+
+        if keepLinks:
+            return '<a href="%s">%s</a>' % (link, anchor)
+        else:
+            return anchor
+    return make_anchor_tag
+
+def clean(outlinks, text):
     # Make an exception to the no-templates rule
     text = wiktLink.sub(r'\1', text)
     text = wiktComp.sub(r'\1', text)
@@ -383,7 +395,7 @@ def clean(text):
     text = dropNested(text, r'{\|', r'\|}')
 
     # Expand links
-    text = wikiLink.sub(make_anchor_tag, text)
+    text = wikiLink.sub(get_tag_maker(outlinks), text)
     # Drop all remaining ones
     text = parametrizedLink.sub('', text)
 
@@ -579,6 +591,7 @@ def process_data(input, source_tag, database):
             # /mediawiki/siteinfo/base
             base = m.group(3)
             prefix = base[:base.rfind("/")]
+    database.commit()
 
 ### CL INTERFACE ############################################################
 

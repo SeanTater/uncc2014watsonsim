@@ -40,8 +40,8 @@ public class ParallelStats {
      * @throws Exception 
      */
     public static void main(String[] args) throws Exception {
-    	
-        ExecutorService pool = Executors.newFixedThreadPool(40);
+    	// Oversubscribing makes scheduling the CPU-scheduler's problem
+        ExecutorService pool = Executors.newFixedThreadPool(50);
     	for (int i=0; i < 5000; i += 100) {
     		pool.execute(new SingleTrainingResult(i));
     	}
