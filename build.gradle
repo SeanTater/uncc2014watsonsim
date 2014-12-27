@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'scala'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'maven'
@@ -6,7 +7,7 @@ apply plugin: 'download-task'
 
 // Meta information
 mainClassName = System.getProperty("mainClass")
-version = "0.2.0"
+version = "0.4.0"
 group = "edu.uncc"
 
 // Meta-dependencies (what you need so as to run this buildscript)
@@ -56,9 +57,15 @@ dependencies {
 //    natives "libindri-jni:libindri-jni:5.6"
     // Sqlite native library (but it comes in a jar)
     compile "org.xerial:sqlite-jdbc:3.7.2"
+    // PostgreSQL
+    compile 'org.postgresql:postgresql:9.3-1101-jdbc41'
     
     // OpenNLP
     compile "org.apache.opennlp:opennlp-tools:1.5.3"
+
+    // Stanford CoreNLP
+    compile 'edu.stanford.nlp:stanford-corenlp:3.4.1'
+    compile 'edu.stanford.nlp:stanford-corenlp:3.4.1:models'
 
     // WebDAV 
     compile 'com.github.lookfirst:sardine:5.1'
@@ -73,8 +80,7 @@ dependencies {
     // multimaps and many other tools
     compile "com.google.guava:guava:17.0"
 
-    // Mahout provides nice Arrays utilities
-    compile group: "org.apache.mahout",              name: "mahout-core",             version: "0.8"
+    compile "junit:junit:4.12"
 }
 
 run {

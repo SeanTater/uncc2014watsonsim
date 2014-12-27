@@ -89,9 +89,7 @@ class SingleTrainingResult extends Thread {
 			//Thread.sleep(1000);
 			DBQuestionSource.replace_cache(q, uncollated_results);
 			// Let the user know things are moving along.
-			System.out.print(""+ q.id + " ");
-			// Somewhere around once in 80 times..
-			if (q.id % 80 == 0) System.out.println(); 
+			System.out.print(".");
 		} catch (Exception e) {
 			// Eat exceptions
 			e.printStackTrace();

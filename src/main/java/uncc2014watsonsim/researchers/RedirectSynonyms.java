@@ -8,7 +8,7 @@ import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.SQLiteDB;
+import uncc2014watsonsim.Database;
 
 /**
  * Create a bunch of new answers with the same passages based on "synonyms"
@@ -17,7 +17,7 @@ import uncc2014watsonsim.SQLiteDB;
  * @author Sean
  */
 public class RedirectSynonyms extends Researcher {
-	SQLiteDB db = new SQLiteDB("sources");
+	Database db = new Database();
 
 	PreparedStatement s = db.prep(
 		"SELECT source from wiki_redirects where target = ? collate nocase;");

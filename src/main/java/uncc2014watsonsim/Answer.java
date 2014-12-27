@@ -26,6 +26,7 @@ public class Answer implements Comparable<Answer> {
      */
     public Answer(Passage d) {
         this.passages.add(d);
+        this.scores = d.scores;
         this.candidate_text = d.title;
     }
     
@@ -70,24 +71,26 @@ public class Answer implements Comparable<Answer> {
         return hash;
     }
 
-    /** Does `this` match `other`, where `this` is the candidate answer
-     *  and `other` is the reference. **Not Transitive or Commutative**!
+    /** 
+     * Return a threshold on distance
      */
     public boolean matches(Answer other) {
+        return distance(other) <= 2;
+    }
+    
+    /** 
+     * Return a Levenshtein distance between answers after stopword removal.
+     */
+    public double distance(Answer other) {
         if (other == null) {
-            return false;
+            return 10;
         }
+        int dist = StringUtils.getLevenshteinDistance(
+        		StringUtils.filterRelevant(candidate_text),
+        		StringUtils.filterRelevant(other.candidate_text),
+        		10);
         
-        return StringUtils.match_subset(other.candidate_text, candidate_text);
-        
-        /* The old method: any two passages match 
-        for (Passage doc1 : this.passages) {
-        	String t1 = StringUtils.filterRelevant(doc1.title);
-        	for (Passage doc2 : other.passages) {
-        		String t2 = StringUtils.filterRelevant(doc2.title);
-        		if (StringUtils.match_subset(t1, t2)) return true;
-        	}
-    	}*/
+        return (dist == -1) ? 10 : dist;
     }
 
     @Override
@@ -128,11 +131,8 @@ public class Answer implements Comparable<Answer> {
     
     /** Convenience method for returning all of the answer's scores as a primitive double[].
      * Intended for Weka, but it could be useful for any ML. */
-    public double[] scoresArray(List<String> answerScoreNames, List<String> passageScoreNames) {
-    	// First all of the answer's scores, followed by all of the scores from
-    	// all of the passages
-    	int dim_count = answerScoreNames.size() + (passageScoreNames.size() * Score.MAX_PASSAGE_COUNT); 
-    	double[] out = new double[dim_count];
+    public double[] scoresArray(List<String> answerScoreNames) {
+    	double[] out = new double[answerScoreNames.size()];
     	Arrays.fill(out, Double.NaN);
     	
     	// Answer scores
@@ -140,17 +140,6 @@ public class Answer implements Comparable<Answer> {
 			Double value = scores.get(answerScoreNames.get(dim_i));
     		out[dim_i] = value == null ? Double.NaN : value;
     	}
-		
-		// All the passage's scores
-    	// TODO: It's possible to have more than MAX_RESULTS passages because of merging.
-		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT && passage_i<passages.size(); passage_i++) {
-			int passage_offset = answerScoreNames.size() + (passageScoreNames.size() * passage_i);
-			Passage p = passages.get(passage_i);
-			for (int dim_i=0; dim_i<passageScoreNames.size(); dim_i++) {
-				Double value = p.scores.get(passageScoreNames.get(dim_i));
-				out[passage_offset + dim_i] = value == null ? Double.NaN : value;
-			}
-		}
 		return out;
     }
     

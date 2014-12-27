@@ -2,6 +2,7 @@ package uncc2014watsonsim;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import uncc2014watsonsim.researchers.PassageRetrieval;
@@ -10,9 +11,9 @@ import uncc2014watsonsim.researchers.PassageRetrieval;
 *
 * @author walid shalaby (adapted from DBQuestionResultsSource)
 */
-public class DBQuestionResultsSource extends QuestionSource {
+public class DBQuestionResultsSource extends ArrayList<Question> {
 	private static final long serialVersionUID = 1L;
-	private static final SQLiteDB db = new SQLiteDB("questions");
+	private static final Database db = new Database();
 
 	
 	/** Get length questions, starting with question id > (not >=) start
@@ -47,7 +48,7 @@ public class DBQuestionResultsSource extends QuestionSource {
 				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?);");
 	    
 		for (Passage r : results) {
-			bulk_insert.setLong(1, q.id);
+			bulk_insert.setString(1, q.getRaw_text());
 			bulk_insert.setString(2, r.title);
 			bulk_insert.setString(3, r.getText());
 			//TODO: we need to generalize this
@@ -70,7 +71,6 @@ public class DBQuestionResultsSource extends QuestionSource {
 	public void load_results(ResultSet sql) throws SQLException {
 		while(sql.next()){
 			Question q = new Question(sql.getString("raw_text"));
-			q.id = sql.getInt("id");
 			q.answer = new Answer(new Passage("", sql.getString("candidate_answer"), "", ""));
 			add(q);
 		}

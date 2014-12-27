@@ -37,22 +37,8 @@ import weka.core.Utils;
  * @author Walid Shalaby
  */
 public class CombineScores extends Researcher {
-	// This is the question set intended for all engines
-	String scorerModelPath = "data/scorer/models/allengines.model";
-	String scorerDatasetPath = "data/scorer/schemas/allengines-01-schema.arff";
-	/* There are also models for several specific groups.
-	 * Google:
-	 * scorerModelPath = "data/scorer/models/google.model";
-	 * scorerDatasetPath = "data/scorer/schemas/google-schema.arff";
-	 * 
-	 * Indri:
-	 * scorerModelPath = "data/scorer/models/indri.model";
-	 * scorerDatasetPath = "data/scorer/schemas/indri-schema.arff";
-	 * 
-	 * Lucene:
-	 * scorerModelPath = "data/scorer/models/lucene.model";
-	 * scorerDatasetPath = "data/scorer/schemas/lucene-schema.arff";
-	 */
+	static String scorerModelPath = "data/scorer/models/allengines.model";
+	static String scorerDatasetPath = "data/scorer/schemas/allengines-01-schema.arff";
 	Classifier scorerModel = null;
 	Instances qResultsDataset = null;
 	
@@ -74,14 +60,76 @@ public class CombineScores extends Researcher {
 		
 	}
 	
-	
-	public void research(Question question) {
-		List<String> MODEL_ANSWER_DIMENSIONS = Arrays.asList(new String[]{"BING_RANK_MAX","BING_RANK_MEAN","BING_RANK_MEDIAN","BING_RANK_MIN","CORRECT","FITB_EXACT_MATCH_SCORE","GOOGLE_RANK_MAX","GOOGLE_RANK_MEAN","GOOGLE_RANK_MEDIAN","GOOGLE_RANK_MIN","INDRI_RANK_MAX","INDRI_RANK_MEAN","INDRI_RANK_MEDIAN","INDRI_RANK_MIN","INDRI_SCORE_MAX","INDRI_SCORE_MEAN","INDRI_SCORE_MEDIAN","INDRI_SCORE_MIN","LUCENE_RANK_MAX","LUCENE_RANK_MEAN","LUCENE_RANK_MEDIAN","LUCENE_RANK_MIN","LUCENE_SCORE_MAX","LUCENE_SCORE_MEAN","LUCENE_SCORE_MEDIAN","LUCENE_SCORE_MIN","NGRAM_MAX","NGRAM_MEAN","NGRAM_MEDIAN","NGRAM_MIN","PASSAGE_COUNT","PASSAGE_QUESTION_LENGTH_RATIO_MAX","PASSAGE_QUESTION_LENGTH_RATIO_MEAN","PASSAGE_QUESTION_LENGTH_RATIO_MEDIAN","PASSAGE_QUESTION_LENGTH_RATIO_MIN","PASSAGE_TERM_MATCH_MAX","PASSAGE_TERM_MATCH_MEAN","PASSAGE_TERM_MATCH_MEDIAN","PASSAGE_TERM_MATCH_MIN","PERCENT_FILTERED_WORDS_IN_COMMON_MAX","PERCENT_FILTERED_WORDS_IN_COMMON_MEAN","PERCENT_FILTERED_WORDS_IN_COMMON_MEDIAN","PERCENT_FILTERED_WORDS_IN_COMMON_MIN","QUESTION_IN_PASSAGE_SCORER_MAX","QUESTION_IN_PASSAGE_SCORER_MEAN","QUESTION_IN_PASSAGE_SCORER_MEDIAN","QUESTION_IN_PASSAGE_SCORER_MIN","SKIP_BIGRAM_MAX","SKIP_BIGRAM_MEAN","SKIP_BIGRAM_MEDIAN","SKIP_BIGRAM_MIN","WORD_PROXIMITY_MAX","WORD_PROXIMITY_MEAN","WORD_PROXIMITY_MEDIAN","WORD_PROXIMITY_MIN"});
-		List<String> MODEL_PASSAGE_DIMENSIONS = Arrays.asList(new String[]{});///*"BING_RANK",*/ "FITB_EXACT_MATCH_SCORE", "INDRI_RANK", "INDRI_SCORE", "LUCENE_RANK", "LUCENE_SCORE", "NGRAM", "PASSAGE_QUESTION_LENGTH_RATIO", "PASSAGE_TERM_MATCH", "PERCENT_FILTERED_WORDS_IN_COMMON", "QUESTION_IN_PASSAGE_SCORER", "SKIP_BIGRAM", "WORD_PROXIMITY"});
+	@Override
+	public void question(Question question) {
+		List<String> MODEL_ANSWER_DIMENSIONS = Arrays.asList(new String[]{
+			"BING_RANK_MAX",
+			"BING_RANK_MEAN",
+			"BING_RANK_MEDIAN",
+			"BING_RANK_MIN",
+			"CORRECT",
+			"DIST_SEM_COS_QASCORE",
+			//"FITB_EXACT_MATCH_SCORE",
+			"GOOGLE_RANK_MAX",
+			"GOOGLE_RANK_MEAN",
+			"GOOGLE_RANK_MEDIAN",
+			"GOOGLE_RANK_MIN",
+			"INDRI_ANSWER_RANK",
+			"INDRI_ANSWER_SCORE",
+			"INDRI_RANK_MAX",
+			"INDRI_RANK_MEAN",
+			"INDRI_RANK_MEDIAN",
+			"INDRI_RANK_MIN",
+			"INDRI_SCORE_MAX",
+			"INDRI_SCORE_MEAN",
+			"INDRI_SCORE_MEDIAN",
+			"INDRI_SCORE_MIN",
+			"LATTYPE_MATCH_SCORER",
+			"LUCENE_ANSWER_RANK",
+			"LUCENE_ANSWER_SCORE",
+			"LUCENE_RANK_MAX",
+			"LUCENE_RANK_MEAN",
+			"LUCENE_RANK_MEDIAN",
+			"LUCENE_RANK_MIN",
+			"LUCENE_SCORE_MAX",
+			"LUCENE_SCORE_MEAN",
+			"LUCENE_SCORE_MEDIAN",
+			"LUCENE_SCORE_MIN",
+			"NGRAM_MAX",
+			"NGRAM_MEAN",
+			"NGRAM_MEDIAN",
+			"NGRAM_MIN",
+			"PASSAGE_COUNT",
+			"PASSAGE_QUESTION_LENGTH_RATIO_MAX",
+			"PASSAGE_QUESTION_LENGTH_RATIO_MEAN",
+			"PASSAGE_QUESTION_LENGTH_RATIO_MEDIAN",
+			"PASSAGE_QUESTION_LENGTH_RATIO_MIN",
+			"PASSAGE_TERM_MATCH_MAX",
+			"PASSAGE_TERM_MATCH_MEAN",
+			"PASSAGE_TERM_MATCH_MEDIAN",
+			"PASSAGE_TERM_MATCH_MIN",
+			"PERCENT_FILTERED_WORDS_IN_COMMON_MAX",
+			"PERCENT_FILTERED_WORDS_IN_COMMON_MEAN",
+			"PERCENT_FILTERED_WORDS_IN_COMMON_MEDIAN",
+			"PERCENT_FILTERED_WORDS_IN_COMMON_MIN",
+			"QUESTION_IN_PASSAGE_SCORER_MAX",
+			"QUESTION_IN_PASSAGE_SCORER_MEAN",
+			"QUESTION_IN_PASSAGE_SCORER_MEDIAN",
+			"QUESTION_IN_PASSAGE_SCORER_MIN",
+			"SKIP_BIGRAM_MAX",
+			"SKIP_BIGRAM_MEAN",
+			"SKIP_BIGRAM_MEDIAN",
+			"SKIP_BIGRAM_MIN",
+			"WORD_PROXIMITY_MAX",
+			"WORD_PROXIMITY_MEAN",
+			"WORD_PROXIMITY_MEDIAN",
+			"WORD_PROXIMITY_MIN",
+			"WPPAGE_VIEWS"
+		});
 		
 		for (Answer a: question) {
 			try {
-				a.scores.put("COMBINED", score(a.scoresArray(MODEL_ANSWER_DIMENSIONS, MODEL_PASSAGE_DIMENSIONS)));
+				a.scores.put("COMBINED", score(a.scoresArray(MODEL_ANSWER_DIMENSIONS)));
 			} catch (Exception e) {
 				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
 				e.printStackTrace();
@@ -90,7 +138,7 @@ public class CombineScores extends Researcher {
 		}
 
 		Collections.sort(question);
-		Collections.reverse(question);
+		//Collections.reverse(question);
 	}
 	
 	/*public static QuestionResultsScorer prepareGenericScorer(String schemapath, String modelpath) {
@@ -129,8 +177,10 @@ public class CombineScores extends Researcher {
 		// use logistic regression as default classifier
 		//String classifierName = "weka.classifiers.functions.SimpleLogistic";
 		//String[] classifierOptions = new String[]{"-I", "0", "-M", "500", "-H", "100", "-W", "0.0"};
-		String classifierName = "weka.classifiers.functions.Logistic";
-		String[] classifierOptions = new String[]{"-R", "1.0E-8", "-M", "-1"};
+		//String classifierName = "weka.classifiers.functions.Logistic";
+		//String[] classifierOptions = new String[]{"-R", "1.0E-8", "-M", "-1"};
+		String classifierName = "weka.classifiers.functions.MultilayerPerceptron";
+		String[] classifierOptions = new String[]{"-L", "0.3", "-M", "0.2", "-N", "500", "-V", "0", "-S", "0", "-E", "20", "-H", "a"};
 		//String classifierName = "weka.classifiers.lazy.KStar";
 		//String[] classifierOptions = new String[]{"-B", "20", "-M", "a"};
 		buildScorerModel(inputpath, outputpath, modelpath, classifierName, classifierOptions, 
@@ -225,5 +275,11 @@ public class CombineScores extends Researcher {
 		    }		    
 		}
 		writer.close();
+	}
+	
+	/** Train the classifier 
+	 * @throws Exception */
+	public static void main(String[] arguments) throws Exception {
+		buildScorerModel("data/weka-log.arff", "data/model.log", scorerModelPath, "CORRECT", false);
 	}
 }

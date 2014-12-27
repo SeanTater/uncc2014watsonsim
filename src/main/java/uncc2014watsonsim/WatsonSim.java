@@ -13,7 +13,7 @@ public class WatsonSim {
         String command = br.readLine();
         
     	while (!command.isEmpty()) {
-    		Question question = Pipeline.ask(command);
+    		Question question = DefaultPipeline.ask(command);
 	        
 	        System.out.println("This is a " + question.getType() + " Question");
 	        

@@ -12,7 +12,6 @@ import opennlp.tools.util.Span;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.QType;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.SampleData;
 
 /**
  *
@@ -27,7 +26,7 @@ public class PersonRecognition extends Researcher {
     public PersonRecognition() {
         InputStream is;
 		try {
-			is = new FileInputStream(SampleData.get_filename("en-ner-person.bin"));
+			is = new FileInputStream("data/en-ner-person.bin");
 	        model = new TokenNameFinderModel(is);
 		} catch (IOException e) {
 			e.printStackTrace();

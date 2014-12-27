@@ -28,7 +28,7 @@ import org.junit.Test;
  *    10 MB / Question of disk space. We're working on cutting that down.  
  * 3. You may have to fiddle with the LIMIT numbers if you are impatient.
  * 4. It will try to upload to the Internet collection server at
- *    http://watsonsim.herokuapp.com/runs so look there for dummaries later.
+ *    http://watsonsim.herokuapp.com/runs so look there for summaries later.
  * 
  * @author Sean Gallagher
  *
@@ -46,7 +46,7 @@ public class StatisticsCollection {
 	@Test
 	public void fitb() {
 		try {
-			new StatsGenerator("fitb", "where question glob '*_*'").run();
+			new StatsGenerator("fitb", "where question glob '*_*' AND ml_block='test'").run();
 		} catch (SQLException e) {
 			fail("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.");
@@ -65,18 +65,18 @@ public class StatisticsCollection {
 	public void factoid() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("factoid", "where "
-					+ "question not glob '*_*' "
-					+ "and category not glob '*COMMON BONDS*' "
-					+ "and category not glob '*BEFORE & AFTER*' "
-					+ "and category not glob '*ANAGRAM*' "
-					+ "and category not glob '*SCRAMBLED*' "
-					+ "and category not glob '*JUMBLED*' "
-					+ "limit 1000").run();
+			new StatsGenerator("factoid", "WHERE "
+					+ "question NOT LIKE '%_%' "
+					+ "AND category NOT LIKE '%COMMON BONDS%' "
+					+ "AND category NOT LIKE '%BEFORE & AFTER%' "
+					+ "AND category NOT LIKE '%ANAGRAM%' "
+					+ "AND category NOT LIKE '%SCRAMBLED%' "
+					+ "AND category NOT LIKE '%JUMBLED%' "
+					+ "AND ml_block='test' LIMIT 10").run();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.");
-			e.printStackTrace();
 		}
 	}
 	
@@ -94,18 +94,18 @@ public class StatisticsCollection {
 	public void notfactfitb() {
 		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("not_fact_fitb", "where "
-					+ "question not glob '*_*' "
-					+ "and category glob '*COMMON BONDS*' "
-					+ "or category glob '*BEFORE & AFTER*' "
-					+ "or category glob '*ANAGRAM*' "
-					+ "or category glob '*SCRAMBLED*' "
-					+ "or category glob '*JUMBLED*' "
-					+ "limit 20").run();
+			new StatsGenerator("not_fact_fitb", "WHERE "
+					+ "question NOT LIKE '%_%' "
+					+ "AND category LIKE '%COMMON BONDS%' "
+					+ "OR category LIKE '%BEFORE & AFTER%' "
+					+ "OR category LIKE '%ANAGRAM%' "
+					+ "OR category LIKE '%SCRAMBLED%' "
+					+ "OR category LIKE '%JUMBLED%' "
+					+ "AND ml_block='test' LIMIT 20").run();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.");
-			e.printStackTrace();
 		}
 	}
 	
@@ -115,17 +115,30 @@ public class StatisticsCollection {
 	 * This test will be very similar to the factoid set because most of the
 	 * questions are factoids.
 	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public void all() {
-		//HACK: We should integrate this somehow. This is basically scraped straight from QClassDetection
 		try {
-			new StatsGenerator("all", "limit 1000").run();
+			new StatsGenerator("noindri-nobing-nowk-wp", "INNER JOIN cache ON query = question GROUP BY question LIMIT 5000").run();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.");
+		}
+	}
+	
+	/**
+	 * Train on 1000 randomly selected questions!
+	 * 
+	 */
+	@Test
+	public void train() {
+		try {
+			new StatsGenerator("train (with Bing)", "ORDER BY random() LIMIT 1000").run();
+		} catch (SQLException e) {
 			e.printStackTrace();
+			fail("Database missing, invalid, or out of date. Check that you "
+					+ "have the latest version.");
 		}
 	}
 }
@@ -162,7 +175,7 @@ public class StatisticsCollection {
  */
 class StatsGenerator {
 	String dataset;
-	private QuestionSource questionsource;
+	private DBQuestionSource questionsource;
 	// correct[n] =def= number of correct answers at rank n 
 	int[] correct = new int[100];
 	int available = 0;
@@ -193,6 +206,7 @@ class StatsGenerator {
 			Answer a = question.get(0);
 			// Clamp to [0, 99]
 			int bin = (int)(a.score() * 99);
+			bin = Math.max(0, Math.min(bin, 99)); 
 			if(a.equals(question.answer)) conf_correct[bin]++;
 			conf_hist[bin]++;
 		}
@@ -274,7 +288,7 @@ class StatsGenerator {
 		System.out.println("Asking Questions");
 		for (int i=0; i<questionsource.size(); i++) {
 			Question q = questionsource.get(i);
-			LocalPipeline.ask(q);
+			DefaultPipeline.ask(q);
 			
 			System.out.print(" " + i);
 			if (i % 25 == 0) System.out.println();

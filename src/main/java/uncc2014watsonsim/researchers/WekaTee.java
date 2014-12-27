@@ -2,8 +2,15 @@ package uncc2014watsonsim.researchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
@@ -36,10 +43,16 @@ public class WekaTee extends Researcher {
 
 	@Override
 	public void question(Question q) {
-		
+
+		// Update the schema and append the data
 		for (Answer a : q) {
-			data.add(new Instance(1.0, a.scoresArray(Score.answer_score_names, Score.passage_score_names)));
+			schema.addAll(a.scores.keySet());
+			Map<String, Double> answer_map = new HashMap<>();
+			answer_map.putAll(a.scores);
+			dataset.add(answer_map);
 		}
+		
+		exportToFile();
 	}
 	
 	/**
