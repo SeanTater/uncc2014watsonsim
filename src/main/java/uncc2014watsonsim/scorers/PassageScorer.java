@@ -26,7 +26,6 @@ public abstract class PassageScorer implements Scorer {
 		min_name = name+"_MIN";
 		mean_name = name+"_MEAN";
 		median_name = name+"_MEDIAN";
-		//Score.registerPassageScore(name);
 		Score.registerAnswerScore(max_name);
 		Score.registerAnswerScore(min_name);
 		Score.registerAnswerScore(mean_name);

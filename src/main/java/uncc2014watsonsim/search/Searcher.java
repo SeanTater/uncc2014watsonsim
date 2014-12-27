@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uncc2014watsonsim.Passage;
-import uncc2014watsonsim.SQLiteDB;
+import uncc2014watsonsim.Database;
 
 /*
  * This interface might change; Please be ready to accommodate the changes.
@@ -22,7 +22,7 @@ import uncc2014watsonsim.SQLiteDB;
  */
 public abstract class Searcher {
 	
-	static final SQLiteDB db = new SQLiteDB("sources");
+	static final Database db = new Database();
 
     /**
      * Runs the <i>query</i>, populating a list of ResultSets
@@ -46,36 +46,34 @@ public abstract class Searcher {
      * This is also how many passages the scorers should expect.
      */
 
-    public final static int MAX_RESULTS = 10;
+    public final static int MAX_RESULTS = 20;
     
     
     /** Fill in the missing titles and full texts from Answers using sources.db
      * This is a no-op if the sources database is missing.
      */
     List<Passage> fillFromSources(List<Passage> passages) {
-    	if (!db.sanityCheck()) {
-    		return passages;
-    	} else {
-	    	List<Passage> results = new ArrayList<Passage>();
-	    	PreparedStatement fetcher = db.prep("select title, text from documents where docno=?;");
-	
-	    	for (Passage p: passages) {
-	    		ResultSet doc_row;
-	    		try {
-					fetcher.setString(1, p.reference);
-					doc_row = fetcher.executeQuery();
-		    		p.title = doc_row.getString("title");
-		    		if (p.title == null) p.title = "";
-		    		p.setText(doc_row.getString("text"));
-		    		if (p.getText() == null) p.setText("");
-				} catch (SQLException e) {
-					e.printStackTrace();
-					throw new RuntimeException("Failed to execute sources full text search. "
-							+ "Missing document? docno:"+p.reference);
+    	List<Passage> results = new ArrayList<Passage>();
+    	PreparedStatement fetcher = db.prep("SELECT title, text FROM meta INNER JOIN content ON meta.id=content.id WHERE reference=?;");
+
+    	for (Passage p: passages) {
+    		ResultSet doc_row;
+    		try {
+				fetcher.setString(1, p.reference);
+				doc_row = fetcher.executeQuery();
+				if (doc_row.next()) {
+					p.title = doc_row.getString("title");
+					p.setText(doc_row.getString("text"));
 				}
-	    		results.add(p);
-	    	}
-	    	return results;
-	    }
+				if (p.title == null) p.title = "";	
+	    		if (p.getText() == null) p.setText("");
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Failed to execute sources search. "
+						+ "Missing document? docno:"+p.reference);
+			}
+    		results.add(p);
+    	}
+    	return results;
     }
 }

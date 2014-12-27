@@ -10,9 +10,12 @@ public class PassageRetrieval extends Researcher {
 
 	private static final Searcher[] searchers = {
 		new LucenePassageSearcher(),
+		//new IndriSearcher(),
 		//new CachingSearcher(new LuceneSearcher(), "lucene"),
 		//new CachingSearcher(new BingSearcher(), "bing"),
 	};
+	
+	
 	@Override
 	public void answer(Question q, Answer a) {
     	String sr = getPassageQuery(q, a);
@@ -20,8 +23,9 @@ public class PassageRetrieval extends Researcher {
     	for (Searcher s : searchers)
     		a.passages.addAll(s.query(sr));
 	}
+	
+	
 	public static String getPassageQuery(Question q, Answer a) {
-		// TODO Auto-generated method stub
 		return q.getRaw_text() + " " + Matcher.quoteReplacement(a.candidate_text);
 	}
 

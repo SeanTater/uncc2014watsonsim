@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import uncc2014watsonsim.Answer;
-import uncc2014watsonsim.Pipeline;
+import uncc2014watsonsim.DefaultPipeline;
 import uncc2014watsonsim.Question;
 
 /**

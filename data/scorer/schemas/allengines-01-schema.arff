@@ -4,12 +4,14 @@
 @attribute BING_RANK_MEAN numeric
 @attribute BING_RANK_MEDIAN numeric
 @attribute BING_RANK_MIN numeric
-@attribute CORRECT {0,1}
-@attribute FITB_EXACT_MATCH_SCORE numeric
+@attribute CORRECT numeric
+%@attribute FITB_EXACT_MATCH_SCORE numeric
 @attribute GOOGLE_RANK_MAX numeric
 @attribute GOOGLE_RANK_MEAN numeric
 @attribute GOOGLE_RANK_MEDIAN numeric
 @attribute GOOGLE_RANK_MIN numeric
+@attribute INDRI_ANSWER_RANK numeric
+@attribute INDRI_ANSWER_SCORE numeric
 @attribute INDRI_RANK_MAX numeric
 @attribute INDRI_RANK_MEAN numeric
 @attribute INDRI_RANK_MEDIAN numeric
@@ -18,6 +20,9 @@
 @attribute INDRI_SCORE_MEAN numeric
 @attribute INDRI_SCORE_MEDIAN numeric
 @attribute INDRI_SCORE_MIN numeric
+@attribute LATTYPE_MATCH_SCORER numeric
+@attribute LUCENE_ANSWER_RANK numeric
+@attribute LUCENE_ANSWER_SCORE numeric
 @attribute LUCENE_RANK_MAX numeric
 @attribute LUCENE_RANK_MEAN numeric
 @attribute LUCENE_RANK_MEDIAN numeric
@@ -47,6 +52,7 @@
 @attribute QUESTION_IN_PASSAGE_SCORER_MEAN numeric
 @attribute QUESTION_IN_PASSAGE_SCORER_MEDIAN numeric
 @attribute QUESTION_IN_PASSAGE_SCORER_MIN numeric
+@attribute RANDOM_INDEXING_COSINE_SIMILARITY numeric
 @attribute SKIP_BIGRAM_MAX numeric
 @attribute SKIP_BIGRAM_MEAN numeric
 @attribute SKIP_BIGRAM_MEDIAN numeric
@@ -55,5 +61,6 @@
 @attribute WORD_PROXIMITY_MEAN numeric
 @attribute WORD_PROXIMITY_MEDIAN numeric
 @attribute WORD_PROXIMITY_MIN numeric
+@attribute WPPAGE_VIEWS numeric
 
 @data

@@ -13,8 +13,6 @@ public class Score {
 	/** Register the answer score for automatically generated model data
 	 * @param name	The ANSWER_SCORE (uppercase, with underscores)
 	 * 
-	 * This insertion is inefficient (n^2) but the retrieval is very efficient.
-	 * Make sure not to call this too often, such as in a scorer.
 	 * This function is idempotent.
 	 */
 	public static void registerAnswerScore(String name) {
@@ -26,8 +24,6 @@ public class Score {
 	/** Register the passage score for automatically generated model data
 	 * @param name	The PASSAGE_SCORE (uppercase, with underscores)
 	 * 
-	 * This insertion is inefficient (n^2) but the retrieval is very efficient.
-	 * Make sure not to call this too often, such as in a scorer.
 	 * This function is idempotent.
 	 */
 	public static void registerPassageScore(String name) {

@@ -10,13 +10,12 @@ import uncc2014watsonsim.qAnalysis.AnnotationController;
 
 public class Question extends ArrayList<Answer> {
 	private static final long serialVersionUID = 1L;
-	public int id; // Question ID comes from the database and is optional.
 	public String text;
 	String raw_text;
 	public Answer answer;
     private String category = "unknown";
     private QType type;
-    private AnnotationController ac = new AnnotationController();
+    //private AnnotationController ac = new AnnotationController();
     
     /**
      * Create a question from it's raw text
@@ -27,7 +26,7 @@ public class Question extends ArrayList<Answer> {
         this.type = QClassDetection.detectType(this);
        // if (type == QType.FITB) {
         //All questions can run through UIMA Annotation Pipeline
-        ac.createAnnotations(this);    	
+        //ac.createAnnotations(this);    	
         //}
     }
 
@@ -95,9 +94,9 @@ public class Question extends ArrayList<Answer> {
 		return added_any;
 	}
 
-	public JCas getCAS() {
+	/*public JCas getCAS() {
 		
 		return ac.getCas();
-	}
+	}*/
         
 }

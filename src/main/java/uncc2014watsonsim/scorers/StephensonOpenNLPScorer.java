@@ -28,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class StephensonOpenNLPScorer {
   private boolean modelsAreInitialized=false;	
-
 	public  String modelsPath="data/"; //models directory
 	private File parserMFile; 
 	private File sentDetectorMFile;
@@ -38,8 +37,8 @@ public class StephensonOpenNLPScorer {
 	public SentenceModel sentenceModel; //sentence detection model 
 	public ParserModel parserModel; //parsing model
 	public POSTaggerME tagger;
-
-
+	
+	
 	public void init() throws InvalidFormatException{
 		File modelsDir = new File(this.modelsPath);
 
@@ -70,7 +69,7 @@ public class StephensonOpenNLPScorer {
 		}
 		this.modelsAreInitialized=true;
 	}
-
+	
 	public void testSentDetector(String testSents) throws InvalidFormatException{
 		init();
 		SentenceDetectorME sentenceDetector = new SentenceDetectorME(this.sentenceModel);
@@ -78,6 +77,6 @@ public class StephensonOpenNLPScorer {
 		for (int i=0;i<sentences.length; i++)
 			System.err.println("sent: "+sentences[i]);
 	}
-
-
+	
+	
 }
