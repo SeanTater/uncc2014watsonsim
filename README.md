@@ -3,7 +3,7 @@ uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watso
 
 Deep Question Answering System
 
-## [Updates and Progress on Development](http://watsonsim.blogspot.com).
+## [Updates and Progress on Development](http://watsonsim.blogspot.com)
 
 ## Get started
 - `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
