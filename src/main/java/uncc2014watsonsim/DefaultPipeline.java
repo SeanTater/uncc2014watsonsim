@@ -52,7 +52,7 @@ public class DefaultPipeline {
 	
 	private static final Searcher[] searchers = {
 		new LuceneSearcher(),
-//		new IndriSearcher(),
+		new IndriSearcher(),
 // You may want to cache Bing results
 //		new BingSearcher()
 		new CachingSearcher(new BingSearcher(), "bing"),
@@ -62,9 +62,8 @@ public class DefaultPipeline {
 		new MediaWikiTrimmer(), // Before passage retrieval
 		new HyphenTrimmer(),
 		/* +0.06 recall
-		 * -0.30 MRR
-		 * new RedirectSynonyms(),
-		 */
+		 * -0.30 MRR */
+		new RedirectSynonyms(),
 		new Merge(),
 		//new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),
@@ -101,7 +100,7 @@ public class DefaultPipeline {
 	};
 
 	private static final Researcher[] late_researchers = {
-		// WekaTee(),
+		new WekaTee(),
 		new CombineScores()
 	};
 	
