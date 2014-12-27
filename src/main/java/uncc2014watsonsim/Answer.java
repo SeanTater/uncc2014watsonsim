@@ -4,9 +4,11 @@ package uncc2014watsonsim;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.json.simple.JSONObject;
 
@@ -25,6 +27,14 @@ public class Answer implements Comparable<Answer> {
     public Answer(Passage d) {
         this.passages.add(d);
         this.candidate_text = d.title;
+    }
+    
+    public Answer(List<Passage> passages,
+    		Map<String, Double> scores,
+    		String candidate_text) {
+    	this.passages = passages;
+    	this.scores = scores;
+    	this.candidate_text = candidate_text;
     }
     
     /**
@@ -153,9 +163,35 @@ public class Answer implements Comparable<Answer> {
 	}
     
     /** Change this Answer to include all the information of another
-     * TODO: What should we do to merge scores? */
-    public void merge(Answer other) {
-    	passages.addAll(other.passages);
+     * HACK: We average the scores but we should probably use a
+     * pluggable binary operator*/
+    public static Answer merge(List<Answer> others) {
+    	Map<String, Double> scores = new HashMap<>();
+        List<Passage> passages = new ArrayList<>();
+        String candidate_text;
+        
+        // Merge all the passages
+    	for (Answer other : others)
+    		passages.addAll(other.passages);
+    	
+    	// Merge the scores
+    	Set<String> all_score_names = new HashSet<>();
+    	for (Answer other : others) all_score_names.addAll(other.scores.keySet());
+    	/// Just average them for now  - THIS IS A HACK
+    	for (String score_name : all_score_names) {
+    		double total=0; 
+    		for (Answer other : others) {
+    			Double score = other.scores.get(score_name);
+    			if (score != null) total += score; 
+    		}
+    	    scores.put(score_name, total / others.size());
+    	}
+    	
+    	// Pick the first candidate answer
+    	candidate_text = others.get(0).candidate_text;
+    	
+    	// Now make an answer from it
+    	return new Answer(passages, scores, candidate_text);
     }
     
 

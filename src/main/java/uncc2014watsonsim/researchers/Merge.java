@@ -1,5 +1,8 @@
 package uncc2014watsonsim.researchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 
@@ -7,18 +10,42 @@ public class Merge extends Researcher {
 	@Override
 	/** Call merge on any two answers with the same title */
 	public void question(Question q) {
-		// The left cursor moves right
-		for (int first_ai=0; first_ai<q.size(); first_ai++) {
-			// The right cursor moves left (so that we can delete safely)
-			for (int second_ai=q.size()-1; second_ai>first_ai; second_ai--) {
-				Answer first_a = q.get(first_ai);
-				Answer second_a = q.get(second_ai);
-				// Merge if necessary
-				//TODO: This uses more or less exact matching. We should do better.
-				if (second_a.matches(first_a)) {
-					first_a.merge(second_a);
-					q.remove(second_ai);
+		List<List<Answer>> answer_blocks = new ArrayList<>();
+		// Arrange the answers into blocks
+		for (Answer original : q) {
+			List<Answer> target = null;
+			for (List<Answer> block : answer_blocks) {
+				for (Answer example : block) {
+					// Look through the examples in this topic
+					// If it matches, choose to put it in this block and quit.
+					if (original.matches(example)) {
+						target = block;
+						break;
+					}
 				}
+				// Found a good option. break again
+				if (target != null) {
+					break;
+				}
+			}
+			if (target == null) {
+				// Make a new topic for this answer
+				List<Answer> new_block = new ArrayList<>();
+				new_block.add(original);
+				answer_blocks.add(new_block);
+			} else {
+				// Use the old topic
+				target.add(original);
+			}
+		}
+		
+		// Merge the blocks
+		q.clear();
+		for (List<Answer> block : answer_blocks) {
+			if (block.size() > 1) {
+				q.add(Answer.merge(block));
+			} else {
+				q.add(block.get(0));
 			}
 		}
 	}

@@ -17,19 +17,17 @@ import weka.core.converters.ArffSaver;
 
 /** Pipe Answer scores to an ARFF file for Weka */
 public class WekaTee extends Researcher {
-	private Instances data;
 	
-	public WekaTee() {
-		FastVector attributes = new FastVector();
-		// Answer score names
-		for (String name : Score.answer_score_names)
-			attributes.addElement(new Attribute(name));
-		// Passage score names
-		for (int passage_i=0; passage_i<Score.MAX_PASSAGE_COUNT; passage_i++)
-			for (String name : Score.passage_score_names)
-				attributes.addElement(new Attribute(name + "_" + passage_i));
-		data = new Instances("Watsonsim captured question stream", attributes, 0);
-	}
+	// This is the sceme we will use for exporting
+	// Note it's inherently sorted
+	Set<String> schema = new TreeSet<>();
+	// But in memory there is no schema because it changes
+	List<Map<String, Double>> dataset = new ArrayList<>();
+	
+	
+	// Make every run unique, but overwrite between questions
+	// This way, you still get /something/ if you interrupt it
+	private Date start_time = new Date();
 	
 	@Override
 	public void research(Question q) {
@@ -44,12 +42,34 @@ public class WekaTee extends Researcher {
 		}
 	}
 	
-	@Override
-	public void complete() {
+	/**
+	 * Export the current dataset to an Arff file
+	 */
+	private void exportToFile() {
+		FastVector attributes = new FastVector();
+		// Answer score names
+		for (String name: schema)
+			attributes.addElement(new Attribute(name));
+		Instances data = new Instances("Watsonsim captured question stream", attributes, 0);
+		
+		// Fill in all the rows in sorted order, then export.
+		int schema_len = schema.size();
+		for (Map<String, Double> dataset_row : dataset) {
+			double[] row = new double[schema_len];
+			Arrays.fill(row, Double.NaN);
+			int col_idx = 0;
+			for (String column : schema) {
+				Double value = dataset_row.get(column);
+				row[col_idx++] = value == null ? Double.NaN : value;
+			}
+			data.add(new Instance(1.0, row));
+		}
+		
+		// Save the results to a file
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(data);
 		try {
-			saver.setFile(new File("data/weka-log.arff"));
+			saver.setFile(new File("data/weka-log." + start_time + Thread.currentThread().getId() + ".arff"));
 			saver.writeBatch();
 		} catch (IOException e) {
 			System.out.println("Failed to write Weka log. Ignoring.");

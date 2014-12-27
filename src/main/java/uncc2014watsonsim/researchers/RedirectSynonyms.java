@@ -3,6 +3,8 @@ package uncc2014watsonsim.researchers;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
@@ -17,22 +19,25 @@ import uncc2014watsonsim.SQLiteDB;
 public class RedirectSynonyms extends Researcher {
 	SQLiteDB db = new SQLiteDB("sources");
 
+	PreparedStatement s = db.prep(
+		"SELECT source from wiki_redirects where target = ? collate nocase;");
+
 	@Override
-	public void answer(Question q, Answer a) {
-		PreparedStatement s = db.prep("select source_title from redirect_documents inner join documents on docno=target_docid where title = ?;");
+	public void question(Question q) {
+		List<Answer> prev_answers = new ArrayList<>();
+		prev_answers.addAll(q);
 		
-		try {
-			s.setString(1, a.candidate_text);
-			ResultSet results = s.executeQuery();
-			while (results.next()) {
-				Answer new_a = new Answer(results.getString("source_title"));
-				new_a.passages.addAll(a.passages);
-				q.add(new_a);
+		for (Answer a : prev_answers) {
+			try {
+				s.setString(1, a.candidate_text);
+				ResultSet results = s.executeQuery();
+				while (results.next()) {
+					q.add(new Answer(a.passages, a.scores, results.getString("source")));
+				}
+			} catch (SQLException e) {
+				// Just don't make any synonyms.
+				return;
 			}
-		} catch (SQLException e) {
-			// Just don't make any synonyms.
-			return;
 		}
-		
 	}
 }
