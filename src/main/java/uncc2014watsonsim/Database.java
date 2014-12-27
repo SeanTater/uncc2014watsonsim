@@ -65,7 +65,7 @@ public class Database {
 		}
 
 		return existent_tables.containsAll(Arrays.asList(new String[]{
-				"meta", "content", "redirects", "questions", "results", "cache"
+				"meta", "content", "wiki_redirects", "questions", "results", "cache"
 		}));
 	}
 
