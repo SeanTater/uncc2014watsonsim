@@ -24,6 +24,7 @@ import org.apache.lucene.util.Version;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
+import uncc2014watsonsim.Score.Merge;
 
 /**
  * @author Phani Rahul
@@ -35,8 +36,8 @@ public class LuceneSearcher extends Searcher {
 	private static QueryParser parser;
 	
 	static {
-		analyzer = new StandardAnalyzer(Version.LUCENE_46);
-		parser = new QueryParser(Version.LUCENE_46, "text", analyzer);
+		analyzer = new StandardAnalyzer(Version.LUCENE_47);
+		parser = new QueryParser(Version.LUCENE_47, "text", analyzer);
 		parser.setAllowLeadingWildcard(true);
 
 		try {
@@ -46,8 +47,9 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);
-		Score.registerAnswerScore("LUCENE_ANSWER_RANK");
-		Score.registerAnswerScore("LUCENE_ANSWER_SCORE");
+		Score.register("LUCENE_ANSWER_RANK", Double.NaN, Merge.Mean);
+		Score.register("LUCENE_ANSWER_SCORE", Double.NaN, Merge.Mean);
+		Score.register("LUCENE_ANSWER_PRESENT", 0.0, Merge.Or);
 	}
 	
 	public synchronized List<Passage> query(String question_text) {
@@ -98,6 +100,7 @@ public class LuceneSearcher extends Searcher {
 						doc.get("docno"))   // Reference
 						.score("LUCENE_ANSWER_RANK", (double) i)           // Rank
 						.score("LUCENE_ANSWER_SCORE", (double) s.score)	// Source
+						.score("LUCENE_ANSWER_PRESENT", 1.0)
 						);
 			}
 		} catch (IOException e) {

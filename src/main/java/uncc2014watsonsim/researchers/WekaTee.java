@@ -24,12 +24,8 @@ import weka.core.converters.ArffSaver;
 
 /** Pipe Answer scores to an ARFF file for Weka */
 public class WekaTee extends Researcher {
-	
-	// This is the sceme we will use for exporting
-	// Note it's inherently sorted
-	Set<String> schema = new TreeSet<>();
 	// But in memory there is no schema because it changes
-	List<Map<String, Double>> dataset = new ArrayList<>();
+	List<double[]> dataset = new ArrayList<>();
 	
 	
 	// Make every run unique, but overwrite between questions
@@ -43,13 +39,8 @@ public class WekaTee extends Researcher {
 
 	@Override
 	public void question(Question q) {
-
-		// Update the schema and append the data
 		for (Answer a : q) {
-			schema.addAll(a.scores.keySet());
-			Map<String, Double> answer_map = new HashMap<>();
-			answer_map.putAll(a.scores);
-			dataset.add(answer_map);
+			dataset.add(a.scores.clone());
 		}
 		
 		exportToFile();
@@ -61,21 +52,13 @@ public class WekaTee extends Researcher {
 	private void exportToFile() {
 		FastVector attributes = new FastVector();
 		// Answer score names
-		for (String name: schema)
+		for (String name: Score.latestSchema())
 			attributes.addElement(new Attribute(name));
 		Instances data = new Instances("Watsonsim captured question stream", attributes, 0);
 		
 		// Fill in all the rows in sorted order, then export.
-		int schema_len = schema.size();
-		for (Map<String, Double> dataset_row : dataset) {
-			double[] row = new double[schema_len];
-			Arrays.fill(row, Double.NaN);
-			int col_idx = 0;
-			for (String column : schema) {
-				Double value = dataset_row.get(column);
-				row[col_idx++] = value == null ? Double.NaN : value;
-			}
-			data.add(new Instance(1.0, row));
+		for (double[] row : dataset) {
+			data.add(new Instance(1.0, Score.update(row)));
 		}
 		
 		// Save the results to a file

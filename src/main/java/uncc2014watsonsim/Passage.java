@@ -11,7 +11,7 @@ public class Passage {
 	private List<String> _tokens;
 	public String engine_name;
 	public String title;
-    public Map<String, Double> scores = new HashMap<>();
+    public double[] scores = Score.empty();
     
     /**
      * Create a new Passage
@@ -30,8 +30,7 @@ public class Passage {
     
     /** Return the value of this Score for this answer, or null */
     public double score(String name) {
-    	Double s = scores.get(name);
-    	return s == null ? Double.NaN : s;
+    	return Score.get(scores, name);
     }
     
     /** Set the value of this Score for this answer, returning the Answer.
@@ -42,7 +41,7 @@ public class Passage {
      * @param value
      */
     public Passage score(String name, double value) {
-    	scores.put(name, value);
+    	Score.set_(scores, name, value);
     	return this;
     }
     

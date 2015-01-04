@@ -64,7 +64,7 @@ public class DefaultPipeline {
 		/* +0.06 recall
 		 * -0.30 MRR */
 		new RedirectSynonyms(),
-		new Merge(),
+		new Merger(),
 		//new ChangeFitbAnswerToContentsOfBlanks(),
 		new PassageRetrieval(),
 		new MediaWikiTrimmer(), // Rerun after passage retrieval
@@ -100,7 +100,7 @@ public class DefaultPipeline {
 	};
 
 	private static final Researcher[] late_researchers = {
-		new WekaTee(),
+		//new WekaTee(),
 		new CombineScores()
 	};
 	

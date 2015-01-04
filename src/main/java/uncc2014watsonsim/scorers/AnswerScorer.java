@@ -8,7 +8,7 @@ public abstract class AnswerScorer implements Scorer {
 	String name;
 	{
 		name = this.getClass().getSimpleName().replaceAll("([a-z])([A-Z]+)", "$1_$2").toUpperCase();
-		Score.registerAnswerScore(name);
+		Score.register(name, Double.NaN, Merge.Mean);
 	}
 	/**
 	 * By default, score every answer to a question.

@@ -17,7 +17,7 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 
 	
 	public ChangeFitbAnswerToContentsOfBlanks () {
-		Score.registerAnswerScore("FITB_EXACT_MATCH_SCORE");
+		Score.register("FITB_EXACT_MATCH_SCORE", Double.NaN, Merge.Mean);
 	}
 	
 	@Override

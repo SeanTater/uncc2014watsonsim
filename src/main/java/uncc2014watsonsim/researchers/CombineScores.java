@@ -22,6 +22,7 @@ import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.Score;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
@@ -62,7 +63,7 @@ public class CombineScores extends Researcher {
 	
 	@Override
 	public void question(Question question) {
-		List<String> MODEL_ANSWER_DIMENSIONS = Arrays.asList(new String[]{
+		String[] MODEL_ANSWER_DIMENSIONS = new String[]{
 			"BING_RANK_MAX",
 			"BING_RANK_MEAN",
 			"BING_RANK_MEDIAN",
@@ -125,15 +126,15 @@ public class CombineScores extends Researcher {
 			"WORD_PROXIMITY_MEDIAN",
 			"WORD_PROXIMITY_MIN",
 			"WPPAGE_VIEWS"
-		});
+		};
 		
 		for (Answer a: question) {
 			try {
-				a.scores.put("COMBINED", score(a.scoresArray(MODEL_ANSWER_DIMENSIONS)));
+				Score.set(a.scores, "COMBINED", score(Score.getEach(a.scores, MODEL_ANSWER_DIMENSIONS)));
 			} catch (Exception e) {
 				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
 				e.printStackTrace();
-				a.scores.put("COMBINED", 0.0);
+				Score.set(a.scores, "COMBINED", 0.0);
 			}
 		}
 

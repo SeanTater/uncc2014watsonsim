@@ -17,7 +17,7 @@ import org.json.simple.JSONObject;
  * @author Sean Gallagher
  */
 public class Answer implements Comparable<Answer> {
-    public Map<String, Double> scores = new HashMap<>();
+    public double[] scores = Score.empty();
     public List<Passage> passages = new ArrayList<>();
     public String candidate_text;
 
@@ -31,7 +31,7 @@ public class Answer implements Comparable<Answer> {
     }
     
     public Answer(List<Passage> passages,
-    		Map<String, Double> scores,
+    		double[] scores,
     		String candidate_text) {
     	this.passages = passages;
     	this.scores = scores;
@@ -126,7 +126,7 @@ public class Answer implements Comparable<Answer> {
      * @param score		Double value of score (or NaN)
      */
 	public void score(String name, double score) {
-		scores.put(name, score);
+		scores = Score.set(scores, name, score);
 	}
     
     /** Convenience method for returning all of the answer's scores as a primitive double[].
@@ -155,7 +155,6 @@ public class Answer implements Comparable<Answer> {
      * HACK: We average the scores but we should probably use a
      * pluggable binary operator*/
     public static Answer merge(List<Answer> others) {
-    	Map<String, Double> scores = new HashMap<>();
         List<Passage> passages = new ArrayList<>();
         String candidate_text;
         
@@ -164,17 +163,10 @@ public class Answer implements Comparable<Answer> {
     		passages.addAll(other.passages);
     	
     	// Merge the scores
-    	Set<String> all_score_names = new HashSet<>();
-    	for (Answer other : others) all_score_names.addAll(other.scores.keySet());
-    	/// Just average them for now  - THIS IS A HACK
-    	for (String score_name : all_score_names) {
-    		double total=0; 
-    		for (Answer other : others) {
-    			Double score = other.scores.get(score_name);
-    			if (score != null) total += score; 
-    		}
-    	    scores.put(score_name, total / others.size());
-    	}
+
+    	double[] scores = Score.empty();
+    	for (Answer other : others)
+    		scores = Score.merge(scores, other.scores);
     	
     	// Pick the first candidate answer
     	candidate_text = others.get(0).candidate_text;

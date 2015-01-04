@@ -15,6 +15,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.Score;
+import uncc2014watsonsim.Score.Merge;
 
 /**
  * Internet-enabled Searcher for Bing.
@@ -32,6 +34,11 @@ import uncc2014watsonsim.Passage;
  * @author D Haval
  */
 public class BingSearcher extends Searcher {
+	
+	static {
+		Score.register("BING_ANSWER_RANK", Double.NaN, Merge.Mean);
+		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Or);
+	}
 	
 	public List<Passage> query(String query) {
 		
@@ -71,7 +78,8 @@ public class BingSearcher extends Searcher {
         			e.select("d|Title").text(),	        // Title
         			e.select("d|Description").text(), // Full Text
         			e.select("d|Url").text())          // Reference
-    				.score("BING_RANK", (double) i) // Score
+    				.score("BING_ANSWER_RANK", (double) i) // Score
+    				.score("BING_ANSWER_PRESENT", 1.0)
     			);
 	    	}
 		    System.out.print("B!");
