@@ -7,7 +7,7 @@ Deep Question Answering System
 
 ## Get started
 - `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
-- Download and unzip [gradle](http://services.gradle.org/distributions/gradle-1.11-bin.zip) somewhere convenient to call from the command line. (Most Linux distros have a packaged version that may be easier, but may also be out of date.)
+- Download and unzip [gradle](http://gradle.org/downloads) somewhere convenient to call from the command line. (Most Linux distros have a packaged version that may be easier, but may also be out of date.)
 - Install Java 7 or newer. Many Macs have only Java 6 by default.
 - Install Indri binaries:
   - For Linux 64, pick the right library in uncc2012watsonsim/lib and copy it to libindri-jni.so
