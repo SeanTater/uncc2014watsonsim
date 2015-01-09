@@ -18,6 +18,7 @@ import org.json.simple.JSONObject;
  */
 public class Answer implements Comparable<Answer> {
     public double[] scores = Score.empty();
+    private double overall_score = Double.NaN;
     public List<Passage> passages = new ArrayList<>();
     public String candidate_text;
 
@@ -105,18 +106,25 @@ public class Answer implements Comparable<Answer> {
     	//String correct = isCorrect() ? "✓" : "✗";
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
-    	return String.format("[%01f %-3s] %s", score(), engines, candidate_text);
+    	return String.format("[%01f %-3s] %s", getOverallScore(), engines, candidate_text);
     }
     
     public String toJSON() {
-    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", score(), candidate_text.replace("\"", "\\\""));
+    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", getOverallScore(), candidate_text.replace("\"", "\\\""));
     }
     
     /**
      * Return the combined score for the answer, or null
      * */
-    public Double score() {
-        return scores.get("COMBINED");
+    public double getOverallScore() {
+        return overall_score;
+    }
+    
+    /**
+     * Set the combined score for the answer, or null
+     * */
+    public void setOverallScore(double s) {
+        overall_score = s;
     }
 
     /**
@@ -129,26 +137,9 @@ public class Answer implements Comparable<Answer> {
 		scores = Score.set(scores, name, score);
 	}
     
-    /** Convenience method for returning all of the answer's scores as a primitive double[].
-     * Intended for Weka, but it could be useful for any ML. */
-    public double[] scoresArray(List<String> answerScoreNames) {
-    	double[] out = new double[answerScoreNames.size()];
-    	Arrays.fill(out, Double.NaN);
-    	
-    	// Answer scores
-    	for (int dim_i=0; dim_i < answerScoreNames.size(); dim_i++){
-			Double value = scores.get(answerScoreNames.get(dim_i));
-    		out[dim_i] = value == null ? Double.NaN : value;
-    	}
-		return out;
-    }
-    
     @Override
 	public int compareTo(Answer other) {
-    	if (score() == null || other.score() == null)
-    		// Comparing a resultset without a combined engine is undefined
-    		return 0;
-    	return score().compareTo(other.score());
+    	return Double.compare(getOverallScore(), other.getOverallScore());
 	}
     
     /** Change this Answer to include all the information of another

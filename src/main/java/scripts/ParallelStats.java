@@ -2,14 +2,9 @@ package scripts;
 
 import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,8 +25,8 @@ import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
 
 /**
- *
- * @author Phani Rahul
+ * @author Sean Gallagher
+ * @author Matt Gibson
  */
 public class ParallelStats {
 
@@ -64,9 +59,10 @@ class SingleTrainingResult extends Thread {
 	}
 	
 	public void run() {
-		String sql = String.format("INNER JOIN cache ON query = question GROUP BY question LIMIT 100 OFFSET %d", offset);
+		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT 100 OFFSET %d", offset);
+		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("IBL with redirects (v2)", sql).run();
+			new StatsGenerator("redirects-with-source-tag", sql).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -137,7 +133,7 @@ class StatsGenerator {
 			// Supposing there is at least one answer
 			Answer a = question.get(0);
 			// Clamp to [0, 99]
-			int bin = (int)(a.score() * 99);
+			int bin = (int)(a.getOverallScore() * 99);
 			bin = Math.max(0, Math.min(bin, 99)); 
 			if(a.equals(question.answer)) conf_correct[bin]++;
 			conf_hist[bin]++;

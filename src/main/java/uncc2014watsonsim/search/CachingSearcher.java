@@ -6,11 +6,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Database;
+import uncc2014watsonsim.Score;
 
 public class CachingSearcher extends Searcher {
+	Random gen = new Random();
 	Searcher searcher;
 	String engine_name;
 	
@@ -34,7 +37,7 @@ public class CachingSearcher extends Searcher {
 		PreparedStatement cache = db.prep(
 				"insert into cache_scores(passage_id, name, value) values (?, ?, ?);");
 		cache.setLong(1, passage_id);
-		for (Entry<String, Double> score: p.scores.entrySet()) {
+		for (Entry<String, Double> score: Score.asMap(p.scores).entrySet()) {
 			cache.setString(2, score.getKey());		
 			cache.setDouble(3, score.getValue());
 			cache.addBatch();
@@ -77,7 +80,7 @@ public class CachingSearcher extends Searcher {
 			for (Passage p : query_results) {
 				// Add every Answer to the cache
 				results.add(p);
-				long id = query.hashCode() ^ ((p.engine_name.hashCode() ^ p.reference.hashCode()) << 32);
+				long id = gen.nextLong();
 				try {
 					set_cache.setLong(1, id);
 					set_cache.setString(2, query);

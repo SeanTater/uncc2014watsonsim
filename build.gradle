@@ -1,5 +1,5 @@
 apply plugin: 'java'
-apply plugin: 'scala'
+//apply plugin: 'scala'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'maven'

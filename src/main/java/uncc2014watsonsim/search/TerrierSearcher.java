@@ -6,7 +6,6 @@ import java.util.List;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.scorers.Merge;
 import uncc2014watsonsim.Translation;
 import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
@@ -14,9 +13,9 @@ import lemurproject.indri.ScoredExtentResult;
 
 /**
  *
- * @author Phani Rahul
+ * @author Matthew Gibson
  */
-public class IndriSearcher extends Searcher {
+public class TerrierSearcher extends Searcher {
 	private static QueryEnvironment q;
 	private static boolean enabled = true;
 	static {
@@ -31,9 +30,8 @@ public class IndriSearcher extends Searcher {
 			e.printStackTrace();
 			enabled=false;
 		}
-		Score.register("INDRI_ANSWER_SCORE", Double.NaN, Merge.Mean);
-		Score.register("INDRI_ANSWER_RANK", Double.NaN, Merge.Mean);
-		Score.register("INDRI_ANSWER_PRESENT", 0.0, Merge.Or);
+		Score.register("TERRIER_ANSWER_SCORE", Double.NaN, Merge.Mean);
+		Score.register("TERRIER_ANSWER_RANK", Double.NaN, Merge.Mean);
 	}
 	
 	public List<Passage> query(String query) {
@@ -48,10 +46,10 @@ public class IndriSearcher extends Searcher {
 		//ParsedDocument[] full_texts;
 		String[] titles;
 		try {
-			ser = IndriSearcher.q.runQuery(query, MAX_RESULTS);
-			docnos = IndriSearcher.q.documentMetadata(ser, "docno");
+			ser = TerrierSearcher.q.runQuery(query, MAX_RESULTS);
+			docnos = TerrierSearcher.q.documentMetadata(ser, "docno");
 			//full_texts = IndriSearcher.q.documents(ser);
-			titles = IndriSearcher.q.documentMetadata(ser, "title");
+			titles = TerrierSearcher.q.documentMetadata(ser, "title");
 		} catch (Exception e) {
 			// If any other step fails, give a more general message but don't die.
 			System.out.println("Querying Indri failed. Is the index in the correct location? Is indri_jni included?");
@@ -68,8 +66,7 @@ public class IndriSearcher extends Searcher {
     			"", //full_texts[i].text, // Full Text
 				docnos[i])          // Reference
 			.score("INDRI_ANSWER_RANK", (double) i)
-			.score("INDRI_ANSWER_SCORE", ser[i].score)
-			.score("INDRI_ANSWER_PRESENT", 1.0));
+			.score("INDRI_ANSWER_SCORE", ser[i].score));
 		}
 		// Indri's titles and full texts could be empty. If they are, fill them from sources.db
 		return fillFromSources(results);

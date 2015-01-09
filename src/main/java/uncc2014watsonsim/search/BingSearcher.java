@@ -16,7 +16,7 @@ import org.jsoup.nodes.Element;
 
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.Score.Merge;
+import uncc2014watsonsim.scorers.Merge;
 
 /**
  * Internet-enabled Searcher for Bing.

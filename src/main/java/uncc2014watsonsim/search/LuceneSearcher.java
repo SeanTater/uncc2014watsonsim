@@ -24,7 +24,7 @@ import org.apache.lucene.util.Version;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.Score.Merge;
+import uncc2014watsonsim.scorers.Merge;
 
 /**
  * @author Phani Rahul
@@ -47,12 +47,15 @@ public class LuceneSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");
 		}
 		searcher = new IndexSearcher(reader);
+	}
+	
+	public LuceneSearcher() {
 		Score.register("LUCENE_ANSWER_RANK", Double.NaN, Merge.Mean);
 		Score.register("LUCENE_ANSWER_SCORE", Double.NaN, Merge.Mean);
 		Score.register("LUCENE_ANSWER_PRESENT", 0.0, Merge.Or);
 	}
 	
-	public synchronized List<Passage> query(String question_text) {
+	public List<Passage> query(String question_text) {
 		List<Passage> results = new ArrayList<Passage>();
 		try {
 			/*DisjunctionMaxQuery q = new DisjunctionMaxQuery((float) 0.1);

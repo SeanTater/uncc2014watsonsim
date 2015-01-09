@@ -11,7 +11,7 @@ import privatedata.UserSpecificConstants;
 
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
-
+import uncc2014watsonsim.scorers.Merge;
 
 /*
  * Google API Imports
@@ -50,7 +50,7 @@ public class GoogleSearcher extends Searcher {
 		.setApplicationName(UserSpecificConstants.googleApplicationName)
 		.setGoogleClientRequestInitializer(KEY_INITIALIZER)
 		.build().cse();
-		Score.registerPassageScore("GOOGLE_RANK");
+		Score.register("GOOGLE_RANK", 0.0, Merge.Min);
 	}
 	
 	public List<Passage> query(String query) {

@@ -2,8 +2,12 @@ package uncc2014watsonsim;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
+
+import uncc2014watsonsim.scorers.Merge;
 
 /**
  * Represent how to create and merge a score.
@@ -13,8 +17,8 @@ import java.util.TreeMap;
 final class Meta implements Comparable<Meta> {
 	public final String name;
 	public final double default_value;
-	public final Score.Merge merge_type;
-	public Meta(String name, double default_value, Score.Merge merge_type) {
+	public final Merge merge_type;
+	public Meta(String name, double default_value, Merge merge_type) {
 		this.name = name;
 		this.default_value = default_value;
 		this.merge_type = merge_type;
@@ -57,17 +61,26 @@ final class Meta implements Comparable<Meta> {
  * @author Sean
  */
 public class Score {
-	public enum Merge {
-		// Implement more as necessary
-		Mean,
-		Or
+	/**
+	 * Returns a convenient copy of scores as a map.
+	 * @param scores
+	 * @return
+	 */
+	public static Map<String, Double> asMap(double[] scores) {
+		String[] version = versions.get(scores.length);
+		Map<String, Double> map = new HashMap<>();
+		for (int i=0; i<version.length; i++) {
+			map.put(version[i], scores[i]);
+		}
+		return map;
 	}
+	
 	/**
 	 * Get a "blank" vector (all defaults)
 	 */
 	public static double[] empty() {
 		double[] scores = new double[metas.size()];
-		int i =0;
+		int i = 0;
 		for (Meta m : metas.values()) {
 			scores[i++] = m.default_value;
 		}
@@ -97,11 +110,10 @@ public class Score {
 	 * @param names
 	 * @return
 	 */
-	public static double[] getEach(double[] incoming, String[] names) {
-		double[] outgoing = new double[names.length];
-		for (int i=0; i<names.length; i++) {
-			outgoing[i] = get(incoming, names[i]);
-		}
+	public static double[] getEach(double[] incoming, List<String> names) {
+		double[] outgoing = new double[names.size()];
+		for (int i=0; i<names.size(); i++)
+			outgoing[i] = get(incoming, names.get(i));
 		return outgoing;
 	}
 	
@@ -125,6 +137,10 @@ public class Score {
 				center[i] = left[i] + right[i] / 2;
 			} else if (m.merge_type == Merge.Or) {
 				center[i] = left[i] + right[i] > 0 ? 1.0 : 0.0;
+			} else if (m.merge_type == Merge.Min) {
+				center[i] = Math.min(left[i], right[i]);
+			} else if (m.merge_type == Merge.Max) {
+				center[i] = Math.max(left[i], right[i]);
 			}
 			i++;
 		}
@@ -138,7 +154,7 @@ public class Score {
 	 * @param default_value		What the value of the score should be if it is missing
 	 * @param merge_mode		How to merge two scores of the same name
 	 */
-	public static void register(String name,
+	public synchronized static void register(String name,
 			double default_value,
 			Merge merge_mode) {
 		if (metas.put(name,

@@ -1,15 +1,18 @@
 @relation 'Watsonsim captured question stream'
 
+@attribute BING_ANSWER_PRESENT numeric
+@attribute BING_ANSWER_RANK numeric
 @attribute BING_RANK_MAX numeric
 @attribute BING_RANK_MEAN numeric
 @attribute BING_RANK_MEDIAN numeric
 @attribute BING_RANK_MIN numeric
 @attribute CORRECT numeric
-%@attribute FITB_EXACT_MATCH_SCORE numeric
+@attribute DIST_SEM_COS_QASCORE numeric
 @attribute GOOGLE_RANK_MAX numeric
 @attribute GOOGLE_RANK_MEAN numeric
 @attribute GOOGLE_RANK_MEDIAN numeric
 @attribute GOOGLE_RANK_MIN numeric
+@attribute INDRI_ANSWER_PRESENT numeric
 @attribute INDRI_ANSWER_RANK numeric
 @attribute INDRI_ANSWER_SCORE numeric
 @attribute INDRI_RANK_MAX numeric
@@ -20,7 +23,8 @@
 @attribute INDRI_SCORE_MEAN numeric
 @attribute INDRI_SCORE_MEDIAN numeric
 @attribute INDRI_SCORE_MIN numeric
-@attribute LATTYPE_MATCH_SCORER numeric
+@attribute IS_WIKI_REDIRECT numeric
+@attribute LUCENE_ANSWER_PRESENT numeric
 @attribute LUCENE_ANSWER_RANK numeric
 @attribute LUCENE_ANSWER_SCORE numeric
 @attribute LUCENE_RANK_MAX numeric
@@ -52,7 +56,6 @@
 @attribute QUESTION_IN_PASSAGE_SCORER_MEAN numeric
 @attribute QUESTION_IN_PASSAGE_SCORER_MEDIAN numeric
 @attribute QUESTION_IN_PASSAGE_SCORER_MIN numeric
-@attribute RANDOM_INDEXING_COSINE_SIMILARITY numeric
 @attribute SKIP_BIGRAM_MAX numeric
 @attribute SKIP_BIGRAM_MEAN numeric
 @attribute SKIP_BIGRAM_MEDIAN numeric

@@ -119,7 +119,7 @@ public class StatisticsCollection {
 	@Test
 	public void all() {
 		try {
-			new StatsGenerator("noindri-nobing-nowk-wp", "INNER JOIN cache ON query = question GROUP BY question LIMIT 5000").run();
+			new StatsGenerator("bing-cache-fill", "ORDER BY random() LIMIT 500").run();//"INNER JOIN cache ON query = question GROUP BY question LIMIT 5000").run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -205,7 +205,7 @@ class StatsGenerator {
 			// Supposing there is at least one answer
 			Answer a = question.get(0);
 			// Clamp to [0, 99]
-			int bin = (int)(a.score() * 99);
+			int bin = (int)(a.getOverallScore() * 99);
 			bin = Math.max(0, Math.min(bin, 99)); 
 			if(a.equals(question.answer)) conf_correct[bin]++;
 			conf_hist[bin]++;

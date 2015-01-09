@@ -33,15 +33,15 @@ public class Passage {
     	return Score.get(scores, name);
     }
     
-    /** Set the value of this Score for this answer, returning the Answer.
+    /** Set the value of this Score for this passage, returning the passage.
      * 
      * The intended use is something like this:
-     * Answer a = new Answer(.......).score(PassageScore.SKIP_BIGRAM, 9.45).score(PassageScore.SKIP_BIGRAM, -1.2)
+     * new Passage(.......).score("SKIP_BIGRAM", 9.45).score("NGRAM", -1.2)
      * @param name
      * @param value
      */
     public Passage score(String name, double value) {
-    	Score.set_(scores, name, value);
+    	scores = Score.set(scores, name, value);
     	return this;
     }
     

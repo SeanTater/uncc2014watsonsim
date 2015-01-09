@@ -16,8 +16,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import uncc2014watsonsim.Answer;
@@ -25,6 +27,7 @@ import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Score;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
+import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Utils;
@@ -42,12 +45,12 @@ public class CombineScores extends Researcher {
 	static String scorerDatasetPath = "data/scorer/schemas/allengines-01-schema.arff";
 	Classifier scorerModel = null;
 	Instances qResultsDataset = null;
+	List<String> names = new ArrayList<>();
 	
 	public CombineScores() {
 		try {
 			LoadModel(scorerModelPath);
 			qResultsDataset = new Instances(new BufferedReader(new FileReader(scorerDatasetPath)));
-			qResultsDataset.setClassIndex(qResultsDataset.numAttributes()-1);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Weka learners are missing. "
@@ -59,87 +62,33 @@ public class CombineScores extends Researcher {
 					+ "without them.");
 		}
 		
+
+		// Get the attribute's names as a string
+		@SuppressWarnings("unchecked")
+		List<Attribute> attributes = Collections.list((Enumeration<Attribute>) qResultsDataset.enumerateAttributes());
+		for (Attribute a : attributes)
+			names.add(a.name());
+		
+		// Only decide the class attribute afterward because otherwise weka
+		// will cut it out and the length will not match
+		qResultsDataset.setClassIndex(qResultsDataset.attribute("CORRECT").index());
+		
 	}
 	
 	@Override
 	public void question(Question question) {
-		String[] MODEL_ANSWER_DIMENSIONS = new String[]{
-			"BING_RANK_MAX",
-			"BING_RANK_MEAN",
-			"BING_RANK_MEDIAN",
-			"BING_RANK_MIN",
-			"CORRECT",
-			"DIST_SEM_COS_QASCORE",
-			//"FITB_EXACT_MATCH_SCORE",
-			"GOOGLE_RANK_MAX",
-			"GOOGLE_RANK_MEAN",
-			"GOOGLE_RANK_MEDIAN",
-			"GOOGLE_RANK_MIN",
-			"INDRI_ANSWER_RANK",
-			"INDRI_ANSWER_SCORE",
-			"INDRI_RANK_MAX",
-			"INDRI_RANK_MEAN",
-			"INDRI_RANK_MEDIAN",
-			"INDRI_RANK_MIN",
-			"INDRI_SCORE_MAX",
-			"INDRI_SCORE_MEAN",
-			"INDRI_SCORE_MEDIAN",
-			"INDRI_SCORE_MIN",
-			"LATTYPE_MATCH_SCORER",
-			"LUCENE_ANSWER_RANK",
-			"LUCENE_ANSWER_SCORE",
-			"LUCENE_RANK_MAX",
-			"LUCENE_RANK_MEAN",
-			"LUCENE_RANK_MEDIAN",
-			"LUCENE_RANK_MIN",
-			"LUCENE_SCORE_MAX",
-			"LUCENE_SCORE_MEAN",
-			"LUCENE_SCORE_MEDIAN",
-			"LUCENE_SCORE_MIN",
-			"NGRAM_MAX",
-			"NGRAM_MEAN",
-			"NGRAM_MEDIAN",
-			"NGRAM_MIN",
-			"PASSAGE_COUNT",
-			"PASSAGE_QUESTION_LENGTH_RATIO_MAX",
-			"PASSAGE_QUESTION_LENGTH_RATIO_MEAN",
-			"PASSAGE_QUESTION_LENGTH_RATIO_MEDIAN",
-			"PASSAGE_QUESTION_LENGTH_RATIO_MIN",
-			"PASSAGE_TERM_MATCH_MAX",
-			"PASSAGE_TERM_MATCH_MEAN",
-			"PASSAGE_TERM_MATCH_MEDIAN",
-			"PASSAGE_TERM_MATCH_MIN",
-			"PERCENT_FILTERED_WORDS_IN_COMMON_MAX",
-			"PERCENT_FILTERED_WORDS_IN_COMMON_MEAN",
-			"PERCENT_FILTERED_WORDS_IN_COMMON_MEDIAN",
-			"PERCENT_FILTERED_WORDS_IN_COMMON_MIN",
-			"QUESTION_IN_PASSAGE_SCORER_MAX",
-			"QUESTION_IN_PASSAGE_SCORER_MEAN",
-			"QUESTION_IN_PASSAGE_SCORER_MEDIAN",
-			"QUESTION_IN_PASSAGE_SCORER_MIN",
-			"SKIP_BIGRAM_MAX",
-			"SKIP_BIGRAM_MEAN",
-			"SKIP_BIGRAM_MEDIAN",
-			"SKIP_BIGRAM_MIN",
-			"WORD_PROXIMITY_MAX",
-			"WORD_PROXIMITY_MEAN",
-			"WORD_PROXIMITY_MEDIAN",
-			"WORD_PROXIMITY_MIN",
-			"WPPAGE_VIEWS"
-		};
-		
 		for (Answer a: question) {
 			try {
-				Score.set(a.scores, "COMBINED", score(Score.getEach(a.scores, MODEL_ANSWER_DIMENSIONS)));
+				a.setOverallScore(score(Score.getEach(a.scores, names)));
 			} catch (Exception e) {
 				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
 				e.printStackTrace();
-				Score.set(a.scores, "COMBINED", 0.0);
+				a.setOverallScore(0.0);
 			}
 		}
 
 		Collections.sort(question);
-		//Collections.reverse(question);
+		Collections.reverse(question);
 	}
 	
 	/*public static QuestionResultsScorer prepareGenericScorer(String schemapath, String modelpath) {

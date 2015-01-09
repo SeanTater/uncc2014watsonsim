@@ -90,11 +90,10 @@ public class LuceneIndriIndexer {
 	        indexAll("SELECT "
 	        			+ "min(reference) as reference, "
 	        			+ "title, "
-	        			+ "group_concat(text) as text "
+	        			+ "string_agg(text, ' ') as text "
 	    			+ "FROM meta "
 					+ "INNER JOIN content ON meta.id=content.id "
-					+ "GROUP BY title "
-					+ "ORDER BY title;",
+					+ "GROUP BY title;",
 					lucene_index,
 					indri_index);
 		} finally {

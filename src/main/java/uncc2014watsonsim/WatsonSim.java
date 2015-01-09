@@ -20,7 +20,6 @@ public class WatsonSim {
 	        // Print out a simple one-line summary of each answer
 	        for (int i=0; i<question.size(); i++) {
 	        	Answer r = question.get(i);
-	        	// The merge researcher does what was once here.
 	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
 	        

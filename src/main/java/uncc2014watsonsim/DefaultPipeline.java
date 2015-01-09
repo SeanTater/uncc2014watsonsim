@@ -1,8 +1,6 @@
 package uncc2014watsonsim;
 
-import java.io.IOException;
 import java.util.Collections;
-import java.util.concurrent.ForkJoinPool;
 
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -100,7 +98,7 @@ public class DefaultPipeline {
 	};
 
 	private static final Researcher[] late_researchers = {
-		//new WekaTee(),
+		new WekaTee(),
 		new CombineScores()
 	};
 	

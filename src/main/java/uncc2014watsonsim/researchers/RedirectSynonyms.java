@@ -9,6 +9,8 @@ import java.util.List;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Database;
+import uncc2014watsonsim.Score;
+import uncc2014watsonsim.scorers.Merge;
 
 /**
  * Create a bunch of new answers with the same passages based on "synonyms"
@@ -21,6 +23,10 @@ public class RedirectSynonyms extends Researcher {
 
 	PreparedStatement s = db.prep(
 		"SELECT source from wiki_redirects where target = ? collate nocase;");
+	
+	{
+		Score.register("IS_WIKI_REDIRECT", 0.0, Merge.Or);
+	}
 
 	@Override
 	public void question(Question q) {
@@ -32,7 +38,12 @@ public class RedirectSynonyms extends Researcher {
 				s.setString(1, a.candidate_text);
 				ResultSet results = s.executeQuery();
 				while (results.next()) {
-					q.add(new Answer(a.passages, a.scores, results.getString("source")));
+					Answer new_answer = new Answer(
+							new ArrayList<>(a.passages),
+							a.scores.clone(),
+							results.getString("source"));
+					Score.set(a.scores, "IS_WIKI_REDIRECT", 1.0);
+					q.add(new_answer);
 				}
 			} catch (SQLException e) {
 				// Just don't make any synonyms.
