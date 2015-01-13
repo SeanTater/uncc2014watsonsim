@@ -39,7 +39,7 @@ public class Database {
 			 */
 			
 			Class.forName("org.postgresql.Driver");
-			conn = DriverManager.getConnection("jdbc:postgresql:watsonsim?user=sean&password=supersecret");
+			conn = DriverManager.getConnection("jdbc:postgresql://cci-text-01.local/watsonsim?user=sean&password=supersecret");
 
 		} catch (SQLException | ClassNotFoundException e2) {
 			e2.printStackTrace();

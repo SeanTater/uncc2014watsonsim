@@ -22,7 +22,7 @@ public class RedirectSynonyms extends Researcher {
 	Database db = new Database();
 
 	PreparedStatement s = db.prep(
-		"SELECT source from wiki_redirects where target = ? collate nocase;");
+		"SELECT source from wiki_redirects where target = ?;");
 	
 	{
 		Score.register("IS_WIKI_REDIRECT", 0.0, Merge.Or);
