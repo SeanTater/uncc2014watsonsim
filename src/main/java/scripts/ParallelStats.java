@@ -37,7 +37,7 @@ public class ParallelStats {
     public static void main(String[] args) throws Exception {
     	// Oversubscribing makes scheduling the CPU-scheduler's problem
         ExecutorService pool = Executors.newFixedThreadPool(50);
-    	for (int i=0; i < 1000; i += 20) {
+    	for (int i=1000; i < 6000; i += 100) {
     		pool.execute(new SingleTrainingResult(i));
     	}
         pool.shutdown();
@@ -59,10 +59,10 @@ class SingleTrainingResult extends Thread {
 	}
 	
 	public void run() {
-		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT 20 OFFSET %d", offset);
+		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT 100 OFFSET %d", offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("source-redir-or", sql).run();
+			new StatsGenerator("source-redir-or-test", sql).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
