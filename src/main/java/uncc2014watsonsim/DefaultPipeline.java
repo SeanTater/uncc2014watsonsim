@@ -99,6 +99,7 @@ public class DefaultPipeline {
 
 	private static final Researcher[] late_researchers = {
 		new WekaTee(),
+		new StatsDump(),
 		new CombineScores()
 	};
 	
