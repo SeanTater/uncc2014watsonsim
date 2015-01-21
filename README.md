@@ -52,7 +52,7 @@ Deep Question Answering System
 - libSVM
 - Gradle
 - Scripts:
-  - needs pgsql
+  - Needs psycopg2, available as python-psycopg2 in ubuntu
 
 ## Tools
 
