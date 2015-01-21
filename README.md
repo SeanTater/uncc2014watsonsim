@@ -47,6 +47,13 @@ Deep Question Answering System
 - We parsed [the full Wikipedia](https://www.dropbox.com/s/hpse3kxsi5or5ba/wikipedia-full-paragraphs-trec.xml.xz?dl=0) as of October 2014 into TREC format, which may be very helpful for indexing. Note that we index one paragraph at a time rather than one article at a time, so the titles are not unique. We will submit an article-by-article format as well if that proves to be helpful.
 - Work is ongoing to place this in an SQLite database so that you do not need to index it yourself. We are working on using Lucene, Indri and Terrier for this.
 
+## Dependencies
+- Indri
+- libSVM
+- Gradle
+- Scripts:
+  - needs pgsql
+
 ## Tools
 
 - [Check to see if your commit broke the code](https://travis-ci.org/SeanTater/uncc2014watsonsim)
