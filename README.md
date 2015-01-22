@@ -29,16 +29,17 @@ Keep in mind that the program may change faster than its documentation. If you a
   - The latest [database snapshot](https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot.pgdump). Load it into Postgres using `pg_restore -d watsonsim [more options as necessary] data-snapshot.pgdump`.
   - The snapshots are updated weekly via a cron job.
 - For Bing web search
-  - copy src/main/java/privatedata/UserSpecificConstants.java.sample to src/main/java/privatedata/UserSpecificConstants.java
-  - [Create an Azure account and sign up for Bing](https://datamarket.azure.com/dataset/bing/search), put the [API key](https://datamarket.azure.com/account/keys) the right variable in UserSpecificConstants.java 
+  - copy config.properties.sample to config.properties
+  - [Create an Azure account and sign up for Bing](https://datamarket.azure.com/dataset/bing/search), put the [API key](https://datamarket.azure.com/account/keys) the right variable in the config.
 - For Google web search (which is disabled currently, so this is optional and will not (yet) be used)
-  - Make a new [Google cloud app](https://cloud.google.com/console), and put the name in UserSpecificConstants.java
-    - Enable the Custom Search API, create a server public API key, and paste it into UserSpecificConstants.java
+  - Make a new [Google cloud app](https://cloud.google.com/console), and put the name in the config
+    - Enable the Custom Search API, create a server public API key, and paste it into the config
   - Make your own [custom search engine](https://www.google.com/cse/create/new)
     - Choose "Search any site" (but you have to pick a domain, maybe wikipedia.org would be good)
     - Edit the custom search you just made. In "Sites to search", change "Search only included sites" to "Search the entire web but emphasize included sites"
-    - Get the search engine ID, put it in UserSpecificConstants.java
+    - Get the search engine ID, put it in the config
 - For the scripts, which you do not need for simple queries:
+  - Python 2.6+
   - psycopg2, which you can install with `pip install psycopg2`, or as python-psycopg2 in ubuntu and fedora
 
 ### Notes:
