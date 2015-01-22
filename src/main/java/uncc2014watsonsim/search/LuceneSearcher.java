@@ -25,6 +25,7 @@ import org.apache.lucene.util.Version;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
+import uncc2014watsonsim.StringUtils;
 import uncc2014watsonsim.scorers.Merge;
 
 /**
@@ -40,11 +41,9 @@ public class LuceneSearcher extends Searcher {
 		analyzer = new StandardAnalyzer(Version.LUCENE_47);
 		parser = new QueryParser(Version.LUCENE_47, "text", analyzer);
 		parser.setAllowLeadingWildcard(true);
-		assert config.containsKey("lucene_index") :
-			"The Lucene index path (lucene_index) is missing from config.properties";
 
 		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(config.getProperty("lucene_index"))));
+			reader = DirectoryReader.open(FSDirectory.open(new File(StringUtils.getOrDie(config, "lucene_index"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path in UserSpecificConstants.java.");

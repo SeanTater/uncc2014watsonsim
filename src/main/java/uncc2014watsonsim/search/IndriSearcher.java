@@ -7,6 +7,7 @@ import java.util.Properties;
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
+import uncc2014watsonsim.StringUtils;
 import uncc2014watsonsim.scorers.Merge;
 import uncc2014watsonsim.Translation;
 import lemurproject.indri.ParsedDocument;
@@ -26,11 +27,9 @@ public class IndriSearcher extends Searcher {
 	 * @param config  The configuration Properties
 	 */
 	public IndriSearcher(Properties config) {
-		assert config.containsKey("indri_index") :
-			"The Indri index path (indri_index) is missing from config.properties";
 		q = new QueryEnvironment();
 		try {
-			q.addIndex(config.getProperty("indri_index"));
+			q.addIndex(StringUtils.getOrDie(config, "indri_index"));
 		} catch (Exception e) {
 			System.out.println("Setting up the Indri index failed."
 					+ " Is the index in the correct location?"

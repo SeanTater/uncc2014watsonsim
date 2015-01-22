@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -144,5 +145,15 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return xy / (Math.sqrt(xsquared) * Math.sqrt(ysquared) + Double.MIN_NORMAL);
 	}
     
-    
+	/**
+	 * Convenience method for getting a setting from Properties
+	 * @param config Properties from the configuration file (config.properties) 
+	 * @param key The key that must exist in the properties
+	 * @return The non-null String value, or else throw a RuntimeException.
+	 */
+	public static String getOrDie(Properties config, String key) {
+		String value = config.getProperty(key);
+		if (value == null) throw new RuntimeException("Required key (" + key + ") missing from configuration file.");
+		return value;
+	}
 }

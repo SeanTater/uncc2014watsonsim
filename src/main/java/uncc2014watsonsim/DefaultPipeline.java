@@ -75,7 +75,7 @@ public class DefaultPipeline {
 		new LuceneSearcher(config),
 		new IndriSearcher(config),
 // You may want to cache Bing results
-//		new BingSearcher()
+//		new BingSearcher(config)
 		new CachingSearcher(new BingSearcher(config), "bing"),
 	};
 	
@@ -87,7 +87,7 @@ public class DefaultPipeline {
 		new RedirectSynonyms(),
 		new Merger(),
 		//new ChangeFitbAnswerToContentsOfBlanks(),
-		new PassageRetrieval(),
+		new PassageRetrieval(config),
 		new MediaWikiTrimmer(), // Rerun after passage retrieval
 		new PersonRecognition(),
 	};

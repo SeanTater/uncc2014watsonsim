@@ -1,2 +1,6 @@
+# This is a .properties file. There is no need for quotes but see Wikipedi
+# for a list of things that need to be escaped, and the precise syntax
+# Most of what you need in this file should be straightforward though
 lucene_index = data/v1.1/lucene_index
 indri_index = data/v1.1/indri_index
+#bing_api_key = FILL ME IN. 

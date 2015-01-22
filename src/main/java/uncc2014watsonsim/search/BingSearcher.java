@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import privatedata.UserSpecificConstants;
-
 import org.apache.http.client.fluent.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.Jsoup;
@@ -17,6 +15,7 @@ import org.jsoup.nodes.Element;
 
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
+import uncc2014watsonsim.StringUtils;
 import uncc2014watsonsim.scorers.Merge;
 
 /**
@@ -39,9 +38,7 @@ public class BingSearcher extends Searcher {
 	public BingSearcher(Properties config) {
 		Score.register("BING_ANSWER_RANK", Double.NaN, Merge.Mean);
 		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Or);
-		assert config.containsKey("bing_api_key") :
-			"The Bing api key (bing_api_key) is missing from config.properties";
-		key = config.getProperty("bing_api_key");
+		key = StringUtils.getOrDie(config, "bing_api_key");
 	}
 	
 	public List<Passage> query(String query) {
