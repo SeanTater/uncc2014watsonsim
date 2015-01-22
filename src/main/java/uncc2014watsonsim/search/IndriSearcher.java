@@ -20,8 +20,14 @@ import lemurproject.indri.ScoredExtentResult;
 public class IndriSearcher extends Searcher {
 	private QueryEnvironment q;
 	private boolean enabled = true;
+	/**
+	 * Setup the Indri Query Environment.
+	 * The "indri_index" property is the Indri index path
+	 * @param config  The configuration Properties
+	 */
 	public IndriSearcher(Properties config) {
-		// Only initialize the query environment and index once
+		assert config.containsKey("indri_index") :
+			"The Indri index path (indri_index) is missing from config.properties";
 		q = new QueryEnvironment();
 		try {
 			q.addIndex(config.getProperty("indri_index"));

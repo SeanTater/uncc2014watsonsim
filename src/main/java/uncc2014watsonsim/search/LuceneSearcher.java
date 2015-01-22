@@ -40,6 +40,8 @@ public class LuceneSearcher extends Searcher {
 		analyzer = new StandardAnalyzer(Version.LUCENE_47);
 		parser = new QueryParser(Version.LUCENE_47, "text", analyzer);
 		parser.setAllowLeadingWildcard(true);
+		assert config.containsKey("lucene_index") :
+			"The Lucene index path (lucene_index) is missing from config.properties";
 
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(config.getProperty("lucene_index"))));

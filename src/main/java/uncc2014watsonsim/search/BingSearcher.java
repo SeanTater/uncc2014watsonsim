@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import privatedata.UserSpecificConstants;
 
@@ -34,10 +35,13 @@ import uncc2014watsonsim.scorers.Merge;
  * @author D Haval
  */
 public class BingSearcher extends Searcher {
-	
-	static {
+	private final String key;
+	public BingSearcher(Properties config) {
 		Score.register("BING_ANSWER_RANK", Double.NaN, Merge.Mean);
 		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Or);
+		assert config.containsKey("bing_api_key") :
+			"The Bing api key (bing_api_key) is missing from config.properties";
+		key = config.getProperty("bing_api_key");
 	}
 	
 	public List<Passage> query(String query) {
@@ -64,7 +68,7 @@ public class BingSearcher extends Searcher {
 	    try {
 	    	String resp = Executor
 	    		.newInstance()
-				.auth(UserSpecificConstants.bingAPIKey, UserSpecificConstants.bingAPIKey)
+				.auth(key, key)
 	    		.execute(Request.Get(uri))
 	    		.returnContent().asString();
 	    	

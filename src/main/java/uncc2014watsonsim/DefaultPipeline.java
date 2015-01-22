@@ -76,7 +76,7 @@ public class DefaultPipeline {
 		new IndriSearcher(config),
 // You may want to cache Bing results
 //		new BingSearcher()
-		new CachingSearcher(new BingSearcher(), "bing"),
+		new CachingSearcher(new BingSearcher(config), "bing"),
 	};
 	
 	private static final Researcher[] early_researchers = {
