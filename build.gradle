@@ -110,23 +110,6 @@ test {
     }
 }
 
-distZip {
-    // Creates the zipfile distributed to class
-    into(project.name + "-" + project.version) {
-        from '.'
-        // Uncomment to include jars in distribution
-        // Note this does not allow for transitive dependencies
-        //from configurations.runtime.allArtifacts.files
-        //from configurations.runtime
-        include '**'
-        exclude 'bin/'
-        exclude 'build/'
-        exclude 'data/'
-        exclude 'target/'
-        exclude 'tmp/'
-    }
-}
-
 eclipse {
     classpath {
         file.withXml {provider ->

@@ -11,9 +11,9 @@ public class WatsonSim {
         System.out.println("Enter the jeopardy text: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = br.readLine();
-        
+        DefaultPipeline pipe = new DefaultPipeline();
     	while (!command.isEmpty()) {
-    		Question question = DefaultPipeline.ask(command);
+    		Question question = pipe.ask(command);
 	        
 	        System.out.println("This is a " + question.getType() + " Question");
 	        

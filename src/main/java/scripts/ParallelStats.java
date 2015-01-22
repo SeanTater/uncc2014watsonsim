@@ -37,8 +37,9 @@ public class ParallelStats {
     public static void main(String[] args) throws Exception {
     	// Oversubscribing makes scheduling the CPU-scheduler's problem
         ExecutorService pool = Executors.newFixedThreadPool(50);
+        long run_start = System.currentTimeMillis();
     	for (int i=1000; i < 6000; i += 100) {
-    		pool.execute(new SingleTrainingResult(i));
+    		pool.execute(new SingleTrainingResult(i, run_start));
     	}
         pool.shutdown();
         
@@ -52,17 +53,19 @@ public class ParallelStats {
 }
 
 class SingleTrainingResult extends Thread {
-	int offset;
+	private final int offset;
+	private final long run_start;
 	
-	public SingleTrainingResult(int offset) {
+	public SingleTrainingResult(int offset, long run_start) {
 		this.offset = offset;
+		this.run_start = run_start;
 	}
 	
 	public void run() {
 		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT 100 OFFSET %d", offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("svm-score-v2", sql).run();
+			new StatsGenerator("svm-score-v2", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -113,6 +116,7 @@ class StatsGenerator {
 	double runtime;
 	int[] conf_correct = new int[100];
 	int[] conf_hist = new int[100];
+	private long run_start;
 	
 	/**
 	 * Generate statistics on a specific set of questions
@@ -122,9 +126,10 @@ class StatsGenerator {
 	 * @param question_query  The SQL filters for the questions. 
 	 * @throws Exception
 	 */
-	public StatsGenerator(String dataset, String question_query) throws SQLException {
+	public StatsGenerator(String dataset, String question_query, long run_start) throws SQLException {
 		this.dataset = dataset;
 		questionsource = new DBQuestionSource(question_query);
+		this.run_start = run_start;
 	}
 	
 	/** Measure how accurate the top question is as a histogram across confidence */
@@ -214,9 +219,10 @@ class StatsGenerator {
 
 		
 		System.out.println("Asking Questions");
+		DefaultPipeline pipe = new DefaultPipeline(run_start); 
 		for (int i=0; i<questionsource.size(); i++) {
 			Question q = questionsource.get(i);
-			DefaultPipeline.ask(q);
+			pipe.ask(q);
 			
 			System.out.print(" " + i);
 			if (i % 25 == 0) System.out.println();

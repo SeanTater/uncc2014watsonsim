@@ -286,9 +286,10 @@ class StatsGenerator {
 
 		
 		System.out.println("Asking Questions");
+		DefaultPipeline pipe = new DefaultPipeline();
 		for (int i=0; i<questionsource.size(); i++) {
 			Question q = questionsource.get(i);
-			DefaultPipeline.ask(q);
+			pipe.ask(q);
 			
 			System.out.print(" " + i);
 			if (i % 25 == 0) System.out.println();

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -15,6 +16,7 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
 import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
+import org.postgresql.jdbc2.TimestampUtils;
 
 import uncc2014watsonsim.researchers.*;
 import uncc2014watsonsim.scorers.*;
@@ -55,76 +57,12 @@ import uncc2014watsonsim.search.*;
  */
 public class DefaultPipeline {
 	
-	public static final Properties config = new Properties();
-	static {
-		// Read the configuration
-		try {
-			Reader s = new InputStreamReader(
-					new FileInputStream("config.properties"), "UTF-8");
-			config.load(s);
-			s.close();
-		} catch (IOException e) {
-			System.err.println("Missing or broken 'config.properties'. "
-					+ "Please create one by copying "
-					+ "config.properties.sample.");
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-	
-	private static final Searcher[] searchers = {
-		new LuceneSearcher(config),
-		new IndriSearcher(config),
-// You may want to cache Bing results
-//		new BingSearcher(config)
-		new CachingSearcher(new BingSearcher(config), "bing"),
-	};
-	
-	private static final Researcher[] early_researchers = {
-		new MediaWikiTrimmer(), // Before passage retrieval
-		new HyphenTrimmer(),
-		/* +0.06 recall
-		 * -0.30 MRR */
-		new RedirectSynonyms(),
-		new Merger(),
-		//new ChangeFitbAnswerToContentsOfBlanks(),
-		new PassageRetrieval(config),
-		new MediaWikiTrimmer(), // Rerun after passage retrieval
-		new PersonRecognition(),
-	};
-	
-	private static final Scorer[] scorers = {
-		new LuceneRank(),
-		new LuceneScore(),
-		new IndriRank(),
-		new IndriScore(),
-		new BingRank(),
-		new GoogleRank(),
-		new WordProximity(),
-		new Correct(),
-		new SkipBigram(),
-		new PassageTermMatch(),
-		new PassageCount(),
-		new PassageQuestionLengthRatio(),
-		new PercentFilteredWordsInCommon(),
-		new QuestionInPassageScorer(),
-		//new ScorerIrene(), // TODO: Introduce something new
-		new NGram(),
-		//new LATTypeMatchScorer(),
-		new WPPageViews(),
-		//new RandomIndexingCosineSimilarity(),
-		new DistSemCosQAScore(),
-		//new DistSemCosQPScore(),
-		//new ScorerAda(),      // TODO: Introduce something new
-		//new WShalabyScorer(), // TODO: Introduce something new
-		//new SentenceSimilarity(),
-		//new CoreNLPSentenceSimilarity(),
-	};
-
-	private static final Researcher[] late_researchers = {
-		new WekaTee(),
-		new CombineScores(),
-		new StatsDump()
-	};
+	private final Timestamp run_start;
+	private final Properties config = new Properties();
+	private final Searcher[] searchers;
+	private final Researcher[] early_researchers;
+	private final Scorer[] scorers;
+	private final Researcher[] late_researchers;
 	
 	/*
 	 * Initialize UIMA. 
@@ -132,9 +70,9 @@ public class DefaultPipeline {
 	 * We also don't want to load the POS models each time we ask a new question. Here we can hold the AE for the 
 	 * entire duration of the Pipeline's life.
 	 */
-	public static AnalysisEngine uimaAE;
+	public AnalysisEngine uimaAE;
 	
-	/*static {
+	/* {
 		try{
 			XMLInputSource uimaAnnotatorXMLInputSource = new XMLInputSource("src/main/java/uncc2014watsonsim/uima/qAnalysis/qAnalysisApplicationDescriptor.xml");
 			final ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(uimaAnnotatorXMLInputSource);
@@ -150,12 +88,93 @@ public class DefaultPipeline {
 	}*/
 	/* End UIMA */
 	
-	public static Question ask(String qtext) {
+	/**
+	 * Start a pipeline with a new timestamp for the statistics dump
+	 */
+	public DefaultPipeline() {
+		this(System.currentTimeMillis());
+	}
+	
+	/**
+	 * Start a pipeline with an existing timestamp
+	 * @param millis Millis since the Unix epoch, as in currentTimeMillis()
+	 */
+	public DefaultPipeline(long millis) {
+		run_start = new Timestamp(millis);
+
+		// Read the configuration
+		try {
+			Reader s = new InputStreamReader(
+					new FileInputStream("config.properties"), "UTF-8");
+			config.load(s);
+			s.close();
+		} catch (IOException e) {
+			System.err.println("Missing or broken 'config.properties'. "
+					+ "Please create one by copying "
+					+ "config.properties.sample.");
+			throw new RuntimeException(e.getMessage());
+		}
+		
+		/*
+		 * Create the pipeline
+		 */
+		searchers = new Searcher[]{
+			new LuceneSearcher(config),
+			new IndriSearcher(config),
+			// You may want to cache Bing results
+			// new BingSearcher(config),
+			new CachingSearcher(new BingSearcher(config), "bing")
+		};
+		early_researchers = new Researcher[]{
+			new MediaWikiTrimmer(), // Before passage retrieval
+			new HyphenTrimmer(),
+			new RedirectSynonyms(),
+			new Merger(),
+			//new ChangeFitbAnswerToContentsOfBlanks(),
+			new PassageRetrieval(config),
+			new MediaWikiTrimmer(), // Rerun after passage retrieval
+			new PersonRecognition(),
+		};
+		scorers = new Scorer[]{
+			new LuceneRank(),
+			new LuceneScore(),
+			new IndriRank(),
+			new IndriScore(),
+			new BingRank(),
+			new GoogleRank(),
+			new WordProximity(),
+			new Correct(),
+			new SkipBigram(),
+			new PassageTermMatch(),
+			new PassageCount(),
+			new PassageQuestionLengthRatio(),
+			new PercentFilteredWordsInCommon(),
+			new QuestionInPassageScorer(),
+			//new ScorerIrene(), // TODO: Introduce something new
+			new NGram(),
+			//new LATTypeMatchScorer(),
+			new WPPageViews(),
+			//new RandomIndexingCosineSimilarity(),
+			new DistSemCosQAScore(),
+			//new DistSemCosQPScore(),
+			//new ScorerAda(),      // TODO: Introduce something new
+			//new WShalabyScorer(), // TODO: Introduce something new
+			//new SentenceSimilarity(),
+			//new CoreNLPSentenceSimilarity(),
+		};
+		late_researchers = new Researcher[]{
+			new WekaTee(),
+			new CombineScores(),
+			new StatsDump(run_start)
+		};
+	}
+	
+	public Question ask(String qtext) {
 	    return ask(new Question(qtext));
 	}
 	
     /** Run the full standard pipeline */
-	public static Question ask(Question question) {
+	public Question ask(Question question) {
 		// Query every engine
 		for (Searcher s: searchers)
 			question.addPassages(s.query(question.getRaw_text()));

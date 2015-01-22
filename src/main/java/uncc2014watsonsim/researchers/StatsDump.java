@@ -2,6 +2,7 @@ package uncc2014watsonsim.researchers;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Map;
 
 import uncc2014watsonsim.Answer;
@@ -15,7 +16,7 @@ public class StatsDump extends Researcher {
 	
 	private Database db = new Database();
 	private PreparedStatement add_run = db.prep(
-			"INSERT INTO results_runs DEFAULT VALUES RETURNING id;");
+			"INSERT INTO results_runs(id) VALUES (?);");
 	private PreparedStatement add_question = db.prep(
 			"INSERT INTO results_questions(run_id, question) VALUES (?, ?) "
 			+ "RETURNING id;");
@@ -26,19 +27,20 @@ public class StatsDump extends Researcher {
 			"INSERT INTO results_scores(results_answers_id, key, value)"
 			+ " VALUES (?, ?, ?);");
 	
-	private java.sql.Timestamp run_id;
+	private Timestamp run_id;
 	private boolean broken = false;
 	
 	/**
 	 * Start a new run in the reports tables.
 	 */
-	public StatsDump() {
+	public StatsDump(Timestamp run_id) {
+		this.run_id = run_id;
 		try {
-			run_id = db.then(add_run).getTimestamp(1);
+			add_run.setTimestamp(1, run_id);
+			add_run.execute();
 		} catch (SQLException e) {
-			// Complain a bit if dumps are being lost, but don't quit.
-			System.err.println(e);
-			broken=true;
+			// If the run exists already, it will fail. No problem.
+			// We will just append to it.
 		}
 	}
 	
