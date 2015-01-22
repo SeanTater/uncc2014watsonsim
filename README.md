@@ -10,7 +10,7 @@ Keep in mind that the program may change faster than its documentation. If you a
 
 ### Overview
 - For the program
-  - `[git](http://git-scm.com/downloads) clone https://github.com/SeanTater/uncc2014watsonsim.git`
+  - [git](http://git-scm.com/downloads) clone https://github.com/SeanTater/uncc2014watsonsim.git
   - Java 8, either:
     - [Bundled with Eclipse](https://www.eclipse.org/downloads/)
     - Ubuntu utopic+: `sudo apt-get install openjdk-8-jdk`
