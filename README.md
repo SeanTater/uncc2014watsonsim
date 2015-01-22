@@ -21,7 +21,7 @@ Keep in mind that the program may change faster than its documentation. If you a
     - Ubuntu, Fedora: install `libsvm-java`
     - [Windows](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) ([instructions](http://stackoverflow.com/questions/25060178/which-weka-and-libsvm-jar-files-to-use-in-java-code-for-svm-classification))
   - [Gradle](http://gradle.org/downloads) (just unzip; no install necessary, keep in mind it updates very often)
-  - Run `gradle eclipse` in `uncc2014watsonsim/` to download platform-independent dependencies and create an Eclipse project
+  - Run `gradle eclipse` in `uncc2014watsonsim/` to download platform-independent dependencies and create an Eclipse project. Your path to the gradle binary will be different. (e.g. `/home/josh/Downloads/gradle-2.22/bin/gradle eclipse`)
 - For the data:
   - A good internet connection, patience, and about 100GB free space
   - [Postgres](http://www.postgresql.org/download/) (we use 9.3)
