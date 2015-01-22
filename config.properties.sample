@@ -3,4 +3,11 @@
 # Most of what you need in this file should be straightforward though
 lucene_index = data/v1.1/lucene_index
 indri_index = data/v1.1/indri_index
-#bing_api_key = FILL ME IN. 
+terrier_index = OPTIONAL UNTIL TERRIER IS IMPLEMENTED
+
+bing_api_key = FILL ME IN
+
+# The following are optional until the Google search is finished
+google_app_name = FILL ME IN
+google_api_key = FILL ME IN
+google_custom_search_id = FILL ME IN
