@@ -22,7 +22,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;

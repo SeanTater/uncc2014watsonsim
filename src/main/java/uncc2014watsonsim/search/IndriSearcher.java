@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
