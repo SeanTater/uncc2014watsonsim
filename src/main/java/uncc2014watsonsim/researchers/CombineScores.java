@@ -107,12 +107,12 @@ public class CombineScores extends Researcher {
 	 * @param attributesValues: one or more attributes used to score the result e.g., indri rank  
 	 * @throws Exception 
 	 */	
-	public double score(double[] attributesValues) throws Exception {
+	public synchronized double score(double[] attributesValues) throws Exception {
 		Instance inst = new Instance(1, attributesValues);
 		inst.setDataset(qResultsDataset);
 		//System.out.println(qResultsDataset.classAttribute().value((int)scorerModel.classifyInstance(inst)));
-		//double[] ds = scorerModel.distributionForInstance(inst);
-		return scorerModel.classifyInstance(inst);
+		return scorerModel.distributionForInstance(inst)[1];
+		//return scorerModel.classifyInstance(inst);
 	}
 	/**
 	 * @param inputpath: path of arff file containing results training instances

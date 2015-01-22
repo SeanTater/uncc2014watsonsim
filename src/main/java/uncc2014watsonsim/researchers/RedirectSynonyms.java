@@ -25,8 +25,9 @@ public class RedirectSynonyms extends Researcher {
 		"SELECT source from wiki_redirects where target = ?;");
 	
 	{
-		Score.register("IS_WIKI_REDIRECT", 0.0, Merge.Or);
+		Score.register("IS_WIKI_REDIRECT", 0.0, Merge.Min);
 	}
+
 
 	@Override
 	public void question(Question q) {

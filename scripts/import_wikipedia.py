@@ -37,7 +37,7 @@ Extracts and cleans text from Wikipedia database dump and stores output in the
 watsonsim database.
 
 Usage:
-  import_wikipedia.py <source tag> <watsonsim database> [options]
+  import_wikipedia.py <source tag> <database host> [options]
 
 Options:
   -c, --compress        : compress output files using bzip
@@ -52,6 +52,7 @@ Options:
 """
 
 import sys
+import code
 import gc
 import getopt
 import urllib
@@ -60,7 +61,7 @@ import bz2
 import os.path
 from htmlentitydefs import name2codepoint
 
-import sqlite3
+import psycopg2
 import nltk
 import random
 from collections import Counter
@@ -116,35 +117,33 @@ discardElements = set([
 # Program version
 version = '2.7'
 
-def open_database(database_filename):
-    db_conn = sqlite3.connect(database_filename)
-    db_cursor = db_conn.cursor()
-    db_cursor.execute("PRAGMA synchronous=off;")
-    db_cursor.execute("PRAGMA busy_timeout=10000000;")
-    return db_conn
+def open_database(host):
+    return psycopg2.connect(database='watsonsim', host=host, user='sean', password='supersecret')
 
 ##### Main function ###########################################################
 def WikiDocument(id, title, text, source_tag, db):
     paragraph_index = 0
     outlinks = []
+    c = db.cursor()
     for paragraph in compact(clean(outlinks, text)):
 	# Cut out the section headers. They don't help for text search really.
 	# And we are not advanced enough to get anything from it if we tried.
+	code.interact(local=vars())
 	if paragraph.count(' '):
             content_id = random.getrandbits(63)
-            db.execute("INSERT INTO content (id, text) VALUES (?, ?);",
-                (content_id, paragraph))
-            db.execute("INSERT INTO meta (id, title, source, paragraph, reference) "
-                "VALUES (?, ?, ?, ?, ?);",
+            c.execute("INSERT INTO meta (id, title, source, paragraph, reference) "
+                "VALUES (%s, %s, %s, %s, %s);",
                 (content_id, title, source_tag, paragraph_index, "WDB:%i" % content_id))
+            c.execute("INSERT INTO content (id, text) VALUES (%s, %s);",
+                (content_id, paragraph))
         
         paragraph_index += 1
     
     link_counts = Counter(outlinks)
-    db.executemany("INSERT INTO wiki_links(tag, source, target, count) VALUES"
-               " (?, ?, ?, ?);",
-               [(source_tag, title, target, count)
-                   for target, count in link_counts.items()])
+    c.executemany("INSERT INTO wiki_links(tag, source, target, link, count) VALUES"
+               " (%s, %s, %s, %s, %s);",
+               [(source_tag, title, target, link, count)
+                   for (link, target), count in link_counts.items()])
     if random.random() < 0.001: db.commit()
 
 def get_url(id, prefix):
@@ -361,6 +360,7 @@ parametrizedLink = re.compile(r'\[\[.*?\]\]')
 # Function applied to wikiLinks
 
 # linkpairs: [(String, String)]
+# This is a curried function
 def get_tag_maker(linkpairs):
     def make_anchor_tag(match):
         global keepLinks
@@ -373,7 +373,7 @@ def get_tag_maker(linkpairs):
         if not anchor:
             anchor = link
         anchor += trail
-	linkpairs.append(anchor)
+	linkpairs.append((link, anchor))
 
         if keepLinks:
             return '<a href="%s">%s</a>' % (link, anchor)

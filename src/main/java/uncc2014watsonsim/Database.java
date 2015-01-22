@@ -60,4 +60,20 @@ public class Database {
 		return ps;
 	}
 
+	/**
+	 * This is a convenience method for getting the first item after executing
+	 * a prepared statement.
+	 * 
+	 * This is useful for statements ending in "RETURNING __;"
+	 * 
+	 * @param ps  The statement to run 
+	 * @return  The ResultSet, moved forward one result
+	 * @throws SQLException
+	 */
+	public ResultSet then(PreparedStatement ps) throws SQLException {
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		return rs;
+	}
+
 }

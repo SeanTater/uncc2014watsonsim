@@ -6,7 +6,7 @@
 @attribute BING_RANK_MEAN numeric
 @attribute BING_RANK_MEDIAN numeric
 @attribute BING_RANK_MIN numeric
-@attribute CORRECT numeric
+@attribute CORRECT {0,1}
 @attribute DIST_SEM_COS_QASCORE numeric
 @attribute GOOGLE_RANK_MAX numeric
 @attribute GOOGLE_RANK_MEAN numeric
