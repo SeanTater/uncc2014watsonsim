@@ -5,54 +5,47 @@ Deep Question Answering System
 
 ## [Updates and Progress on Development](http://watsonsim.blogspot.com)
 
-## Get started
-- `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
-- Download and unzip [gradle](http://gradle.org/downloads) somewhere convenient to call from the command line. (Most Linux distros have a packaged version that may be easier, but may also be out of date.)
-- Install Java 7 or newer. Many Macs have only Java 6 by default.
-- Install Indri binaries:
-  - For Linux 64, pick the right library in uncc2012watsonsim/lib and copy it to libindri-jni.so
-  - For Windows 64, do the same but end it in .dll
-  - For others, or if the above doesn't work, compile indri on your own and copy `libindri-jni.so` or `libindri-jni.dll` to uncc2014watsonsim/lib.
-- Setup UserSpecificConstants (in src/main/java)
-  - Make a copy of the file without .sample at the end of the filename
-  - Make your own Google cloud app in the [Google console](https://cloud.google.com/console).
-    - Put the name into the source.
-    - Enable the Custom Search API
-    - Create a server Public API Key, put it in the source.
-  - Make your own custom search engine in the [Custom Search Console](https://www.google.com/cse/create/new)
-    - Search any site (but you have to pick a domain, maybe wikipedia.org would be good)
+## Setup
+Keep in mind that the program may change faster than its documentation. If you are experiencing problems, [contact a developer](mailto:stgallag@gmail.com).
+
+### Overview
+- For the program
+  - `[git](http://git-scm.com/downloads) clone https://github.com/SeanTater/uncc2014watsonsim.git`
+  - Java 8, either:
+    - [Bundled with Eclipse](https://www.eclipse.org/downloads/)
+    - Ubuntu utopic+: `sudo apt-get install openjdk-8-jdk`
+    - Fedora 20+: `yum install java-1.8.0-openjdk`
+    - [Windows, Mac, all others](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+  - [Indri search library (native)](http://www.lemurproject.org/indri.php), needs to be compiled with SWIG and Java, keep the libindri_jni.*
+  - libSVM machine learning library (native)
+    - Ubuntu, Fedora: install `libsvm-java`
+    - [Windows](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) ([instructions](http://stackoverflow.com/questions/25060178/which-weka-and-libsvm-jar-files-to-use-in-java-code-for-svm-classification))
+  - [Gradle](http://gradle.org/downloads) (just unzip; no install necessary, keep in mind it updates very often)
+  - Run `gradle eclipse` in `uncc2014watsonsim/` to download platform-independent dependencies and create an Eclipse project
+- For the data:
+  - A good internet connection, patience, and about 100GB free space
+  - [Postgres](http://www.postgresql.org/download/) (we use 9.3)
+  - The latest [Lucene and Indri indexes](https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot.tar.xz). Just unzip into the data/ subdirectory.
+  - The latest [database snapshot](https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot.pgdump). Load it into Postgres using `pg_restore -d watsonsim [more options as necessary] data-snapshot.pgdump`.
+  - The snapshots are updated weekly via a cron job.
+- For Bing web search
+  - copy src/main/java/privatedata/UserSpecificConstants.java.sample to src/main/java/privatedata/UserSpecificConstants.java
+  - [Create an Azure account and sign up for Bing](https://datamarket.azure.com/dataset/bing/search), put the [API key](https://datamarket.azure.com/account/keys) the right variable in UserSpecificConstants.java 
+- For Google web search (which is disabled currently, so this is optional and will not (yet) be used)
+  - Make a new [Google cloud app](https://cloud.google.com/console), and put the name in UserSpecificConstants.java
+    - Enable the Custom Search API, create a server public API key, and paste it into UserSpecificConstants.java
+  - Make your own [custom search engine](https://www.google.com/cse/create/new)
+    - Choose "Search any site" (but you have to pick a domain, maybe wikipedia.org would be good)
     - Edit the custom search you just made. In "Sites to search", change "Search only included sites" to "Search the entire web but emphasize included sites"
-    - Get the search engine ID, put it in the source.
-- Have Gradle setup gobs of other stuff
-  - `/where/you/unzipped/gradle/bin/gradle cleanEclipse eclipse assemble`
+    - Get the search engine ID, put it in UserSpecificConstants.java
+- For the scripts, which you do not need for simple queries:
+  - psycopg2, which you can install with `pip install psycopg2`, or as python-psycopg2 in ubuntu and fedora
 
-## Start developing
-
-- Make sure you are in the branch you want. Use (or google) `git branch` and `git checkout`
-- `git pull` to get the latest code _before_ writing any code.
-- Consider making a branch before making major changes (it's tougher to move the changes later)
-- Get comfortable with gradle. As a 5-second tour:
-  - `gradle assemble` -> update dependencies
-  - `gradle test` -> run tests
-  - `gradle run` -> run watsonsim (it will ask you for questions, give you results)
-  - Configuration is in build.gradle
-- Write code and [documentation](http://seantater.github.io/uncc2014watsonsim/)!
-- [Ask to be added as a contributor](mailto:stgallag@gmail.com) or if your code is small, send a patch
-- Repeat
-
-## Troubleshoot
+### Notes:
+- Java 7 may suffice, but some of the code is being ported to Java 8 and soon the incompatibilities may merge into master. So beware.
+- We once used SQLite but with many connections (200-500+), corruption seems to be a problem. We may make the SQL pluggable to avoid this extra setup step but probably not until someone requests it.
+- The data is sizable and growing, especially for statistics reports.
 - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
-
-## Get the data
-- We parsed [the full Wikipedia](https://www.dropbox.com/s/hpse3kxsi5or5ba/wikipedia-full-paragraphs-trec.xml.xz?dl=0) as of October 2014 into TREC format, which may be very helpful for indexing. Note that we index one paragraph at a time rather than one article at a time, so the titles are not unique. We will submit an article-by-article format as well if that proves to be helpful.
-- Work is ongoing to place this in an SQLite database so that you do not need to index it yourself. We are working on using Lucene, Indri and Terrier for this.
-
-## Dependencies
-- Indri
-- libSVM
-- Gradle
-- Scripts:
-  - Needs psycopg2, available as python-psycopg2 in ubuntu
 
 ## Tools
 
