@@ -1,0 +1,2 @@
+lucene_index = data/v1.1/lucene_index
+indri_index = data/v1.1/indri_index

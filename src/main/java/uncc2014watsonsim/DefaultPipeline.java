@@ -73,7 +73,7 @@ public class DefaultPipeline {
 	
 	private static final Searcher[] searchers = {
 		new LuceneSearcher(config),
-		new IndriSearcher(),
+		new IndriSearcher(config),
 // You may want to cache Bing results
 //		new BingSearcher()
 		new CachingSearcher(new BingSearcher(), "bing"),

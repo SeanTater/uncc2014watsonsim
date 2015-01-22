@@ -2,6 +2,7 @@ package uncc2014watsonsim.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import privatedata.UserSpecificConstants;
 import uncc2014watsonsim.Passage;
@@ -17,13 +18,13 @@ import lemurproject.indri.ScoredExtentResult;
  * @author Phani Rahul
  */
 public class IndriSearcher extends Searcher {
-	private static QueryEnvironment q;
-	private static boolean enabled = true;
-	static {
+	private QueryEnvironment q;
+	private boolean enabled = true;
+	public IndriSearcher(Properties config) {
 		// Only initialize the query environment and index once
 		q = new QueryEnvironment();
 		try {
-			q.addIndex(UserSpecificConstants.indriIndex);
+			q.addIndex(config.getProperty("indri_index"));
 		} catch (Exception e) {
 			System.out.println("Setting up the Indri index failed."
 					+ " Is the index in the correct location?"
@@ -48,10 +49,10 @@ public class IndriSearcher extends Searcher {
 		//ParsedDocument[] full_texts;
 		String[] titles;
 		try {
-			ser = IndriSearcher.q.runQuery(query, MAX_RESULTS);
-			docnos = IndriSearcher.q.documentMetadata(ser, "docno");
+			ser = q.runQuery(query, MAX_RESULTS);
+			docnos = q.documentMetadata(ser, "docno");
 			//full_texts = IndriSearcher.q.documents(ser);
-			titles = IndriSearcher.q.documentMetadata(ser, "title");
+			titles = q.documentMetadata(ser, "title");
 		} catch (Exception e) {
 			// If any other step fails, give a more general message but don't die.
 			System.out.println("Querying Indri failed. Is the index in the correct location? Is indri_jni included?");
