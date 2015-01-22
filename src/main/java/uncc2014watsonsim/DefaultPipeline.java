@@ -1,6 +1,13 @@
 package uncc2014watsonsim;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Collections;
+import java.util.Properties;
 
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -48,8 +55,24 @@ import uncc2014watsonsim.search.*;
  */
 public class DefaultPipeline {
 	
+	public static final Properties config = new Properties();
+	static {
+		// Read the configuration
+		try {
+			Reader s = new InputStreamReader(
+					new FileInputStream("config.properties"), "UTF-8");
+			config.load(s);
+			s.close();
+		} catch (IOException e) {
+			System.err.println("Missing or broken 'config.properties'. "
+					+ "Please create one by copying "
+					+ "config.properties.sample.");
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+	
 	private static final Searcher[] searchers = {
-		new LuceneSearcher(),
+		new LuceneSearcher(config),
 		new IndriSearcher(),
 // You may want to cache Bing results
 //		new BingSearcher()
