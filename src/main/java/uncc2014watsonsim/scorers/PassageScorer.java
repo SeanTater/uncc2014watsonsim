@@ -26,10 +26,10 @@ public abstract class PassageScorer implements Scorer {
 		min_name = name+"_MIN";
 		mean_name = name+"_MEAN";
 		median_name = name+"_MEDIAN";
-		Score.register(max_name, Double.NaN, Merge.Mean);
-		Score.register(min_name, Double.NaN, Merge.Mean);
-		Score.register(mean_name, Double.NaN, Merge.Mean);
-		Score.register(median_name, Double.NaN, Merge.Mean);
+		Score.register(max_name, -1, Merge.Mean);
+		Score.register(min_name, -1, Merge.Mean);
+		Score.register(mean_name, -1, Merge.Mean);
+		Score.register(median_name, -1, Merge.Mean);
 	}
 
 	/** Default implementation of research for a question.

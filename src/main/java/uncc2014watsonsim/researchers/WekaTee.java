@@ -2,11 +2,9 @@ package uncc2014watsonsim.researchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Collections;
-import java.util.Vector;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
@@ -21,14 +19,21 @@ import weka.core.converters.Saver;
 
 /** Pipe Answer scores to an ARFF file for Weka */
 public class WekaTee extends Researcher {
-	private List<double[]> dataset = new ArrayList<>();
+	private final List<double[]> dataset = new ArrayList<>();
 	private ArffSaver saver;
 	private int saved_schema_version = -1;
 	
 	
 	// Make every run unique, but overwrite between questions
 	// This way, you still get /something/ if you interrupt it
-	private Date start_time = new Date();
+	private final Timestamp start_time;
+	/**
+	 * Dump the training data to an ARFF file marked by the given timestamp
+	 * @param start_time
+	 */
+	public WekaTee(Timestamp start_time) {
+		this.start_time = start_time;
+	}
 	
 	@Override
 	public void research(Question q) {

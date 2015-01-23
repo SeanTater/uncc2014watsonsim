@@ -163,7 +163,7 @@ public class DefaultPipeline {
 			//new CoreNLPSentenceSimilarity(),
 		};
 		late_researchers = new Researcher[]{
-			new WekaTee(),
+			new WekaTee(run_start),
 			new CombineScores(),
 			new StatsDump(run_start)
 		};

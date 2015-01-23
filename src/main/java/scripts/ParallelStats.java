@@ -38,7 +38,7 @@ public class ParallelStats {
     	// Oversubscribing makes scheduling the CPU-scheduler's problem
         ExecutorService pool = Executors.newFixedThreadPool(50);
         long run_start = System.currentTimeMillis();
-    	for (int i=1000; i < 6000; i += 100) {
+    	for (int i=0; i < 1000; i += 100) {
     		pool.execute(new SingleTrainingResult(i, run_start));
     	}
         pool.shutdown();

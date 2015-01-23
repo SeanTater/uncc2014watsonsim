@@ -36,7 +36,7 @@ import uncc2014watsonsim.scorers.Merge;
 public class BingSearcher extends Searcher {
 	private final String key;
 	public BingSearcher(Properties config) {
-		Score.register("BING_ANSWER_RANK", Double.NaN, Merge.Mean);
+		Score.register("BING_ANSWER_RANK", -1, Merge.Mean);
 		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Or);
 		key = StringUtils.getOrDie(config, "bing_api_key");
 	}

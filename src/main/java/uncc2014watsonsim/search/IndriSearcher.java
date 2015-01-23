@@ -36,8 +36,8 @@ public class IndriSearcher extends Searcher {
 			e.printStackTrace();
 			enabled=false;
 		}
-		Score.register("INDRI_ANSWER_SCORE", Double.NaN, Merge.Mean);
-		Score.register("INDRI_ANSWER_RANK", Double.NaN, Merge.Mean);
+		Score.register("INDRI_ANSWER_SCORE", -1, Merge.Mean);
+		Score.register("INDRI_ANSWER_RANK", -1, Merge.Mean);
 		Score.register("INDRI_ANSWER_PRESENT", 0.0, Merge.Or);
 	}
 	

@@ -49,8 +49,8 @@ public class LuceneSearcher extends Searcher {
 		}
 		searcher = new IndexSearcher(reader);
 	
-		Score.register("LUCENE_ANSWER_RANK", Double.NaN, Merge.Mean);
-		Score.register("LUCENE_ANSWER_SCORE", Double.NaN, Merge.Mean);
+		Score.register("LUCENE_ANSWER_RANK", -1, Merge.Mean);
+		Score.register("LUCENE_ANSWER_SCORE", -1, Merge.Mean);
 		Score.register("LUCENE_ANSWER_PRESENT", 0.0, Merge.Or);
 	}
 	
