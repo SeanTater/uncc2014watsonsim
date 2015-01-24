@@ -30,6 +30,7 @@ public class Passage {
     
     /** Return the value of this Score for this answer, or null */
     public double score(String name) {
+    	scores = Score.update(scores);
     	return Score.get(scores, name);
     }
     

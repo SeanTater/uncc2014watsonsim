@@ -157,8 +157,9 @@ public class Score {
 	public synchronized static void register(String name,
 			double default_value,
 			Merge merge_mode) {
-		if (metas.put(name,
-				new Meta(name, default_value, merge_mode)) == null) {
+		if (!metas.containsKey(name)) {
+			metas.put(name,
+					new Meta(name, default_value, merge_mode));
 			// This is a new entry
 			// We have to make it an array because otherwise editing metas will
 			// cause all the versions to change

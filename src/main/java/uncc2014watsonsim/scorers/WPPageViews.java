@@ -22,11 +22,11 @@ public class WPPageViews extends AnswerScorer {
 			if (rs.next()) {
 				return rs.getDouble(1);
 			} else {
-				return Double.NaN;
+				return -1;
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
-			return Double.NaN;
+			return -1;
 		}
 	}
 	

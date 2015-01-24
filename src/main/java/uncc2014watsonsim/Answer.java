@@ -2,15 +2,8 @@
 package uncc2014watsonsim;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-
-import org.json.simple.JSONObject;
 
 /**
  * @author Phani Rahul
@@ -52,17 +45,6 @@ public class Answer implements Comparable<Answer> {
     public Answer(String candidate_text) {
     	this.candidate_text = candidate_text;
     }
-    
-    /** Create an Answer (with engine) from JSON */
-	public Answer(String engine, JSONObject attr) {
-		this(
-			engine,
-			(String) attr.get(engine+"_title"),
-			"",
-			"");
-		passages.get(0).score(engine+"_RANK", (double) attr.get(engine+"_rank"));
-		passages.get(0).score(engine+"_SCORE", (double) attr.get(engine+"_score"));
-	}
 
     @Override
     /** How to handle inexact matches this way?? */

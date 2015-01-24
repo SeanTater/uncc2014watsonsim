@@ -136,12 +136,12 @@ public class DefaultPipeline {
 			new PersonRecognition(),
 		};
 		scorers = new Scorer[]{
-			new LuceneRank(),
-			new LuceneScore(),
-			new IndriRank(),
-			new IndriScore(),
-			new BingRank(),
-			new GoogleRank(),
+			//new LuceneRank(),
+			//new LuceneScore(),
+			//new IndriRank(),
+			//new IndriScore(),
+			//new BingRank(),
+			//new GoogleRank(),
 			new WordProximity(),
 			new Correct(),
 			new SkipBigram(),

@@ -4,7 +4,6 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,7 +37,7 @@ public class ParallelStats {
     	// Oversubscribing makes scheduling the CPU-scheduler's problem
         ExecutorService pool = Executors.newFixedThreadPool(50);
         long run_start = System.currentTimeMillis();
-    	for (int i=0; i < 1000; i += 100) {
+    	for (int i=0; i < 1000; i += 20) {
     		pool.execute(new SingleTrainingResult(i, run_start));
     	}
         pool.shutdown();
@@ -62,10 +61,10 @@ class SingleTrainingResult extends Thread {
 	}
 	
 	public void run() {
-		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT 100 OFFSET %d", offset);
+		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT 20 OFFSET %d", offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("svm-score-v2", sql, run_start).run();
+			new StatsGenerator("svm-score-v3", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "

@@ -23,7 +23,9 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.scorers.Merge;
 
 /**
  * @author Phani Rahul
@@ -46,6 +48,9 @@ public class LucenePassageSearcher extends Searcher {
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path for lucene_index.");
 		}
 		searcher = new IndexSearcher(reader);
+
+		Score.register("LUCENE_SCORE", -1, Merge.Mean);
+		Score.register("LUCENE_RANK", -1, Merge.Mean);
 	}
 	
 	public List<Passage> query(String question_text) {
