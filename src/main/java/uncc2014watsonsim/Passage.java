@@ -31,7 +31,7 @@ public class Passage {
     /** Return the value of this Score for this answer, or null */
     public double score(String name) {
     	scores = Score.update(scores);
-    	return Score.get(scores, name);
+    	return Score.get(scores, name, -1);
     }
     
     /** Set the value of this Score for this passage, returning the passage.

@@ -93,13 +93,13 @@ public class Score {
 	 * @param scores	The score vector
 	 * @param name		The name of the score
 	 */
-	public static double get(double[] scores, String name) {
+	public static double get(double[] scores, String name, double otherwise) {
 		String[] version = versions.get(scores.length);
 		int index = Arrays.binarySearch(version, name);
 		if (index >= 0) {
 			return scores[index];
 		} else {
-			return Double.NaN;
+			return otherwise;
 		}
 	}
 	/**
@@ -113,7 +113,7 @@ public class Score {
 	public static double[] getEach(double[] incoming, List<String> names) {
 		double[] outgoing = new double[names.size()];
 		for (int i=0; i<names.size(); i++)
-			outgoing[i] = get(incoming, names.get(i));
+			outgoing[i] = get(incoming, names.get(i), -1);
 		return outgoing;
 	}
 	
