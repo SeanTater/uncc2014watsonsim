@@ -59,6 +59,7 @@ import urllib
 import re
 import bz2
 import os.path
+import time
 from htmlentitydefs import name2codepoint
 
 import psycopg2
@@ -80,6 +81,11 @@ keepLinks = False
 # Whether to transform sections into HTML
 #
 keepSections = False
+
+##
+# Whether to keep Lists (which will become unpunctuated)
+#
+keepLists = True
 
 ##
 # Recognize only these namespaces
@@ -128,7 +134,6 @@ def WikiDocument(id, title, text, source_tag, db):
     for paragraph in compact(clean(outlinks, text)):
 	# Cut out the section headers. They don't help for text search really.
 	# And we are not advanced enough to get anything from it if we tried.
-	code.interact(local=vars())
 	if paragraph.count(' '):
             content_id = random.getrandbits(63)
             c.execute("INSERT INTO meta (id, title, source, paragraph, reference) "
@@ -508,8 +513,8 @@ def compact(text):
                 page.append(title)
         # handle lists
         elif line[0] in '*#:;':
-            if keepSections:
-                page.append("<li>%s</li>" % line[1:])
+            if keepLists:
+                page.append("%s" % line[1:])
             else:
                 continue
         # Drop residuals of lists
