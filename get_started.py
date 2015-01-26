@@ -38,7 +38,7 @@ def install_postgres():
                 check_call("sudo yum install postgres-9.3".split())
             elif dist == "Ubuntu":
                 check_call("sudo apt-get install postgres-9.3".split())
-        except CalledProcessError e:
+        except CalledProcessError as e:
             print e
             print "Opening a shell to allow you to install and setup Postgres manually."
             print 'Use "exit 1" to abort installation'
