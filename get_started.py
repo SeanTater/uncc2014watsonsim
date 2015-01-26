@@ -14,11 +14,12 @@ import shutil
 from subprocess import call, check_call
 import sys
 import tarfile
+import zipfile
 import urllib2
 import wget
 
-# Download a file and give a little feedback on the screen at the same time.
 def download(url, name):
+    """ Download a file and give a little feedback on the screen at the same time. """
     print "Downloading %s. 1 \".\" = 1 MB: " % url
     # We know the URLs beforehand and this method works fine
     base = url.split('/')[-1]
@@ -29,10 +30,16 @@ def download(url, name):
             sys.stdout.write('.')
             out.write(block)
 
-# Unpack a file and delete the original
 def unpack(ar, delete):
+    """ Unpack a file and delete the original """
     print "Unpacking %s" %ar
-    tarfile.open(ar).extractall()
+    if ar.endswith("tar"):
+        tarfile.open(ar).extractall()
+    elif ar.endswith("zip"):
+        zipfile.Zipfile(ar, "r").extractall()
+    else:
+        print "Could not recognize file format of %s. Aborting unpack." %ar
+        return # Skip the possible delete
     if delete: os.remove(ar)
 
 def install_postgres():
@@ -94,19 +101,25 @@ if __name__ == "__main__":
     if not ask("Are you sure you want to start? It may take many hours and 150+ GB of disk space. "):
         sys.exit(1)
     
+    # The theory here is to do the smallest tasks first.
+    if args.gradle:
+        # Less than 5 minutes
+        download(GRADLE_URL)
+        unpack(os.path.basename(GRADLE_URL), then_delete)
     if args.postgres:
+        # Maybe about 5 minutes
         pass
         #installPostgres
-    if args.database:
-        download(PGBACKUP_URL)
-        #restorePgbackup
-    if args.indices:
-        download(DATA_URL)
-        unpack(os.path.basename(DATA_URL), then_delete) # A stretch since URL's are not paths
     if args.indri:
+        # Maybe 15 minutes
         download(INDRI_URL)
         unpack(os.path.basename(INDRI_URL), then_delete)
         #installIndri
-    if args.gradle:
-        download(GRADLE_URL)
-        unpack(os.path.basename(GRADLE_URL), then_delete)
+    if args.database:
+        # Several hours
+        download(PGBACKUP_URL)
+        #restorePgbackup
+    if args.indices:
+        # Several more hours
+        download(DATA_URL)
+        unpack(os.path.basename(DATA_URL), then_delete) # A stretch since URL's are not paths
