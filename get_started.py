@@ -30,10 +30,10 @@ def download(url, name):
             out.write(block)
 
 # Unpack a file and delete the original
-def unpack(ar):
+def unpack(ar, delete):
     print "Unpacking %s" %ar
     tarfile.open(ar).extractall()
-    os.remove(ar)
+    if delete: os.remove(ar)
 
 def install_postgres():
     if platform.system() == "Linux":
@@ -51,11 +51,62 @@ def install_postgres():
     else:
         print "Can only install Postgres on Linux (yet)."
 
+def ask(prompt):
+    return raw_input(prompt + " | ")[0].lower() in ('y', 't')
+
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Setup the Watsonsim question answering system.")
+    parser.add_argument("--no-indices",
+        action="store_false",
+        dest='indices',
+        default=True,
+        help="Don't download indices (50-75GB).")
+    parser.add_argument("--no-indri",
+        action="store_false",
+        dest='indri',
+        default=True,
+        help="Don't compile and install Indri search engine.")
+    parser.add_argument("--no-database",
+        action="store_false",
+        dest='database',
+        default=True,
+        help="Don't download and unpack the central database dump.")
+    parser.add_argument("--no-postgres",
+        action="store_false",
+        dest='postgres',
+        default=True,
+        help="Don't install postgresql server (which would be from the repository).")
+    parser.add_argument("--no-gradle",
+        action="store_false",
+        dest='gradle',
+        default=True,
+        help="Don't download and install gradle.")
+    parser.add_argument("-d", "--delete-archives",
+        action='store_true", 
+        dest='delete-archives',
+        default=False,
+        help="Delete the downloaded archives and build directories when finished.")
+    args = parser.parse_args()
+    
     print "This script is not ready yet, refer to the homepage for installation instructions."
     sys.exit(1)
-    download(DATA_URL)
-    unpack(os.path.basename(DATA_URL)) # A stretch since URL's are not paths
-    download(INDRI_URL)
-    unpack(os.path.basename(INDRI_URL))
-    download(PGBACKUP_URL)
+    if not ask("Are you sure you want to start? It may take many hours and 150+ GB of disk space. "):
+        sys.exit(1)
+    
+    if args.postgres:
+        pass
+        #installPostgres
+    if args.database:
+        download(PGBACKUP_URL)
+        #restorePgbackup
+    if args.indices:
+        download(DATA_URL)
+        unpack(os.path.basename(DATA_URL), then_delete) # A stretch since URL's are not paths
+    if args.indri:
+        download(INDRI_URL)
+        unpack(os.path.basename(INDRI_URL), then_delete)
+        #installIndri
+    if args.gradle:
+        download(GRADLE_URL)
+        unpack(os.path.basename(GRADLE_URL), then_delete)
