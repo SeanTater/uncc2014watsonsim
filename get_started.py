@@ -18,18 +18,6 @@ import zipfile
 import urllib2
 import wget
 
-def download(url, name):
-    """ Download a file and give a little feedback on the screen at the same time. """
-    print "Downloading %s. 1 \".\" = 1 MB: " % url
-    # We know the URLs beforehand and this method works fine
-    base = url.split('/')[-1]
-    with open(base, 'wb') as out:
-        r = requests.get(url, stream=True)
-        # Even a megabyte at a time is a pretty busy screen from what I see.
-        for block in r.iter_content(1024 * 1024):
-            sys.stdout.write('.')
-            out.write(block)
-
 def unpack(ar, delete):
     """ Unpack a file and delete the original """
     print "Unpacking %s" %ar
@@ -104,7 +92,7 @@ if __name__ == "__main__":
     # The theory here is to do the smallest tasks first.
     if args.gradle:
         # Less than 5 minutes
-        download(GRADLE_URL)
+        wget.download(GRADLE_URL)
         unpack(os.path.basename(GRADLE_URL), then_delete)
     if args.postgres:
         # Maybe about 5 minutes
@@ -112,14 +100,14 @@ if __name__ == "__main__":
         #installPostgres
     if args.indri:
         # Maybe 15 minutes
-        download(INDRI_URL)
+        wget.download(INDRI_URL)
         unpack(os.path.basename(INDRI_URL), then_delete)
         #installIndri
     if args.database:
         # Several hours
-        download(PGBACKUP_URL)
+        wget.download(PGBACKUP_URL)
         #restorePgbackup
     if args.indices:
         # Several more hours
-        download(DATA_URL)
+        wget.download(DATA_URL)
         unpack(os.path.basename(DATA_URL), then_delete) # A stretch since URL's are not paths
