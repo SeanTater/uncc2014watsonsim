@@ -55,7 +55,7 @@ public class WekaTee extends Researcher {
 	/** File-writing serialized counterpart to question()
 	 * 
 	 * @param new_entries	The new arrays to dump
-	 * @param start_time	The timpstamp of the file to dump to
+	 * @param start_time	The timestamp of the file to dump to
 	 */
 	private static synchronized void dump(List<double[]> new_entries, Timestamp start_time) {
 		dataset.addAll(new_entries);

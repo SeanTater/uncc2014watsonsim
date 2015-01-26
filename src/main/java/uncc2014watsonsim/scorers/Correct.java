@@ -2,6 +2,7 @@ package uncc2014watsonsim.scorers;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.Score;
 
 public class Correct extends AnswerScorer {
 	@Override

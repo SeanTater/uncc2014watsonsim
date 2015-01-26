@@ -2,9 +2,11 @@ package uncc2014watsonsim;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import uncc2014watsonsim.scorers.Merge;
@@ -79,12 +81,14 @@ public class Score {
 	 * Get a "blank" vector (all defaults)
 	 */
 	public static double[] empty() {
-		double[] scores = new double[metas.size()];
-		int i = 0;
-		for (Meta m : metas.values()) {
-			scores[i++] = m.default_value;
+		synchronized (metas) {
+			double[] scores = new double[metas.size()];
+			int i = 0;
+			for (Meta m : metas.values()) {
+				scores[i++] = m.default_value;
+			}
+			return scores;
 		}
-		return scores;
 	}
 	
 	/**
@@ -111,6 +115,7 @@ public class Score {
 	 * @return
 	 */
 	public static double[] getEach(double[] incoming, List<String> names) {
+		incoming = update(incoming);
 		double[] outgoing = new double[names.size()];
 		for (int i=0; i<names.size(); i++)
 			outgoing[i] = get(incoming, names.get(i), -1);
@@ -154,16 +159,18 @@ public class Score {
 	 * @param default_value		What the value of the score should be if it is missing
 	 * @param merge_mode		How to merge two scores of the same name
 	 */
-	public synchronized static void register(String name,
+	public static void register(String name,
 			double default_value,
 			Merge merge_mode) {
-		if (!metas.containsKey(name)) {
-			metas.put(name,
-					new Meta(name, default_value, merge_mode));
-			// This is a new entry
-			// We have to make it an array because otherwise editing metas will
-			// cause all the versions to change
-			versions.add(metas.keySet().toArray(new String[versions.size()]));
+		synchronized (metas) {
+			if (!metas.containsKey(name)) {
+				metas.put(name,
+						new Meta(name, default_value, merge_mode));
+				// This is a new entry
+				// We have to make it an array because otherwise editing metas will
+				// cause all the versions to change
+				versions.add(metas.keySet().toArray(new String[versions.size()]));
+			}
 		}
 	}
 	
@@ -237,7 +244,7 @@ public class Score {
 	// Lucene and Indri decide how many passages to retrieve for a candidate answer using this
 	public static final int MAX_PASSAGE_COUNT = 50;
 	
-	private static final TreeMap<String, Meta> metas = new TreeMap<>();
+	private static final SortedMap<String, Meta> metas = Collections.synchronizedSortedMap(new TreeMap<String, Meta>());
 	
 	static {
 		// This means the length of the incoming double[] is the same as
