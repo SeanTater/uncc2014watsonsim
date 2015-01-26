@@ -10,13 +10,13 @@ INDRI_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/indri-5.8.ta
 ################################################################################
 import platform
 import requests
+from   setuptools import setup
 import shutil
-from subprocess import call, check_call
+from   subprocess import call, check_call
 import sys
 import tarfile
-import zipfile
 import urllib2
-import wget
+import zipfile
 
 def unpack(ar, delete):
     """ Unpack a file and delete the original """
@@ -30,7 +30,7 @@ def unpack(ar, delete):
         return # Skip the possible delete
     if delete: os.remove(ar)
 
-def install_postgres():
+def installPostgres():
     if platform.system() == "Linux":
         dist = platform.dist()[0]
         try:
@@ -49,8 +49,24 @@ def install_postgres():
 def ask(prompt):
     return raw_input(prompt + " | ")[0].lower() in ('y', 't')
 
+
+setup(
+    name="Watsonsim Question Answering System",
+    version="0.5",
+    author="Sean Gallagher",
+    author_email="stgallag@gmail.com",
+    url="http://github.com/SeanTater/uncc2014watsonsim",
+    setup_requires = [
+        'wget>=2.2',
+        'requests>=2.2.1'
+    ],
+    install_requires = [
+        'psycopg2>=2.4.5'
+    ]
+)
 if __name__ == "__main__":
     import argparse
+    import wget
     parser = argparse.ArgumentParser(description="Setup the Watsonsim question answering system.")
     parser.add_argument("--no-indices",
         action="store_false",
@@ -78,7 +94,7 @@ if __name__ == "__main__":
         default=True,
         help="Don't download and install gradle.")
     parser.add_argument("-d", "--delete-archives",
-        action='store_true", 
+        action='store_true', 
         dest='delete-archives',
         default=False,
         help="Delete the downloaded archives and build directories when finished.")
@@ -96,8 +112,7 @@ if __name__ == "__main__":
         unpack(os.path.basename(GRADLE_URL), then_delete)
     if args.postgres:
         # Maybe about 5 minutes
-        pass
-        #installPostgres
+        installPostgres()
     if args.indri:
         # Maybe 15 minutes
         wget.download(INDRI_URL)

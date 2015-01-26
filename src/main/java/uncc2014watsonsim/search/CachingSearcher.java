@@ -29,6 +29,7 @@ public class CachingSearcher extends Searcher {
 		cache.setLong(1, passage_id);
 		ResultSet sql = cache.executeQuery();
 		while (sql.next()) {
+			// Only the ENGINE_NAME* scores were saved, so no filtering needs to happen here
 			p.score(sql.getString("name"), sql.getDouble("value"));
 		}
 	}
@@ -38,9 +39,12 @@ public class CachingSearcher extends Searcher {
 				"insert into cache_scores(passage_id, name, value) values (?, ?, ?);");
 		cache.setLong(1, passage_id);
 		for (Entry<String, Double> score: Score.asMap(p.scores).entrySet()) {
-			cache.setString(2, score.getKey());		
-			cache.setDouble(3, score.getValue());
-			cache.addBatch();
+			// Only save scores that prefix this engine, to avoid breaking other scores
+			if (score.getKey().toLowerCase().startsWith(this.engine_name)) {
+				cache.setString(2, score.getKey());		
+				cache.setDouble(3, score.getValue());
+				cache.addBatch();
+			}
 		}
 		cache.executeBatch();
 	}
