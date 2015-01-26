@@ -4,6 +4,7 @@
 DATA_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot.tar.gz"
 PGBACKUP_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot.pgdump"
 GRADLE_URL = "https://services.gradle.org/distributions/gradle-2.2.1-bin.zip"
+INDRI_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/indri-5.8.tar.gz"
 ################################################################################
 # Needs requests, wget
 ################################################################################
@@ -54,5 +55,7 @@ if __name__ == "__main__":
     print "This script is not ready yet, refer to the homepage for installation instructions."
     sys.exit(1)
     download(DATA_URL)
-    unpack(DATA_TARGET)
+    unpack(os.path.basename(DATA_URL)) # A stretch since URL's are not paths
+    download(INDRI_URL)
+    unpack(os.path.basename(INDRI_URL))
     download(PGBACKUP_URL)
