@@ -1,5 +1,12 @@
 package uncc2014watsonsim;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.lang3.ObjectUtils;
+
 import uncc2014watsonsim.nlp.NLPUtils;
 import edu.stanford.nlp.trees.Tree;
 
@@ -7,23 +14,33 @@ import edu.stanford.nlp.trees.Tree;
  * Detect the LAT as the noun in closest proximity to a determiner.
  */
 public class DetectLAT {
-	
 	/**
 	 * Intermediate results from LAT detection
-	 *
 	 */
 	private static class LATStatus {
+		public final Tree dt, nn;	// Determiner, Noun
 		public LATStatus(Tree d, Tree n){
 			dt = d; nn = n;
 		}
-		public LATStatus(LATStatus a, LATStatus b) {
-			if (a.dt == null)	dt = b.dt;
-			else				dt = a.dt;
-			if (a.nn == null)	nn = b.nn;
-			else				nn = a.nn;
-		}
-		public final Tree dt;	// Determiner
-		public final Tree nn;	// Noun
+	}
+
+	// This is from worst to best! That way -1 is the worse-than-worst;
+	static final List<String> DT_RANK = Arrays.asList(new String[]{
+			"a", "the", "those", "that", "these", "this"
+	});
+	public static LATStatus merge(LATStatus a, LATStatus b) {
+		if (a.dt == null || a.nn == null)
+			// There are no pairs yet. Merge until you get one.
+			return new LATStatus(
+					ObjectUtils.firstNonNull(a.dt, b.dt),
+					ObjectUtils.firstNonNull(a.nn, b.nn));
+		else if (b.dt == null || b.nn == null)
+			// A is ready, b is broken. Drop b.
+			return a;
+		else
+			// Both are viable. Pick the best.
+			if (DT_RANK.indexOf(a) < DT_RANK.indexOf(b))	return b;
+			else											return a;
 	}
 	
 	private String treeAsString(Tree t) {
@@ -47,7 +64,7 @@ public class DetectLAT {
 		default:
 			LATStatus l = new LATStatus((Tree) null, null);
 			for (Tree kid : t.children())
-				l = new LATStatus(l, simpleFetchLAT(kid));
+				l = merge(l, simpleFetchLAT(kid));
 			return l;
 		}
 	}
