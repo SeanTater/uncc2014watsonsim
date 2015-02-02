@@ -1,13 +1,12 @@
 package uncc2014watsonsim;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import uncc2014watsonsim.nlp.NLPUtils;
+import static uncc2014watsonsim.nlp.NLPUtils.treeAsString;
+import static uncc2014watsonsim.nlp.NLPUtils.parseToTrees;
 import edu.stanford.nlp.trees.Tree;
 
 /**
@@ -39,18 +38,14 @@ public class DetectLAT {
 			return a;
 		else
 			// Both are viable. Pick the best.
-			if (DT_RANK.indexOf(a) < DT_RANK.indexOf(b))	return b;
-			else											return a;
+			return (latRank(a) < latRank(b)) ? b : a;
 	}
 	
-	private String treeAsString(Tree t) {
-		StringBuilder b = new StringBuilder("");
-		for (Tree l : t.getLeaves()) {
-			b.append(l.value());
-			b.append(' ');
-		}
-		b.deleteCharAt(b.length()-1);
-		return b.toString();
+	/**
+	 * Case insensitively rank the LAT's by a predefined order
+	 */
+	private static int latRank(LATStatus t) {
+		return DT_RANK.indexOf(treeAsString(t.dt).toLowerCase());
 	}
 	
 	/**
@@ -70,7 +65,7 @@ public class DetectLAT {
 	}
 	
 	public String simpleFetchLAT(String s) {
-		for (Tree t : NLPUtils.parseToTrees(s)) {
+		for (Tree t : parseToTrees(s)) {
 			LATStatus lat = simpleFetchLAT(t);
 			if (lat.nn != null) return treeAsString(lat.nn);
 		}
