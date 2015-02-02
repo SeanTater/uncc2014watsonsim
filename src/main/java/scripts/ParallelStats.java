@@ -64,7 +64,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT 100 OFFSET %d", offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("svm-score-v4", sql, run_start).run();
+			new StatsGenerator("svm-score-v5", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "

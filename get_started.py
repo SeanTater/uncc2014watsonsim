@@ -49,7 +49,7 @@ class Download(object):
     def ask(prompt):
         return raw_input(prompt + " | ")[0].lower() in ('y', 't')
 
-    def run()
+    def run():
         import argparse
         import wget
         parser = argparse.ArgumentParser(description="Setup the Watsonsim question answering system.")
@@ -127,4 +127,3 @@ setup(
     ],
     cmdclass={"download": Download}
 )
-if __name__ == "__main__":
