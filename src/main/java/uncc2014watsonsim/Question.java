@@ -2,9 +2,13 @@ package uncc2014watsonsim;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.uima.jcas.JCas;
 
+import edu.stanford.nlp.trees.Tree;
+import uncc2014watsonsim.nlp.LAT;
+import uncc2014watsonsim.nlp.NLPUtils;
 import uncc2014watsonsim.qAnalysis.AnnotationController;
 
 
@@ -15,6 +19,8 @@ public class Question extends ArrayList<Answer> {
 	public Answer answer;
     private String category = "unknown";
     private QType type;
+    public final String simple_lat;
+    public final List<Tree> parsed;
     //private AnnotationController ac = new AnnotationController();
     
     /**
@@ -24,7 +30,9 @@ public class Question extends ArrayList<Answer> {
         this.raw_text = text;
         this.text = StringUtils.filterRelevant(text);
         this.type = QClassDetection.detectType(this);
-       // if (type == QType.FITB) {
+        parsed = NLPUtils.parseToTrees(raw_text);
+        simple_lat = LAT.detect(parsed.get(0));
+        // if (type == QType.FITB) {
         //All questions can run through UIMA Annotation Pipeline
         //ac.createAnnotations(this);    	
         //}

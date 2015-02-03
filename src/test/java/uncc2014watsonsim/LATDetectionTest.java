@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import uncc2014watsonsim.nlp.LAT;
 import edu.stanford.nlp.util.Pair;
 
 public class LATDetectionTest {
@@ -25,10 +26,9 @@ public class LATDetectionTest {
 				new Pair("play", "Alabama's official outdoor drama is this play, enacted in the summer at Helen Keller's birthplace."),
 				new Pair("group", "This singing group is featured on a video subtitled \"One Hour Of Girl Power!\"."),
 		};
-		DetectLAT dlat = new DetectLAT();
 		for (Pair<String, String> pair : cases)
 			assertEquals(pair.first, 
-					dlat.simpleFetchLAT(pair.second)
+					LAT.detect(pair.second)
 					);
 	}
 

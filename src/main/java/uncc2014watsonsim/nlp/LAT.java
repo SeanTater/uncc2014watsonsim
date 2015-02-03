@@ -1,4 +1,4 @@
-package uncc2014watsonsim;
+package uncc2014watsonsim.nlp;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import edu.stanford.nlp.trees.Tree;
 /**
  * Detect the LAT as the noun in closest proximity to a determiner.
  */
-public class DetectLAT {
+public class LAT {
 	/**
 	 * Intermediate results from LAT detection
 	 */
@@ -37,7 +37,7 @@ public class DetectLAT {
 	 * 2) Favor specific determiners in a specific order
 	 * @return a new immutable partial LAT analysis  
 	 */
-	public static LATStatus merge(LATStatus a, LATStatus b) {
+	private static LATStatus merge(LATStatus a, LATStatus b) {
 		if (a.ok() && b.ok()) 	return (latRank(a) < latRank(b)) ? b : a;
 		else if (a.ok())		return a;
 		else if (b.ok()) 		return b; 			
@@ -59,7 +59,7 @@ public class DetectLAT {
 	/**
 	 * A very simple LAT detector. It wants the lowest subtree with both a determiner and a noun
 	 */
-	private LATStatus fetchLAT(Tree t) {
+	private static LATStatus fetchLAT(Tree t) {
 		switch (t.value()) {
 		case "DT": return new LATStatus(t, null);
 		case "NN":
@@ -75,7 +75,21 @@ public class DetectLAT {
 		}
 	}
 	
-	public String simpleFetchLAT(String s) {
+	/**
+	 * Detect the LAT using a simple rule-based approach
+	 * @return The most general single-word noun LAT
+	 */
+	public static String detect(Tree t) {
+		LATStatus lat = fetchLAT(t);
+		return lat.ok() ? treeAsString(lat.nn) : "";
+	}
+	
+	/**
+	 * Detect the LAT using a simple rule-based approach
+	 * This is a thin wrapper for use as a string
+	 * @return The most general single-word noun LAT
+	 */
+	public static String detect(String s) {
 		for (Tree t : parseToTrees(s)) {
 			LATStatus lat = fetchLAT(t);
 			if (lat.ok()) return treeAsString(lat.nn);
