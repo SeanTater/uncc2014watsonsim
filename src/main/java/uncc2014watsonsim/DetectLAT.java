@@ -1,6 +1,7 @@
 package uncc2014watsonsim;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -21,24 +22,31 @@ public class DetectLAT {
 		public LATStatus(Tree d, Tree n){
 			dt = d; nn = n;
 		}
+		public boolean ok() {
+			return dt != null && nn != null;
+		}
 	}
 
 	// This is from worst to best! That way -1 is the worse-than-worst;
 	static final List<String> DT_RANK = Arrays.asList(new String[]{
 			"a", "the", "those", "that", "these", "this"
 	});
+	/**
+	 * Merge two partial LAT analyses.
+	 * 1) Favor complete analyses over fragments
+	 * 2) Favor specific determiners in a specific order
+	 * @return a new immutable partial LAT analysis  
+	 */
 	public static LATStatus merge(LATStatus a, LATStatus b) {
-		if (a.dt == null || a.nn == null)
-			// There are no pairs yet. Merge until you get one.
+		if (a.ok() && b.ok()) 	return (latRank(a) < latRank(b)) ? b : a;
+		else if (a.ok())		return a;
+		else if (b.ok()) 		return b; 			
+		else {
+			// Neither are viable. Merge them.
 			return new LATStatus(
 					ObjectUtils.firstNonNull(a.dt, b.dt),
 					ObjectUtils.firstNonNull(a.nn, b.nn));
-		else if (b.dt == null || b.nn == null)
-			// A is ready, b is broken. Drop b.
-			return a;
-		else
-			// Both are viable. Pick the best.
-			return (latRank(a) < latRank(b)) ? b : a;
+		}
 	}
 	
 	/**
@@ -50,24 +58,27 @@ public class DetectLAT {
 	
 	/**
 	 * A very simple LAT detector. It wants the lowest subtree with both a determiner and a noun
-	 * @param t
 	 */
-	public LATStatus simpleFetchLAT(Tree t) {
+	private LATStatus fetchLAT(Tree t) {
 		switch (t.value()) {
 		case "DT": return new LATStatus(t, null);
-		case "NN": return new LATStatus(null, t);
+		case "NN":
+		case "NNS": return new LATStatus(null, t);
 		default:
 			LATStatus l = new LATStatus((Tree) null, null);
-			for (Tree kid : t.children())
-				l = merge(l, simpleFetchLAT(kid));
+			// The last noun tends to be the most general
+			List<Tree> kids = t.getChildrenAsList();
+			Collections.reverse(kids);
+			for (Tree kid : kids)
+				l = merge(l, fetchLAT(kid));
 			return l;
 		}
 	}
 	
 	public String simpleFetchLAT(String s) {
 		for (Tree t : parseToTrees(s)) {
-			LATStatus lat = simpleFetchLAT(t);
-			if (lat.nn != null) return treeAsString(lat.nn);
+			LATStatus lat = fetchLAT(t);
+			if (lat.ok()) return treeAsString(lat.nn);
 		}
 		return "";
 	}
