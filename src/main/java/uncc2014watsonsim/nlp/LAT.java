@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import static uncc2014watsonsim.nlp.NLPUtils.treeAsString;
-import static uncc2014watsonsim.nlp.NLPUtils.parseToTrees;
+import static uncc2014watsonsim.nlp.Trees.concat;
+import static uncc2014watsonsim.nlp.Trees.parse;
 import edu.stanford.nlp.trees.Tree;
 
 /**
@@ -17,9 +17,9 @@ public class LAT {
 	/**
 	 * Intermediate results from LAT detection
 	 */
-	private static class LATStatus {
+	private static class Analysis {
 		public final Tree dt, nn;	// Determiner, Noun
-		public LATStatus(Tree d, Tree n){
+		public Analysis(Tree d, Tree n){
 			dt = d; nn = n;
 		}
 		public boolean ok() {
@@ -37,13 +37,13 @@ public class LAT {
 	 * 2) Favor specific determiners in a specific order
 	 * @return a new immutable partial LAT analysis  
 	 */
-	private static LATStatus merge(LATStatus a, LATStatus b) {
+	private static Analysis merge(Analysis a, Analysis b) {
 		if (a.ok() && b.ok()) 	return (latRank(a) < latRank(b)) ? b : a;
 		else if (a.ok())		return a;
 		else if (b.ok()) 		return b; 			
 		else {
 			// Neither are viable. Merge them.
-			return new LATStatus(
+			return new Analysis(
 					ObjectUtils.firstNonNull(a.dt, b.dt),
 					ObjectUtils.firstNonNull(a.nn, b.nn));
 		}
@@ -52,25 +52,25 @@ public class LAT {
 	/**
 	 * Case insensitively rank the LAT's by a predefined order
 	 */
-	private static int latRank(LATStatus t) {
-		return DT_RANK.indexOf(treeAsString(t.dt).toLowerCase());
+	private static int latRank(Analysis t) {
+		return DT_RANK.indexOf(concat(t.dt).toLowerCase());
 	}
 	
 	/**
 	 * A very simple LAT detector. It wants the lowest subtree with both a determiner and a noun
 	 */
-	private static LATStatus fetchLAT(Tree t) {
+	private static Analysis detectPart(Tree t) {
 		switch (t.value()) {
-		case "DT": return new LATStatus(t, null);
+		case "DT": return new Analysis(t, null);
 		case "NN":
-		case "NNS": return new LATStatus(null, t);
+		case "NNS": return new Analysis(null, t);
 		default:
-			LATStatus l = new LATStatus((Tree) null, null);
+			Analysis l = new Analysis((Tree) null, null);
 			// The last noun tends to be the most general
 			List<Tree> kids = t.getChildrenAsList();
 			Collections.reverse(kids);
 			for (Tree kid : kids)
-				l = merge(l, fetchLAT(kid));
+				l = merge(l, detectPart(kid));
 			return l;
 		}
 	}
@@ -80,8 +80,8 @@ public class LAT {
 	 * @return The most general single-word noun LAT
 	 */
 	public static String detect(Tree t) {
-		LATStatus lat = fetchLAT(t);
-		return lat.ok() ? treeAsString(lat.nn) : "";
+		Analysis lat = detectPart(t);
+		return lat.ok() ? concat(lat.nn) : "";
 	}
 	
 	/**
@@ -90,9 +90,9 @@ public class LAT {
 	 * @return The most general single-word noun LAT
 	 */
 	public static String detect(String s) {
-		for (Tree t : parseToTrees(s)) {
-			LATStatus lat = fetchLAT(t);
-			if (lat.ok()) return treeAsString(lat.nn);
+		for (Tree t : parse(s)) {
+			Analysis lat = detectPart(t);
+			if (lat.ok()) return concat(lat.nn);
 		}
 		return "";
 	}
