@@ -90,6 +90,7 @@ public class LAT {
 	 * @return The most general single-word noun LAT
 	 */
 	public static String detect(String s) {
+		System.out.println(parse(s));
 		for (Tree t : parse(s)) {
 			Analysis lat = detectPart(t);
 			if (lat.ok()) return concat(lat.nn);

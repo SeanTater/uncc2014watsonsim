@@ -2,7 +2,8 @@
 
 @attribute BING_ANSWER_PRESENT numeric
 @attribute BING_ANSWER_RANK numeric
-@attribute CORRECT {0,1}
+@attribute CORRECT numeric
+@attribute COUNT numeric
 @attribute DIST_SEM_COS_QASCORE numeric
 @attribute INDRI_ANSWER_PRESENT numeric
 @attribute INDRI_ANSWER_RANK numeric

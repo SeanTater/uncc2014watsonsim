@@ -136,16 +136,19 @@ public class Score {
 		left = update(left);
 		right = update(right);
 		double[] center = new double[left.length];
+		double left_count = get(left, "COUNT", 1),
+		       right_count = get(right, "COUNT", 1);
 		int i = 0;
 		for ( Meta m : metas.values() ) {
-			if (m.merge_type == Merge.Mean) {
-				center[i] = left[i] + right[i] / 2;
-			} else if (m.merge_type == Merge.Or) {
-				center[i] = left[i] + right[i] > 0 ? 1.0 : 0.0;
-			} else if (m.merge_type == Merge.Min) {
-				center[i] = Math.min(left[i], right[i]);
-			} else if (m.merge_type == Merge.Max) {
-				center[i] = Math.max(left[i], right[i]);
+			switch (m.merge_type) {
+			case Mean:
+				center[i] = (left_count * left[i] + right_count * right[i]);
+				center[i] /= left_count + right_count;
+				break;
+			case Or: center[i] = left[i] + right[i] > 0 ? 1.0 : 0.0; break;
+			case Min: center[i] = Math.min(left[i], right[i]); break;
+			case Max: center[i] = Math.max(left[i], right[i]); break;
+			case Sum: center[i] = left[i] + right[i]; break; 
 			}
 			i++;
 		}
@@ -250,5 +253,6 @@ public class Score {
 		// This means the length of the incoming double[] is the same as
 		// the index into versions[]. 
 		versions.add(new String[0]);
+		register("COUNT", 1, Merge.Sum);
 	}
 }

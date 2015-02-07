@@ -37,8 +37,9 @@ public class ParallelStats {
     	// Oversubscribing makes scheduling the CPU-scheduler's problem
         ExecutorService pool = Executors.newFixedThreadPool(50);
         long run_start = System.currentTimeMillis();
-    	for (int i=1000; i < 6000; i += 100) {
-    		pool.execute(new SingleTrainingResult(i, run_start));
+        int groupsize = 5000 / 50;
+    	for (int i=1000; i < 6000; i += groupsize) {
+    		pool.execute(new SingleTrainingResult(i, run_start, groupsize));
     	}
         pool.shutdown();
         
@@ -54,17 +55,19 @@ public class ParallelStats {
 class SingleTrainingResult extends Thread {
 	private final int offset;
 	private final long run_start;
+	private final int groupsize;
 	
-	public SingleTrainingResult(int offset, long run_start) {
+	public SingleTrainingResult(int offset, long run_start, int groupsize) {
 		this.offset = offset;
 		this.run_start = run_start;
+		this.groupsize = groupsize;
 	}
 	
 	public void run() {
-		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT 100 OFFSET %d", offset);
+		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("mlp-score-v1", sql, run_start).run();
+			new StatsGenerator("training", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail("Database missing, invalid, or out of date. Check that you "
@@ -104,17 +107,17 @@ class SingleTrainingResult extends Thread {
  * @author Sean Gallagher
  */
 class StatsGenerator {
-	String dataset;
-	private DBQuestionSource questionsource;
-	// correct[n] =def= number of correct answers at rank n 
-	int[] correct = new int[100];
-	int available = 0;
-	double total_inverse_rank = 0;
-	int total_answers = 0;
+	private final String dataset;
+	private final DBQuestionSource questionsource;
+	// correct[n] is the number of correct answers at rank n 
+	private final int[] correct = new int[100];
+	private int available = 0;
+	private double total_inverse_rank = 0;
+	private int total_answers = 0;
 	
-	double runtime;
-	int[] conf_correct = new int[100];
-	int[] conf_hist = new int[100];
+	private double runtime;
+	private final int[] conf_correct = new int[100];
+	private final int[] conf_hist = new int[100];
 	private long run_start;
 	
 	/**
@@ -214,7 +217,7 @@ class StatsGenerator {
 	
 	/** Run statistics, then upload to the server */
 	public void run() {
-		long start_time = System.nanoTime();
+		final long start_time = System.nanoTime();
 
 		
 		System.out.println("Asking Questions");
