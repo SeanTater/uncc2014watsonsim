@@ -25,6 +25,10 @@ public class TypeDetectionTest {
 			types = TagLAT.types("New York");
 		} catch (RuntimeException e) {
 			// If this goes wrong, it probably just means we are disconnected
+			System.err.println("Failed to connect to SPARQL endpoint for answer "
+					+ "type detection. Perhaps you are disconnected?");
+			System.err.println(e.getMessage());
+			System.err.println(e.getStackTrace());
 			return;
 		}
 		assertTrue(types.contains("city"));
