@@ -39,6 +39,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return mQuestion.trim();
 	}
 	
+	/** Remove all characters except alphanumerics and space */
+	public static String sanitize(String input) {
+		return input.replaceAll("[^A-Za-z0-9 ]", " ");
+	}
+	
 	/** splits the given string into tokens */
 	public static List<String> tokenize(String text) {
 		List<String> tokens = new ArrayList<>();
@@ -69,7 +74,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	
 	
     /** Returns true if every non-stopword from candidate is found in reference */
-    public static boolean match_subset(String candidate, String reference){
+    public static boolean matchSubset(String candidate, String reference){
             // Match these two sets in linear (or linearithmic) time
             HashSet<String> reference_terms = new HashSet<String>();
             reference_terms.addAll(StringUtils.tokenize(candidate));

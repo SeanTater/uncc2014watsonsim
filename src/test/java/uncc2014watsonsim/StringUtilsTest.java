@@ -8,11 +8,11 @@ public class StringUtilsTest {
 
 	@Test
 	public void test_match_subset() {
-		assertTrue(StringUtils.match_subset("cat toy", "cat toy"));
+		assertTrue(StringUtils.matchSubset("cat toy", "cat toy"));
 		
-		assertTrue(StringUtils.match_subset("thundering applause", "resounding, thundering applause"));
+		assertTrue(StringUtils.matchSubset("thundering applause", "resounding, thundering applause"));
 		
-		assertTrue(StringUtils.match_subset("What is for dinner, mother?", "What, is mother for dinner?"));
+		assertTrue(StringUtils.matchSubset("What is for dinner, mother?", "What, is mother for dinner?"));
 	}
 	
 	@Test

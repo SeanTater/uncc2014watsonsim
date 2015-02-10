@@ -9,7 +9,7 @@ public class Translation {
 
 	// Indri querying is excellent; just trimming out garbage to prevent parse errors is pretty good.
     public static String getIndriQuery(String question) {
-        return question.replaceAll("[^A-Za-z0-9 ]", " ");
+        return StringUtils.sanitize(question);
     }
 
     public static String getLuceneQuery(String question) {
