@@ -127,8 +127,8 @@ public class DefaultPipeline {
 		};
 		early_researchers = new Researcher[]{
 			new MediaWikiTrimmer(), // Before passage retrieval
-			new HyphenTrimmer(),
 			new RedirectSynonyms(),
+			new HyphenTrimmer(),
 			new Merger(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(config),
@@ -149,7 +149,7 @@ public class DefaultPipeline {
 			new PassageCount(),
 			new PassageQuestionLengthRatio(),
 			new PercentFilteredWordsInCommon(),
-			new QuestionInPassageScorer(),
+			new AnswerInQuestionScorer(),
 			//new ScorerIrene(), // TODO: Introduce something new
 			new NGram(),
 			//new LATTypeMatchScorer(),
@@ -157,7 +157,6 @@ public class DefaultPipeline {
 			//new RandomIndexingCosineSimilarity(),
 			new DistSemCosQAScore(),
 			//new DistSemCosQPScore(),
-			//new ScorerAda(),      // TODO: Introduce something new
 			//new WShalabyScorer(), // TODO: Introduce something new
 			//new SentenceSimilarity(),
 			//new CoreNLPSentenceSimilarity(),

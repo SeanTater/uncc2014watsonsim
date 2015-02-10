@@ -46,7 +46,7 @@ public abstract class Searcher {
      * This is also how many passages the scorers should expect.
      */
 
-    public final static int MAX_RESULTS = 20;
+    public final static int MAX_RESULTS = 10;
     
     
     /** Fill in the missing titles and full texts from Answers using sources.db

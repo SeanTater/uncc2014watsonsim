@@ -81,6 +81,10 @@ dependencies {
     compile "com.google.guava:guava:17.0"
 
     compile "junit:junit:4.12"
+    // Jena for SPARQL connections
+    compile "org.apache.jena:apache-jena-libs:2.12.1"
+    // Jens is missing the xml-libs dependency
+    compile "xml-apis:xml-apis:1.4.01"
 }
 
 run {

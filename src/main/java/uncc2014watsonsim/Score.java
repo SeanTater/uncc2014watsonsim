@@ -142,7 +142,7 @@ public class Score {
 		for ( Meta m : metas.values() ) {
 			switch (m.merge_type) {
 			case Mean:
-				center[i] = (left_count * left[i] + right_count * right[i]);
+				center[i] = left_count * left[i] + right_count * right[i];
 				center[i] /= left_count + right_count;
 				break;
 			case Or: center[i] = left[i] + right[i] > 0 ? 1.0 : 0.0; break;

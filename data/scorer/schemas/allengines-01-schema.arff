@@ -1,8 +1,9 @@
 @relation 'Watsonsim captured question stream'
 
+@attribute ANSWER_IN_QUESTION_SCORER numeric
 @attribute BING_ANSWER_PRESENT numeric
 @attribute BING_ANSWER_RANK numeric
-@attribute CORRECT numeric
+@attribute CORRECT {0,1}
 @attribute COUNT numeric
 @attribute DIST_SEM_COS_QASCORE numeric
 @attribute INDRI_ANSWER_PRESENT numeric
@@ -31,10 +32,6 @@
 @attribute PERCENT_FILTERED_WORDS_IN_COMMON_MEAN numeric
 @attribute PERCENT_FILTERED_WORDS_IN_COMMON_MEDIAN numeric
 @attribute PERCENT_FILTERED_WORDS_IN_COMMON_MIN numeric
-@attribute QUESTION_IN_PASSAGE_SCORER_MAX numeric
-@attribute QUESTION_IN_PASSAGE_SCORER_MEAN numeric
-@attribute QUESTION_IN_PASSAGE_SCORER_MEDIAN numeric
-@attribute QUESTION_IN_PASSAGE_SCORER_MIN numeric
 @attribute SKIP_BIGRAM_MAX numeric
 @attribute SKIP_BIGRAM_MEAN numeric
 @attribute SKIP_BIGRAM_MEDIAN numeric
