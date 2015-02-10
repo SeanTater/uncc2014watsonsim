@@ -5,6 +5,7 @@ DATA_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot
 PGBACKUP_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot.pgdump"
 GRADLE_URL = "https://services.gradle.org/distributions/gradle-2.2.1-bin.zip"
 INDRI_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/indri-5.8.tar.gz"
+SRPARSER_URL = "http://nlp.stanford.edu/software/stanford-srparser-2014-08-28-models.jar"
 ################################################################################
 # Needs requests, wget
 ################################################################################
@@ -68,6 +69,11 @@ class Download(object):
             dest='database',
             default=True,
             help="Don't download and unpack the central database dump.")
+        parser.add_argument("--no-srparser",
+            action="store_false",
+            dest='srparser',
+            default=True,
+            help="Don't download the NLP Shift Recuce Parser Models.")
         parser.add_argument("--no-postgres",
             action="store_false",
             dest='postgres',
@@ -95,6 +101,9 @@ class Download(object):
             # Less than 5 minutes
             wget.download(GRADLE_URL)
             unpack(os.path.basename(GRADLE_URL), then_delete)
+        if args.srparser:
+            # Less than 5 minutes probably
+            wget.download(SRPARSER_URL)
         if args.postgres:
             # Maybe about 5 minutes
             installPostgres()
