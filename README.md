@@ -1,14 +1,11 @@
 uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watsonsim.png?branch=master)](https://travis-ci.org/SeanTater/uncc2014watsonsim)
 ======
-
 Deep Question Answering System
 
-## [Updates and Progress on Development](http://watsonsim.blogspot.com)
-
-## Setup
+## [Regular Updates on Development](http://watsonsim.blogspot.com)
 Keep in mind that the program may change faster than its documentation. If you are experiencing problems, [contact a developer](mailto:stgallag@gmail.com).
 
-### Overview
+## Overview
 - For the program
   - [git](http://git-scm.com/downloads) clone https://github.com/SeanTater/uncc2014watsonsim.git
   - Java 8, either:
