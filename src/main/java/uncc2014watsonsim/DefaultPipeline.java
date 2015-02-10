@@ -21,6 +21,7 @@ import org.postgresql.jdbc2.TimestampUtils;
 import uncc2014watsonsim.researchers.*;
 import uncc2014watsonsim.scorers.*;
 import uncc2014watsonsim.search.*;
+import static uncc2014watsonsim.StringUtils.getOrDie;
 
 /** The standard Question Analysis pipeline.
  * 
@@ -134,6 +135,7 @@ public class DefaultPipeline {
 			new PassageRetrieval(config),
 			new MediaWikiTrimmer(), // Rerun after passage retrieval
 			new PersonRecognition(),
+			new TagLAT(getOrDie(config, "sparql_url")),
 		};
 		scorers = new Scorer[]{
 			//new LuceneRank(),
