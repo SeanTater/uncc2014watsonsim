@@ -1,6 +1,5 @@
-uncc2014watsonsim [![Build Status](https://travis-ci.org/SeanTater/uncc2014watsonsim.png?branch=master)](https://travis-ci.org/SeanTater/uncc2014watsonsim)
+Watsonsim Question Answering System [![Build Status](https://travis-ci.org/SeanTater/uncc2014watsonsim.png?branch=master)](https://travis-ci.org/SeanTater/uncc2014watsonsim)
 ======
-Deep Question Answering System
 
 ## [Regular Updates on Development](http://watsonsim.blogspot.com)
 Keep in mind that the program may change faster than its documentation. If you are experiencing problems, [contact a developer](mailto:stgallag@gmail.com).
