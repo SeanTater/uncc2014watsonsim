@@ -17,19 +17,8 @@ import uncc2014watsonsim.StringUtils;
 
 public class TestAnagrams  {
 	
-	public class Candidate {
-		public final String text;
-		public final boolean in_quotes;
-		public Candidate(String text, boolean in_quotes) {
-			this.text = text;
-			this.in_quotes = in_quotes;
-		}
-	}
-	
 	public static void main(String args[]) throws IOException
 	{
-	ArrayList<String> wordList = new ArrayList<>();
-	ArrayList<String> sortedList = new ArrayList<>();
 	Map<String,String> mp = new HashMap<>();
 	BufferedReader br = new BufferedReader(new FileReader(new File("wordlist.txt")));
 	String line;
@@ -42,19 +31,13 @@ public class TestAnagrams  {
 		
 		char[] charArray=line.toLowerCase().toCharArray();
 		Arrays.sort(charArray);
-		//System.out.println(String.valueOf(charArray));
 		mp.put(line,String.valueOf(charArray));	
 	}
 	System.out.println("Enter the Jeopardy Anagram Question:");
     BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
     String question = br2.readLine();
-    String command;
-    command = StringUtils.filterRelevant(question);
-    
-    
     String command1="";
-    if (question.contains(":")||question.contains("\""))
-	{
+    
     	Pattern pattern = Pattern.compile("\"([A-z ]+)\"|: ([A-z ]+)");
     	 Matcher matcher = pattern.matcher(question);
     	
@@ -64,25 +47,15 @@ public class TestAnagrams  {
     		 System.out.println(command1);
     		
     	 }
-    	/*command1 = question.replace(" ","");
-    	command1 = command1.replace(",","");
-    	String line1 = null;
-    	if(question.contains(":"))
-         line1 = command1.substring(command1.indexOf(":")+1);
-    	else if(question.contains("\""))
-    	 line1 = command1.substring(command1.indexOf("\"")+1,command1.lastIndexOf("\""));
-    	command1 = line1;*/
     	search_key(command1,mp);
-	}
-  
-    //for every 
+    	// for generic case
     	String[] s = question.split(" ");
     	if(s.length<2)
     	{
+    		// this words for questions like "Nuke Air" -> Ukariane no need to split 
     		question  = question.replace(" ","");
     		search_key(question,mp);
     	}
-    	
     	else
     	{
     	for(String s1:s)
