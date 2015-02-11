@@ -1,8 +1,6 @@
 package uncc2014watsonsim;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Passage {
 	// Which engine found this passage?

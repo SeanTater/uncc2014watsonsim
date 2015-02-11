@@ -127,15 +127,13 @@ public class DefaultPipeline {
 			new CachingSearcher(new BingSearcher(config), "bing")
 		};
 		early_researchers = new Researcher[]{
-			new MediaWikiTrimmer(), // Before passage retrieval
 			new RedirectSynonyms(),
 			new HyphenTrimmer(),
 			new Merger(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(config),
-			new MediaWikiTrimmer(), // Rerun after passage retrieval
 			new PersonRecognition(),
-			new TagLAT(getOrDie(config, "sparql_url")),
+			//new TagLAT(getOrDie(config, "sparql_url")),
 		};
 		scorers = new Scorer[]{
 			//new LuceneRank(),
@@ -152,15 +150,13 @@ public class DefaultPipeline {
 			new PassageQuestionLengthRatio(),
 			new PercentFilteredWordsInCommon(),
 			new AnswerInQuestionScorer(),
-			//new ScorerIrene(), // TODO: Introduce something new
 			new NGram(),
 			//new LATTypeMatchScorer(),
-			new LATCheck(),
+			//new LATCheck(),
 			new WPPageViews(),
 			//new RandomIndexingCosineSimilarity(),
 			new DistSemCosQAScore(),
 			//new DistSemCosQPScore(),
-			//new WShalabyScorer(), // TODO: Introduce something new
 			//new SentenceSimilarity(),
 			//new CoreNLPSentenceSimilarity(),
 		};
