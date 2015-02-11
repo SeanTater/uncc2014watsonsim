@@ -93,8 +93,6 @@ public class TagLAT extends Researcher {
 		 * not. WordNet can help with this.
 		 * 
 		 */
-		System.out.println(target_name);
-
 		List<String> types = new ArrayList<>();
 		try {
 			ResultSet rs = qe.execSelect();

@@ -1,5 +1,6 @@
 package uncc2014watsonsim;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -59,6 +60,7 @@ public class Database {
 		}
 		return ps;
 	}
+	
 
 	/**
 	 * This is a convenience method for getting the first item after executing
@@ -76,4 +78,15 @@ public class Database {
 		return rs;
 	}
 
+	/**
+	 * A simple delegate for creating Postgres arrays
+	 */
+	public Array createArrayOf(String typeName, Object[] elements) {
+		try {
+			return conn.createArrayOf(typeName, elements);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Can't create an SQL array from \"" + elements + "\"");
+		}
+	}
 }

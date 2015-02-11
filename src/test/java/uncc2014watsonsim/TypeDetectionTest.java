@@ -20,9 +20,15 @@ public class TypeDetectionTest {
 	 * the DBPedia database setup.
 	 */
 	public void test() {
+		testHasAll("New York", new String[]{"city", "municipality", "place"});
+		testHasAll("tab", new String[]{"beverage", "food"});
+	}
+
+
+	public void testHasAll(String source, String[] targets) {
 		List<String> types = new ArrayList<>();
 		try {
-			types = new TagLAT("http://cci-text-01.local:8890/sparql/").types("New York");
+			types = new TagLAT("http://cci-text-01.local:8890/sparql/").types(source);
 		} catch (RuntimeException e) {
 			// If this goes wrong, it probably just means we are disconnected
 			System.err.println("Failed to connect to SPARQL endpoint for answer "
@@ -31,9 +37,9 @@ public class TypeDetectionTest {
 			System.err.println(e.getStackTrace());
 			return;
 		}
-		assertTrue(types.contains("city"));
-		assertTrue(types.contains("municipality"));
-		assertTrue(types.contains("place"));
+		
+		for (String target : targets)
+			assertTrue(types.contains(target));
 	}
 
 }

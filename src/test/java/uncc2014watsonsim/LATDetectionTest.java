@@ -25,6 +25,7 @@ public class LATDetectionTest {
 				new Pair("fruit", "The name of this small Oriental citrus fruit is from the Chinese for \"golden orange\"."),
 				new Pair("play", "Alabama's official outdoor drama is this play, enacted in the summer at Helen Keller's birthplace."),
 				new Pair("group", "This singing group is featured on a video subtitled \"One Hour Of Girl Power!\"."),
+				new Pair("sheep", "A wee female sheep can grow up to be a great big one")
 		};
 		for (Pair<String, String> pair : cases)
 			assertEquals(pair.first, 
