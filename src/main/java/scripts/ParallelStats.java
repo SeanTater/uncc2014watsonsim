@@ -37,8 +37,8 @@ public class ParallelStats {
     	// Oversubscribing makes scheduling the CPU-scheduler's problem
         ExecutorService pool = Executors.newFixedThreadPool(50);
         long run_start = System.currentTimeMillis();
-        int groupsize = 5000/50;
-    	for (int i=1000; i < 6000; i += groupsize) {
+        int groupsize = 1000/50;
+    	for (int i=0; i < 1000; i += groupsize) {
     		pool.execute(new SingleTrainingResult(i, run_start, groupsize));
     	}
         pool.shutdown();
@@ -67,7 +67,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("reduced-results", sql, run_start).run();
+			new StatsGenerator("training", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.toString());

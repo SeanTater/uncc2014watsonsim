@@ -155,6 +155,7 @@ public class DefaultPipeline {
 			//new ScorerIrene(), // TODO: Introduce something new
 			new NGram(),
 			//new LATTypeMatchScorer(),
+			new LATCheck(),
 			new WPPageViews(),
 			//new RandomIndexingCosineSimilarity(),
 			new DistSemCosQAScore(),

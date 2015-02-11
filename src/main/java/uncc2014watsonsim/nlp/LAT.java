@@ -93,7 +93,7 @@ public class LAT {
 		System.out.println(parse(s));
 		for (Tree t : parse(s)) {
 			Analysis lat = detectPart(t);
-			if (lat.ok()) return concat(lat.nn);
+			if (lat.ok()) return concat(lat.nn).toLowerCase();
 		}
 		return "";
 	}

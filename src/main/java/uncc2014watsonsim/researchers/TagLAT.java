@@ -1,6 +1,7 @@
 package uncc2014watsonsim.researchers;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
@@ -13,6 +14,7 @@ import static uncc2014watsonsim.StringUtils.sanitize;
 
 public class TagLAT extends Researcher {
 	private final String sparql_url;
+	private final Random gen = new Random();
 	public TagLAT(String sparql_url) {
 		this.sparql_url = sparql_url;
 	}
@@ -25,12 +27,16 @@ public class TagLAT extends Researcher {
 		a.lexical_types = types(a.candidate_text);
 	}
 	
+	public List<String> types(String candidate_text) {
+		return types(candidate_text, 0);
+	}
+	
 	/**
 	 * Find the possible lexical types of a name.
 	 * tag("New York") for example might be:
 	 *  {"populated place", "place", "municipality"}..
 	 */
-	public List<String> types(String candidate_text) {
+	public List<String> types(String candidate_text, int retries) {
 		String target_name = sanitize(candidate_text);
 		
 		// Sadly, Jena + sparqlservice does not support sanitization
@@ -55,15 +61,15 @@ public class TagLAT extends Researcher {
 				+ "?thing rdfs:label ?thingname."
 				+ "?thingname <bif:contains> \"'"+ target_name + "'\"."
 				//		+ "UNION"
-				//+ "{ ?thing foaf:name  ?thingname."
+				//+ "{ ?thing foaf:name  ?thingname."	
 				//+ "?thingname <bif:contains> \"'"+ target_name + "'\". }"
 						+ ""
 				+ "?thing rdf:type ?type."
 				+ "?type rdfs:label ?typename."
 				+ "FILTER ("
 					+ "langMatches(lang(?typename), 'EN')"
-				+ ")} limit 100");
-		qe.setTimeout(1000);
+				+ ")} limit 10");
+		qe.setTimeout(5000);
 		
 		/*
 		 * ABOUT THE QUERY
@@ -97,11 +103,12 @@ public class TagLAT extends Researcher {
 				QuerySolution s = rs.next();
 				RDFNode node = s.get("?typename");
 				if (node == null) {}
-				else if (node.isLiteral()) types.add(node.asLiteral().getLexicalForm());
-				else if (node.isResource()) types.add(node.asResource().getLocalName());
+				else if (node.isLiteral()) types.add(node.asLiteral().getLexicalForm().toLowerCase());
+				else if (node.isResource()) types.add(node.asResource().getLocalName().toLowerCase());
 			}
 		} catch (QueryExceptionHTTP h) {
 			System.err.println("LAT timeout on " + target_name);
+			if (retries>0) return types(candidate_text, retries-1);
 		}
 
 		System.out.println(target_name + ": " + types);
