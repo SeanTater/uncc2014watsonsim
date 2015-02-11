@@ -20,7 +20,7 @@ public class TestAnagrams  {
 	public static void main(String args[]) throws IOException
 	{
 	Map<String,String> mp = new HashMap<>();
-	BufferedReader br = new BufferedReader(new FileReader(new File("wordlist.txt")));
+	BufferedReader br = new BufferedReader(new FileReader(new File("data/wordlist.txt")));
 	String line;
 	
 	while((line = br.readLine())!= null)
