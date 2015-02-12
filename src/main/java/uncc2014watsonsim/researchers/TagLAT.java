@@ -41,6 +41,31 @@ public class TagLAT extends Researcher {
 		
 		// Sadly, Jena + sparqlservice does not support sanitization
 		// So we have to paste in strings
+		/* For easy checking, this is the original query
+PREFIX : <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbpedia2: <http://dbpedia.org/property/>
+PREFIX dbpedia: <http://dbpedia.org/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+select distinct ?typename where {
+ ?thing rdfs:label ?thingname.
+ ?thingname <bif:contains> \"'"+ target_name '\".
+ //              UNION
+ //{ ?thing foaf:name  ?thingname."   
+ //?thingname <bif:contains> \"'"+ target_name '\". }
+
+ ?thing rdf:type ?type.
+ ?type rdfs:label ?typename.
+ FILTER (
+  langMatches(lang(?typename), 'EN')
+)} limit 10"
+		 */
 		QueryExecution qe = QueryExecutionFactory.sparqlService(
 				sparql_url,
 				// There are several possible servers

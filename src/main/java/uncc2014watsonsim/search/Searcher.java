@@ -49,11 +49,13 @@ public abstract class Searcher {
     public final static int MAX_RESULTS = 10;
     
     
-    /** Fill in the missing titles and full texts from Answers using sources.db
+    /** Fill in the missing titles and full texts from Answers using the
+     * sources from the relational database.
+     *  
      * This is a no-op if the sources database is missing.
      */
     List<Passage> fillFromSources(List<Passage> passages) {
-    	List<Passage> results = new ArrayList<Passage>();
+    	List<Passage> results = new ArrayList<>();
     	PreparedStatement fetcher = db.prep("SELECT title, text FROM meta INNER JOIN content ON meta.id=content.id WHERE reference=?;");
 
     	for (Passage p: passages) {

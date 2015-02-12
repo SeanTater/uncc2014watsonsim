@@ -10,12 +10,19 @@ import uncc2014watsonsim.Database;
 
 public class Synonyms {
 	private final Database db = new Database();
+	/*
+	 * select count(*), trim(both ' .-’`''' from lower(target)) as name
+	 * 	from wiki_links
+	 * 	where link in ('author','Author', 'writer', 'Writer', 'novelist', 'Novelist')
+	 *  group by name having count(*) > 1 
+	 *  order by count(*) desc;
+	 */
 	private final PreparedStatement getSynonyms = db.prep(
 			"SELECT count(*), trim(both ' .-’`''' FROM lower(target)) AS name"
-			+ "FROM wiki_links"
-			+ "WHERE link IN ('author','Author', 'writer', 'Writer', 'novelist', 'Novelist')"
-			+ "GROUP BY name HAVING count(*) > 1" 
-			+ "ORDER count(*) DESC;");
+			+ " FROM wiki_links"
+			+ " WHERE link = ANY (?)"
+			+ " GROUP BY name HAVING count(*) > 1" 
+			+ " ORDER BY count(*) DESC;");
 	
 	/**
 	 * Find paraphrases and synonyms of a set of phrases.
@@ -27,7 +34,7 @@ public class Synonyms {
 	 */
 	public List<Weighted<String>> viaWikiLinks(String[] sources) {
 		try {
-			getSynonyms.setArray(0, db.createArrayOf("text", sources));
+			getSynonyms.setArray(1, db.createArrayOf("text", sources));
 			ResultSet rows = getSynonyms.executeQuery();
 			List<Weighted<String>> synonyms = new ArrayList<>();
 			while (rows.next()) {
@@ -39,13 +46,6 @@ public class Synonyms {
 			throw new RuntimeException("Failed to create query for wiki link synonyms of \"" + sources + "\"");
 		}
 	}
-/*
- * select count(*), trim(both ' .-’`''' from lower(target)) as name
- * 	from wiki_links
- * 	where link in ('author','Author', 'writer', 'Writer', 'novelist', 'Novelist')
- *  group by name having count(*) > 1 
- *  order by count(*) desc;
- */
 	
 	
 }

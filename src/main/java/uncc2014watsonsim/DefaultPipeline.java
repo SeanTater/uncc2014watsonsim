@@ -133,7 +133,7 @@ public class DefaultPipeline {
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(config),
 			new PersonRecognition(),
-			//new TagLAT(getOrDie(config, "sparql_url")),
+			new TagLAT(getOrDie(config, "sparql_url")),
 		};
 		scorers = new Scorer[]{
 			//new LuceneRank(),
@@ -152,7 +152,7 @@ public class DefaultPipeline {
 			new AnswerInQuestionScorer(),
 			new NGram(),
 			//new LATTypeMatchScorer(),
-			//new LATCheck(),
+			new LATCheck(),
 			new WPPageViews(),
 			//new RandomIndexingCosineSimilarity(),
 			new DistSemCosQAScore(),
