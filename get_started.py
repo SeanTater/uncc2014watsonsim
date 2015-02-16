@@ -132,6 +132,10 @@ class Download(object):
         cp ~/.m2/repository/org/apache/solr/solr-solrj/4.6.1/solr-solrj-4.6.1.jar apache-jena-2.12.1/lib/
         cp ~/.m2/repository/org/apache/lucene/lucene-core/4.6.1/lucene-core-4.6.1.jar apache-jena-2.12.1/lib/
         cp ~/.m2/repository/org/apache/lucene/lucene-*/4.6.1/*.jar apache-jena-2.12.1/lib/
+        
+        then to setup the index:
+        apache-jena-2.12.1/bin/tdbloader -v --tdb=jena-lucene.ttl dbpedia_2014.owl instance_types_en.nt genders_en.nt labels_en.nt
+        
         """
         if args.indri:
             # Maybe 15 minutes
