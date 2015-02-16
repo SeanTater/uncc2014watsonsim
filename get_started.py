@@ -107,6 +107,17 @@ class Download(object):
         if args.postgres:
             # Maybe about 5 minutes
             installPostgres()
+            
+        """
+        TODO: Install Jena binaries. You can run Watsonsim with only the libraries.
+        But if you need to index the TDB RDF index you will need tdbloader, but tdbloader
+        needs jena-text with Lucene, which you Maven for and can't get in the default
+        download. Meaning:
+            1) Install Maven
+            2) Download Jena
+            3) Run mvn install on Jena
+            This seems to take a lot of time, disk, network and CPU.
+        """
         if args.indri:
             # Maybe 15 minutes
             wget.download(INDRI_URL)
