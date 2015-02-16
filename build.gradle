@@ -1,30 +1,22 @@
-apply plugin: 'java'
-//apply plugin: 'scala'
-apply plugin: 'eclipse'
-apply plugin: 'application'
-apply plugin: 'maven'
-apply plugin: 'download-task'
+plugins {
+    id "de.undercouch.download" version "1.2"
+    id 'java'
+    id 'eclipse'
+    id 'application'
+    id 'maven'
+}
 
 // Meta information
 mainClassName = System.getProperty("mainClass")
 version = "0.4.0"
 group = "edu.uncc"
 
-// Meta-dependencies (what you need so as to run this buildscript)
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'de.undercouch:gradle-download-task:0.5'
-    }
-}
-
 // Dependencies and where to get them (some are nonstandard)
 repositories {
     mavenCentral()
     maven {url "https://repo.eclipse.org/content/groups/releases/"}
     maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
+    flatDir {dirs "lib"}
 }
 
 dependencies {
@@ -66,6 +58,8 @@ dependencies {
     // Stanford CoreNLP
     compile 'edu.stanford.nlp:stanford-corenlp:3.4.1'
     compile 'edu.stanford.nlp:stanford-corenlp:3.4.1:models'
+    // SRParser models are necessary but too large for maven
+    compile name: 'stanford-srparser-2014-08-28-models'
 
     // WebDAV 
     compile 'com.github.lookfirst:sardine:5.1'
@@ -83,8 +77,21 @@ dependencies {
     compile "junit:junit:4.12"
     // Jena for SPARQL connections
     compile "org.apache.jena:apache-jena-libs:2.12.1"
+    compile "org.apache.jena:jena-text:1.1.1"
     compile 'xom:xom:+'
     compile "xalan:xalan:+"
+}
+
+task environment << {
+    download {
+        onlyIfNewer true
+        src 'http://nlp.stanford.edu/software/stanford-srparser-2014-08-28-models.jar'
+        dest 'lib'
+    }
+    copy {
+        from '/usr/share/java/libsvm.jar'
+        into 'lib'
+    }
 }
 
 run {
