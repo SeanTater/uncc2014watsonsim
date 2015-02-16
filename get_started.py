@@ -117,6 +117,12 @@ class Download(object):
             2) Download Jena
             3) Run mvn install on Jena
             This seems to take a lot of time, disk, network and CPU.
+            
+        OR, from the looks of it, you can just copy some jars.
+        cp ~/.m2/repository/org/apache/jena/jena-text/1.1.1/jena-text-1.1.1.jar apache-jena-2.12.1/lib/
+        cp ~/.m2/repository/org/apache/solr/solr-solrj/4.6.1/solr-solrj-4.6.1.jar apache-jena-2.12.1/lib/
+        cp ~/.m2/repository/org/apache/lucene/lucene-core/4.6.1/lucene-core-4.6.1.jar apache-jena-2.12.1/lib/
+        cp ~/.m2/repository/org/apache/lucene/lucene-*/4.6.1/*.jar apache-jena-2.12.1/lib/
         """
         if args.indri:
             # Maybe 15 minutes
