@@ -6,6 +6,15 @@ PGBACKUP_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snap
 GRADLE_URL = "https://services.gradle.org/distributions/gradle-2.2.1-bin.zip"
 INDRI_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/indri-5.8.tar.gz"
 SRPARSER_URL = "http://nlp.stanford.edu/software/stanford-srparser-2014-08-28-models.jar"
+DBPEDIA_URLS = [
+    "http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/dbpedia_2014.owl.bz2",
+    "http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/instance_types_en.nt.bz2",
+    "http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/labels_en.nt.bz2",
+    # We don't use this one yet:
+    "http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/instance_types_heuristic_en.nt.bz2",
+    # This last one is from DBPedia NLP, we don't use it yet either
+    "http://wifo5-04.informatik.uni-mannheim.de/downloads/datasets/genders_en.nt.bz2"
+    ]
 ################################################################################
 # Needs requests, wget
 ################################################################################
