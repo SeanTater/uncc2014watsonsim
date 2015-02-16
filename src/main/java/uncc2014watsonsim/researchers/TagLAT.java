@@ -29,23 +29,20 @@ public class TagLAT extends Researcher {
 			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 			+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
 			+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>"
+			+ "PREFIX text: <http://jena.apache.org/text#>"
 			+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
-			+ "select distinct ?typename where {"
-			+ "?thing rdfs:label ?thingname."
-			+ "?thingname <bif:contains> ?name ."
-			//		+ "UNION"
-			//+ "{ ?thing foaf:name  ?thingname."	
-			//+ "?thingname <bif:contains> \"'"+ target_name + "'\". }"
+			+ "select distinct ?thing where {"
+			+ "?thing text:query ('Jane' 50)." // Apache Jena/Lucene extension
 					+ ""
-			+ "?thing rdf:type ?type."
-			+ "?type rdfs:label ?typename."
-			+ "FILTER ("
-				+ "langMatches(lang(?typename), 'EN')"
-			+ ")} limit 10");
+			//+ "?thing rdf:type ?type."
+			//+ "?type rdfs:label ?typename."
+			//+ "FILTER ("
+			//	+ "langMatches(lang(?typename), 'EN')"
+			+ "} limit 10");
 	
 	public TagLAT(String sparql_url) {
 		this.sparql_url = sparql_url;
-		dataset = TDBFactory.createDataset("data/jena-tdb");
+		dataset = TDBFactory.assembleDataset("data/rdf/jena-lucene.ttl");
 		dataset.begin(ReadWrite.READ);
 		model = dataset.getDefaultModel();
 	}
@@ -123,14 +120,15 @@ select distinct ?typename where {
 		 */
 		List<String> types = new ArrayList<>();
 		QuerySolutionMap params = new QuerySolutionMap();
-		params.add("namecontent", model.createTypedLiteral(candidate_text));
+		params.add("thingname", model.createTypedLiteral("*" + candidate_text + "*"));
 		try (QueryExecution qe = QueryExecutionFactory.create(query, model)) {
 			qe.setInitialBinding(params);
-			qe.setTimeout(5000);
+			//qe.setTimeout(5000);
 			ResultSet rs = qe.execSelect();
 			while (rs.hasNext()) {
+				types.add("Echo");
 				QuerySolution s = rs.next();
-				RDFNode node = s.get("?typename");
+				RDFNode node = s.get("?thing");
 				if (node == null) {}
 				else if (node.isLiteral()) types.add(node.asLiteral().getLexicalForm().toLowerCase());
 				else if (node.isResource()) types.add(node.asResource().getLocalName().toLowerCase());

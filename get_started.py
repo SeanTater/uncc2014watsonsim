@@ -21,14 +21,14 @@ DBPEDIA_URLS = [
 ################################################################################
 import platform
 import requests
-from   setuptools import setup
+from   setuptools import setup, Command
 import shutil
 from   subprocess import call, check_call
 import sys
 import tarfile
 import urllib2
 import zipfile
-class Download(object):
+class Download(Command):
     def unpack(ar, delete):
         """ Unpack a file and delete the original """
         print "Unpacking %s" %ar
@@ -124,12 +124,12 @@ class Download(object):
             installPostgres()
         if args.fuseki:
             wget.download(FUSEKI_URL)
-            unpack(os.path.basename(FUSEKI_URL, then_delete)
-        """
-        http://apache.osuosl.org/jena/binaries/jena-fuseki-1.1.1-distribution.tar.gz
-        java -cp jena-fuseki-1.1.1/fuseki-server.jar tdb.tdbloader --tdb=jena-lucene.ttl *.owl *.nt
-        java -cp jena-fuseki-1.1.1/fuseki-server.jar jena.textindexer --desc=../jena-lucene.ttl
-        """
+            unpack(os.path.basename(FUSEKI_URL, then_delete))
+        
+        #http://apache.osuosl.org/jena/binaries/jena-fuseki-1.1.1-distribution.tar.gz
+        #java -cp jena-fuseki-1.1.1/fuseki-server.jar tdb.tdbloader --tdb=jena-lucene.ttl *.owl *.nt
+        #java -cp jena-fuseki-1.1.1/fuseki-server.jar jena.textindexer --desc=../jena-lucene.ttl
+        
         if args.indri:
             # Maybe 15 minutes
             wget.download(INDRI_URL)

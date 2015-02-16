@@ -78,7 +78,10 @@ dependencies {
 
     compile "junit:junit:4.12"
     // Jena for SPARQL connections
-    compile "org.apache.jena:apache-jena-libs:2.12.1"
+    compile "org.apache.jena:jena-tdb:1.1.1"
+    // This is necessary for full text search
+    // But it also installs a .pom as a .jar as one of its transiitives
+    // and that makes Eclipse croak. So we will have to edit the classpath file
     compile "org.apache.jena:jena-text:1.1.1"
     compile 'xom:xom:+'
     compile "xalan:xalan:+"
@@ -89,6 +92,18 @@ task environment << {
         onlyIfNewer true
         src 'http://nlp.stanford.edu/software/stanford-srparser-2014-08-28-models.jar'
         dest 'lib'
+    }
+    download {
+        src 'https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot.tar.gz'         // ~50GB uncompressed, varies
+        src 'https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snapshot.pgdump'         // ~50GB uncompressed, varies
+        src 'https://dl.dropboxusercontent.com/u/92563044/watsonsim/indri-5.8.tar.gz'             // ~50MB
+        src 'http://apache.osuosl.org/jena/binaries/jena-fuseki-1.1.1-distribution.tar.gz'        // ~50MB
+        src 'http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/dbpedia_2014.owl.bz2'        // ~2 MB
+        src 'http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/instance_types_en.nt.bz2' // ~4 GB
+        src 'http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/labels_en.nt.bz2'         // ~1 GB
+        src 'http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/instance_types_heuristic_en.nt.bz2'  // ~ 1 GB
+        src 'http://wifo5-04.informatik.uni-mannheim.de/downloads/datasets/genders_en.nt.bz2'     // 31 MB
+        dest 'downloads'
     }
     copy {
         from '/usr/share/java/libsvm.jar'
