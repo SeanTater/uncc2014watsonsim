@@ -6,6 +6,15 @@ PGBACKUP_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/data-snap
 GRADLE_URL = "https://services.gradle.org/distributions/gradle-2.2.1-bin.zip"
 INDRI_URL = "https://dl.dropboxusercontent.com/u/92563044/watsonsim/indri-5.8.tar.gz"
 SRPARSER_URL = "http://nlp.stanford.edu/software/stanford-srparser-2014-08-28-models.jar"
+DBPEDIA_URLS = [
+    "http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/dbpedia_2014.owl.bz2",
+    "http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/instance_types_en.nt.bz2",
+    "http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/labels_en.nt.bz2",
+    # We don't use this one yet:
+    "http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/instance_types_heuristic_en.nt.bz2",
+    # This last one is from DBPedia NLP, we don't use it yet either
+    "http://wifo5-04.informatik.uni-mannheim.de/downloads/datasets/genders_en.nt.bz2"
+    ]
 ################################################################################
 # Needs requests, wget
 ################################################################################
@@ -107,6 +116,23 @@ class Download(object):
         if args.postgres:
             # Maybe about 5 minutes
             installPostgres()
+            
+        """
+        TODO: Install Jena binaries. You can run Watsonsim with only the libraries.
+        But if you need to index the TDB RDF index you will need tdbloader, but tdbloader
+        needs jena-text with Lucene, which you Maven for and can't get in the default
+        download. Meaning:
+            1) Install Maven
+            2) Download Jena
+            3) Run mvn install on Jena
+            This seems to take a lot of time, disk, network and CPU.
+            
+        OR, from the looks of it, you can just copy some jars.
+        cp ~/.m2/repository/org/apache/jena/jena-text/1.1.1/jena-text-1.1.1.jar apache-jena-2.12.1/lib/
+        cp ~/.m2/repository/org/apache/solr/solr-solrj/4.6.1/solr-solrj-4.6.1.jar apache-jena-2.12.1/lib/
+        cp ~/.m2/repository/org/apache/lucene/lucene-core/4.6.1/lucene-core-4.6.1.jar apache-jena-2.12.1/lib/
+        cp ~/.m2/repository/org/apache/lucene/lucene-*/4.6.1/*.jar apache-jena-2.12.1/lib/
+        """
         if args.indri:
             # Maybe 15 minutes
             wget.download(INDRI_URL)
