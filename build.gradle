@@ -23,6 +23,8 @@ dependencies {
     // Machine learning
     compile group: "com.googlecode.jcsv",            name: "jcsv",                    version: "1.4.0"
     compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.6'
+    // A native library used by weka
+    compile name: 'libsvm'
     compile group: "com.github.spullara.cli-parser", name: "cli-parser",              version: "1.1"
 
     // Statistics
