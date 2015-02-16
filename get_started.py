@@ -133,9 +133,12 @@ class Download(object):
         cp ~/.m2/repository/org/apache/lucene/lucene-core/4.6.1/lucene-core-4.6.1.jar apache-jena-2.12.1/lib/
         cp ~/.m2/repository/org/apache/lucene/lucene-*/4.6.1/*.jar apache-jena-2.12.1/lib/
         
-        then to setup the index:
+        then to setup the index, from apache-jena:
         apache-jena-2.12.1/bin/tdbloader -v --tdb=jena-lucene.ttl dbpedia_2014.owl instance_types_en.nt genders_en.nt labels_en.nt
-        
+        and to setup text search on the same index, you need Fuseki:
+        http://apache.osuosl.org/jena/binaries/jena-fuseki-1.1.1-distribution.tar.gz
+        you can then run
+        java -cp fuseki-server.jar jena.textindexer --desc=../jena-lucene.ttl
         """
         if args.indri:
             # Maybe 15 minutes
