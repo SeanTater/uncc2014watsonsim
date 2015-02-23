@@ -41,10 +41,10 @@ public class LATCheck extends AnswerScorer {
 					System.out.println("synonym " + synonym.item
 							+ " of " + q.simple_lat
 							+ " matches with weight " + synonym.weight);
-					return synonym.weight;
+					return Math.log(synonym.weight);
 				}
 			}
 		}
-		return 0.0;
+		return -1.0;
 	}
 }

@@ -2,6 +2,7 @@
 # for a list of things that need to be escaped, and the precise syntax
 # Most of what you need in this file should be straightforward though
 lucene_index = data/v1.1/lucene_index
+jena_lucene_index = data/rdf/lucene
 indri_index = data/v1.1/indri_index
 terrier_index = OPTIONAL UNTIL TERRIER IS IMPLEMENTED
 
