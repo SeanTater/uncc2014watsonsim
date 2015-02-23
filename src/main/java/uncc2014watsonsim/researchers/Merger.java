@@ -5,6 +5,7 @@ import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.StringUtils;
 
 public class Merger extends Researcher {
 	@Override
@@ -18,7 +19,7 @@ public class Merger extends Researcher {
 				for (Answer example : block) {
 					// Look through the examples in this topic
 					// If it matches, choose to put it in this block and quit.
-					if (original.matches(example)) {
+					if (matches(original,example)) {
 						target = block;
 						break;
 					}
@@ -48,6 +49,15 @@ public class Merger extends Researcher {
 				q.add(block.get(0));
 			}
 		}
+	}
+	
+	private boolean matches(Answer left, Answer right) {
+		int dist =  StringUtils.getLevenshteinDistance(
+				left.candidate_text,
+				right.candidate_text,
+				2);
+		// dist = -1 means "uncertain but at least the threshold"
+		return (0 <= dist && dist < 2) ? true : false;
 	}
 
 }

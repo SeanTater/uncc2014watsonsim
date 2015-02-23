@@ -55,28 +55,6 @@ public class Answer implements Comparable<Answer> {
         return hash;
     }
 
-    /** 
-     * Return a threshold on distance
-     */
-    public boolean matches(Answer other) {
-        return distance(other) <= 2;
-    }
-    
-    /** 
-     * Return a Levenshtein distance between answers after stopword removal.
-     */
-    public double distance(Answer other) {
-        if (other == null) {
-            return 10;
-        }
-        int dist = StringUtils.getLevenshteinDistance(
-        		StringUtils.filterRelevant(candidate_text),
-        		StringUtils.filterRelevant(other.candidate_text),
-        		10);
-        
-        return (dist == -1) ? 10 : dist;
-    }
-
     @Override
     public String toString() {
     	// Make a short view of the engines as single-letter abbreviations
