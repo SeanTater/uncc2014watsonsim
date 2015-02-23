@@ -29,7 +29,7 @@ public class LATDetectionTest {
 		};
 		for (Pair<String, String> pair : cases)
 			assertEquals(pair.first, 
-					LAT.detect(pair.second)
+					LAT.fromClue(pair.second)
 					);
 	}
 

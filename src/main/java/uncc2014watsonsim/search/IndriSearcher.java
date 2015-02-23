@@ -7,6 +7,7 @@ import java.util.Properties;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.scorers.Merge;
 import uncc2014watsonsim.Translation;
 import lemurproject.indri.ParsedDocument;
@@ -25,10 +26,10 @@ public class IndriSearcher extends Searcher {
 	 * The "indri_index" property is the Indri index path
 	 * @param config  The configuration Properties
 	 */
-	public IndriSearcher(Properties config) {
+	public IndriSearcher(Environment env) {
 		q = new QueryEnvironment();
 		try {
-			q.addIndex(StringUtils.getOrDie(config, "indri_index"));
+			q.addIndex(env.getOrDie("indri_index"));
 		} catch (Exception e) {
 			System.out.println("Setting up the Indri index failed."
 					+ " Is the index in the correct location?"

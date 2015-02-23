@@ -39,15 +39,27 @@ import edu.stanford.nlp.trees.Tree;
  * Detect the LAT as the noun in closest proximity to a determiner.
  */
 public class LAT {
-	private LuceneDBPediaSearch label_search;
-	public LAT() {
-		label_search = new LuceneDBPediaSearch();
+	private final LuceneDBPediaSearch rdf_label_search;
+	private final Dataset rdf;
+	
+	public LAT(Environment env) {
+		rdf_label_search = new LuceneDBPediaSearch();
+		rdf = TDBFactory.assembleDataset(
+				env.pathMustExist("rdf/jena-lucene.ttl"));
 	}
-	private static final Dataset dataset = TDBFactory.assembleDataset("data/rdf/jena-lucene.ttl");
+
+	/*
+	 * Functionality for determining the LAT of a clue.
+	 */
+	
+	// This is from worst to best! That way -1 is the worse-than-worst;
+	static final List<String> DT_RANK = Arrays.asList(new String[]{
+			"a", "the", "those", "that", "these", "this"
+	});
 	/**
 	 * Intermediate results from LAT detection
 	 */
-	private static class Analysis {
+	private static final class Analysis {
 		public final Tree dt, nn;	// Determiner, Noun
 		public Analysis(Tree d, Tree n){
 			dt = d; nn = n;
@@ -57,10 +69,6 @@ public class LAT {
 		}
 	}
 
-	// This is from worst to best! That way -1 is the worse-than-worst;
-	static final List<String> DT_RANK = Arrays.asList(new String[]{
-			"a", "the", "those", "that", "these", "this"
-	});
 	/**
 	 * Merge two partial LAT analyses.
 	 * 1) Favor complete analyses over fragments
@@ -68,7 +76,7 @@ public class LAT {
 	 * @return a new immutable partial LAT analysis  
 	 */
 	private static Analysis merge(Analysis a, Analysis b) {
-		if (a.ok() && b.ok()) 	return (latRank(a) < latRank(b)) ? b : a;
+		if (a.ok() && b.ok()) 	return (rank(a) < rank(b)) ? b : a;
 		else if (a.ok())		return a;
 		else if (b.ok()) 		return b; 			
 		else {
@@ -82,7 +90,7 @@ public class LAT {
 	/**
 	 * Case insensitively rank the LAT's by a predefined order
 	 */
-	private static int latRank(Analysis t) {
+	private static int rank(Analysis t) {
 		return DT_RANK.indexOf(concat(t.dt).toLowerCase());
 	}
 	
@@ -109,7 +117,7 @@ public class LAT {
 	 * Detect the LAT using a simple rule-based approach
 	 * @return The most general single-word noun LAT
 	 */
-	public static String detect(Tree t) {
+	public static String fromClue(Tree t) {
 		Analysis lat = detectPart(t);
 		return lat.ok() ? concat(lat.nn) : "";
 	}
@@ -119,7 +127,7 @@ public class LAT {
 	 * This is a thin wrapper for use as a string
 	 * @return The most general single-word noun LAT
 	 */
-	public static String detect(String s) {
+	public static String fromClue(String s) {
 		System.out.println(parse(s));
 		for (Tree t : parse(s)) {
 			Analysis lat = detectPart(t);
@@ -157,7 +165,7 @@ public class LAT {
 					+ "langMatches(lang(?kind), 'EN')"
 				    //+ "&& regex(?name, ?content, 'i')"
 				+ ")} limit 10");
-		List<String> uris = label_search.query(text);
+		List<String> uris = rdf_label_search.query(text);
 		if (uris.size() > 0) sparql.setIri("content", uris.get(0));
 		else sparql.setIri("content", "uri:moo:ajklhawkjd");
 		return sparql.asQuery();
@@ -169,7 +177,7 @@ public class LAT {
 	 * tag("New York") for example might be:
 	 *  {"populated place", "place", "municipality"}..
 	 */
-	public List<String> types(String candidate_text) {
+	public List<String> fromCandidate(String candidate_text) {
 		/*
 		 * ABOUT THE QUERY
 		 * ===============
@@ -193,10 +201,10 @@ public class LAT {
 		 * 
 		 */
 
-		dataset.begin(ReadWrite.READ);
+		rdf.begin(ReadWrite.READ);
 		List<String> types = new ArrayList<>();
 		try (QueryExecution qe = QueryExecutionFactory.create(getQuery(candidate_text), 
-				dataset.getDefaultModel())) {
+				rdf.getDefaultModel())) {
 			ResultSet rs = qe.execSelect();
 			while (rs.hasNext()) {
 				QuerySolution s = rs.next();
@@ -206,7 +214,7 @@ public class LAT {
 				else if (node.isResource()) types.add(node.asResource().getLocalName().toLowerCase());
 			}
 		} finally {
-			dataset.end();
+			rdf.end();
 		}
 
 		System.out.println(candidate_text + ": " + types);
@@ -217,13 +225,16 @@ public class LAT {
 class LuceneDBPediaSearch {
 	private final IndexSearcher searcher;
 	
-	public LuceneDBPediaSearch() {
+	public LuceneDBPediaSearch(Environment env) {
 		IndexReader reader;
 		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File("data/rdf/lucene")));
+			reader = DirectoryReader.open(FSDirectory.open(new File(
+					env.pathMustExist("rdf/lucene"))));
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path for jena_lucene_index.");
+			throw new RuntimeException("Jena's RDF full text Lucene index (for"
+					+ "candidate type checking) is missing. Check the README "
+					+ "for how to generate this index.");
 		}
 		searcher = new IndexSearcher(reader);
 	}

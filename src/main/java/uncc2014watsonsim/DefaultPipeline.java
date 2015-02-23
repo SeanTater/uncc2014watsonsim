@@ -18,10 +18,10 @@ import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
 import org.postgresql.jdbc2.TimestampUtils;
 
+import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.researchers.*;
 import uncc2014watsonsim.scorers.*;
 import uncc2014watsonsim.search.*;
-import static uncc2014watsonsim.StringUtils.getOrDie;
 
 /** The standard Question Analysis pipeline.
  * 
@@ -101,39 +101,33 @@ public class DefaultPipeline {
 	 * @param millis Millis since the Unix epoch, as in currentTimeMillis()
 	 */
 	public DefaultPipeline(long millis) {
-		run_start = new Timestamp(millis);
-
-		// Read the configuration
+		Environment env;
 		try {
-			Reader s = new InputStreamReader(
-					new FileInputStream("config.properties"), "UTF-8");
-			config.load(s);
-			s.close();
+			env = new Environment("data/");
 		} catch (IOException e) {
-			System.err.println("Missing or broken 'config.properties'. "
-					+ "Please create one by copying "
-					+ "config.properties.sample.");
-			throw new RuntimeException(e.getMessage());
-		}
+			e.printStackTrace();
+			throw new RuntimeException("No environment: cannot create a pipeline.");
+		} 
+		run_start = new Timestamp(millis);
 		
 		/*
 		 * Create the pipeline
 		 */
 		searchers = new Searcher[]{
-			new LuceneSearcher(config),
-			new IndriSearcher(config),
+			new LuceneSearcher(env),
+			new IndriSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
-			new CachingSearcher(new BingSearcher(config), "bing")
+			new CachingSearcher(new BingSearcher(env), "bing")
 		};
 		early_researchers = new Researcher[]{
 			new RedirectSynonyms(),
 			new HyphenTrimmer(),
 			new Merger(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
-			new PassageRetrieval(config),
+			new PassageRetrieval(env),
 			new PersonRecognition(),
-			new TagLAT(getOrDie(config, "sparql_url")),
+			new TagLAT(env),
 		};
 		scorers = new Scorer[]{
 			//new LuceneRank(),

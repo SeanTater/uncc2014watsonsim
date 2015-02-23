@@ -25,6 +25,7 @@ import org.apache.lucene.util.Version;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.scorers.Merge;
 
 /**
@@ -36,13 +37,13 @@ public class LucenePassageSearcher extends Searcher {
 	private Analyzer analyzer;
 	private QueryParser parser;
 	
-	public LucenePassageSearcher(Properties config) {
+	public LucenePassageSearcher(Environment env) {
 		analyzer = new StandardAnalyzer(Version.LUCENE_47);
 		parser = new QueryParser(Version.LUCENE_47, "text", analyzer);
 		parser.setAllowLeadingWildcard(true);
 
 		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(StringUtils.getOrDie(config, "lucene_index"))));
+			reader = DirectoryReader.open(FSDirectory.open(new File(env.getOrDie("lucene_index"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path for lucene_index.");

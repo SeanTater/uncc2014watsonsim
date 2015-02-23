@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.scorers.Merge;
 
 /**
@@ -35,10 +36,10 @@ import uncc2014watsonsim.scorers.Merge;
  */
 public class BingSearcher extends Searcher {
 	private final String key;
-	public BingSearcher(Properties config) {
+	public BingSearcher(Environment env) {
 		Score.register("BING_ANSWER_RANK", -1, Merge.Mean);
 		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Or);
-		key = StringUtils.getOrDie(config, "bing_api_key");
+		key = env.getOrDie("bing_api_key");
 	}
 	
 	public List<Passage> query(String query) {

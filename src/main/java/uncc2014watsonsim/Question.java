@@ -31,7 +31,7 @@ public class Question extends ArrayList<Answer> {
         this.text = StringUtils.filterRelevant(text);
         this.type = QClassDetection.detectType(this);
         parsed = Trees.parse(raw_text);
-        simple_lat = LAT.detect(parsed.get(0));
+        simple_lat = LAT.fromClue(parsed.get(0));
         // if (type == QType.FITB) {
         //All questions can run through UIMA Annotation Pipeline
         //ac.createAnnotations(this);    	

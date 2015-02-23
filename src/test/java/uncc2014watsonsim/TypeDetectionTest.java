@@ -28,7 +28,7 @@ public class TypeDetectionTest {
 	public void testHasAll(String source, String[] targets) {
 		List<String> types = new ArrayList<>();
 		try {
-			types = new TagLAT("http://cci-text-01.local:8890/sparql/").types(source);
+			types = new TagLAT("http://cci-text-01.local:8890/sparql/").fromCandidate(source);
 		} catch (RuntimeException e) {
 			// If this goes wrong, it probably just means we are disconnected
 			System.err.println("Failed to connect to SPARQL endpoint for answer "
