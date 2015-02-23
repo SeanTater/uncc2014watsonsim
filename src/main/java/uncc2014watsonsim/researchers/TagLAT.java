@@ -10,7 +10,7 @@ public class TagLAT extends Researcher {
 	private final LAT backend;
 	
 	public TagLAT(Environment env) {
-		backend = new LAT();
+		backend = new LAT(env);
 	}
 	/**
 	 * Find the possible lexical types of a candidate, and label the answer.

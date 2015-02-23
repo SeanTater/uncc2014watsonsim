@@ -43,7 +43,7 @@ public class LAT {
 	private final Dataset rdf;
 	
 	public LAT(Environment env) {
-		rdf_label_search = new LuceneDBPediaSearch();
+		rdf_label_search = new LuceneDBPediaSearch(env);
 		rdf = TDBFactory.assembleDataset(
 				env.pathMustExist("rdf/jena-lucene.ttl"));
 	}
@@ -177,7 +177,7 @@ public class LAT {
 	 * tag("New York") for example might be:
 	 *  {"populated place", "place", "municipality"}..
 	 */
-	public List<String> fromCandidate(String candidate_text) {
+	public List<String> fromCandidate(String text) {
 		/*
 		 * ABOUT THE QUERY
 		 * ===============
@@ -203,21 +203,23 @@ public class LAT {
 
 		rdf.begin(ReadWrite.READ);
 		List<String> types = new ArrayList<>();
-		try (QueryExecution qe = QueryExecutionFactory.create(getQuery(candidate_text), 
+		try (QueryExecution qe = QueryExecutionFactory.create(getQuery(text), 
 				rdf.getDefaultModel())) {
 			ResultSet rs = qe.execSelect();
 			while (rs.hasNext()) {
 				QuerySolution s = rs.next();
 				RDFNode node = s.get("?kind");
 				if (node == null) {}
-				else if (node.isLiteral()) types.add(node.asLiteral().getLexicalForm().toLowerCase());
-				else if (node.isResource()) types.add(node.asResource().getLocalName().toLowerCase());
+				else if (node.isLiteral())
+					types.add(node.asLiteral().getLexicalForm().toLowerCase());
+				else if (node.isResource())
+					types.add(node.asResource().getLocalName().toLowerCase());
 			}
 		} finally {
 			rdf.end();
 		}
 
-		System.out.println(candidate_text + ": " + types);
+		System.out.println(text + ": " + types);
 		return types;
 	}
 }

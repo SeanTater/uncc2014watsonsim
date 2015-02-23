@@ -2,6 +2,7 @@ package uncc2014watsonsim.nlp;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -68,6 +69,8 @@ public class Environment {
 				Properties _local_props = new Properties();
 				_local_props.load(s);
 				props = _local_props;
+			} catch (FileNotFoundException e) {
+				// This is only an error if none are found.
 			}
 		}
 		// If it didn't link, all the reads failed.
