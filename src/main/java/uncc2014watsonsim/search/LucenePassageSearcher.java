@@ -70,8 +70,8 @@ public class LucenePassageSearcher extends Searcher {
 				Document doc = searcher.doc(s.doc);
 				results.add(new uncc2014watsonsim.Passage(
 						"lucene", 			// Engine
-						doc.get("title"),	// Title
-						doc.get("text"), 	// Text
+						"",	// Title
+						"", // Text
 						doc.get("docno"))   // Reference
 						.score("LUCENE_RANK", (double) i)           // Rank
 						.score("LUCENE_SCORE", (double) s.score)	// Source

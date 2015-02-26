@@ -3,6 +3,7 @@ package uncc2014watsonsim.scorers;
 import java.util.List;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.nlp.Synonyms;
 import uncc2014watsonsim.nlp.Weighted;
 import uncc2014watsonsim.scorers.AnswerScorer;
@@ -14,7 +15,15 @@ import uncc2014watsonsim.Question;
  *
  */
 public class LATCheck extends AnswerScorer {
-	private final Synonyms syn = new Synonyms();
+	private final Synonyms syn;
+	
+	/**
+	 * Create a new LATCheck using a shared environment
+	 */
+	public LATCheck(Environment env) {
+		syn = new Synonyms(env);
+	}
+	
 	@Override
 	public double scoreAnswer(Question q, Answer a) {
 		/*

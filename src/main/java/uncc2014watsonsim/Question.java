@@ -28,7 +28,7 @@ public class Question extends ArrayList<Answer> {
      */
     public Question(String text) {
         this.raw_text = text;
-        this.text = StringUtils.filterRelevant(text);
+        this.text = StringUtils.canonicalize(text);
         this.type = QClassDetection.detectType(this);
         parsed = Trees.parse(raw_text);
         simple_lat = LAT.fromClue(parsed.get(0));

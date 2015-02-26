@@ -19,7 +19,7 @@ import lemurproject.indri.ScoredExtentResult;
  * @author Phani Rahul
  */
 public class IndriSearcher extends Searcher {
-	private QueryEnvironment q;
+	private final QueryEnvironment q = new QueryEnvironment();
 	private boolean enabled = true;
 	/**
 	 * Setup the Indri Query Environment.
@@ -27,7 +27,6 @@ public class IndriSearcher extends Searcher {
 	 * @param config  The configuration Properties
 	 */
 	public IndriSearcher(Environment env) {
-		q = new QueryEnvironment();
 		try {
 			q.addIndex(env.getOrDie("indri_index"));
 		} catch (Exception e) {
@@ -71,13 +70,12 @@ public class IndriSearcher extends Searcher {
 	    	results.add(new Passage(
     			"indri",         	// Engine
     			titles[i],	        // Title
-    			"", //full_texts[i].text, // Full Text
+    			"",                 // Full Text
 				docnos[i])          // Reference
 			.score("INDRI_ANSWER_RANK", (double) i)
 			.score("INDRI_ANSWER_SCORE", ser[i].score)
 			.score("INDRI_ANSWER_PRESENT", 1.0));
 		}
-		// Indri's titles and full texts could be empty. If they are, fill them from sources.db
 		return fillFromSources(results);
 	}
 	

@@ -8,15 +8,16 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Database;
 import uncc2014watsonsim.Score;
 
 public class CachingSearcher extends Searcher {
-	Random gen = new Random();
-	Searcher searcher;
+	private Random gen = new Random();
+	private Searcher searcher;
 	String engine_name;
-	
 
 	public CachingSearcher(Searcher searcher, String engine_name) {
 		this.searcher = searcher;

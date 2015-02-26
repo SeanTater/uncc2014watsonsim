@@ -88,7 +88,7 @@ public class IndriDocumentSearch extends JCasAnnotator_ImplBase {
 			
 			qString = UimaTools.getSingleton(queryView, QueryString.type);
 		
-			String main_query = StringUtils.filterRelevant(qString.getQuery());
+			String main_query = StringUtils.canonicalize(qString.getQuery());
 			main_query = Translation.getIndriQuery(main_query);
 			
 			ScoredExtentResult[] ser = q.runQuery(main_query, MAX_RESULTS);

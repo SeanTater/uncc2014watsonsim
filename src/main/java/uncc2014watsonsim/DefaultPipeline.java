@@ -121,23 +121,18 @@ public class DefaultPipeline {
 			new CachingSearcher(new BingSearcher(env), "bing")
 		};
 		early_researchers = new Researcher[]{
-			new RedirectSynonyms(),
+			new RedirectSynonyms(env),
 			new HyphenTrimmer(),
-			new Merger(),
+			new StrictFilters(),
+			new Merger(env),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(env),
 			new PersonRecognition(),
 			new TagLAT(env),
 		};
 		scorers = new Scorer[]{
-			//new LuceneRank(),
-			//new LuceneScore(),
-			//new IndriRank(),
-			//new IndriScore(),
-			//new BingRank(),
-			//new GoogleRank(),
 			new WordProximity(),
-			new Correct(),
+			new Correct(env),
 			new SkipBigram(),
 			new PassageTermMatch(),
 			new PassageCount(),
@@ -145,8 +140,7 @@ public class DefaultPipeline {
 			new PercentFilteredWordsInCommon(),
 			new AnswerInQuestionScorer(),
 			new NGram(),
-			//new LATTypeMatchScorer(),
-			new LATCheck(),
+			new LATCheck(env),
 			new WPPageViews(),
 			//new RandomIndexingCosineSimilarity(),
 			new DistSemCosQAScore(),
@@ -178,9 +172,8 @@ public class DefaultPipeline {
     		r.complete();
     	
 
-        for (Scorer s: scorers) {
+        for (Scorer s: scorers)
         	s.scoreQuestion(question);
-        }
         
         for (Researcher r : late_researchers)
 			r.question(question);

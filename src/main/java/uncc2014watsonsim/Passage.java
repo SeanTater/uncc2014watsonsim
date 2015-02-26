@@ -1,14 +1,17 @@
 package uncc2014watsonsim;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class Passage {
 	// Which engine found this passage?
-	public String reference;
-	private String text;
-	private List<String> _tokens;
-	public String engine_name;
-	public String title;
+	public final String reference;
+	private final String text;
+	private final List<String> _tokens;
+	public final String engine_name;
+	public final String title;
     public double[] scores = Score.empty();
     
     /**
@@ -20,10 +23,20 @@ public class Passage {
      * @param reference   Specific to the engine, or a URL, for later lookup
      */
 	public Passage(String engine_name, String title, String text, String reference) {
-		this.setText(text);
+		if (engine_name == null)
+			throw new NullPointerException("Engine name cannot be null.");
+		if (title == null)
+			throw new NullPointerException("Title cannot be null.");
+		if (text == null)
+			throw new NullPointerException("Text cannot be null.");
+		if (reference == null)
+			throw new NullPointerException("Reference cannot be null.");
+			
+		this.text = StringEscapeUtils.unescapeXml(text);
+		this._tokens = StringUtils.tokenize(this.text);
 		this.reference = reference;
 		this.engine_name = engine_name;
-		this.title = title;
+		this.title = StringEscapeUtils.unescapeXml(title);
 	}
     
     /** Return the value of this Score for this answer, or null */
@@ -49,9 +62,7 @@ public class Passage {
      * @return
      */
     public List<String> tokens() {
-    	if (_tokens == null)
-    		_tokens = StringUtils.tokenize(getText());
-    	return _tokens;
+    	return new ArrayList<>(_tokens);
     }
 
     /**
@@ -61,13 +72,5 @@ public class Passage {
      */
 	public String getText() {
 		return text;
-	}
-	/**
-     * Wrapper for passage text
-     * This is wrapped because it triggers on-the-fly calculations
-     */
-	public void setText(String text) {
-		this.text = text;
-    	this._tokens = null;
 	}
 }

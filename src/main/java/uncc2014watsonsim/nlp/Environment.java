@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import uncc2014watsonsim.Database;
+
 /**
  * The NLP toolkit needs several shared resources, like text search indices
  * and database connections. Some can be shared between threads to save
@@ -20,11 +22,16 @@ import java.util.Properties;
  * So start an global environment by constructing it, and start a new thread
  * by using the newThread() method of the environment.
  * 
+ * The public fields of the Environment are intended for internal use by all
+ * the NLP packages. Exercise great care before mutating anything. 
+ * 
  * @author Sean Gallagher
  */
 public class Environment {
 	private final String data_path;
 	public final Map<String, String> config;
+	public final Database db = new Database();
+	
 	/**
 	 * Create a (possibly) shared NLP environment. The given data directory
 	 * must be created (usually from a downloaded zipfile, check the README).

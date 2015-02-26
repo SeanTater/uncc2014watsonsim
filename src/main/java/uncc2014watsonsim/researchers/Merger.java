@@ -6,8 +6,20 @@ import java.util.List;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.nlp.Environment;
+import uncc2014watsonsim.nlp.Synonyms;
 
 public class Merger extends Researcher {
+	private final Synonyms syn;
+	
+	/**
+	 * Create a new merger using shared environment resources.
+	 * @param env
+	 */
+	public Merger(Environment env) {
+		syn = new Synonyms(env);
+	}
+	
 	@Override
 	/** Call merge on any two answers with the same title */
 	public void question(Question q) {
@@ -19,7 +31,7 @@ public class Merger extends Researcher {
 				for (Answer example : block) {
 					// Look through the examples in this topic
 					// If it matches, choose to put it in this block and quit.
-					if (matches(original,example)) {
+					if (syn.matchViaLevenshtein(original.candidate_text, example.candidate_text)) {
 						target = block;
 						break;
 					}
@@ -50,14 +62,4 @@ public class Merger extends Researcher {
 			}
 		}
 	}
-	
-	private boolean matches(Answer left, Answer right) {
-		int dist =  StringUtils.getLevenshteinDistance(
-				left.candidate_text,
-				right.candidate_text,
-				2);
-		// dist = -1 means "uncertain but at least the threshold"
-		return (0 <= dist && dist < 2) ? true : false;
-	}
-
 }

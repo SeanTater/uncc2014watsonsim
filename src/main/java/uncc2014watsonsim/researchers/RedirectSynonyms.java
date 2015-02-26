@@ -6,10 +6,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Database;
 import uncc2014watsonsim.Score;
+import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.scorers.Merge;
 
 /**
@@ -19,15 +22,14 @@ import uncc2014watsonsim.scorers.Merge;
  * @author Sean
  */
 public class RedirectSynonyms extends Researcher {
-	Database db = new Database();
-
-	PreparedStatement s = db.prep(
-		"SELECT source from wiki_redirects where target = ?;");
+	private final Database db;
+	private final PreparedStatement s;
 	
-	{
+	public RedirectSynonyms(Environment env) {
+		db = env.db;
+		s = db.prep("SELECT source from wiki_redirects where target = ?;");
 		Score.register("IS_WIKI_REDIRECT", 0.0, Merge.Min);
 	}
-
 
 	@Override
 	public void question(Question q) {
@@ -42,7 +44,7 @@ public class RedirectSynonyms extends Researcher {
 					Answer new_answer = new Answer(
 							new ArrayList<>(a.passages),
 							a.scores.clone(),
-							results.getString("source"));
+							StringEscapeUtils.unescapeXml(results.getString("source")));
 					Score.set(a.scores, "IS_WIKI_REDIRECT", 1.0);
 					q.add(new_answer);
 				}

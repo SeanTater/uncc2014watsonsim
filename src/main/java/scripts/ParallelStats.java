@@ -21,6 +21,7 @@ import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.DBQuestionSource;
 import uncc2014watsonsim.DefaultPipeline;
 import uncc2014watsonsim.Question;
+import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
 
 /**
@@ -67,7 +68,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("log-lat train", sql, run_start).run();
+			new StatsGenerator("filter before merging", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.toString());
@@ -234,7 +235,7 @@ class StatsGenerator {
 	
 			for (int rank=0; rank<q.size(); rank++) {
 				Answer candidate = q.get(rank);
-				if (candidate.matches(q.answer)) {
+				if (Score.get(candidate.scores, "CORRECT", 0.0) > 0.99) {
 					onCorrectAnswer(q, candidate, rank);
 					break;
 				}

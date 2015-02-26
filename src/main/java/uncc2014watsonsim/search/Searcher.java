@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Database;
 
@@ -63,18 +65,21 @@ public abstract class Searcher {
     		try {
 				fetcher.setString(1, p.reference);
 				doc_row = fetcher.executeQuery();
-				if (doc_row.next()) {
-					p.title = doc_row.getString("title");
-					p.setText(doc_row.getString("text"));
+				if (doc_row.next()
+						&& doc_row.getString("title") != null
+						&& doc_row.getString("text") != null) {
+					results.add(new Passage(
+							p.engine_name,
+							doc_row.getString("title"),
+							doc_row.getString("text"),
+							p.reference
+							));
 				}
-				if (p.title == null) p.title = "";	
-	    		if (p.getText() == null) p.setText("");
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException("Failed to execute sources search. "
 						+ "Missing document? docno:"+p.reference);
 			}
-    		results.add(p);
     	}
     	return results;
     }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.client.fluent.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.Jsoup;
@@ -75,6 +76,7 @@ public class BingSearcher extends Searcher {
 	    	// Perhaps limit to MAX_RESULTS?
 		    for (int i=0; i < elements.size(); i++) {
 		    	Element e = elements.get(i);
+		    	
 	    		results.add(new Passage(
         			"bing",         	// Engine
         			e.select("d|Title").text(),	        // Title

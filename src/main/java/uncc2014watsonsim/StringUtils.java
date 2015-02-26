@@ -32,15 +32,36 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	private static final int CACHE_SIZE = 256;
 	private static CacheMap<String, ArrayList<Double>> context_cache_map = new CacheMap<String, ArrayList<Double>>(CACHE_SIZE);
 	
-	/** Filter out stop words from a string */
-	public static String filterRelevant(String text) {
-		String mQuestion="";
-		for (String token : tokenize(text))
-			mQuestion += token + " ";
-		return mQuestion.trim();
+	/**
+	 * Try to canonicalize a string somewhat conservatively.
+	 * Basically, we:
+	 *    ignore case
+	 *    ignore punctuation such as (){}[]<>;:,."'
+	 *        The ' is probably debatable. The rest are generally
+	 *        inaudible so they wouldn't have counted in a question
+	 *        had they been spoken anyway.
+	 *    ignore stopwords and some stems
+	 *        This is the effect of Lucene's filters.
+	 */
+	public static String canonicalize(String dirty) {
+		dirty = dirty
+				.toLowerCase()
+				.replaceAll("[(){}\\\\/\\[\\]<>;:,.\"'“”‘’«»「」…-]", "");
+		
+		StringBuilder clean = new StringBuilder();
+		for (String token : tokenize(dirty)) {
+			clean.append(token);
+			clean.append(' ');
+		}
+		return clean.toString().trim();
 	}
 	
-	/** Remove all characters except alphanumerics and space */
+	/**
+	 * Remove all characters except alphanumerics and space.
+	 * 
+	 * This is a pretty wild thing to do since it clears out tons of usually
+	 * useful stuff, like accent marks, punctuation, capitals..
+	 */
 	public static String sanitize(String input) {
 		return input.replaceAll("[^A-Za-z0-9 ]", " ");
 	}
