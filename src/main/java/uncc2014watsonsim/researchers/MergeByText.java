@@ -3,20 +3,22 @@ package uncc2014watsonsim.researchers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.StringUtils;
 import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.nlp.Synonyms;
 
-public class Merger extends Researcher {
+public class MergeByText extends Researcher {
 	private final Synonyms syn;
+	private final Logger log = Logger.getLogger(this.getClass());
 	
 	/**
 	 * Create a new merger using shared environment resources.
 	 * @param env
 	 */
-	public Merger(Environment env) {
+	public MergeByText(Environment env) {
 		syn = new Synonyms(env);
 	}
 	
@@ -27,20 +29,19 @@ public class Merger extends Researcher {
 		// Arrange the answers into blocks
 		for (Answer original : q) {
 			List<Answer> target = null;
+			
+			block_search:
 			for (List<Answer> block : answer_blocks) {
 				for (Answer example : block) {
 					// Look through the examples in this topic
 					// If it matches, choose to put it in this block and quit.
 					if (syn.matchViaLevenshtein(original.candidate_text, example.candidate_text)) {
 						target = block;
-						break;
+						break block_search;
 					}
 				}
-				// Found a good option. break again
-				if (target != null) {
-					break;
-				}
 			}
+			
 			if (target == null) {
 				// Make a new topic for this answer
 				List<Answer> new_block = new ArrayList<>();
@@ -51,8 +52,9 @@ public class Merger extends Researcher {
 				target.add(original);
 			}
 		}
-		
+
 		// Merge the blocks
+		final int prev_answers = q.size();
 		q.clear();
 		for (List<Answer> block : answer_blocks) {
 			if (block.size() > 1) {
@@ -61,5 +63,7 @@ public class Merger extends Researcher {
 				q.add(block.get(0));
 			}
 		}
+		
+		log.info("Merged " + prev_answers + " candidates into " + q.size() + " (by surface similarity).");
 	}
 }

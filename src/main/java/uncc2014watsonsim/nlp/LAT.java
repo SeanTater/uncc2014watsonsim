@@ -52,18 +52,27 @@ public class LAT {
 	 * Functionality for determining the LAT of a clue.
 	 */
 	
-	// This is from worst to best! That way -1 is the worse-than-worst;
-	static final List<String> DT_RANK = Arrays.asList(new String[]{
-			"a", "the", "those", "that", "these", "this"
-	});
+	
 	/**
 	 * Intermediate results from LAT detection
 	 */
 	private static final class Analysis {
-		public final Tree dt, nn;	// Determiner, Noun
+		public final Tree dt, nn;	// Determiner, Noun// This is from worst to best! That way -1 is the worse-than-worst;
+		private static final List<String> DT_RANK = Arrays.asList(new String[]{
+				"those", "that", "these", "this"
+		});
 		public Analysis(Tree d, Tree n){
 			dt = d; nn = n;
 		}
+
+		/**
+		 * Case insensitively rank the LAT's by a predefined order
+		 */
+		public int rank() {
+			if (dt == null) return -1;
+			return DT_RANK.indexOf(concat(dt).toLowerCase());
+		}
+		
 		public boolean ok() {
 			return dt != null && nn != null;
 		}
@@ -76,7 +85,7 @@ public class LAT {
 	 * @return a new immutable partial LAT analysis  
 	 */
 	private static Analysis merge(Analysis a, Analysis b) {
-		if (a.ok() && b.ok()) 	return (rank(a) < rank(b)) ? b : a;
+		if (a.ok() && b.ok()) 	return (a.rank() < b.rank()) ? b : a;
 		else if (a.ok())		return a;
 		else if (b.ok()) 		return b; 			
 		else {
@@ -87,12 +96,6 @@ public class LAT {
 		}
 	}
 	
-	/**
-	 * Case insensitively rank the LAT's by a predefined order
-	 */
-	private static int rank(Analysis t) {
-		return DT_RANK.indexOf(concat(t.dt).toLowerCase());
-	}
 	
 	/**
 	 * A very simple LAT detector. It wants the lowest subtree with both a determiner and a noun
@@ -119,7 +122,11 @@ public class LAT {
 	 */
 	public static String fromClue(Tree t) {
 		Analysis lat = detectPart(t);
-		return lat.ok() ? concat(lat.nn) : "";
+		if (lat.ok() && lat.rank() >= 0) {
+			return concat(lat.nn);
+		} else {
+			return "";
+		}
 	}
 	
 	/**
@@ -131,7 +138,9 @@ public class LAT {
 		System.out.println(parse(s));
 		for (Tree t : parse(s)) {
 			Analysis lat = detectPart(t);
-			if (lat.ok()) return concat(lat.nn).toLowerCase();
+			if (lat.ok() && lat.rank() >= 0) {
+				return concat(lat.nn).toLowerCase();
+			}
 		}
 		return "";
 	}
@@ -219,7 +228,6 @@ public class LAT {
 			rdf.end();
 		}
 
-		System.out.println(text + ": " + types);
 		return types;
 	}
 }

@@ -68,11 +68,11 @@ public class ChangeFitbAnswerToContentsOfBlanks extends Researcher {
 		String result = null;
 		
 		for (Answer a: question) {
-			matcher1 = pattern1.matcher(a.passages.get(0).getText()); //title is the text to be searched
+			matcher1 = pattern1.matcher(a.passages.get(0).text); //title is the text to be searched
 			if (matcher1.find()) {	//find the question with blanks (str1) within the document (a.getFullText()); assign result as str1substring (question with blanks filled in)
 				docPatternStart = matcher1.start();
 				docPatternEnd = matcher1.end();
-				String str1substring = a.passages.get(0).getText().substring(docPatternStart, docPatternEnd);
+				String str1substring = a.passages.get(0).text.substring(docPatternStart, docPatternEnd);
 				//System.out.println("found pattern in doc: " + str1substring + ": title: " + a.getTitle()); //for debug
 
 				answerStartLocation = 0;

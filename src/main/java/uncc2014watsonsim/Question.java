@@ -2,8 +2,10 @@ package uncc2014watsonsim;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.uima.jcas.JCas;
 
 import edu.stanford.nlp.trees.Tree;
@@ -30,8 +32,16 @@ public class Question extends ArrayList<Answer> {
         this.raw_text = text;
         this.text = StringUtils.canonicalize(text);
         this.type = QClassDetection.detectType(this);
-        parsed = Trees.parse(raw_text);
+        parsed = Collections.unmodifiableList(Trees.parse(raw_text));
         simple_lat = LAT.fromClue(parsed.get(0));
+        
+        Logger log = Logger.getLogger(getClass());
+        if (simple_lat.isEmpty())
+        	log.info("Couldn't find a LAT.");
+        else
+        	log.info("Looking for a " + simple_lat);
+        
+        log.info("Looks like a " + type.toString().toLowerCase() + " question");
         // if (type == QType.FITB) {
         //All questions can run through UIMA Annotation Pipeline
         //ac.createAnnotations(this);    	

@@ -24,7 +24,7 @@ public class PercentFilteredWordsInCommon extends PassageScorer {
 	
 	public double scorePassage(Question q, Answer a, Passage p) {
 			List<String> questionTextArray = StringUtils.tokenize(q.text);
-			List<String> passageText = p.tokens();
+			List<String> passageText = p.tokens;
 			int count = 0;
 			for (String word : questionTextArray)
 				if (passageText.contains(word))

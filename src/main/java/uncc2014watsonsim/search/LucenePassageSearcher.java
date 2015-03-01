@@ -32,16 +32,10 @@ import uncc2014watsonsim.scorers.Merge;
  * @author Phani Rahul
  */
 public class LucenePassageSearcher extends Searcher {
-	private IndexReader reader;
-	private IndexSearcher searcher = null;
-	private Analyzer analyzer;
-	private QueryParser parser;
+	private IndexSearcher searcher;
 	
 	public LucenePassageSearcher(Environment env) {
-		analyzer = new StandardAnalyzer(Version.LUCENE_47);
-		parser = new QueryParser(Version.LUCENE_47, "text", analyzer);
-		parser.setAllowLeadingWildcard(true);
-
+		IndexReader reader;
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(env.getOrDie("lucene_index"))));
 		} catch (IOException e) {
@@ -54,16 +48,23 @@ public class LucenePassageSearcher extends Searcher {
 		Score.register("LUCENE_RANK", -1, Merge.Mean);
 	}
 	
+	/**
+	 * Create a Lucene Query using the words as SHOULD clauses
+	 */
+	public BooleanQuery queryFromWords(String text) {
+		BooleanQuery q = new BooleanQuery();
+		for (String word : text.split("\\W+")) {
+			q.add(new TermQuery(new Term("text", word)), BooleanClause.Occur.SHOULD);
+		}
+		return q;
+	}
+	
 	public List<Passage> query(String question_text) {
-		List<Passage> results = new ArrayList<Passage>();
+		List<Passage> results = new ArrayList<>();
 		try {
-			BooleanQuery q = new BooleanQuery();
-			for (String word : question_text.split("\\W+")) {
-				q.add(new TermQuery(new Term("text", word)), BooleanClause.Occur.SHOULD);
-			}
-			TopDocs topDocs = searcher.search(q, MAX_RESULTS);
-			
-			ScoreDoc[] hits = topDocs.scoreDocs;
+			ScoreDoc[] hits = searcher.search(
+					queryFromWords(question_text),
+					MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];

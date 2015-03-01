@@ -22,7 +22,7 @@ public class SkipBigram extends PassageScorer {
 		Set<String> a_set = generateBigrams(StringUtils.tokenize(a.candidate_text));
 		
 		// Romantic novelist Jane Austen once wrote -the- book Emma.
-		Set<String> p_set = generateBigrams(p.tokens());
+		Set<String> p_set = generateBigrams(p.tokens);
 		
 		a_set.retainAll(p_set);
 		

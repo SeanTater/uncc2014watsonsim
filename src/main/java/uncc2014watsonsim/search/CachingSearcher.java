@@ -8,23 +8,24 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Database;
 import uncc2014watsonsim.Score;
+import uncc2014watsonsim.nlp.Environment;
 
 public class CachingSearcher extends Searcher {
 	private Random gen = new Random();
 	private Searcher searcher;
 	String engine_name;
+	private Database db;
 
-	public CachingSearcher(Searcher searcher, String engine_name) {
+	public CachingSearcher(Environment env, Searcher searcher, String engine_name) {
+		this.db = env.db;
 		this.searcher = searcher;
 		this.engine_name = engine_name;
 	}
 	
-	private void getScores(Database db, Passage p, long passage_id) throws SQLException {
+	private void getScores(Passage p, long passage_id) throws SQLException {
 		PreparedStatement cache = db.prep(
 				"select name, value from cache_scores where (passage_id = ?);");
 		cache.setLong(1, passage_id);
@@ -35,7 +36,7 @@ public class CachingSearcher extends Searcher {
 		}
 	}
 	
-	private void setScores(Database db, Passage p, long passage_id) throws SQLException {
+	private void setScores(Passage p, long passage_id) throws SQLException {
 		PreparedStatement cache = db.prep(
 				"insert into cache_scores(passage_id, name, value) values (?, ?, ?);");
 		cache.setLong(1, passage_id);
@@ -51,8 +52,7 @@ public class CachingSearcher extends Searcher {
 	}
 	
 	public List<Passage> query(String query) {
-		List<Passage> results = new ArrayList<Passage>();
-		Database db = new Database();
+		List<Passage> results = new ArrayList<>();
 		try {
 			// Part 1: Find any existing cache, use it if possible
 			PreparedStatement cache = db.prep(
@@ -69,7 +69,7 @@ public class CachingSearcher extends Searcher {
 						sql.getString("fulltext"),
 						sql.getString("reference"));
 				results.add(p);
-				getScores(db, p, sql.getLong("id"));
+				getScores(p, sql.getLong("id"));
 			}
 		} catch (SQLException e) {
 			// If retrieving fails, that is OK. We will simply revert to the searcher.
@@ -91,10 +91,10 @@ public class CachingSearcher extends Searcher {
 					set_cache.setString(2, query);
 					set_cache.setString(3, p.engine_name);
 					set_cache.setString(4, p.title);
-					set_cache.setString(5, p.getText());
+					set_cache.setString(5, p.text);
 					set_cache.setString(6, p.reference);
 					set_cache.addBatch();
-					setScores(db, p, id);
+					setScores(p, id);
 				} catch (SQLException e) {
 					System.out.println("Failed to set cache to SQLite. (DB missing?) Ignoring.");
 					e.printStackTrace();

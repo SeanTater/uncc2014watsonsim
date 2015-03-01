@@ -37,6 +37,7 @@ import org.apache.lucene.util.Version;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Database;
 import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.nlp.Environment;
 
 /**
  *
@@ -51,29 +52,17 @@ public class LuceneIndriIndexer {
     /**
      * the input file which has to be indexed. This is a database made from TRECtext's
      */
-    static Database db = new Database();
+    static Environment env;
 	static Pattern splitter = Pattern.compile("\\w+");
 	static Properties config = new Properties();
 	
 
     /**
-     * @param args the command line arguments
-     * @throws Exception 
+     * Index collected datasources using Lucene and Indri 
      */
     public static void main(String[] args) throws Exception {
-		// Read the configuration
-    	// This is copy-pasted from DefaultPipeline
-		try {
-			Reader s = new InputStreamReader(
-					new FileInputStream("config.properties"), "UTF-8");
-			config.load(s);
-			s.close();
-		} catch (IOException e) {
-			System.err.println("Missing or broken 'config.properties'. "
-					+ "Please create one by copying "
-					+ "config.properties.sample.");
-			throw new RuntimeException(e.getMessage());
-		}
+		// Make the shared environment for watsonsim tools
+		env = new Environment("data/");
     	
 		// Only initialize the query environment and index once
 		IndexEnvironment indri_index = new IndexEnvironment();
@@ -83,7 +72,7 @@ public class LuceneIndriIndexer {
 			// open means to append
 			// create means to replace
 			// TODO: ask the user
-			indri_index.create(StringUtils.getOrDie(config, "indri_index"));
+			indri_index.create(env.getOrDie("indri_index"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Can't create Indri index. Please check that you entered the right path in UserSpecificConstants.java.");
@@ -91,7 +80,7 @@ public class LuceneIndriIndexer {
 		indri_index.setStoreDocs(false); 
     	
     	/* Setup Lucene */
-        Directory dir = FSDirectory.open(new File(StringUtils.getOrDie(config, "lucene_index")));
+        Directory dir = FSDirectory.open(new File(env.getOrDie("lucene_index")));
         // here we are using a standard analyzer, there are a lot of analyzers available to our use.
         Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_47);
         IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_47, analyzer);
@@ -128,7 +117,7 @@ public class LuceneIndriIndexer {
     		IndexWriter lucene_index,
     		IndexEnvironment indri_index) throws Exception {
     	/* SQL setup */
-		java.sql.ResultSet sql = db.prep(query).executeQuery();
+		java.sql.ResultSet sql = env.db.prep(query).executeQuery();
 		
 		while(sql.next()){
 			Passage p = new Passage("none", sql.getString("title"), sql.getString("text"), sql.getString("reference"));
@@ -143,7 +132,7 @@ public class LuceneIndriIndexer {
 		// Index with Lucene
         Document doc = new Document();
         doc.add(new TextField("title", p.title, Field.Store.NO));
-        doc.add(new TextField("text", p.getText(), Field.Store.NO));
+        doc.add(new TextField("text", p.text, Field.Store.NO));
         doc.add(new StoredField("docno", p.reference));
         lucene_index.addDocument(doc);
     }
@@ -155,7 +144,7 @@ public class LuceneIndriIndexer {
          * ourselves. (Indri still does indexing, stemming, etc.)
          */
 		// Split for indri
-		Matcher matcher = splitter.matcher(p.getText());
+		Matcher matcher = splitter.matcher(p.text);
 		List<TermExtent> positions = new ArrayList<TermExtent>();
 		ArrayList<String> terms = new ArrayList<String>();
 		while (matcher.find()) {

@@ -23,7 +23,7 @@ public class PassageTermMatch extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
 		
 		// Jane Austen
-		String c_t = StringUtils.join(p.getText(), " ");
+		String c_t = StringUtils.join(p.text, " ");
 		
 		// Romantic novelist Jane Austen once wrote -the- book Emma.
 		String q_t = q.text;

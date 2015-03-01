@@ -15,7 +15,7 @@ public class StephensonScorer extends PassageScorer {
 		String qs = q.getRaw_text();
 		String qst = q.text;
 		String as = a.candidate_text;
-		String ps=p.getText();
+		String ps=p.text;
 
 		int pl = ps.length();
 		int ql = qs.length();

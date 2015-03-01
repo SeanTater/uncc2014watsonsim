@@ -36,7 +36,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * Try to canonicalize a string somewhat conservatively.
 	 * Basically, we:
 	 *    ignore case
-	 *    ignore punctuation such as (){}[]<>;:,."'
+	 *    ignore punctuation such as (){}\\\\/\\[\\]—<>;:,.\"'“”‘’«»「」…-
 	 *        The ' is probably debatable. The rest are generally
 	 *        inaudible so they wouldn't have counted in a question
 	 *        had they been spoken anyway.
@@ -46,7 +46,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	public static String canonicalize(String dirty) {
 		dirty = dirty
 				.toLowerCase()
-				.replaceAll("[(){}\\\\/\\[\\]<>;:,.\"'“”‘’«»「」…-]", "");
+				.replaceAll("[(){}\\\\/\\[\\]—<>;:,.\"'“”‘’«»「」…-]", "")
+				.trim();
 		
 		StringBuilder clean = new StringBuilder();
 		for (String token : tokenize(dirty)) {

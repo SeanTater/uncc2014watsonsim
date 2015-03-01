@@ -23,7 +23,7 @@ public class WordProximity extends PassageScorer {
 		double distance = 1;
 		double average_log_distance = 0;
 		
-		for (String w : p.getText().split("\\W+")) {
+		for (String w : p.text.split("\\W+")) {
 			if (q_words.contains(w)) {
 				average_log_distance += Math.log(distance);
 				distance = 1;

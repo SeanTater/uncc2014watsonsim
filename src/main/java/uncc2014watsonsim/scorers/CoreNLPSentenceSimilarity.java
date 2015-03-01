@@ -29,7 +29,6 @@ import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcess
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
-
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
 import opennlp.tools.parser.Parser;
@@ -40,11 +39,11 @@ import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.SimpleTokenizer;
-
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
+import uncc2014watsonsim.nlp.Trees;
 
 /* @author Wlodek
  * @author Sean Gallagher
@@ -56,37 +55,6 @@ import uncc2014watsonsim.StringUtils;
  */
 
 public class CoreNLPSentenceSimilarity extends PassageScorer {
-	
-	Properties props;
-	StanfordCoreNLP pipeline;
-	public CoreNLPSentenceSimilarity() {
-		// creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution 
-	    props = new Properties();
-	    props.put("annotators", "tokenize, ssplit, pos, parse");
-	    props.put("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
-	    pipeline = new StanfordCoreNLP(props);
-	}
-	
-	public List<Tree> parseToTrees(String text) {
-	    
-	    // create an empty Annotation just with the given text
-	    Annotation document = new Annotation(text);
-	    
-	    // run all Annotators on this text
-	    pipeline.annotate(document);
-	    
-	    // these are all the sentences in this document
-	    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
-	    List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-	    List<Tree> trees = new ArrayList<>();
-	    
-	    for(CoreMap sentence: sentences) {
-	      // this is the parse tree of the current sentence
-	      trees.add(sentence.get(TreeAnnotation.class));
-	    }
-	    return trees;
-	}
-	
 	/**
 	 * Score the similarity of two sentences according to
 	 * sum([ len(x) | x of X, y of Y, if x == y ])
@@ -95,9 +63,8 @@ public class CoreNLPSentenceSimilarity extends PassageScorer {
 	 * @param y
 	 * @return
 	 */
-	public double scorePhrases(String s1, String s2) {
-		List<Tree> t1 = parseToTrees(s1);
-		List<Tree> t2 = parseToTrees(s2);
+	public double scorePhrases(List<Tree> t1, String s2) {
+		List<Tree> t2 = Trees.parse(s2);
 		
 		HashSet<Tree> t1_subtrees = new HashSet<>();
 		HashSet<Tree> t2_subtrees = new HashSet<>();
@@ -117,7 +84,7 @@ public class CoreNLPSentenceSimilarity extends PassageScorer {
 	 * 
 	 */
 	public double scorePassage(Question q, Answer a, Passage p) {
-		return scorePhrases(p.getText(), a.candidate_text);
+		return scorePhrases(p.parsed, a.candidate_text);
 	}
 }
 

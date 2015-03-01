@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.client.fluent.*;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,6 +38,7 @@ import uncc2014watsonsim.scorers.Merge;
  */
 public class BingSearcher extends Searcher {
 	private final String key;
+	private final Logger log = Logger.getLogger(getClass());
 	public BingSearcher(Environment env) {
 		Score.register("BING_ANSWER_RANK", -1, Merge.Mean);
 		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Or);
@@ -86,10 +88,10 @@ public class BingSearcher extends Searcher {
     				.score("BING_ANSWER_PRESENT", 1.0)
     			);
 	    	}
-		    System.out.print("B!");
+		    log.info("Retrieved " + elements.size() + " candidates from Bing.");
 	    } catch (IOException e) {
-	    	System.out.println("Error while searching with Bing. Ignoring. Details follow.");
-	        e.printStackTrace();
+	    	log.error("Error while searching with Bing. Ignoring. Details follow.");
+	        log.error(e.getMessage());
 	    }
 	    return results;
 	}

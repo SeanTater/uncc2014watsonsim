@@ -189,7 +189,7 @@ public class SentenceSimilarity extends PassageScorer {
 		// Tokenize the text, necessary for simple and NLP searches
 		List<List<String>> ca_sentences = tokenizeParagraph(a.candidate_text);
 		List<List<String>> q_sentences = tokenizeParagraph(q.getRaw_text());
-		List<List<String>> passage_sentences = tokenizeParagraph(p.getText());
+		List<List<String>> passage_sentences = tokenizeParagraph(p.text);
 		
 		// Run NLP on the question and candidate answer
 		List<Parse> ca_children = getAllChildren(parseParagraph(ca_sentences));
@@ -235,7 +235,7 @@ public class SentenceSimilarity extends PassageScorer {
 				ca_children,
 				p_children,
 				verbose);
-		return q_score*ca_score/p.getText().length();
+		return q_score*ca_score/p.text.length();
 	}
 }
 

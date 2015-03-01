@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.log4j.Logger;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
@@ -24,6 +25,7 @@ import uncc2014watsonsim.scorers.Merge;
 public class RedirectSynonyms extends Researcher {
 	private final Database db;
 	private final PreparedStatement s;
+	private final Logger log = Logger.getLogger(this.getClass());
 	
 	public RedirectSynonyms(Environment env) {
 		db = env.db;
@@ -36,11 +38,15 @@ public class RedirectSynonyms extends Researcher {
 		List<Answer> prev_answers = new ArrayList<>();
 		prev_answers.addAll(q);
 		
+		// For logging 
+		int synonym_count = 0;
+		
 		for (Answer a : prev_answers) {
 			try {
 				s.setString(1, a.candidate_text);
 				ResultSet results = s.executeQuery();
 				while (results.next()) {
+					synonym_count++;
 					Answer new_answer = new Answer(
 							new ArrayList<>(a.passages),
 							a.scores.clone(),
@@ -53,5 +59,8 @@ public class RedirectSynonyms extends Researcher {
 				return;
 			}
 		}
+		
+		log.info("Found " + synonym_count + " synonyms for " + prev_answers.size() +
+				" candidate answers using Wikipedia redirects.");
 	}
 }

@@ -80,7 +80,7 @@ public class KensNLPScorer extends PassageScorer {
 	public String[] DivideIntoSentences(Passage p) throws InvalidFormatException{
 		init();
 		SentenceDetectorME sentenceDetector = new SentenceDetectorME(this.sentenceModel);
-		return sentenceDetector.sentDetect(p.getText());
+		return sentenceDetector.sentDetect(p.text);
 	}
 
 

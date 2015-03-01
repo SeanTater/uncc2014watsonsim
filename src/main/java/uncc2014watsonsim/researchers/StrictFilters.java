@@ -1,9 +1,12 @@
 package uncc2014watsonsim.researchers;
 
+import org.apache.log4j.Logger;
+
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Question;
 
 public class StrictFilters extends Researcher {
+	private final Logger log = Logger.getLogger(this.getClass());
 	/**
 	 * Perform several strict filters relating mostly to game rules.
 	 * 
@@ -15,7 +18,7 @@ public class StrictFilters extends Researcher {
 	 * 5: Remove answers not in Latin text
 	 */
 	public void question(Question q) {
-		
+		int original_size = q.size(); // For logging
 		for (int i=q.size()-1; i >= 0; i--) {
 			Answer a = q.get(i);
 			
@@ -41,7 +44,13 @@ public class StrictFilters extends Researcher {
 			// Is over half of it non-Latin text?
 			else if (a.candidate_text.replaceAll("[^A-Za-z0-9 ]", "").length() * 2 < a.candidate_text.length())
 				q.remove(i);
+			
+			// Does it look like a web address?
+			else if (a.candidate_text.matches("^(http://)?([A-Za-z]+\\.)?[A-Za-z]+\\.(com|net|org|co\\.[A-Za-z]{2})$"))
+				q.remove(i);
 		}
+		
+		log.info("Eliminated " + (original_size - q.size()) + " invalid answers");
 	}
 	
 	/**

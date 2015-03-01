@@ -10,10 +10,11 @@ import java.util.Objects;
  * @author Sean Gallagher
  */
 public class Answer implements Comparable<Answer> {
+    public String candidate_text;
+    
     public double[] scores = Score.empty();
     private double overall_score = Double.NaN;
     public List<Passage> passages = new ArrayList<>();
-    public String candidate_text;
     public List<String> lexical_types;
 
     /**
@@ -62,9 +63,6 @@ public class Answer implements Comparable<Answer> {
     	for (Passage e: this.passages)
     		if (e.engine_name != null)
     			engines += e.engine_name.substring(0, 1);
-    	
-    	// ResultSet don't know if they are correct anymore..
-    	//String correct = isCorrect() ? "✓" : "✗";
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
     	return String.format("[%01f %-3s] %s", getOverallScore(), engines, candidate_text);

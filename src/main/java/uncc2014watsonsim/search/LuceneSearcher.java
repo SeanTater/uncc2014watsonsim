@@ -32,16 +32,11 @@ import uncc2014watsonsim.scorers.Merge;
  * @author Phani Rahul
  */
 public class LuceneSearcher extends Searcher {
-	private IndexReader reader;
 	private IndexSearcher searcher;
-	private Analyzer analyzer;
-	private QueryParser parser;
 	
 	public LuceneSearcher(Environment env) {
-		analyzer = new StandardAnalyzer(Version.LUCENE_47);
-		parser = new QueryParser(Version.LUCENE_47, "text", analyzer);
-		parser.setAllowLeadingWildcard(true);
-		
+
+		IndexReader reader;
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(new File(env.getOrDie("lucene_index"))));
 		} catch (IOException e) {
@@ -55,43 +50,34 @@ public class LuceneSearcher extends Searcher {
 		Score.register("LUCENE_ANSWER_PRESENT", 0.0, Merge.Or);
 	}
 	
+	/**
+	 * Create a Lucene query using the bigrams in the given text
+	 * @param text
+	 */
+	public BooleanQuery queryFromSkipBigrams(String text) {
+		BooleanQuery q = new BooleanQuery();
+		String prev_word = null;
+		for (String word : text.split("\\W+")) {
+			if (prev_word != null) {
+				PhraseQuery pq = new PhraseQuery();
+				pq.setSlop(1);
+				pq.add(new Term("text", prev_word));
+				pq.add(new Term("text", word));
+				q.add(pq, BooleanClause.Occur.SHOULD);
+			}
+			q.add(new TermQuery(new Term("text", word)), BooleanClause.Occur.SHOULD);
+			prev_word = word;
+		}
+		return q;
+	}
+	
+	
 	public List<Passage> query(String question_text) {
-		List<Passage> results = new ArrayList<Passage>();
+		List<Passage> results = new ArrayList<>();
 		try {
-			/*DisjunctionMaxQuery q = new DisjunctionMaxQuery((float) 0.1);
-			
-			// Text
-			//PhraseQuery pq = new PhraseQuery();
-			//q.setSlop(9);
-			//pq.setBoost(1);
-			Deque<String> history = new ArrayDeque<String>(3);
-			for (String word : question_text.split("\\W+")) {
-				q.add(new TermQuery(new Term("text", word)));
-			}
-			q.add(pq, BooleanClause.Occur.SHOULD);
-			
-			// Title
-			pq = new PhraseQuery();
-			pq.setSlop(2);
-			for (String word : question_text.split("\\W+")) {
-				pq.add(new Term("title", word));
-			}
-			q.add(pq, BooleanClause.Occur.SHOULD);
-			*/
-			BooleanQuery q = new BooleanQuery();
-			String last_word = null;
-			for (String word : question_text.split("\\W+")) {
-				if (last_word != null) {
-					PhraseQuery pq = new PhraseQuery();
-					pq.setSlop(1);
-					pq.add(new Term("text", last_word));
-					pq.add(new Term("text", word));
-					q.add(pq, BooleanClause.Occur.SHOULD);
-				}
-				q.add(new TermQuery(new Term("text", word)), BooleanClause.Occur.SHOULD);
-				last_word = word;
-			}
-			ScoreDoc[] hits = searcher.search(q, MAX_RESULTS).scoreDocs;
+			ScoreDoc[] hits = searcher.search(
+					queryFromSkipBigrams(question_text),
+					MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];

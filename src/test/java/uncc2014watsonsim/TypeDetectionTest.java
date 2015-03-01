@@ -2,12 +2,14 @@ package uncc2014watsonsim;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
-import uncc2014watsonsim.researchers.TagLAT;
+import uncc2014watsonsim.nlp.Environment;
+import uncc2014watsonsim.nlp.LAT;
 
 public class TypeDetectionTest {
 
@@ -28,8 +30,9 @@ public class TypeDetectionTest {
 	public void testHasAll(String source, String[] targets) {
 		List<String> types = new ArrayList<>();
 		try {
-			types = new TagLAT("http://cci-text-01.local:8890/sparql/").fromCandidate(source);
-		} catch (RuntimeException e) {
+			Environment env = new Environment("data/");
+			types = new LAT(env).fromCandidate(source);
+		} catch (RuntimeException | IOException e) {
 			// If this goes wrong, it probably just means we are disconnected
 			System.err.println("Failed to connect to SPARQL endpoint for answer "
 					+ "type detection. Perhaps you are disconnected?");

@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -59,7 +60,6 @@ import uncc2014watsonsim.search.*;
 public class DefaultPipeline {
 	
 	private final Timestamp run_start;
-	private final Properties config = new Properties();
 	private final Searcher[] searchers;
 	private final Researcher[] early_researchers;
 	private final Scorer[] scorers;
@@ -118,13 +118,13 @@ public class DefaultPipeline {
 			new IndriSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
-			new CachingSearcher(new BingSearcher(env), "bing")
+			new CachingSearcher(env, new BingSearcher(env), "bing")
 		};
 		early_researchers = new Researcher[]{
 			new RedirectSynonyms(env),
 			new HyphenTrimmer(),
 			new StrictFilters(),
-			new Merger(env),
+			new MergeByText(env),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(env),
 			new PersonRecognition(),
@@ -146,7 +146,7 @@ public class DefaultPipeline {
 			new DistSemCosQAScore(),
 			//new DistSemCosQPScore(),
 			//new SentenceSimilarity(),
-			//new CoreNLPSentenceSimilarity(),
+			new CoreNLPSentenceSimilarity(),
 		};
 		late_researchers = new Researcher[]{
 			new WekaTee(run_start),
@@ -162,19 +162,25 @@ public class DefaultPipeline {
     /** Run the full standard pipeline */
 	public Question ask(Question question) {
 		// Query every engine
+		Logger l = Logger.getLogger(this.getClass());
+		
+		l.info("Generating candidate answers..");
 		for (Searcher s: searchers)
 			question.addPassages(s.query(question.getRaw_text()));
-
+		l.info("Generated " + question.size() + " candidate answers.");
+		
+		
 		for (Researcher r : early_researchers)
 			r.question(question);
     	
     	for (Researcher r : early_researchers)
     		r.complete();
     	
-
+    	l.info("Scoring supporting evidence..");
         for (Scorer s: scorers)
         	s.scoreQuestion(question);
         
+        l.info("Computing confidence..");
         for (Researcher r : late_researchers)
 			r.question(question);
     	

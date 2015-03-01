@@ -18,7 +18,7 @@ public class PassageQuestionLengthRatio extends PassageScorer {
 		//String ps=p.text; // text is guaranteed to have content
 	    //ps.tokenize();
 		
-		int pl = p.getText().length();
+		int pl = p.text.length();
 		int ql = qs.length();
 		double sc=pl/ql;
 		return sc;
