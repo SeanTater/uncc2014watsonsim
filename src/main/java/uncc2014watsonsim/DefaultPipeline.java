@@ -121,12 +121,13 @@ public class DefaultPipeline {
 			new CachingSearcher(env, new BingSearcher(env), "bing")
 		};
 		early_researchers = new Researcher[]{
-			new RedirectSynonyms(env),
+			//new RedirectSynonyms(env),
 			new HyphenTrimmer(),
 			new StrictFilters(),
 			new MergeByText(env),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(env),
+			new MergeByCommonSupport(),
 			new PersonRecognition(),
 			new TagLAT(env),
 		};

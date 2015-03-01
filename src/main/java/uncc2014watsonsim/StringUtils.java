@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -70,6 +71,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	/** splits the given string into tokens */
 	public static List<String> tokenize(String text) {
 		List<String> tokens = new ArrayList<>();
+		DoubleMetaphone metaphone = new DoubleMetaphone();
 		
 		try (TokenStream tokenStream = analyzer.tokenStream("text", text)) {
 			//TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_46, new StringReader(text));
@@ -80,7 +82,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			tokenStream.reset();
 		
 			while (tokenStream.incrementToken()) {
-				tokens.add(token.toString());
+				tokens.add(metaphone.encode(token.toString()));
 			}
 		} catch (IOException e) {
 			// If we can't trim it, so what?

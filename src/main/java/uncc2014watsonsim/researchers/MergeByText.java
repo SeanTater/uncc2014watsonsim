@@ -27,30 +27,23 @@ public class MergeByText extends Researcher {
 	public void question(Question q) {
 		List<List<Answer>> answer_blocks = new ArrayList<>();
 		// Arrange the answers into blocks
+		each_answer:
 		for (Answer original : q) {
-			List<Answer> target = null;
-			
-			block_search:
 			for (List<Answer> block : answer_blocks) {
 				for (Answer example : block) {
 					// Look through the examples in this topic
 					// If it matches, choose to put it in this block and quit.
 					if (syn.matchViaLevenshtein(original.candidate_text, example.candidate_text)) {
-						target = block;
-						break block_search;
+						block.add(original);
+						continue each_answer;
 					}
 				}
 			}
 			
-			if (target == null) {
-				// Make a new topic for this answer
-				List<Answer> new_block = new ArrayList<>();
-				new_block.add(original);
-				answer_blocks.add(new_block);
-			} else {
-				// Use the old topic
-				target.add(original);
-			}
+			// Make a new topic for this answer
+			List<Answer> new_block = new ArrayList<>();
+			new_block.add(original);
+			answer_blocks.add(new_block);
 		}
 
 		// Merge the blocks
