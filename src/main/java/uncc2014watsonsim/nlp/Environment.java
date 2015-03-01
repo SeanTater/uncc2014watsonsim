@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.tdb.TDBFactory;
+
 import uncc2014watsonsim.Database;
 
 /**
@@ -31,6 +34,7 @@ public class Environment {
 	private final String data_path;
 	public final Map<String, String> config;
 	public final Database db = new Database();
+	public final Dataset rdf;
 	
 	/**
 	 * Create a (possibly) shared NLP environment. The given data directory
@@ -93,6 +97,9 @@ public class Environment {
 		Map<Object, Object> m = new HashMap<>();
 		m.putAll(props);
 		this.config = Collections.unmodifiableMap((Map) m);
+		
+		rdf = TDBFactory.assembleDataset(
+				pathMustExist("rdf/jena-lucene.ttl"));
 	}
 	
 

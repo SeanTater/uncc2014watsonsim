@@ -29,7 +29,6 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.tdb.TDBFactory;
 
 import static uncc2014watsonsim.nlp.Trees.concat;
 import static uncc2014watsonsim.nlp.Trees.parse;
@@ -39,13 +38,12 @@ import edu.stanford.nlp.trees.Tree;
  * Detect the LAT as the noun in closest proximity to a determiner.
  */
 public class LAT {
-	private final LuceneDBPediaSearch rdf_label_search;
 	private final Dataset rdf;
+	private final LuceneDBPediaSearch rdf_label_search;
 	
 	public LAT(Environment env) {
 		rdf_label_search = new LuceneDBPediaSearch(env);
-		rdf = TDBFactory.assembleDataset(
-				env.pathMustExist("rdf/jena-lucene.ttl"));
+		rdf = env.rdf;
 	}
 
 	/*
