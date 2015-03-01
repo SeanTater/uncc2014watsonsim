@@ -68,7 +68,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("match with metaphone, remove redirects", sql, run_start).run();
+			new StatsGenerator("merge by common support", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.toString());
