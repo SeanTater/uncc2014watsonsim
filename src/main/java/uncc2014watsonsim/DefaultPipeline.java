@@ -132,6 +132,7 @@ public class DefaultPipeline {
 			new TagLAT(env),
 		};
 		scorers = new Scorer[]{
+			new AnswerLength(),
 			new WordProximity(),
 			new Correct(env),
 			new SkipBigram(),
