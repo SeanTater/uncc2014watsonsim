@@ -104,6 +104,7 @@ task environment << {
         src 'http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/instance_types_heuristic_en.nt.bz2'  // ~ 1 GB
         src 'http://wifo5-04.informatik.uni-mannheim.de/downloads/datasets/genders_en.nt.bz2'     // 31 MB
         src 'http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/disambiguations_en.nt.bz2' // 194 MB
+        src 'http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/en/short_abstracts_en.nt.bz2' // 1.8 GB
         dest 'downloads'
     }
     copy {
