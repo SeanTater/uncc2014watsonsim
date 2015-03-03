@@ -41,7 +41,6 @@ public class PassageTermMatch extends PassageScorer {
 		/*
 		 * We will first separate the text of the query and passage into terms.
 		 * Note: The parameters are assumed to have stopwords removed.
-<<<<<<< HEAD
 		 */
 		List<String> qTerms = StringUtils.tokenize(queryText);
 		List<String> pTerms = StringUtils.tokenize(passageText);

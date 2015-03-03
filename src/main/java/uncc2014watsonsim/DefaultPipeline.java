@@ -133,6 +133,7 @@ public class DefaultPipeline {
 		};
 		scorers = new Scorer[]{
 			new AnswerLength(),
+			new PassageLATCheck(env),
 			new WordProximity(),
 			new Correct(env),
 			new SkipBigram(),

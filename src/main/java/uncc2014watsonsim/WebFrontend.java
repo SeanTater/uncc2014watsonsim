@@ -11,7 +11,7 @@ public class WebFrontend {
 		get(new Route("/ask") {
 			@Override
 			public Object handle(Request request, Response response) {
-	    		Question question = DefaultPipeline.ask(request.queryParams("query"));
+	    		Question question = new DefaultPipeline().ask(request.queryParams("query"));
 		        
 	    		String output = "";
 		        // Print out a simple one-line summary of each answer

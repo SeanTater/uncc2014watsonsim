@@ -71,7 +71,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	/** splits the given string into tokens */
 	public static List<String> tokenize(String text) {
 		List<String> tokens = new ArrayList<>();
-		DoubleMetaphone metaphone = new DoubleMetaphone();
 		
 		try (TokenStream tokenStream = analyzer.tokenStream("text", text)) {
 			//TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_46, new StringReader(text));
@@ -82,7 +81,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			tokenStream.reset();
 		
 			while (tokenStream.incrementToken()) {
-				tokens.add(metaphone.encode(token.toString()));
+				tokens.add(token.toString());
 			}
 		} catch (IOException e) {
 			// If we can't trim it, so what?

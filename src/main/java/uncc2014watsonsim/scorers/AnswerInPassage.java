@@ -2,24 +2,18 @@ package uncc2014watsonsim.scorers;
 
 /*
  * Author: Chris Stephenson
+ * later rewritten by Sean
  */
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
 
-public class StephensonScorer extends PassageScorer {
+public class AnswerInPassage extends PassageScorer {
 	@Override
 	public double scorePassage(Question q, Answer a, Passage p)
 	{
-		String qs = q.getRaw_text();
-		String qst = q.text;
-		String as = a.candidate_text;
-		String ps=p.text;
-
-		int pl = ps.length();
-		int ql = qs.length();
-		double sc=pl/ql;
-		return sc; 
+		return p.text.contains(a.candidate_text) ?
+				1 : 0;
 	}
 }

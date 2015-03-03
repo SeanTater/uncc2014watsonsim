@@ -1,17 +1,14 @@
-package uncc2014watsonsim.nlp;
+package uncc2014watsonsim;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import edu.stanford.nlp.dcoref.CorefChain;
-import edu.stanford.nlp.dcoref.CorefCoreAnnotations.CorefChainAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import uncc2014watsonsim.nlp.Trees;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
-import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
@@ -19,17 +16,22 @@ import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcess
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
-//import edu.stanford.nlp.util.*;
 
-/* @author Wlodek
- * @author Sean Gallagher
+/**
+ * A String, tokenized, parsed into Trees, and as a semantic graph.
  * 
- * Namespace for the preconfigured NLP pipeline
  */
+public class Phrase {
+	public final String text;
 
-public class Trees {
-	static final StanfordCoreNLP pipeline;
+	// Cached Fields
+	private final Annotation document;
+	public final List<String> tokens;
+	public final List<Tree> trees;
+	public final List<SemanticGraph> graphs;
 	
+	// Create a pipeline
+	static final StanfordCoreNLP pipeline;
 	static {
 		// creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution 
 	    Properties props = new Properties();
@@ -38,10 +40,14 @@ public class Trees {
 	    pipeline = new StanfordCoreNLP(props);
 	}
 	
-	public static List<CoreMap> parse(String text) {
-	    
+	public Phrase(String text) {
+		if (text == null)
+			throw new NullPointerException("Text cannot be null.");
+		this.text = StringEscapeUtils.unescapeXml(text);
+		this.tokens = Collections.unmodifiableList(StringUtils.tokenize(this.text));
+		
 	    // create an empty Annotation just with the given text
-	    Annotation document = new Annotation(text);
+	    document = new Annotation(text);
 	    
 	    // run all Annotators on this text
 	    pipeline.annotate(document);
@@ -50,30 +56,17 @@ public class Trees {
 	    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
 	    List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 	    List<Tree> trees = new ArrayList<>();
-	    List<Tree> dependencies = new ArrayList<>();
+	    List<SemanticGraph> graphs = new ArrayList<>();
+	    
 	    
 	    for(CoreMap sentence: sentences) {
 	      // this is the parse tree of the current sentence
-	    	Tree t = sentence.get(TreeAnnotation.class);
-	    	SemanticGraph graph = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
-	    	trees.add(t);
+	    	trees.add(sentence.get(TreeAnnotation.class));
+	    	graphs.add(sentence.get(CollapsedCCProcessedDependenciesAnnotation.class));
 	    }
-	    return sentences;
+	    
+	    this.trees = Collections.unmodifiableList(trees);
+	    this.graphs = Collections.unmodifiableList(graphs);
 	}
-	
-	/**
-	 * Concatenate the leaves of a parse tree, interspersed with spaces
-	 * @param t	The input tree
-	 * @return The resulting space-delimited string
-	 */
-	public static String concat(Tree t) {
-		StringBuilder b = new StringBuilder("");
-		for (Tree l : t.getLeaves()) {
-			b.append(l.value());
-			b.append(' ');
-		}
-		b.deleteCharAt(b.length()-1);
-		return b.toString();
-	}
-}
 
+}

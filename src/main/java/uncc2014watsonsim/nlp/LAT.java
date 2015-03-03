@@ -32,7 +32,10 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 
 import static uncc2014watsonsim.nlp.Trees.concat;
 import static uncc2014watsonsim.nlp.Trees.parse;
+import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.trees.Tree;
+import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
+import edu.stanford.nlp.util.CoreMap;
 
 /**
  * Detect the LAT as the noun in closest proximity to a determiner.
@@ -132,9 +135,10 @@ public class LAT {
 	 * This is a thin wrapper for use as a string
 	 * @return The most general single-word noun LAT
 	 */
-	public static String fromClue(String s) {
-		System.out.println(parse(s));
-		for (Tree t : parse(s)) {
+	public static String fromClue(String text) {
+		
+		for (CoreMap s : parse(text)) {
+			Tree t = s.get(TreeAnnotation.class);
 			Analysis lat = detectPart(t);
 			if (lat.ok() && lat.rank() >= 0) {
 				return concat(lat.nn).toLowerCase();

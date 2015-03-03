@@ -1,24 +1,13 @@
 package uncc2014watsonsim;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import uncc2014watsonsim.nlp.Trees;
-import edu.stanford.nlp.trees.Tree;
 
-public class Passage {
+public class Passage extends Phrase {
 	// Stored Fields
 	public final String reference;
-	public final String text;
 	public final String engine_name;
 	public final String title;
-	
-	// Cached Fields
-	public final List<String> tokens;
-	public final List<Tree> parsed;
 	
 	// Mutable
     public double[] scores = Score.empty();
@@ -32,18 +21,14 @@ public class Passage {
      * @param reference   Specific to the engine, or a URL, for later lookup
      */
 	public Passage(String engine_name, String title, String text, String reference) {
+		super(text);
 		if (engine_name == null)
 			throw new NullPointerException("Engine name cannot be null.");
 		if (title == null)
 			throw new NullPointerException("Title cannot be null.");
-		if (text == null)
-			throw new NullPointerException("Text cannot be null.");
 		if (reference == null)
 			throw new NullPointerException("Reference cannot be null.");
-			
-		this.text = StringEscapeUtils.unescapeXml(text);
-		this.tokens = Collections.unmodifiableList(StringUtils.tokenize(this.text));
-		this.parsed = Collections.unmodifiableList(Trees.parse(this.text));
+		
 		this.reference = reference;
 		this.engine_name = engine_name;
 		this.title = StringEscapeUtils.unescapeXml(title);

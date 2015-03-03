@@ -6,6 +6,7 @@ import java.util.List;
 import edu.stanford.nlp.trees.Tree;
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Passage;
+import uncc2014watsonsim.Phrase;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.nlp.Trees;
 
@@ -27,13 +28,12 @@ public class CoreNLPSentenceSimilarity extends PassageScorer {
 	 * @param y
 	 * @return
 	 */
-	public double scorePhrases(List<Tree> t1, String s2) {
-		List<Tree> t2 = Trees.parse(s2);
+	public double scorePhrases(Phrase t1, Phrase t2) {
 		
 		HashSet<Tree> t1_subtrees = new HashSet<>();
 		HashSet<Tree> t2_subtrees = new HashSet<>();
-		for (Tree x : t1) t1_subtrees.addAll(x);
-		for (Tree y : t2) t2_subtrees.addAll(y);
+		for (Tree x : t1.trees) t1_subtrees.addAll(x);
+		for (Tree y : t2.trees) t2_subtrees.addAll(y);
 		t1_subtrees.retainAll(t2_subtrees);
 		
 		double score = 0.0;
@@ -48,7 +48,7 @@ public class CoreNLPSentenceSimilarity extends PassageScorer {
 	 * 
 	 */
 	public double scorePassage(Question q, Answer a, Passage p) {
-		return scorePhrases(p.parsed, a.candidate_text);
+		return scorePhrases(p, new Phrase(a.candidate_text));
 	}
 }
 

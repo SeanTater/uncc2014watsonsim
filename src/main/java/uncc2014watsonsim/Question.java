@@ -22,7 +22,6 @@ public class Question extends ArrayList<Answer> {
     private String category = "unknown";
     private QType type;
     public final String simple_lat;
-    public final List<Tree> parsed;
     //private AnnotationController ac = new AnnotationController();
     
     /**
@@ -32,8 +31,7 @@ public class Question extends ArrayList<Answer> {
         this.raw_text = text;
         this.text = StringUtils.canonicalize(text);
         this.type = QClassDetection.detectType(this);
-        parsed = Collections.unmodifiableList(Trees.parse(raw_text));
-        simple_lat = LAT.fromClue(parsed.get(0));
+        simple_lat = LAT.fromClue(new Phrase(raw_text).trees.get(0));
         
         Logger log = Logger.getLogger(getClass());
         if (simple_lat.isEmpty())
