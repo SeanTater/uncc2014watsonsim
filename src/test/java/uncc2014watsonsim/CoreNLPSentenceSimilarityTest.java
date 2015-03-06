@@ -7,18 +7,19 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import edu.stanford.nlp.trees.Tree;
+import uncc2014watsonsim.nlp.Trees;
 import uncc2014watsonsim.scorers.CoreNLPSentenceSimilarity;
+import uncc2014watsonsim.Phrase;
 
 public class CoreNLPSentenceSimilarityTest {
 
 	@Test
 	public void testParseToTree() {
-		CoreNLPSentenceSimilarity scorer = new CoreNLPSentenceSimilarity();
 		
 		// Empty case
-		assertEquals(new ArrayList<>(), scorer.parseToTrees(""));
+		assertEquals(new ArrayList<>(), Trees.parse(""));
 		// Simple case
-		assertEquals(Tree.valueOf("(ROOT (NP (NN Example)))"), scorer.parseToTrees("Example").get(0));
+		assertEquals(Tree.valueOf("(ROOT (NP (NN Example)))"), Trees.parse("Example").get(0));
 		// Challenging case
 		// fails: "Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo."
 		// succeeds, or at least it looks generally right to me:
@@ -26,14 +27,14 @@ public class CoreNLPSentenceSimilarityTest {
 				+ "(VP (VBD was) (NP (DT the) (JJ first) (NN man)"
 				+ "(S (VP (TO to) (VP (VB walk) "
 				+ "(PP (IN on) (NP (DT the) (NN moon)))))))) (. .)))"),
-				scorer.parseToTrees("Niel Armstrong was the first man to walk on the moon.").get(0));
+				Trees.parse("Niel Armstrong was the first man to walk on the moon.").get(0));
 		
 		assertEquals(
 				Tree.valueOf("(ROOT (S (NP (PRP I)) (VP (VBP am) (ADJP (JJ tall))) (. .)))"),
-				scorer.parseToTrees("I am tall. You are short.").get(0));
+				Trees.parse("I am tall. You are short.").get(0));
 		assertEquals(
 				Tree.valueOf("(ROOT (S (NP (PRP You)) (VP (VBP are) (ADJP (JJ short))) (. .)))"),
-				scorer.parseToTrees("I am tall. You are short.").get(1));
+				Trees.parse("I am tall. You are short.").get(1));
 		
 	}
 
@@ -44,12 +45,16 @@ public class CoreNLPSentenceSimilarityTest {
 		// These are in large part to make sure that it does not accidentally change.
 		assertEquals(
 				6.0,
-				scorer.scorePhrases("My goat knows the bowling score.", "Michael rowed the boat ashore."),
+				scorer.scorePhrases(
+					new Phrase("My goat knows the bowling score."),
+					new Phrase("Michael rowed the boat ashore.")),
 				0.01
 		);
 		assertEquals(
 				12.0,
-				scorer.scorePhrases("A tisket. A tasket. A green and yellow basket.", "A tisket, a tasket, what color is my basket?"),
+				scorer.scorePhrases(
+					new Phrase("A tisket. A tasket. A green and yellow basket."),
+					new Phrase("A tisket, a tasket, what color is my basket?")),
 				0.01
 		);
 	}

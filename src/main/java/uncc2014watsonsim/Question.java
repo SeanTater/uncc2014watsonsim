@@ -11,7 +11,6 @@ import org.apache.uima.jcas.JCas;
 import edu.stanford.nlp.trees.Tree;
 import uncc2014watsonsim.nlp.LAT;
 import uncc2014watsonsim.nlp.Trees;
-import uncc2014watsonsim.qAnalysis.AnnotationController;
 
 
 public class Question extends ArrayList<Answer> {
@@ -22,7 +21,6 @@ public class Question extends ArrayList<Answer> {
     private String category = "unknown";
     private QType type;
     public final String simple_lat;
-    //private AnnotationController ac = new AnnotationController();
     
     /**
      * Create a question from it's raw text
@@ -40,10 +38,6 @@ public class Question extends ArrayList<Answer> {
         	log.info("Looking for a " + simple_lat);
         
         log.info("Looks like a " + type.toString().toLowerCase() + " question");
-        // if (type == QType.FITB) {
-        //All questions can run through UIMA Annotation Pipeline
-        //ac.createAnnotations(this);    	
-        //}
     }
 
 	/**
