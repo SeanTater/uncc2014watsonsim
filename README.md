@@ -5,7 +5,7 @@ Watsonsim Question Answering System [![Build Status](https://travis-ci.org/SeanT
 Keep in mind that the program may change faster than its documentation. If you are experiencing problems, [contact a developer](mailto:stgallag@gmail.com).
 
 ## Quick Intro
-Watsonsim works using a pipeline of operations on questions, candidate answers, and their supporting passages. In many ways it is similar to [IBM's Watson](http://en.wikipedia.org/wiki/Watson_(computer\)), and [Petr's YodaQA](https://github.com/brmson/yodaqa). It's not all that similar to more logic based systems like [OpenCog](http://opencog.org/) or [Wolfram Alpha](www.wolframalpha.com). But there are significant differences even from Watson and YodaQA.
+Watsonsim works using a pipeline of operations on questions, candidate answers, and their supporting passages. In many ways it is similar to [IBM's Watson](http://en.wikipedia.org/wiki/Watson_%28computer%29), and [Petr's YodaQA](https://github.com/brmson/yodaqa). It's not all that similar to more logic based systems like [OpenCog](http://opencog.org/) or [Wolfram Alpha](www.wolframalpha.com). But there are significant differences even from Watson and YodaQA.
 
 - We don't use a standard UIMA pipeline, which is a product of our student-project history. Sometimes this is a hindrance but typically it has little impact. We suspect it reduces the learning overhead and boilerplate code.
 - Unlike YodaQA, we target Jeopardy! questions, but we do incorporate their method of Lexical Anawer Type (LAT) checking, in addition to our own.
