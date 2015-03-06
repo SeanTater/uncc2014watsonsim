@@ -24,7 +24,7 @@ import uncc2014watsonsim.Database;
  */
 public abstract class Searcher {
 	
-	static final Database db = new Database();
+	final Database db = new Database();
 
     /**
      * Runs the <i>query</i>, populating a list of ResultSets

@@ -53,6 +53,9 @@ dependencies {
     compile "org.xerial:sqlite-jdbc:3.7.2"
     // PostgreSQL
     compile 'org.postgresql:postgresql:9.3-1101-jdbc41'
+    // Connection pooling (revisit this later)
+    //compile 'com.mchange:c3p0:0.9.5'
+
     
     // OpenNLP
     compile "org.apache.opennlp:opennlp-tools:1.5.3"
