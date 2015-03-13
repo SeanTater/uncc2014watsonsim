@@ -49,16 +49,7 @@ public class PassageLATCheck extends AnswerScorer {
 		 */
 
 		// Rules
-		String ruleSrc = "[(?noun_r urn:sent:type ?type_r) <- "	// Joan is an actress.
-				+ "(?type_r urn:sent:nsubj ?noun_r),"			// JOAN is an ACTRESS.
-				+ "(?type_r urn:sent:det ?det),"				// Joan is AN ACTRESS.
-				+ "(?type_r urn:sent:cop ?cop),"				// Joan IS an ACTRESS.
-				+ "(?type_r urn:sent:tag urn:sent:NN),"			// Joan is an ACTRESS
-				//+ "(?type_r urn:sent:idx ?type_idx),"
-				//+ "(?noun_r urn:sent:idx ?noun_idx)"
-				+ "]";
 		List<Rule> rules = Rule.rulesFromURL("file:src/main/parse.rules");
-		//List<Rule> rules = Rule.parseRules(ruleSrc);
 		Reasoner reasoner = new GenericRuleReasoner(rules);
 		
 		for (Passage p: a.passages) {
@@ -96,33 +87,10 @@ public class PassageLATCheck extends AnswerScorer {
 					IndexedWord obj = graph.getNodeByIndex(obj_id);
 					if (subj.tag().startsWith("NN")
 							&& obj.tag().startsWith("NN")) {
-						log.info("Discovered (method b)" + pasteTogetherNoun(graph, subj)
+						log.info("Discovered " + pasteTogetherNoun(graph, subj)
 								+ " is a(n) " + pasteTogetherNoun(graph, obj));
 					}
 					
-				}
-				
-				for (IndexedWord word : graph.vertexSet()) {
-					// Look for the candidate
-					if (word.tag().startsWith("NN")) {
-						String candidate_noun = pasteTogetherNoun(graph, word);
-
-						//System.out.println(phrase);
-						if (syn.matchViaLevenshtein(
-							candidate_noun,
-							a.candidate_text)) {
-							
-							// Found the candidate. Get the LATs.
-							for (SemanticGraphEdge edge : graph.incomingEdgeIterable(word)) {
-								if (edge.getRelation().getShortName().equals("nsubj")
-										&& edge.getGovernor().tag().startsWith("NN")) {
-									String lat_noun = pasteTogetherNoun(graph, edge.getGovernor());
-
-									log.info("Discovered " + candidate_noun + " is a(n) " + lat_noun);
-								}
-							}
-						}
-					}
 				}
 			}
 		}
@@ -143,13 +111,16 @@ public class PassageLATCheck extends AnswerScorer {
 		for (SemanticGraphEdge edge : graph.outgoingEdgeIterable(rightmost)) {
 			switch (edge.getRelation().getShortName()) {
 			case "nn":
+			case "cd":
+			case "amod":
 				phrase.append(edge.getDependent().originalText());
 				phrase.append(' ');
 				break;
-			case "prep_of":
-				phrase.append("of ");
-				phrase.append(edge.getDependent().originalText());
-				phrase.append(' ');
+			case "prep":
+				if (edge.getRelation().getSpecific().equals("of")) {
+					phrase.append(edge.getDependent().originalText());
+					phrase.append(' ');
+				}
 				break;
 			}
 		}
