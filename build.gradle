@@ -124,10 +124,10 @@ run {
     main "uncc2014watsonsim.WatsonSim"
 }
 
-task(run_cache_searches, type: JavaExec) {
+task(train, type: JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
-    main "uncc2014watsonsim.sources.GenerateSearchResultDataset"
+    main "uncc2014watsonsim.ParallelStats"
 }
 
 task(run_index, type: JavaExec) {

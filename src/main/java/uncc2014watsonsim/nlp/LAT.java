@@ -151,30 +151,16 @@ public class LAT {
 		ParameterizedSparqlString sparql = new ParameterizedSparqlString(
 				"PREFIX : <http://dbpedia.org/resource/>\n"
 				+ "PREFIX dbo: <http://dbpedia.org/ontology/>\n"
-				+ "PREFIX dbpedia2: <http://dbpedia.org/property/>\n"
-				+ "PREFIX dbpedia: <http://dbpedia.org/>\n"
-				+ "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"
-				+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-				+ "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
 				+ "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
-				+ "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"
-				+ "PREFIX text: <http://jena.apache.org/text#>\n"
-				+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
 				+ "select distinct ?kind where {\n"
-				//+ "?thing text:query (rdfs:label 'moose'@en 50);" // Apache Jena/Lucene extension
-				//+ "?thing rdfs:label ?content.\n"
 				+ "{?content dbo:wikiPageDisambiguates ?article."
 				+ " ?article a ?kind_resource.}"
 				+ "Union"
 				+ "{?content a ?kind_resource.}"
-				//+ "?thing rdfs:label ?label."
-				
-				//+ "?thing rdf:type ?type."
 				+ "?kind_resource rdfs:label ?kind."
 				+ "FILTER ("
 					+ "langMatches(lang(?kind), 'EN')"
-				    //+ "&& regex(?name, ?content, 'i')"
 				+ ")} limit 10");
 		List<String> uris = rdf_label_search.query(text);
 		if (uris.size() > 0) sparql.setIri("content", uris.get(0));
