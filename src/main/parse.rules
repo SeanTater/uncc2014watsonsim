@@ -1,0 +1,8 @@
+[(?noun_r urn:sent:type ?type_r) <-
+    (?type_r urn:sent:nsubj ?noun_r),
+    (?type_r urn:sent:det ?det),
+    (?type_r urn:sent:cop ?cop)
+    // (?type_r urn:sent:tag urn:sent:NN)
+    // (?type_r urn:sent:idx ?type_idx)
+    // (?noun_r urn:sent:idx ?noun_idx)
+]
