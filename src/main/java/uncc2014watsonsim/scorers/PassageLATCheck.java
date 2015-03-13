@@ -1,5 +1,6 @@
 package uncc2014watsonsim.scorers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -51,6 +52,7 @@ public class PassageLATCheck extends AnswerScorer {
 		// Rules
 		List<Rule> rules = Rule.rulesFromURL("file:src/main/parse.rules");
 		Reasoner reasoner = new GenericRuleReasoner(rules);
+		ArrayList<String> resulting_types = new ArrayList<>();
 		
 		for (Passage p: a.passages) {
 			for (SemanticGraph graph : p.graphs) {
@@ -83,15 +85,34 @@ public class PassageLATCheck extends AnswerScorer {
 				for (Statement stmt : new IterableIterator<Statement>(iter)) {
 					int subj_id= Integer.parseInt(stmt.getSubject().asResource().getURI().split(":")[2]);
 					int obj_id= Integer.parseInt(stmt.getObject().asResource().getURI().split(":")[2]);
-					IndexedWord subj = graph.getNodeByIndex(subj_id);
-					IndexedWord obj = graph.getNodeByIndex(obj_id);
-					if (subj.tag().startsWith("NN")
-							&& obj.tag().startsWith("NN")) {
-						log.info("Discovered " + pasteTogetherNoun(graph, subj)
-								+ " is a(n) " + pasteTogetherNoun(graph, obj));
+					IndexedWord subj_idx = graph.getNodeByIndex(subj_id);
+					IndexedWord obj_idx = graph.getNodeByIndex(obj_id);
+					if (subj_idx.tag().startsWith("NN")
+							&& obj_idx.tag().startsWith("NN")) {
+						
+						String subj = pasteTogetherNoun(graph, subj_idx);
+						String obj = pasteTogetherNoun(graph, obj_idx);
+						log.info("Discovered " + subj 
+								+ " is a(n) " + obj);
+						
+						if (syn.matchViaLevenshtein(subj, a.candidate_text)) {
+							a.lexical_types.add(obj);
+						} else if (syn.matchViaLevenshtein(obj, q.simple_lat)) {
+							log.info("Let's examine " + subj 
+									+ " since it's a(n) " + obj);
+						}
 					}
 					
 				}
+			}
+		}
+		for (String type : a.lexical_types) {
+			boolean matches = syn.matchViaLevenshtein(type, q.simple_lat);
+			
+			log.info("Matching " + type + " against " + q.simple_lat
+					+ (matches ? " succeeds." : " fails."));
+			if (matches) {
+				return 1.0;
 			}
 		}
 		return 0.0;
