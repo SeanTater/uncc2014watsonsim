@@ -30,7 +30,7 @@ public class TypeDetectionTest {
 		List<String> types = new ArrayList<>();
 		try {
 			Environment env = new Environment("data/");
-			types = new ClueType(env).fromCandidate(source);
+			types = new ClueType(env).viaDBPedia(source);
 		} catch (RuntimeException | IOException e) {
 			// If this goes wrong, it probably just means we are disconnected
 			System.err.println("Failed to connect to SPARQL endpoint for answer "

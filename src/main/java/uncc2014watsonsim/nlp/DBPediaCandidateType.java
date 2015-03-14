@@ -29,11 +29,11 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 
-public class CandidateType {
+public class DBPediaCandidateType {
 	private final Dataset rdf;
 	private final LuceneDBPediaSearch rdf_label_search;
 	
-	public CandidateType(Environment env) {
+	public DBPediaCandidateType(Environment env) {
 		rdf_label_search = new LuceneDBPediaSearch(env);
 		rdf = env.rdf;
 	}
@@ -65,7 +65,7 @@ public class CandidateType {
 	 * tag("New York") for example might be:
 	 *  {"populated place", "place", "municipality"}..
 	 */
-	public List<String> fromCandidate(String text) {
+	public List<String> viaDBPedia(String text) {
 		/*
 		 * ABOUT THE QUERY
 		 * ===============
@@ -110,6 +110,7 @@ public class CandidateType {
 		return types;
 	}
 
+	
 }
 
 class LuceneDBPediaSearch {
