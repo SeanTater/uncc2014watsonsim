@@ -1,23 +1,10 @@
 package edu.uncc.cs.watsonsim;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.resource.ResourceInitializationException;
-import org.apache.uima.resource.ResourceSpecifier;
-import org.apache.uima.util.InvalidXMLException;
-import org.apache.uima.util.XMLInputSource;
-import org.postgresql.jdbc2.TimestampUtils;
 
 import edu.uncc.cs.watsonsim.researchers.*;
 import edu.uncc.cs.watsonsim.scorers.*;
@@ -63,30 +50,6 @@ public class DefaultPipeline {
 	private final Researcher[] early_researchers;
 	private final Scorer[] scorers;
 	private final Researcher[] late_researchers;
-	
-	/*
-	 * Initialize UIMA. 
-	 * Why here? We do not want to reinstantiate the Analysis engine each time.
-	 * We also don't want to load the POS models each time we ask a new question. Here we can hold the AE for the 
-	 * entire duration of the Pipeline's life.
-	 */
-	public AnalysisEngine uimaAE;
-	
-	/* {
-		try{
-			XMLInputSource uimaAnnotatorXMLInputSource = new XMLInputSource("src/main/java/uncc2014watsonsim/uima/qAnalysis/qAnalysisApplicationDescriptor.xml");
-			final ResourceSpecifier specifier = UIMAFramework.getXMLParser().parseResourceSpecifier(uimaAnnotatorXMLInputSource);
-			//Generate AE
-			uimaAE = UIMAFramework.produceAnalysisEngine(specifier);
-		}catch(IOException e){
-			e.printStackTrace();
-		} catch (InvalidXMLException e) {
-			e.printStackTrace();
-		} catch (ResourceInitializationException e) {
-			e.printStackTrace();
-		}
-	}*/
-	/* End UIMA */
 	
 	/**
 	 * Start a pipeline with a new timestamp for the statistics dump

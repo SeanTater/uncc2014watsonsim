@@ -20,6 +20,7 @@ import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphEdge;
 import edu.stanford.nlp.util.IterableIterator;
 import edu.stanford.nlp.util.Pair;
+import edu.uncc.cs.watsonsim.Phrase;
 
 public class SupportCandidateType {
 
@@ -69,43 +70,53 @@ public class SupportCandidateType {
 		phrase.append(rightmost.originalText());
 		return phrase.toString();
 	}
-	
 
-	public static List<Pair<IndexedWord, IndexedWord>> extractTypeDeclarations(SemanticGraph graph) {
-		// Load data into a model
-		Model model = ModelFactory.createMemModelMaker().createFreshModel();
-		
-		// Add all the edges
-		for (SemanticGraphEdge edge : graph.edgeIterable()) {
-			model.add(
-					wordResource(model, edge.getGovernor()),
-					model.createProperty("urn:sent:" + edge.getRelation().getShortName()),
-					wordResource(model, edge.getDependent()));
-		}
-		// Index the words
-		Property tag_property = model.createProperty("urn:sent:tag"); 
-		for (IndexedWord word : graph.vertexSet()) {
-			model.add(
-					wordResource(model, word),
-					tag_property,
-					model.createResource("urn:sent:" + word.tag()));
-		}
-		// Create an inference model
-		InfModel infmodel = ModelFactory.createInfModel(reasoner, model);
-		// Query the model
-		StmtIterator iter = infmodel.listStatements(
-				(Resource)null,
-				model.createProperty("urn:sent:type"),
-				(RDFNode)null);
-		
-		// Get the resulting matches
+	/**
+	 * Find simple statements of type in regular text, such as "Diabetes is a
+	 * common disease"
+	 * 
+	 * Subclasses are very similarly stated, such as "A hummingbird is a kind
+	 * of bird." But we don't distinguish between these yet. We should though.
+	 * 
+	 * @return Pairs of nouns and their types.
+	 */
+	public static List<Pair<IndexedWord, IndexedWord>> extract(Phrase p) {
 		List<Pair<IndexedWord,IndexedWord>> names_and_types = new ArrayList<>();
-		for (Statement stmt : new IterableIterator<Statement>(iter)) {
-			IndexedWord subj_idx = resourceWord(graph, stmt.getSubject());
-			IndexedWord obj_idx = resourceWord(graph, stmt.getObject().asResource());
-			if (subj_idx.tag().startsWith("NN")
-					&& obj_idx.tag().startsWith("NN")) {
-				names_and_types.add(new Pair<>(subj_idx, obj_idx));
+		for (SemanticGraph graph: p.graphs){
+			// Load data into a model
+			Model model = ModelFactory.createMemModelMaker().createFreshModel();
+			
+			// Add all the edges
+			for (SemanticGraphEdge edge : graph.edgeIterable()) {
+				model.add(
+						wordResource(model, edge.getGovernor()),
+						model.createProperty("urn:sent:" + edge.getRelation().getShortName()),
+						wordResource(model, edge.getDependent()));
+			}
+			// Index the words
+			Property tag_property = model.createProperty("urn:sent:tag"); 
+			for (IndexedWord word : graph.vertexSet()) {
+				model.add(
+						wordResource(model, word),
+						tag_property,
+						model.createResource("urn:sent:" + word.tag()));
+			}
+			// Create an inference model
+			InfModel infmodel = ModelFactory.createInfModel(reasoner, model);
+			// Query the model
+			StmtIterator iter = infmodel.listStatements(
+					(Resource)null,
+					model.createProperty("urn:sent:type"),
+					(RDFNode)null);
+			
+			// Get the resulting matches
+			for (Statement stmt : new IterableIterator<Statement>(iter)) {
+				IndexedWord subj_idx = resourceWord(graph, stmt.getSubject());
+				IndexedWord obj_idx = resourceWord(graph, stmt.getObject().asResource());
+				if (subj_idx.tag().startsWith("NN")
+						&& obj_idx.tag().startsWith("NN")) {
+					names_and_types.add(new Pair<>(subj_idx, obj_idx));
+				}
 			}
 		}
 		return names_and_types;

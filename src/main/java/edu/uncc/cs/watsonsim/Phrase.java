@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -15,7 +17,6 @@ import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcess
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
-import edu.uncc.cs.watsonsim.nlp.Trees;
 
 /**
  * A String, tokenized, parsed into Trees, and as a semantic graph.
@@ -29,6 +30,8 @@ public class Phrase {
 	public final List<String> tokens;
 	public final List<Tree> trees;
 	public final List<SemanticGraph> graphs;
+	private final ConcurrentHashMap<Function, Object> memos =
+			new ConcurrentHashMap<>();
 	
 	// Create a pipeline
 	static final StanfordCoreNLP pipeline;
@@ -67,6 +70,14 @@ public class Phrase {
 	    
 	    this.trees = Collections.unmodifiableList(trees);
 	    this.graphs = Collections.unmodifiableList(graphs);
+	}
+	
+	/**
+	 * Lightweight functional annotations. Either apply the function and get
+	 * the result, or if it has been done, return the existing value.
+	 */
+	public <X> X memo(Function<Phrase, X> app) {
+		return (X) memos.computeIfAbsent(app, (key) -> app.apply(this));
 	}
 
 }

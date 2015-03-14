@@ -41,7 +41,7 @@ public class PassageLATCheck extends AnswerScorer {
 	public double scoreAnswer(Question q, Answer a) {
 		for (Passage p: a.passages) {
 			for (SemanticGraph graph : p.graphs) {
-				for (Pair<IndexedWord,IndexedWord> name_and_type : SupportCandidateType.extractTypeDeclarations(graph)) {
+				for (Pair<IndexedWord,IndexedWord> name_and_type : SupportCandidateType.extract(graph)) {
 					String subj = SupportCandidateType.concatNoun(graph, name_and_type.first());
 					String obj = SupportCandidateType.concatNoun(graph, name_and_type.second());
 					log.info("Discovered " + subj + " is a(n) " + obj);

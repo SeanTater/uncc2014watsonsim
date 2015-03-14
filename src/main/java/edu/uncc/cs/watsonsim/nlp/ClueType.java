@@ -14,6 +14,7 @@ import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
 import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.Phrase;
 
 /**
  * Detect the LAT as the noun in closest proximity to a determiner.
@@ -105,9 +106,8 @@ public class ClueType {
 	 * @return The most general single-word noun LAT
 	 */
 	public static String fromClue(String text) {
-		
-		for (CoreMap s : parse(text)) {
-			Tree t = s.get(TreeAnnotation.class);
+		Phrase p = new Phrase(text);
+		for (Tree t : p.trees) {
 			Analysis lat = detectPart(t);
 			if (lat.ok() && lat.rank() >= 0) {
 				return concat(lat.nn).toLowerCase();
