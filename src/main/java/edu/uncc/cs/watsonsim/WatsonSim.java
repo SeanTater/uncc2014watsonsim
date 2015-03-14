@@ -2,6 +2,7 @@ package edu.uncc.cs.watsonsim;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
@@ -23,15 +24,16 @@ public class WatsonSim {
         Logger.getRootLogger().setLevel(Level.INFO);
         DefaultPipeline pipe = new DefaultPipeline();
     	while (!command.isEmpty()) {
-    		Question question = pipe.ask(command);
+    		Question question = new Question(command);
+    		List<Answer> answers = pipe.ask(question);
 	        
 	        // Print out a simple one-line summary of each answer
-	        for (int i=0; i<question.size() && i < 10; i++) {
-	        	Answer r = question.get(i);
+	        for (int i=0; i<answers.size() && i < 10; i++) {
+	        	Answer r = answers.get(i);
 	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
 	        if (question.size() > 10) {
-	        	System.out.println((question.size() - 10)
+	        	System.out.println((answers.size() - 10)
 	        			+ " additional candidates are hidden.");
 	        }
 	

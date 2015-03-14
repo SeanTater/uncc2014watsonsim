@@ -1,6 +1,8 @@
 package edu.uncc.cs.watsonsim;
 import static spark.Spark.*;
 
+import java.util.List;
+
 import spark.*;
 
 public class WebFrontend {
@@ -11,11 +13,12 @@ public class WebFrontend {
 		get(new Route("/ask") {
 			@Override
 			public Object handle(Request request, Response response) {
-	    		Question question = new DefaultPipeline().ask(request.queryParams("query"));
+	    		Question question = new Question(request.queryParams("query"));
+	    		List<Answer> answers = new DefaultPipeline().ask(question);
 		        
 	    		String output = "";
 		        // Print out a simple one-line summary of each answer
-		        for (Answer r: question) {
+		        for (Answer r: answers) {
 		        	output += r.toJSON() + ",";
 		        }
 		        response.type("application/json");

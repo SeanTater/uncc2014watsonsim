@@ -1,5 +1,8 @@
 package edu.uncc.cs.watsonsim.researchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import edu.uncc.cs.watsonsim.Answer;
@@ -17,40 +20,39 @@ public class StrictFilters extends Researcher {
 	 * 4: Remove ultra-long answers because J! never wants a 3-minute speech
 	 * 5: Remove answers not in Latin text
 	 */
-	public void question(Question q) {
-		int original_size = q.size(); // For logging
-		for (int i=q.size()-1; i >= 0; i--) {
-			Answer a = q.get(i);
+	public List<Answer> question(Question q, List<Answer> answers) {
+		List<Answer> new_answers = new ArrayList<>();
+		for (Answer a : answers) {
 			
 			// J! Archive has answers
-			if (a.candidate_text.contains("J! Archive"))
-				q.remove(i);
+			if (a.candidate_text.contains("J! Archive")) {}
+				
 			
 			// "List of" is a bad sign 
-			else if (a.candidate_text.contains("List of"))
-				q.remove(i);
+			else if (a.candidate_text.contains("List of")) {}
 			
 			// Is the answer in the question?
-			else if (almostContains(q.getRaw_text(), a.candidate_text))
-				q.remove(i);
+			else if (almostContains(q.getRaw_text(), a.candidate_text)) {}
 			
 			// Is it too long?
 			// The longest real answer in our sample of about 40,000 is:
 			// How much wood would a woodchuck chuck if a woodchuck could chuck wood?
 			// and it's 70 characters long. So cut there.
-			else if (a.candidate_text.length() > 70)
-				q.remove(i);
+			else if (a.candidate_text.length() > 70) {}
 			
 			// Is over half of it non-Latin text?
-			else if (a.candidate_text.replaceAll("[^A-Za-z0-9 ]", "").length() * 2 < a.candidate_text.length())
-				q.remove(i);
+			else if (a.candidate_text.replaceAll("[^A-Za-z0-9 ]", "").length() * 2 < a.candidate_text.length()) {}
 			
 			// Does it look like a web address?
-			else if (a.candidate_text.matches("^(http://)?([A-Za-z]+\\.)?[A-Za-z]+\\.(com|net|org|co\\.[A-Za-z]{2})$"))
-				q.remove(i);
+			else if (a.candidate_text.matches("^(http://)?([A-Za-z]+\\.)?[A-Za-z]+\\.(com|net|org|co\\.[A-Za-z]{2})$")) {}
+			
+			else {
+				new_answers.add(a);
+			}
 		}
 		
-		log.info("Eliminated " + (original_size - q.size()) + " invalid answers");
+		log.info("Eliminated " + (answers.size() - new_answers.size()) + " invalid answers");
+		return new_answers;
 	}
 	
 	/**

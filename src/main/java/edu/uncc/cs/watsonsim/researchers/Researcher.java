@@ -17,7 +17,7 @@ abstract public class Researcher {
 	 * The empty researcher does nothing.
 	 */
 	public static final Researcher NIL = new Researcher() {
-		public Question pull(Question q){return q;}
+		public List<Answer> pull(Question q, List<Answer> answers){return answers;}
 	};
 	
 	/**

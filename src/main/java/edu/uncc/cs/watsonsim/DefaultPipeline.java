@@ -121,12 +121,12 @@ public class DefaultPipeline {
 		);
 	}
 	
-	public Question ask(String qtext) {
+	public List<Answer> ask(String qtext) {
 	    return ask(new Question(qtext));
 	}
 	
     /** Run the full standard pipeline */
-	public Question ask(Question question) {
+	public List<Answer> ask(Question question) {
 		// Query every engine
 		Logger l = Logger.getLogger(this.getClass());
 		
@@ -145,8 +145,8 @@ public class DefaultPipeline {
         	s.scoreQuestion(question, answers);
         
         l.info("Computing confidence..");
-        late_researchers.pull(question, answers);
+        answers = late_researchers.pull(question, answers);
         
-        return question;
+        return answers;
     }
 }
