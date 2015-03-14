@@ -26,10 +26,10 @@ import edu.stanford.nlp.semgraph.SemanticGraphEdge;
 import edu.stanford.nlp.util.IterableIterator;
 import edu.stanford.nlp.util.Pair;
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Phrase;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.nlp.Synonyms;
 
 /**

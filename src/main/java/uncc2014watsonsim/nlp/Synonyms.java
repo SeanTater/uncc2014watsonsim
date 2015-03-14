@@ -8,6 +8,7 @@ import java.util.List;
 
 import uncc2014watsonsim.Answer;
 import uncc2014watsonsim.Database;
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.StringUtils;
 
 public class Synonyms {

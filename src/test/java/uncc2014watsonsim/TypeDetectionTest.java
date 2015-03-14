@@ -8,8 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import uncc2014watsonsim.nlp.Environment;
-import uncc2014watsonsim.nlp.LAT;
+import uncc2014watsonsim.nlp.ClueType;
 
 public class TypeDetectionTest {
 
@@ -31,7 +30,7 @@ public class TypeDetectionTest {
 		List<String> types = new ArrayList<>();
 		try {
 			Environment env = new Environment("data/");
-			types = new LAT(env).fromCandidate(source);
+			types = new ClueType(env).fromCandidate(source);
 		} catch (RuntimeException | IOException e) {
 			// If this goes wrong, it probably just means we are disconnected
 			System.err.println("Failed to connect to SPARQL endpoint for answer "

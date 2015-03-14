@@ -34,10 +34,10 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Database;
 import uncc2014watsonsim.StringUtils;
-import uncc2014watsonsim.nlp.Environment;
 
 /**
  *

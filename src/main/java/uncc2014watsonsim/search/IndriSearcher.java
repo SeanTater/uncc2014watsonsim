@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
-import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.scorers.Merge;
 import uncc2014watsonsim.Translation;
 import lemurproject.indri.ParsedDocument;

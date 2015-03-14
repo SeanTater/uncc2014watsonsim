@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.apache.uima.jcas.JCas;
 
 import edu.stanford.nlp.trees.Tree;
-import uncc2014watsonsim.nlp.LAT;
+import uncc2014watsonsim.nlp.ClueType;
 import uncc2014watsonsim.nlp.Trees;
 
 
@@ -29,7 +29,7 @@ public class Question extends ArrayList<Answer> {
         this.raw_text = text;
         this.text = StringUtils.canonicalize(text);
         this.type = QClassDetection.detectType(this);
-        simple_lat = LAT.fromClue(new Phrase(raw_text).trees.get(0));
+        simple_lat = ClueType.fromClue(new Phrase(raw_text).trees.get(0));
         
         Logger log = Logger.getLogger(getClass());
         if (simple_lat.isEmpty())

@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Database;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.nlp.Environment;
 
 public class CachingSearcher extends Searcher {
 	private Random gen = new Random();

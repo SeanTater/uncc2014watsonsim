@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import uncc2014watsonsim.nlp.LAT;
+import uncc2014watsonsim.nlp.ClueType;
 import edu.stanford.nlp.util.Pair;
 
 public class LATDetectionTest {
@@ -139,7 +139,7 @@ public class LATDetectionTest {
 		};
 		for (Pair<String, String> pair : cases)
 			assertEquals(pair.first, 
-					LAT.fromClue(pair.second)
+					ClueType.fromClue(pair.second)
 					);
 	}
 

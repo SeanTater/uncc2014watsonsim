@@ -3,7 +3,7 @@ package uncc2014watsonsim.scorers;
 import java.util.List;
 
 import uncc2014watsonsim.Answer;
-import uncc2014watsonsim.nlp.Environment;
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.nlp.Synonyms;
 import uncc2014watsonsim.nlp.Weighted;
 import uncc2014watsonsim.scorers.AnswerScorer;

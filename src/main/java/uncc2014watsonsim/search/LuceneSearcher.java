@@ -22,10 +22,10 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Score;
 import uncc2014watsonsim.StringUtils;
-import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.scorers.Merge;
 
 /**

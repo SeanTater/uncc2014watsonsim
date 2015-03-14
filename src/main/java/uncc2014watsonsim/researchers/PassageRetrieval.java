@@ -7,9 +7,9 @@ import java.util.regex.Matcher;
 import org.apache.log4j.Logger;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Passage;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.search.*;
 
 public class PassageRetrieval extends Researcher {

@@ -1,9 +1,9 @@
 package uncc2014watsonsim.scorers;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.StringUtils;
-import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.nlp.Synonyms;
 
 public class Correct extends AnswerScorer {

@@ -10,10 +10,10 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Question;
 import uncc2014watsonsim.Database;
 import uncc2014watsonsim.Score;
-import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.scorers.Merge;
 
 /**

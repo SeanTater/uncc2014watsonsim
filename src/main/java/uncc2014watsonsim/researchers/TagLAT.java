@@ -3,17 +3,17 @@ package uncc2014watsonsim.researchers;
 import org.apache.log4j.Logger;
 
 import uncc2014watsonsim.Answer;
+import uncc2014watsonsim.Environment;
 import uncc2014watsonsim.Question;
-import uncc2014watsonsim.nlp.Environment;
-import uncc2014watsonsim.nlp.LAT;
+import uncc2014watsonsim.nlp.ClueType;
 
 
 public class TagLAT extends Researcher {
-	private final LAT backend;
+	private final ClueType backend;
 	private final Logger log = Logger.getLogger(this.getClass());
 	
 	public TagLAT(Environment env) {
-		backend = new LAT(env);
+		backend = new ClueType(env);
 	}
 	/**
 	 * Find the possible lexical types of a candidate, and label the answer.

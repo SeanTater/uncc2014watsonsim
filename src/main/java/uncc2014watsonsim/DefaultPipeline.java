@@ -19,7 +19,6 @@ import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
 import org.postgresql.jdbc2.TimestampUtils;
 
-import uncc2014watsonsim.nlp.Environment;
 import uncc2014watsonsim.researchers.*;
 import uncc2014watsonsim.scorers.*;
 import uncc2014watsonsim.search.*;
