@@ -80,8 +80,8 @@ public class SupportCandidateType {
 	 * 
 	 * @return Pairs of nouns and their types.
 	 */
-	public static List<Pair<IndexedWord, IndexedWord>> extract(Phrase p) {
-		List<Pair<IndexedWord,IndexedWord>> names_and_types = new ArrayList<>();
+	public static List<Pair<String, String>> extract(Phrase p) {
+		List<Pair<String, String>> names_and_types = new ArrayList<>();
 		for (SemanticGraph graph: p.graphs){
 			// Load data into a model
 			Model model = ModelFactory.createMemModelMaker().createFreshModel();
@@ -115,7 +115,9 @@ public class SupportCandidateType {
 				IndexedWord obj_idx = resourceWord(graph, stmt.getObject().asResource());
 				if (subj_idx.tag().startsWith("NN")
 						&& obj_idx.tag().startsWith("NN")) {
-					names_and_types.add(new Pair<>(subj_idx, obj_idx));
+					names_and_types.add(new Pair<>(
+							concatNoun(graph, subj_idx),
+							concatNoun(graph, obj_idx)));
 				}
 			}
 		}

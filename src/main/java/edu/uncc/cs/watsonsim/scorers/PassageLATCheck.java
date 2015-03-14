@@ -40,18 +40,16 @@ public class PassageLATCheck extends AnswerScorer {
 	 */
 	public double scoreAnswer(Question q, Answer a) {
 		for (Passage p: a.passages) {
-			for (SemanticGraph graph : p.graphs) {
-				for (Pair<IndexedWord,IndexedWord> name_and_type : SupportCandidateType.extract(graph)) {
-					String subj = SupportCandidateType.concatNoun(graph, name_and_type.first());
-					String obj = SupportCandidateType.concatNoun(graph, name_and_type.second());
-					log.info("Discovered " + subj + " is a(n) " + obj);
-					
-					if (syn.matchViaLevenshtein(subj, a.candidate_text)) {
-						a.lexical_types.add(obj);
-					} else if (syn.matchViaLevenshtein(obj, q.simple_lat)) {
-						log.info("Let's examine " + subj 
-								+ " since it's a(n) " + obj);
-					}
+			for (Pair<String, String> name_and_type : p.memo(SupportCandidateType::extract)) {
+				String subj = name_and_type.first;
+				String obj = name_and_type.second;
+				log.info("Discovered " + subj + " is a(n) " + obj);
+				
+				if (syn.matchViaLevenshtein(subj, a.candidate_text)) {
+					a.lexical_types.add(obj);
+				} else if (syn.matchViaLevenshtein(obj, q.simple_lat)) {
+					log.info("Let's examine " + subj 
+							+ " since it's a(n) " + obj);
 				}
 			}
 		}

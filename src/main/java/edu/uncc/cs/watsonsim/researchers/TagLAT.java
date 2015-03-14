@@ -33,10 +33,10 @@ public class TagLAT extends Researcher {
 		for (Answer a: q) {
 			a.lexical_types = dbpedia.viaDBPedia(a.candidate_text);
 			for (Phrase p: a.passages) {
-				List<Pair<IndexedWord, IndexedWord>> types = p.memo(SupportCandidateType::extract);
-				for (Pair<IndexedWord, IndexedWord> name_and_type : types) {
-					log.info("Looks like " + name_and_type.first.originalText() +
-							" is a " + name_and_type.second.originalText());
+				List<Pair<String, String>> types = p.memo(SupportCandidateType::extract);
+				for (Pair<String, String> name_and_type : types) {
+					log.info("Looks like " + name_and_type.first +
+							" is a " + name_and_type.second);
 				}
 			}
 			if (a.lexical_types.size() > 1) have_any_types++;
