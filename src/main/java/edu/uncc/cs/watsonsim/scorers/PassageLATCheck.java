@@ -39,19 +39,6 @@ public class PassageLATCheck extends AnswerScorer {
 	 * performance point.
 	 */
 	public double scoreAnswer(Question q, Answer a) {
-		for (Passage p: a.passages) {
-			for (Pair<String, String> name_and_type : p.memo(SupportCandidateType::extract)) {
-				String subj = name_and_type.first;
-				String obj = name_and_type.second;
-				
-				if (syn.matchViaLevenshtein(subj, a.candidate_text)) {
-					a.lexical_types.add(obj);
-				} else if (syn.matchViaLevenshtein(obj, q.simple_lat)) {
-					log.info("Let's examine " + subj 
-							+ " since it's a(n) " + obj);
-				}
-			}
-		}
 		for (String type : a.lexical_types) {
 			boolean matches = syn.matchViaLevenshtein(type, q.simple_lat);
 			
