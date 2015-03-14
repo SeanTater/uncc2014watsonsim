@@ -3,6 +3,7 @@ package edu.uncc.cs.watsonsim.researchers;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 
 import edu.uncc.cs.watsonsim.Answer;
@@ -48,7 +49,7 @@ public class StatsDump extends Researcher {
 	 * Store a question with its answers and scores in the reports tables.
 	 */
 	@Override
-	public synchronized void question(Question q) {
+	public synchronized List<Answer> question(Question q, List<Answer> answers) {
 		if (!broken) {
 			try {
 				add_question.setTimestamp(1, run_id);
@@ -79,6 +80,7 @@ public class StatsDump extends Researcher {
 				broken=true;
 			}
 		}
+		return answers;
 	}
 
 }

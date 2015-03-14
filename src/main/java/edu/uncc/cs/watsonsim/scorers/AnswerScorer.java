@@ -1,5 +1,7 @@
 package edu.uncc.cs.watsonsim.scorers;
 
+import java.util.List;
+
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;
@@ -16,8 +18,8 @@ public abstract class AnswerScorer implements Scorer {
 	 * @param q		Question
 	 */
 	@Override
-	public void scoreQuestion(Question q) {
-		for (Answer a : q)
+	public void scoreQuestion(Question q, List<Answer> answers) {
+		for (Answer a : answers)
 			a.score(name, scoreAnswer(q, a));		
 	}
 	

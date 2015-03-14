@@ -24,11 +24,11 @@ public class MergeByText extends Researcher {
 	
 	@Override
 	/** Call merge on any two answers with the same title */
-	public void question(Question q) {
+	public List<Answer> question(Question q, List<Answer> answers) {
 		List<List<Answer>> answer_blocks = new ArrayList<>();
 		// Arrange the answers into blocks
 		each_answer:
-		for (Answer original : q) {
+		for (Answer original : answers) {
 			for (List<Answer> block : answer_blocks) {
 				for (Answer example : block) {
 					// Look through the examples in this topic
@@ -47,16 +47,16 @@ public class MergeByText extends Researcher {
 		}
 
 		// Merge the blocks
-		final int prev_answers = q.size();
-		q.clear();
+		List<Answer> new_answers = new ArrayList<>();
 		for (List<Answer> block : answer_blocks) {
 			if (block.size() > 1) {
-				q.add(Answer.merge(block));
+				new_answers.add(Answer.merge(block));
 			} else {
-				q.add(block.get(0));
+				new_answers.add(block.get(0));
 			}
 		}
 		
-		log.info("Merged " + prev_answers + " candidates into " + q.size() + " (by surface similarity).");
+		log.info("Merged " + answers.size() + " candidates into " + new_answers.size() + " (by surface similarity).");
+		return new_answers;
 	}
 }

@@ -34,22 +34,17 @@ public class WekaTee extends Researcher {
 	public WekaTee(Timestamp start_time) {
 		this.start_time = start_time;
 	}
-	
-	@Override
-	public void research(Question q) {
-		question(q);
-	}
 
 	@Override
 	/**
 	 * Multithreaded counterpart to dump, which is synchronized
 	 */
-	public void question(Question q) {
-
+	public List<Answer> question(Question q, List<Answer> answers) {
 		List<double[]> new_entries = new ArrayList<>();
-		for (Answer a : q)
+		for (Answer a : answers)
 			new_entries.add(a.scores.clone());
 		dump(new_entries, start_time);
+		return answers;
 	}
 	
 	/** File-writing serialized counterpart to question()

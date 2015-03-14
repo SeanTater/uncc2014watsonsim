@@ -76,8 +76,8 @@ public class CombineScores extends Researcher {
 	}
 	
 	@Override
-	public void question(Question question) {
-		for (Answer a: question) {
+	public List<Answer> question(Question question, List<Answer> answers) {
+		for (Answer a: answers) {
 			try {
 				a.setOverallScore(score(Score.getEach(a.scores, names)));
 			} catch (Exception e) {
@@ -87,8 +87,9 @@ public class CombineScores extends Researcher {
 			}
 		}
 
-		Collections.sort(question);
-		Collections.reverse(question);
+		Collections.sort(answers);
+		Collections.reverse(answers);
+		return answers;
 	}
 	
 	/*public static QuestionResultsScorer prepareGenericScorer(String schemapath, String modelpath) {

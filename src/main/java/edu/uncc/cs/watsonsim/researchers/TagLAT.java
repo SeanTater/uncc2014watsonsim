@@ -32,7 +32,7 @@ public class TagLAT extends Researcher {
 	 * Find the possible lexical types of a candidate, and label the answer.
 	 */
 	@Override
-	public void question(Question q) {
+	public List<Answer> question(Question q, List<Answer> answers) {
 		int have_any_types = 0;
 		
 		int dbpedia_types = 0;
@@ -40,7 +40,7 @@ public class TagLAT extends Researcher {
 		
 		List<Answer> suggestions = new ArrayList<>();
 		
-		for (Answer a: q) {
+		for (Answer a: answers) {
 			a.lexical_types = dbpedia.viaDBPedia(a.candidate_text);
 			dbpedia_types += a.lexical_types.size(); 
 			
@@ -60,12 +60,19 @@ public class TagLAT extends Researcher {
 			}
 			if (!a.lexical_types.isEmpty()) have_any_types++;
 		}
-		q.addAll(suggestions);
+		
+		// This is the chain magic:
+		// We can pull the new suggestions through the pipeline and merge them!
+		List<Answer> new_answers = new ArrayList<>();
+		new_answers.addAll(answers);
+		new_answers.addAll(chain.pull(q, suggestions));
+		
 
 		//System.out.println(text + " could be any of " + types);
 		log.info("Found " + (dbpedia_types+support_types) + " types for "
 				+ have_any_types + " candidates. ("+ support_types +" by reading) "
 				+ (q.size() - have_any_types) + " candidates are unknown.");
+		return new_answers;
 	}
 
 }

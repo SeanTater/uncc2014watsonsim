@@ -2,6 +2,8 @@ package edu.uncc.cs.watsonsim;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -49,7 +51,7 @@ public class DefaultPipeline {
 	private final Searcher[] searchers;
 	private final Researcher early_researchers;
 	private final Scorer[] scorers;
-	private final Researcher[] late_researchers;
+	private final Researcher late_researchers;
 	
 	/**
 	 * Start a pipeline with a new timestamp for the statistics dump
@@ -112,11 +114,11 @@ public class DefaultPipeline {
 			//new SentenceSimilarity(),
 			new CoreNLPSentenceSimilarity(),
 		};
-		late_researchers = new Researcher[]{
+		late_researchers = Researcher.pipe(
 			new WekaTee(run_start),
 			new CombineScores(),
 			new StatsDump(run_start)
-		};
+		);
 	}
 	
 	public Question ask(String qtext) {
@@ -129,21 +131,21 @@ public class DefaultPipeline {
 		Logger l = Logger.getLogger(this.getClass());
 		
 		l.info("Generating candidate answers..");
+		List<Answer> answers = new ArrayList<>();
 		for (Searcher s: searchers)
 			for (Passage p : s.query(question.getRaw_text()))
-				question.add(p);
-		l.info("Generated " + question.size() + " candidate answers.");
+				answers.add(new Answer(p));
+		l.info("Generated " + answers.size() + " candidate answers.");
 		
 		
-		early_researchers.pull(question);
+		answers = early_researchers.pull(question, answers);
     	
     	l.info("Scoring supporting evidence..");
         for (Scorer s: scorers)
-        	s.scoreQuestion(question);
+        	s.scoreQuestion(question, answers);
         
         l.info("Computing confidence..");
-        for (Researcher r : late_researchers)
-			r.question(question);
+        late_researchers.pull(question, answers);
         
         return question;
     }

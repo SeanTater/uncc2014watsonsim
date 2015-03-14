@@ -2,6 +2,7 @@ package edu.uncc.cs.watsonsim.scorers;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.uncc.cs.watsonsim.Answer;
@@ -12,10 +13,10 @@ public class WordProximity extends PassageScorer {
 	Set<String> q_words = new HashSet<String>();
 	
 	@Override
-	public void scoreQuestion(Question q) {
+	public void scoreQuestion(Question q, List<Answer> answers) {
 		q_words.clear();
 		q_words.addAll(Arrays.asList(q.text.split("\\W+")));
-		super.scoreQuestion(q);
+		super.scoreQuestion(q, answers);
 	}
 	
 	@Override

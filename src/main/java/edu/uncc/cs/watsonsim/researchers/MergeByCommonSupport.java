@@ -15,10 +15,10 @@ public class MergeByCommonSupport extends Researcher {
 	
 	@Override
 	/** Call merge on any two answers, where the answers have more passages in common than different*/
-	public void question(Question q) {
+	public List<Answer> question(Question q, List<Answer> answers) {
 		List<List<Answer>> answer_blocks = new ArrayList<>();
 		each_answer:
-		for (Answer original : q) {
+		for (Answer original : answers) {
 			HashSet<Passage> o_passages = new HashSet<>();
 			o_passages.addAll(original.passages);
 			
@@ -47,16 +47,16 @@ public class MergeByCommonSupport extends Researcher {
 		}
 
 		// Merge the blocks
-		final int prev_answers = q.size();
-		q.clear();
+		List<Answer> new_answers = new ArrayList<>();
 		for (List<Answer> block : answer_blocks) {
 			if (block.size() > 1) {
-				q.add(Answer.merge(block));
+				new_answers.add(Answer.merge(block));
 			} else {
-				q.add(block.get(0));
+				new_answers.add(block.get(0));
 			}
 		}
 		
-		log.info("Merged " + prev_answers + " candidates into " + q.size() + " (by common passages).");
+		log.info("Merged " + answers.size() + " candidates into " + new_answers.size() + " (by common passages).");
+		return new_answers;
 	}
 }

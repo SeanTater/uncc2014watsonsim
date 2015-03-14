@@ -1,5 +1,8 @@
 package edu.uncc.cs.watsonsim.researchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Question;
@@ -34,9 +37,8 @@ abstract public class Researcher {
 	/**
 	 * Wrapper method to pull questions through the research chain
 	 */
-	public Question pull(Question q) {
-		question(chain.pull(q));
-		return q;
+	public List<Answer> pull(Question q, List<Answer> candidates) {
+		return question(q, chain.pull(q, candidates));
 	}
 
 	/** Default implementation of research for a question.
@@ -45,10 +47,11 @@ abstract public class Researcher {
 	 * @param question
 	 * @throws Exception 
 	 */
-	public void question(Question q) {
-		// Use counting instead of iteration to allow concurrent modification
-		for (int i=0; i < q.size(); i++)
-			answer(q, q.get(i));
+	public List<Answer> question(Question q, List<Answer> candidates) {
+		List<Answer> outs = new ArrayList<>();
+		for (Answer in : candidates)
+			outs.add(answer(q, in));
+		return outs;
 	}
 	
 	/** Default implementation for researching an answer.
@@ -59,16 +62,7 @@ abstract public class Researcher {
 	 * 
 	 * @return TODO
 	 */
-	public void answer(Question q, Answer a) {
-		for (Passage p: a.passages)
-			passage(q, a, p);
+	public Answer answer(Question q, Answer a) {
+		return a;
 	}
-	
-	/** Default implementation for researching an answer.
-	 * Does nothing by default. You don't need to override this if you don't
-	 * use it.
-	 * 
-	 * @param answer
-	 */
-	public void passage(Question q, Answer a, Passage p) {}
 }

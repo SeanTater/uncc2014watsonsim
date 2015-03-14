@@ -26,10 +26,10 @@ public class PassageRetrieval extends Researcher {
 	
 	
 	@Override
-	public void question(Question q) {
+	public List<Answer> question(Question q, List<Answer> answers) {
 		int total_passages=0; // logging
 		
-		for (Answer a: q) {
+		for (Answer a: answers) {
 	    	String sr = getPassageQuery(q, a);
 	    	// Query every engine
 	    	for (Searcher s : searchers) {
@@ -40,6 +40,7 @@ public class PassageRetrieval extends Researcher {
 		}
 		
 		log.info("Found " + total_passages + " supporting passages.");
+		return answers;
 	}
 	
 	

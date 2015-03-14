@@ -34,14 +34,11 @@ public class RedirectSynonyms extends Researcher {
 	}
 
 	@Override
-	public void question(Question q) {
-		List<Answer> prev_answers = new ArrayList<>();
-		prev_answers.addAll(q);
-		
+	public List<Answer> question(Question q, List<Answer> answers) {
 		// For logging 
 		int synonym_count = 0;
-		
-		for (Answer a : prev_answers) {
+		List<Answer> new_answers = new ArrayList<Answer>();
+		for (Answer a : answers) {
 			try {
 				s.setString(1, a.candidate_text);
 				ResultSet results = s.executeQuery();
@@ -52,15 +49,16 @@ public class RedirectSynonyms extends Researcher {
 							a.scores.clone(),
 							StringEscapeUtils.unescapeXml(results.getString("source")));
 					Score.set(a.scores, "IS_WIKI_REDIRECT", 1.0);
-					q.add(new_answer);
+					new_answers.add(new_answer);
 				}
 			} catch (SQLException e) {
 				// Just don't make any synonyms.
-				return;
+				return answers;
 			}
 		}
 		
-		log.info("Found " + synonym_count + " synonyms for " + prev_answers.size() +
+		log.info("Found " + synonym_count + " synonyms for " + answers.size() +
 				" candidate answers using Wikipedia redirects.");
+		return new_answers;
 	}
 }

@@ -2,6 +2,7 @@ package edu.uncc.cs.watsonsim.scorers;
 
 
 import java.util.Arrays;
+import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
@@ -38,8 +39,8 @@ public abstract class PassageScorer implements Scorer {
 	 * Override this if you need more power.
 	 * @param q		Question
 	 */
-	public void scoreQuestion(Question q) {
-		for (Answer a : q) {
+	public void scoreQuestion(Question q, List<Answer> answers) {
+		for (Answer a : answers) {
 			double sum = 0.0;
 			final int p_count = a.passages.size();
 			if (p_count > 0) {

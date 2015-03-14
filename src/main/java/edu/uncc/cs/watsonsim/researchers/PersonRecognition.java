@@ -3,6 +3,7 @@ package edu.uncc.cs.watsonsim.researchers;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,14 +43,15 @@ public class PersonRecognition extends Researcher {
     }
 
 	@Override
-    public void question(Question q) {
+    public List<Answer> question(Question q, List<Answer> answers) {
     	if (q.getType() == QType.FITB && enabled){
-    		super.question(q);
+    		answers = super.question(q, answers);
     	}
+    	return answers;
     }
 
     @Override
-    public void answer(Question q, Answer answer) {
+    public Answer answer(Question q, Answer answer) {
         Span nameSpans[] = null;
         String[] sentence = null;
         sentence = answer.candidate_text.split("[,'()  ]+");
@@ -68,7 +70,7 @@ public class PersonRecognition extends Researcher {
         if (!ret.toString().isEmpty()){
         	answer.candidate_text = ret.toString();
         }
-        	
+        return answer;	
     }
 
 }
