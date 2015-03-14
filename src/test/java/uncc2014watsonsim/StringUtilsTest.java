@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import edu.uncc.cs.watsonsim.StringUtils;
+
 public class StringUtilsTest {
 
 	@Test

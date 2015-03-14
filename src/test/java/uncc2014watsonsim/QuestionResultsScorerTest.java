@@ -4,7 +4,7 @@
 */
 
 package uncc2014watsonsim;
-import uncc2014watsonsim.researchers.CombineScores;
+import edu.uncc.cs.watsonsim.researchers.CombineScores;
 
 
 public class QuestionResultsScorerTest {

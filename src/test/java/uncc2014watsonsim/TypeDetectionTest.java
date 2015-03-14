@@ -8,7 +8,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import uncc2014watsonsim.nlp.ClueType;
+import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.nlp.ClueType;
 
 public class TypeDetectionTest {
 

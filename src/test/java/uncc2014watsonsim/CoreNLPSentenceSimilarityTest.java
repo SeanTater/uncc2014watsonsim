@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import edu.stanford.nlp.trees.Tree;
-import uncc2014watsonsim.nlp.Trees;
-import uncc2014watsonsim.scorers.CoreNLPSentenceSimilarity;
-import uncc2014watsonsim.Phrase;
+import edu.uncc.cs.watsonsim.Phrase;
+import edu.uncc.cs.watsonsim.nlp.Trees;
+import edu.uncc.cs.watsonsim.scorers.CoreNLPSentenceSimilarity;
 
 public class CoreNLPSentenceSimilarityTest {
 

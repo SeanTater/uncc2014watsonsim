@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import edu.uncc.cs.watsonsim.QType;
+import edu.uncc.cs.watsonsim.Question;
+
 public class QClassDetectionTest {
 
 	@Test

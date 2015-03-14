@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import uncc2014watsonsim.nlp.ClueType;
 import edu.stanford.nlp.util.Pair;
+import edu.uncc.cs.watsonsim.nlp.ClueType;
 
 public class LATDetectionTest {
 
