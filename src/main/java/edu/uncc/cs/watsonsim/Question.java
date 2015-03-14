@@ -103,10 +103,5 @@ public class Question extends ArrayList<Answer> {
 		}
 		return added_any;
 	}
-
-	/*public JCas getCAS() {
-		
-		return ac.getCas();
-	}*/
         
 }

@@ -10,15 +10,33 @@ import edu.uncc.cs.watsonsim.Question;
  * Scorer instead for that, which is parallelizable.
  */
 abstract public class Researcher {
-	
-	/** Default implementation of research for a question.
-	 * Simply calls research_answer for every Answer
-	 * Override this if you need more power.
-	 * @param question
-	 * @throws Exception 
+	/**
+	 * The empty researcher does nothing.
 	 */
-	public void research(Question q) {
-		question(q);
+	public static final Researcher NIL = new Researcher() {
+		public Question pull(Question q){return q;}
+	};
+	
+	/**
+	 * The previous item in the research chain
+	 */
+	protected Researcher chain = NIL;
+	
+	public static Researcher pipe(Researcher... segments) {
+		Researcher prev = NIL;
+		for (Researcher link : segments) {
+			link.chain = prev;
+			prev = link;
+		}
+		return prev;
+	}
+	
+	/**
+	 * Wrapper method to pull questions through the research chain
+	 */
+	public Question pull(Question q) {
+		question(chain.pull(q));
+		return q;
 	}
 
 	/** Default implementation of research for a question.
@@ -53,9 +71,4 @@ abstract public class Researcher {
 	 * @param answer
 	 */
 	public void passage(Question q, Answer a, Passage p) {}
-	
-	/** Default implementation for ending question research.
-	 * This might trigger some database inserts or like writing, for example.
-	 */
-	public void complete() {};
 }

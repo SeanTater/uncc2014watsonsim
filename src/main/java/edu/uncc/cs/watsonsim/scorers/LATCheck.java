@@ -2,6 +2,8 @@ package edu.uncc.cs.watsonsim.scorers;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
@@ -16,6 +18,7 @@ import edu.uncc.cs.watsonsim.scorers.AnswerScorer;
  */
 public class LATCheck extends AnswerScorer {
 	private final Synonyms syn;
+	private final Logger log = Logger.getLogger(getClass());
 	
 	/**
 	 * Create a new LATCheck using a shared environment
@@ -46,11 +49,13 @@ public class LATCheck extends AnswerScorer {
 		if (!q.simple_lat.isEmpty()) {
 			List<Weighted<String>> question_synonyms = syn.viaWikiLinks(new String[]{q.simple_lat});
 			for (Weighted<String> synonym : question_synonyms) {
-				if (a.lexical_types.contains(synonym.item)) {
-					System.out.println("synonym " + synonym.item
-							+ " of " + q.simple_lat
-							+ " matches with weight " + synonym.weight);
-					return Math.log(synonym.weight);
+				for (String candidate_type : a.lexical_types) {
+					if (syn.matchViaLevenshtein(synonym.item, candidate_type)) {
+						log.info(a.candidate_text + " is a " + synonym.item
+								+ " which is  " + q.simple_lat
+								+ " (weight " + Math.log(synonym.weight) + ")");
+						return Math.log(synonym.weight);
+					}
 				}
 			}
 		}

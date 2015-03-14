@@ -47,7 +47,7 @@ public class DefaultPipeline {
 	
 	private final Timestamp run_start;
 	private final Searcher[] searchers;
-	private final Researcher[] early_researchers;
+	private final Researcher early_researchers;
 	private final Scorer[] scorers;
 	private final Researcher[] late_researchers;
 	
@@ -82,7 +82,7 @@ public class DefaultPipeline {
 			// new BingSearcher(config),
 			new CachingSearcher(env, new BingSearcher(env), "bing")
 		};
-		early_researchers = new Researcher[]{
+		early_researchers = Researcher.pipe(
 			//new RedirectSynonyms(env),
 			new HyphenTrimmer(),
 			new StrictFilters(),
@@ -91,11 +91,10 @@ public class DefaultPipeline {
 			new PassageRetrieval(env),
 			new MergeByCommonSupport(),
 			new PersonRecognition(),
-			new TagLAT(env),
-		};
+			new TagLAT(env)
+		);
 		scorers = new Scorer[]{
 			new AnswerLength(),
-			new PassageLATCheck(env),
 			new WordProximity(),
 			new Correct(env),
 			new SkipBigram(),
@@ -131,15 +130,12 @@ public class DefaultPipeline {
 		
 		l.info("Generating candidate answers..");
 		for (Searcher s: searchers)
-			question.addPassages(s.query(question.getRaw_text()));
+			for (Passage p : s.query(question.getRaw_text()))
+				question.add(p);
 		l.info("Generated " + question.size() + " candidate answers.");
 		
 		
-		for (Researcher r : early_researchers)
-			r.question(question);
-    	
-    	for (Researcher r : early_researchers)
-    		r.complete();
+		early_researchers.pull(question);
     	
     	l.info("Scoring supporting evidence..");
         for (Scorer s: scorers)
@@ -148,9 +144,6 @@ public class DefaultPipeline {
         l.info("Computing confidence..");
         for (Researcher r : late_researchers)
 			r.question(question);
-    	
-    	for (Researcher r : late_researchers)
-    		r.complete();
         
         return question;
     }
