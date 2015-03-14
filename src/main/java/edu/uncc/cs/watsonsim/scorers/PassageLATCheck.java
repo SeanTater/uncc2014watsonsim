@@ -43,7 +43,6 @@ public class PassageLATCheck extends AnswerScorer {
 			for (Pair<String, String> name_and_type : p.memo(SupportCandidateType::extract)) {
 				String subj = name_and_type.first;
 				String obj = name_and_type.second;
-				log.info("Discovered " + subj + " is a(n) " + obj);
 				
 				if (syn.matchViaLevenshtein(subj, a.candidate_text)) {
 					a.lexical_types.add(obj);

@@ -3,6 +3,8 @@ package edu.uncc.cs.watsonsim.nlp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -26,6 +28,7 @@ public class SupportCandidateType {
 
 	private static final Reasoner reasoner = new GenericRuleReasoner(
 			Rule.rulesFromURL("file:src/main/parse.rules"));
+	private static final Logger log = Logger.getLogger(SupportCandidateType.class);
 	
 	/**
 	 * Make a resource to represent a word
@@ -115,9 +118,10 @@ public class SupportCandidateType {
 				IndexedWord obj_idx = resourceWord(graph, stmt.getObject().asResource());
 				if (subj_idx.tag().startsWith("NN")
 						&& obj_idx.tag().startsWith("NN")) {
-					names_and_types.add(new Pair<>(
-							concatNoun(graph, subj_idx),
-							concatNoun(graph, obj_idx)));
+					String noun = concatNoun(graph, subj_idx);
+					String type = concatNoun(graph, obj_idx);
+					log.info("Discovered " + noun + " is a(n) " + type);
+					names_and_types.add(new Pair<>(noun,type));
 				}
 			}
 		}
