@@ -11,6 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.store.FSDirectory;
+
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.tdb.TDBFactory;
 
@@ -33,6 +38,7 @@ public class Environment {
 	public final Map<String, String> config;
 	public final Database db = new Database();
 	public final Dataset rdf;
+	public final IndexSearcher lucene;
 	
 	/**
 	 * Create a (possibly) shared NLP environment. The given data directory
@@ -96,8 +102,19 @@ public class Environment {
 		m.putAll(props);
 		this.config = Collections.unmodifiableMap((Map) m);
 		
+		// Now do some per-thread setup
 		rdf = TDBFactory.assembleDataset(
 				pathMustExist("rdf/jena-lucene.ttl"));
+		
+		// Lucene indexes have huge overhead so avoid re-instantiating by putting them in the Environment
+		IndexReader reader;
+		try {
+			reader = DirectoryReader.open(FSDirectory.open(new File(getOrDie("lucene_index"))));
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("The candidate-answer Lucene index failed to open.");
+		}
+		lucene = new IndexSearcher(reader);
 	}
 	
 

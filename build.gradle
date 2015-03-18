@@ -88,6 +88,9 @@ dependencies {
     compile "org.apache.jena:jena-text:1.1.1"
     compile 'xom:xom:+'
     compile "xalan:xalan:+"
+    // Prolog interface for dependency tree matching
+    compile 'jpl:jpl:3.1.4-alpha'
+
 }
 
 task environment << {
@@ -121,19 +124,19 @@ run {
     standardInput = System.in
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
-    main "uncc2014watsonsim.WatsonSim"
+    main "edu.uncc.cs.watsonsim.WatsonSim"
 }
 
 task(train, type: JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
-    main "uncc2014watsonsim.ParallelStats"
+    main "edu.uncc.cs.watsonsim.ParallelStats"
 }
 
 task(run_index, type: JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
-    main "uncc2014watsonsim.sources.DBIndexer"
+    main "edu.uncc.cs.watsonsim.sources.DBIndexer"
 }
 
 test {

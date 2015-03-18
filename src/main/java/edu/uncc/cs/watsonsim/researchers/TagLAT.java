@@ -28,11 +28,19 @@ public class TagLAT extends Researcher {
 		syn = new Synonyms(env);
 	}
 	
+	public List<Answer> pull(Question q, List<Answer> answers) {
+		return pull(q, answers, 0);
+	}
+	
+	public List<Answer> pull(Question q, List<Answer> answers, int depth) {
+		return question(q, chain.pull(q, answers), depth);
+	}
+	
+	
 	/**
 	 * Find the possible lexical types of a candidate, and label the answer.
 	 */
-	@Override
-	public List<Answer> question(Question q, List<Answer> answers) {
+	public List<Answer> question(Question q, List<Answer> answers, int depth) {
 		int have_any_types = 0;
 		
 		int dbpedia_types = 0;
@@ -47,10 +55,10 @@ public class TagLAT extends Researcher {
 			for (Phrase p: a.passages) {
 				List<Pair<String, String>> types = p.memo(SupportCandidateType::extract);
 				for (Pair<String, String> name_and_type : types) {
-					if (syn.matchViaLevenshtein(name_and_type.first, a.candidate_text)) {
+					if (syn.matchViaSearch(name_and_type.first, a.candidate_text)) {
 						a.lexical_types.add(name_and_type.second);
 						support_types++;
-					} else if (syn.matchViaLevenshtein(name_and_type.second, q.simple_lat)) {
+					} else if (syn.matchViaSearch(name_and_type.second, q.simple_lat)) {
 						log.info("Suggesting " + name_and_type.first);
 						Answer suggestion = new Answer(name_and_type.first);
 						suggestion.lexical_types = Arrays.asList(name_and_type.second);
@@ -65,7 +73,8 @@ public class TagLAT extends Researcher {
 		// We can pull the new suggestions through the pipeline and merge them!
 		List<Answer> new_answers = new ArrayList<>();
 		new_answers.addAll(answers);
-		new_answers.addAll(chain.pull(q, suggestions));
+		if (!suggestions.isEmpty() && depth < 3)
+			new_answers.addAll(pull(q, suggestions, depth+1));
 		
 
 		//System.out.println(text + " could be any of " + types);

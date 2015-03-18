@@ -48,6 +48,7 @@ public class LATCheck extends AnswerScorer {
 		 */
 		if (!q.simple_lat.isEmpty()) {
 			List<Weighted<String>> question_synonyms = syn.viaWikiLinks(new String[]{q.simple_lat});
+			question_synonyms.add(new Weighted<String>(q.simple_lat, 1000.0));
 			for (Weighted<String> synonym : question_synonyms) {
 				for (String candidate_type : a.lexical_types) {
 					if (syn.matchViaLevenshtein(synonym.item, candidate_type)) {

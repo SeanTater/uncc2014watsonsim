@@ -6,3 +6,7 @@
     // (?type_r urn:sent:idx ?type_idx)
     // (?noun_r urn:sent:idx ?noun_idx)
 ]
+[(?noun_r urn:sent:type ?type_other),
+ (?type_other urn:sent:conj_and ?type_r) ->
+    (?noun_r urn:sent:type ?type_r)
+]

@@ -32,19 +32,10 @@ import edu.uncc.cs.watsonsim.scorers.Merge;
  * @author Phani Rahul
  */
 public class LuceneSearcher extends Searcher {
-	private IndexSearcher searcher;
+	private final IndexSearcher lucene;
 	
 	public LuceneSearcher(Environment env) {
-
-		IndexReader reader;
-		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(env.getOrDie("lucene_index"))));
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("The candidate-answer Lucene index failed to open.");
-		}
-		searcher = new IndexSearcher(reader);
-	
+		lucene = env.lucene;
 		Score.register("LUCENE_ANSWER_RANK", -1, Merge.Mean);
 		Score.register("LUCENE_ANSWER_SCORE", -1, Merge.Mean);
 		Score.register("LUCENE_ANSWER_PRESENT", 0.0, Merge.Or);
@@ -75,13 +66,13 @@ public class LuceneSearcher extends Searcher {
 	public List<Passage> query(String question_text) {
 		List<Passage> results = new ArrayList<>();
 		try {
-			ScoreDoc[] hits = searcher.search(
+			ScoreDoc[] hits = lucene.search(
 					queryFromSkipBigrams(question_text),
 					MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];
-				Document doc = searcher.doc(s.doc);
+				Document doc = lucene.doc(s.doc);
 				results.add(new edu.uncc.cs.watsonsim.Passage(
 						"lucene", 			// Engine
 						"",	// Title - filled in by shared db

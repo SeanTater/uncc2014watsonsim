@@ -42,7 +42,7 @@ public class WatsonSim {
 	        		+ "a question to search again, or enter to quit\n>>> ");
 	        command = br.readLine();
 	        while (command.matches("[0-9]+")) {
-	        	Answer a = question.get(Integer.parseInt(command));
+	        	Answer a = answers.get(Integer.parseInt(command));
 	        	System.out.println("First full text for ["
 	        			+ a.candidate_text + "]: \n"
 	        			+ a.passages.get(0).text + "\n");

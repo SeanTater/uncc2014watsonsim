@@ -15,7 +15,7 @@ public class Answer implements Comparable<Answer> {
     public double[] scores = Score.empty();
     private double overall_score = Double.NaN;
     public List<Passage> passages = new ArrayList<>();
-    public List<String> lexical_types;
+    public List<String> lexical_types = new ArrayList<>();
 
     /**
      * Create an Answer with one implicitly defined Passage

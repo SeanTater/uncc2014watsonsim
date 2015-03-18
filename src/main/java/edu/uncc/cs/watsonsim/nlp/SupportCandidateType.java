@@ -20,6 +20,7 @@ import com.hp.hpl.jena.reasoner.rulesys.Rule;
 import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphEdge;
+import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.util.IterableIterator;
 import edu.stanford.nlp.util.Pair;
 import edu.uncc.cs.watsonsim.Phrase;
@@ -63,7 +64,8 @@ public class SupportCandidateType {
 				phrase.append(' ');
 				break;
 			case "prep":
-				if (edge.getRelation().getSpecific().equals("of")) {
+				if (edge.getRelation().getSpecific() != null
+						&& edge.getRelation().getSpecific().equals("of")) {
 					phrase.append(edge.getDependent().originalText());
 					phrase.append(' ');
 				}
@@ -91,9 +93,18 @@ public class SupportCandidateType {
 			
 			// Add all the edges
 			for (SemanticGraphEdge edge : graph.edgeIterable()) {
+				// I like the specific prepositions better
+				// so change them to match
+				GrammaticalRelation rel = edge.getRelation();
+				String relation_name = rel.getShortName();
+				if ( (rel.getShortName().equals("prep")
+						|| rel.getShortName().equals("conj"))
+						&& rel.getSpecific() != null
+						&& rel.getSpecific().isEmpty())
+					relation_name = rel.getShortName() + "_" + rel.getSpecific();
 				model.add(
 						wordResource(model, edge.getGovernor()),
-						model.createProperty("urn:sent:" + edge.getRelation().getShortName()),
+						model.createProperty("urn:sent:" + relation_name),
 						wordResource(model, edge.getDependent()));
 			}
 			// Index the words

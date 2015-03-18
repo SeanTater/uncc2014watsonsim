@@ -32,17 +32,10 @@ import edu.uncc.cs.watsonsim.scorers.Merge;
  * @author Phani Rahul
  */
 public class LucenePassageSearcher extends Searcher {
-	private IndexSearcher searcher;
+	private IndexSearcher lucene;
 	
 	public LucenePassageSearcher(Environment env) {
-		IndexReader reader;
-		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(env.getOrDie("lucene_index"))));
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Lucene index is missing. Check that you filled in the right path for lucene_index.");
-		}
-		searcher = new IndexSearcher(reader);
+		lucene = env.lucene;
 
 		Score.register("LUCENE_SCORE", -1, Merge.Mean);
 		Score.register("LUCENE_RANK", -1, Merge.Mean);
@@ -51,7 +44,7 @@ public class LucenePassageSearcher extends Searcher {
 	/**
 	 * Create a Lucene Query using the words as SHOULD clauses
 	 */
-	public BooleanQuery queryFromWords(String text) {
+	public static BooleanQuery queryFromWords(String text) {
 		BooleanQuery q = new BooleanQuery();
 		for (String word : text.split("\\W+")) {
 			q.add(new TermQuery(new Term("text", word)), BooleanClause.Occur.SHOULD);
@@ -62,13 +55,13 @@ public class LucenePassageSearcher extends Searcher {
 	public List<Passage> query(String question_text) {
 		List<Passage> results = new ArrayList<>();
 		try {
-			ScoreDoc[] hits = searcher.search(
+			ScoreDoc[] hits = lucene.search(
 					queryFromWords(question_text),
 					MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
 				ScoreDoc s = hits[i];
-				Document doc = searcher.doc(s.doc);
+				Document doc = lucene.doc(s.doc);
 				results.add(new edu.uncc.cs.watsonsim.Passage(
 						"lucene", 			// Engine
 						"",	// Title

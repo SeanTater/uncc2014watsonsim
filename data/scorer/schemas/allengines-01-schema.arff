@@ -25,7 +25,6 @@
 @attribute NGRAM_MEDIAN numeric
 @attribute NGRAM_MIN numeric
 @attribute PASSAGE_COUNT numeric
-@attribute PASSAGE_LATCHECK numeric
 @attribute PASSAGE_QUESTION_LENGTH_RATIO_MAX numeric
 @attribute PASSAGE_QUESTION_LENGTH_RATIO_MEAN numeric
 @attribute PASSAGE_QUESTION_LENGTH_RATIO_MEDIAN numeric

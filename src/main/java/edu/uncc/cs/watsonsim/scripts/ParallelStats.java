@@ -39,7 +39,7 @@ public class ParallelStats {
         ExecutorService pool = Executors.newFixedThreadPool(50);
         long run_start = System.currentTimeMillis();
         int groupsize = 5000/50;
-    	for (int i=1000; i < 5000; i += groupsize) {
+    	for (int i=1000; i < 6000; i += groupsize) {
     		pool.execute(new SingleTrainingResult(i, run_start, groupsize));
     	}
         pool.shutdown();
@@ -68,7 +68,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("test answer length", sql, run_start).run();
+			new StatsGenerator("test passage lat", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.toString());
@@ -137,20 +137,20 @@ class StatsGenerator {
 	}
 	
 	/** Measure how accurate the top question is as a histogram across confidence */
-	private void calculateConfidenceHistogram(Question question) {
-		if (question.size() >= 1) {
+	private void calculateConfidenceHistogram(List<Answer> answers) {
+		if (!answers.isEmpty()) {
 			// Supposing there is at least one answer
-			Answer a = question.get(0);
+			Answer a = answers.get(0);
 			// Clamp to [0, 99]
 			int bin = (int)(a.getOverallScore() * 99);
 			bin = Math.max(0, Math.min(bin, 99)); 
-			if(a.equals(question.answer)) conf_correct[bin]++;
+			if(Score.get(a.scores, "CORRECT", 0.0) > 0.99) conf_correct[bin]++;
 			conf_hist[bin]++;
 		}
 	}
 	
 	/** Callback for every correct answer */
-	public void onCorrectAnswer(Question question, Answer candidate, int rank) {
+	public void onCorrectAnswer(List<Answer> answers, Answer candidate, int rank) {
 		total_inverse_rank += 1 / ((double)rank + 1);
 		available++;
 		// Clamp the rank to 100. Past that we don't have a histogram.
@@ -226,28 +226,27 @@ class StatsGenerator {
 		DefaultPipeline pipe = new DefaultPipeline(run_start); 
 		for (int i=0; i<questionsource.size(); i++) {
 			Question q = questionsource.get(i);
-			pipe.ask(q);
+			List<Answer> answers = pipe.ask(q);
 			
 			System.out.print(" " + i);
 			if (i % 25 == 0) System.out.println();
 			
-			if (q.size() == 0) continue;
+			if (answers.size() == 0) continue;
 	
-			for (int rank=0; rank<q.size(); rank++) {
-				Answer candidate = q.get(rank);
+			for (int rank=0; rank<answers.size(); rank++) {
+				Answer candidate = answers.get(rank);
 				if (Score.get(candidate.scores, "CORRECT", 0.0) > 0.99) {
-					onCorrectAnswer(q, candidate, rank);
+					onCorrectAnswer(answers, candidate, rank);
 					break;
 				}
 			}
 			
-			calculateConfidenceHistogram(q);
+			calculateConfidenceHistogram(answers);
 			
-			total_answers += q.size();
+			total_answers += answers.size();
 			//System.out.println("Q: " + text.question + "\n" +
 			//		"A[Guessed: " + top_answer.getScore() + "]: " + top_answer.getTitle() + "\n" +
 			//		"A[Actual:" + correct_answer_score + "]: "  + text.answer);
-			q.clear();
 		}
 	
 		// Only count the rank of questions that were actually there
