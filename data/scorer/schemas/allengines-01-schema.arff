@@ -33,10 +33,11 @@
 @attribute PASSAGE_TERM_MATCH_MEAN numeric
 @attribute PASSAGE_TERM_MATCH_MEDIAN numeric
 @attribute PASSAGE_TERM_MATCH_MIN numeric
-@attribute PERCENT_FILTERED_WORDS_IN_COMMON_MAX numeric
-@attribute PERCENT_FILTERED_WORDS_IN_COMMON_MEAN numeric
-@attribute PERCENT_FILTERED_WORDS_IN_COMMON_MEDIAN numeric
-@attribute PERCENT_FILTERED_WORDS_IN_COMMON_MIN numeric
+@attribute QAKEYWORD_MATCH numeric
+@attribute QPKEYWORD_MATCH_MAX numeric
+@attribute QPKEYWORD_MATCH_MEAN numeric
+@attribute QPKEYWORD_MATCH_MEDIAN numeric
+@attribute QPKEYWORD_MATCH_MIN numeric
 @attribute SKIP_BIGRAM_MAX numeric
 @attribute SKIP_BIGRAM_MEAN numeric
 @attribute SKIP_BIGRAM_MEDIAN numeric

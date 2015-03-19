@@ -72,7 +72,7 @@ public class QClassDetectionTest {
 				try {
 					assertEquals(labels[i], questions[i].getType());
 				} catch (java.lang.AssertionError ae) {
-					System.out.println("Failed to correctly categorize " + questions[i].raw_text + " as " + labels[i] + "; incorrect type: " + questions[i].getType());
+					System.out.println("Failed to correctly categorize " + questions[i].text + " as " + labels[i] + "; incorrect type: " + questions[i].getType());
 					missed++;
 				}
 			}

@@ -103,7 +103,8 @@ public class DefaultPipeline {
 			new PassageTermMatch(),
 			new PassageCount(),
 			new PassageQuestionLengthRatio(),
-			new PercentFilteredWordsInCommon(),
+			new QPKeywordMatch(),
+			new QAKeywordMatch(),
 			new AnswerInQuestionScorer(),
 			new NGram(),
 			new LATCheck(env),
@@ -133,7 +134,7 @@ public class DefaultPipeline {
 		l.info("Generating candidate answers..");
 		List<Answer> answers = new ArrayList<>();
 		for (Searcher s: searchers)
-			for (Passage p : s.query(question.getRaw_text()))
+			for (Passage p : s.query(question.text))
 				answers.add(new Answer(p));
 		l.info("Generated " + answers.size() + " candidate answers.");
 		

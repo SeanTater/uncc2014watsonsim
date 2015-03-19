@@ -90,6 +90,7 @@ dependencies {
     compile "xalan:xalan:+"
     // Prolog interface for dependency tree matching
     compile 'jpl:jpl:3.1.4-alpha'
+    compile 'it.unibo.alice.tuprolog:tuprolog:2.1.1'
 
 }
 
@@ -127,10 +128,10 @@ run {
     main "edu.uncc.cs.watsonsim.WatsonSim"
 }
 
-task(train, type: JavaExec) {
+task(train, type:JavaExec) {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
-    main "edu.uncc.cs.watsonsim.ParallelStats"
+    main "edu.uncc.cs.watsonsim.scripts.ParallelStats"
 }
 
 task(run_index, type: JavaExec) {

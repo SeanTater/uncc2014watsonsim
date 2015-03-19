@@ -13,10 +13,7 @@ import edu.uncc.cs.watsonsim.nlp.ClueType;
 import edu.uncc.cs.watsonsim.nlp.Trees;
 
 
-public class Question extends ArrayList<Answer> {
-	private static final long serialVersionUID = 1L;
-	public String text;
-	String raw_text;
+public class Question extends Phrase {
 	public Answer answer;
     private String category = "unknown";
     private QType type;
@@ -26,10 +23,9 @@ public class Question extends ArrayList<Answer> {
      * Create a question from it's raw text
      */
     public Question(String text) {
-        this.raw_text = text;
-        this.text = StringUtils.canonicalize(text);
+    	super(text);
         this.type = QClassDetection.detectType(this);
-        simple_lat = ClueType.fromClue(new Phrase(raw_text).trees.get(0));
+        simple_lat = ClueType.fromClue(new Phrase(text).trees.get(0));
         
         Logger log = Logger.getLogger(getClass());
         if (simple_lat.isEmpty())
@@ -83,23 +79,11 @@ public class Question extends ArrayList<Answer> {
     public void setType(QType type) {
         this.type = type;
     }
-
- 	public String getRaw_text() {
-		return raw_text;
-	}
-
-	public void setRaw_text(String raw_text) {
-		this.raw_text = raw_text;
-	}
-	
-	public boolean add(Passage p) {
-		return add(new Answer(p));
-	}
 	
 	public boolean addPassages(Collection<Passage> ps) {
 		boolean added_any = false;
 		for (Passage p: ps) {
-			added_any |= add(new Answer(p));
+			//added_any |= add(new Answer(p));
 		}
 		return added_any;
 	}

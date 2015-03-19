@@ -19,16 +19,16 @@ public class QClassDetection {
 		if (isFITB(q)) {
 			return QType.FITB;
 		}
-		else if (isCommonBonds(q.raw_text,q.getCategory())) {
+		else if (isCommonBonds(q.text,q.getCategory())) {
 			return QType.COMMON_BONDS;
 		}
-		else if (isAnagram(q.raw_text,q.getCategory())) {
+		else if (isAnagram(q.text,q.getCategory())) {
 			return QType.ANAGRAM;
 		}
-		else if (isBeforeAndAfter(q.raw_text,q.getCategory())) {
+		else if (isBeforeAndAfter(q.text,q.getCategory())) {
 			return QType.BEFORE_AND_AFTER;
 		}
-		else if (isQuotation(q.raw_text,q.getCategory())) {
+		else if (isQuotation(q.text,q.getCategory())) {
 			return QType.QUOTATION;
 		}
 		else {
@@ -47,7 +47,7 @@ public class QClassDetection {
 		//TODO: Another, more common, indication of FITB is quoted phrases adjacent to the focus.
 		// Use focus detection (and LAT detection) to identify these.
 		
-		if (question.getRaw_text().contains("_")) {
+		if (question.text.contains("_")) {
 			return true;
 		} else {
 			return false;

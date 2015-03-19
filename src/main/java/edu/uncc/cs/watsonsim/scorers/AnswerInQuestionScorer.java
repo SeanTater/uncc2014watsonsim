@@ -12,7 +12,7 @@ public class AnswerInQuestionScorer extends AnswerScorer {
 	
 	@Override
 	public double scoreAnswer(Question q, Answer a) {
-		String qtext = q.getRaw_text().toLowerCase();
+		String qtext = q.text.toLowerCase();
 		String atext = a.candidate_text.toLowerCase();
 		
 		if (qtext.contains(atext))

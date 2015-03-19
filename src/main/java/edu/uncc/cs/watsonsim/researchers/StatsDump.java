@@ -53,10 +53,10 @@ public class StatsDump extends Researcher {
 		if (!broken) {
 			try {
 				add_question.setTimestamp(1, run_id);
-				add_question.setString(2, q.getRaw_text());
+				add_question.setString(2, q.text);
 				long question_id = db.then(add_question).getLong(1);
 				
-				for (Answer a : q) {
+				for (Answer a : answers) {
 					add_answer.setLong(1, question_id);
 					add_answer.setString(2, a.candidate_text);
 					long answer_id = db.then(add_answer).getLong(1);

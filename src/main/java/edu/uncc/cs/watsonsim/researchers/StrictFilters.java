@@ -32,7 +32,7 @@ public class StrictFilters extends Researcher {
 			else if (a.candidate_text.contains("List of")) {}
 			
 			// Is the answer in the question?
-			else if (almostContains(q.getRaw_text(), a.candidate_text)) {}
+			else if (almostContains(q.text, a.candidate_text)) {}
 			
 			// Is it too long?
 			// The longest real answer in our sample of about 40,000 is:

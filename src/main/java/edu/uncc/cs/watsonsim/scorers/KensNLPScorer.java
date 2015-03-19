@@ -124,7 +124,7 @@ public class KensNLPScorer extends PassageScorer {
 			Parser parser = ParserFactory.create(this.parserModel, 20, 0.95);
 
 			//create question parse
-			Parse[] questionParse = ParserTool.parseLine(q.getRaw_text(), parser, 1);
+			Parse[] questionParse = ParserTool.parseLine(q.text, parser, 1);
 
 			//create passage parses (one for each sentence)
 			String[] passageSentences = this.DivideIntoSentences(p);

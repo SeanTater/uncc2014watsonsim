@@ -39,7 +39,7 @@ public class ParallelStats {
         ExecutorService pool = Executors.newFixedThreadPool(50);
         long run_start = System.currentTimeMillis();
         int groupsize = 5000/50;
-    	for (int i=1000; i < 6000; i += groupsize) {
+    	for (int i=2000; i < 7000; i += groupsize) {
     		pool.execute(new SingleTrainingResult(i, run_start, groupsize));
     	}
         pool.shutdown();
@@ -68,7 +68,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("test passage lat", sql, run_start).run();
+			new StatsGenerator("QA Keyword Match - Test", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.toString());

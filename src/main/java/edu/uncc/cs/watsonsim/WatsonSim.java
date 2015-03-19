@@ -32,7 +32,7 @@ public class WatsonSim {
 	        	Answer r = answers.get(i);
 	        	System.out.println(String.format("%2d: %s", i, r));
 	        }
-	        if (question.size() > 10) {
+	        if (answers.size() > 10) {
 	        	System.out.println((answers.size() - 10)
 	        			+ " additional candidates are hidden.");
 	        }

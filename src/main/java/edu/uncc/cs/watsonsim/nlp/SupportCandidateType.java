@@ -1,10 +1,18 @@
 package edu.uncc.cs.watsonsim.nlp;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.Theory;
+
+import com.google.common.io.Files;
 import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -88,6 +96,20 @@ public class SupportCandidateType {
 	public static List<Pair<String, String>> extract(Phrase p) {
 		List<Pair<String, String>> names_and_types = new ArrayList<>();
 		for (SemanticGraph graph: p.graphs){
+			//Query qry = new Query("consult",
+			//		new Term[] {new Atom("src/main/parse.pl")});
+			/*Prolog engine = new Prolog();
+			try {
+				engine.setTheory(new Theory(
+						Files.toString(new File("src/main/parse.pl"), Charset.forName("UTF-8"))));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidTheoryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			//engine.setTheory(new Theory());
 			// Load data into a model
 			Model model = ModelFactory.createMemModelMaker().createFreshModel();
 			

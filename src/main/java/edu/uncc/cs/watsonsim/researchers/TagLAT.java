@@ -80,7 +80,7 @@ public class TagLAT extends Researcher {
 		//System.out.println(text + " could be any of " + types);
 		log.info("Found " + (dbpedia_types+support_types) + " types for "
 				+ have_any_types + " candidates. ("+ support_types +" by reading) "
-				+ (q.size() - have_any_types) + " candidates are unknown.");
+				+ (answers.size() - have_any_types) + " candidates are unknown.");
 		return new_answers;
 	}
 
