@@ -63,7 +63,6 @@ This list isn't exhaustive, but it should be a good overview
   - psycopg2, which you can install with `pip install psycopg2`, or as python-psycopg2 in ubuntu and fedora
 
 ### Notes:
-- Java 7 may suffice, but some of the code is being ported to Java 8 and soon the incompatibilities may merge into master. So beware.
 - We once used SQLite but with many connections (200-500+), corruption seems to be a problem. We may make the SQL pluggable to avoid this extra setup step but probably not until someone requests it.
 - The data is sizable and growing, especially for statistics reports.
 - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
