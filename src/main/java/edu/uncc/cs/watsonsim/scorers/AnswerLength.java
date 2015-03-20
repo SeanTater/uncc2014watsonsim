@@ -10,7 +10,7 @@ import edu.uncc.cs.watsonsim.Question;
 public class AnswerLength extends AnswerScorer {
 	
 	public double scoreAnswer(Question q, Answer a) {
-		return a.candidate_text.length();
+		return a.text.length();
 	}
 
 }

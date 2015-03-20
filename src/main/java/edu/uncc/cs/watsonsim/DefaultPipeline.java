@@ -10,6 +10,7 @@ import org.apache.uima.analysis_engine.AnalysisEngine;
 
 import edu.uncc.cs.watsonsim.researchers.*;
 import edu.uncc.cs.watsonsim.scorers.*;
+import edu.uncc.cs.watsonsim.scripts.TestAnagrams;
 import edu.uncc.cs.watsonsim.search.*;
 
 /** The standard Question Analysis pipeline.
@@ -82,7 +83,8 @@ public class DefaultPipeline {
 			new IndriSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
-			new CachingSearcher(env, new BingSearcher(env), "bing")
+			new CachingSearcher(env, new BingSearcher(env), "bing"),
+			new TestAnagrams()
 		};
 		early_researchers = Researcher.pipe(
 			//new RedirectSynonyms(env),
@@ -93,7 +95,8 @@ public class DefaultPipeline {
 			new PassageRetrieval(env),
 			new MergeByCommonSupport(),
 			new PersonRecognition(),
-			new TagLAT(env)
+			new TagLAT(env),
+			new MergeByCommonSupport()
 		);
 		scorers = new Scorer[]{
 			new AnswerLength(),

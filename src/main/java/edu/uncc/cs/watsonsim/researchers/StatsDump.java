@@ -58,7 +58,7 @@ public class StatsDump extends Researcher {
 				
 				for (Answer a : answers) {
 					add_answer.setLong(1, question_id);
-					add_answer.setString(2, a.candidate_text);
+					add_answer.setString(2, a.text);
 					long answer_id = db.then(add_answer).getLong(1);
 					
 					for (Map.Entry<String, Double> e : Score.asMap(a.scores).entrySet()) {

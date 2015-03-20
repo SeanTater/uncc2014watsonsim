@@ -52,7 +52,7 @@ public class LATCheck extends AnswerScorer {
 			for (Weighted<String> synonym : question_synonyms) {
 				for (String candidate_type : a.lexical_types) {
 					if (syn.matchViaLevenshtein(synonym.item, candidate_type)) {
-						log.info(a.candidate_text + " is a " + synonym.item
+						log.info(a.text + " is a " + synonym.item
 								+ " which is  " + q.simple_lat
 								+ " (weight " + Math.log(synonym.weight) + ")");
 						return Math.log(synonym.weight);

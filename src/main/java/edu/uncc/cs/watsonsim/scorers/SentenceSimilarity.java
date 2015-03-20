@@ -186,7 +186,7 @@ public class SentenceSimilarity extends PassageScorer {
 		boolean verbose = true;
 		
 		// Tokenize the text, necessary for simple and NLP searches
-		List<List<String>> ca_sentences = tokenizeParagraph(a.candidate_text);
+		List<List<String>> ca_sentences = tokenizeParagraph(a.text);
 		List<List<String>> q_sentences = tokenizeParagraph(q.text);
 		List<List<String>> passage_sentences = tokenizeParagraph(p.text);
 		

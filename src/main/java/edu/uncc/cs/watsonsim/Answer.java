@@ -9,8 +9,8 @@ import java.util.Objects;
  * @author Phani Rahul
  * @author Sean Gallagher
  */
-public class Answer implements Comparable<Answer> {
-    public String candidate_text;
+public class Answer extends Phrase implements Comparable<Answer> {
+    
     
     public double[] scores = Score.empty();
     private double overall_score = Double.NaN;
@@ -21,17 +21,19 @@ public class Answer implements Comparable<Answer> {
      * Create an Answer with one implicitly defined Passage
      */
     public Answer(Passage d) {
+    	super(d.title);
         this.passages.add(d);
         this.scores = d.scores;
-        this.candidate_text = d.title;
+        
     }
     
     public Answer(List<Passage> passages,
     		double[] scores,
     		String candidate_text) {
+    	super(candidate_text);
     	this.passages = passages;
     	this.scores = scores;
-    	this.candidate_text = candidate_text;
+    	
     }
     
     /**
@@ -45,14 +47,25 @@ public class Answer implements Comparable<Answer> {
      * Create an Answer without any passages
      */
     public Answer(String candidate_text) {
-    	this.candidate_text = candidate_text;
+    	super(candidate_text);
+    	
+    }
+    
+    // Copy with one mutation: the text
+    public Answer(Answer original, String text)
+    {
+    	super(text);
+    	scores = original.scores.clone();
+    	for (Passage p : original.passages) {
+    		passages.add(new Passage(p));
+    	}
     }
 
     @Override
     /** How to handle inexact matches this way?? */
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.candidate_text);
+        hash = 41 * hash + Objects.hashCode(this.text);
         return hash;
     }
 
@@ -65,11 +78,11 @@ public class Answer implements Comparable<Answer> {
     			engines += e.engine_name.substring(0, 1);
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
-    	return String.format("[%01f %-3s] %s", getOverallScore(), engines, candidate_text);
+    	return String.format("[%01f %-3s] %s", getOverallScore(), engines, text);
     }
     
     public String toJSON() {
-    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", getOverallScore(), candidate_text.replace("\"", "\\\""));
+    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", getOverallScore(), text.replace("\"", "\\\""));
     }
     
     /**
@@ -119,7 +132,7 @@ public class Answer implements Comparable<Answer> {
     		scores = Score.merge(scores, other.scores);
     	
     	// Pick the first candidate answer
-    	candidate_text = others.get(0).candidate_text;
+    	candidate_text = others.get(0).text;
     	
     	// Now make an answer from it
     	return new Answer(passages, scores, candidate_text);

@@ -48,7 +48,7 @@ public class CoreNLPSentenceSimilarity extends PassageScorer {
 	 * 
 	 */
 	public double scorePassage(Question q, Answer a, Passage p) {
-		return scorePhrases(p, new Phrase(a.candidate_text));
+		return scorePhrases(p, new Phrase(a.text));
 	}
 }
 

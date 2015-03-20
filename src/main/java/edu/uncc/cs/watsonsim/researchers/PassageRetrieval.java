@@ -45,7 +45,7 @@ public class PassageRetrieval extends Researcher {
 	
 	
 	private String getPassageQuery(Question q, Answer a) {
-		return q.text + " " + Matcher.quoteReplacement(a.candidate_text);
+		return q.text + " " + Matcher.quoteReplacement(a.text);
 	}
 
 }

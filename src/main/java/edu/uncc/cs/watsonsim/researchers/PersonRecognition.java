@@ -54,7 +54,7 @@ public class PersonRecognition extends Researcher {
     public Answer answer(Question q, Answer answer) {
         Span nameSpans[] = null;
         String[] sentence = null;
-        sentence = answer.candidate_text.split("[,'()  ]+");
+        sentence = answer.text.split("[,'()  ]+");
 
         nameSpans = nameFinder.find(sentence);
         nameFinder.clearAdaptiveData();
@@ -68,7 +68,8 @@ public class PersonRecognition extends Researcher {
             }
         }
         if (!ret.toString().isEmpty()){
-        	answer.candidate_text = ret.toString();
+        	//answer.text = ret.toString();
+        	return new Answer(answer, ret.toString());
         }
         return answer;	
     }

@@ -15,7 +15,7 @@ import edu.uncc.cs.watsonsim.StringUtils;
 public class NGram extends PassageScorer {
 	public double scorePassage(Question q, Answer a, Passage p) {
 		// Jane Austen
-		List<String> a_set = generateNgrams(3, StringUtils.tokenize(a.candidate_text));
+		List<String> a_set = generateNgrams(3, StringUtils.tokenize(a.text));
 		
 		// Romantic novelist Jane Austen once wrote -the- book Emma.
 		List<String> p_set = generateNgrams(3, p.tokens);

@@ -40,7 +40,7 @@ public class RedirectSynonyms extends Researcher {
 		List<Answer> new_answers = new ArrayList<Answer>();
 		for (Answer a : answers) {
 			try {
-				s.setString(1, a.candidate_text);
+				s.setString(1, a.text);
 				ResultSet results = s.executeQuery();
 				while (results.next()) {
 					synonym_count++;

@@ -49,13 +49,13 @@ public class TagLAT extends Researcher {
 		List<Answer> suggestions = new ArrayList<>();
 		
 		for (Answer a: answers) {
-			a.lexical_types = dbpedia.viaDBPedia(a.candidate_text);
+			a.lexical_types = dbpedia.viaDBPedia(a.text);
 			dbpedia_types += a.lexical_types.size(); 
 			
 			for (Phrase p: a.passages) {
 				List<Pair<String, String>> types = p.memo(SupportCandidateType::extract);
 				for (Pair<String, String> name_and_type : types) {
-					if (syn.matchViaSearch(name_and_type.first, a.candidate_text)) {
+					if (syn.matchViaSearch(name_and_type.first, a.text)) {
 						a.lexical_types.add(name_and_type.second);
 						support_types++;
 					} else if (syn.matchViaSearch(name_and_type.second, q.simple_lat)) {

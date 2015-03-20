@@ -13,7 +13,7 @@ public class AnswerInPassage extends PassageScorer {
 	@Override
 	public double scorePassage(Question q, Answer a, Passage p)
 	{
-		return p.text.contains(a.candidate_text) ?
+		return p.text.contains(a.text) ?
 				1 : 0;
 	}
 }

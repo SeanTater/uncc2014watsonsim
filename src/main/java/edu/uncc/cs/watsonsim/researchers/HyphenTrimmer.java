@@ -8,10 +8,10 @@ import edu.uncc.cs.watsonsim.Question;
 public class HyphenTrimmer extends Researcher {
 	
 	public Answer answer(Question q, Answer a) {
-		String[] improved_answer_parts = a.candidate_text.split("[-:(|]");
+		String[] improved_answer_parts = a.text.split("[-:(|]");
 		
 		if (improved_answer_parts.length>0) {
-			a.candidate_text = improved_answer_parts[0].trim();
+			return new Answer(a, improved_answer_parts[0].trim());
 		}
 		return a;
 	}

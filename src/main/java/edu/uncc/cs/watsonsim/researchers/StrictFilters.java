@@ -25,26 +25,26 @@ public class StrictFilters extends Researcher {
 		for (Answer a : answers) {
 			
 			// J! Archive has answers
-			if (a.candidate_text.contains("J! Archive")) {}
+			if (a.text.contains("J! Archive")) {}
 				
 			
 			// "List of" is a bad sign 
-			else if (a.candidate_text.contains("List of")) {}
+			else if (a.text.contains("List of")) {}
 			
 			// Is the answer in the question?
-			else if (almostContains(q.text, a.candidate_text)) {}
+			else if (almostContains(q.text, a.text)) {}
 			
 			// Is it too long?
 			// The longest real answer in our sample of about 40,000 is:
 			// How much wood would a woodchuck chuck if a woodchuck could chuck wood?
 			// and it's 70 characters long. So cut there.
-			else if (a.candidate_text.length() > 70) {}
+			else if (a.text.length() > 70) {}
 			
 			// Is over half of it non-Latin text?
-			else if (a.candidate_text.replaceAll("[^A-Za-z0-9 ]", "").length() * 2 < a.candidate_text.length()) {}
+			else if (a.text.replaceAll("[^A-Za-z0-9 ]", "").length() * 2 < a.text.length()) {}
 			
 			// Does it look like a web address?
-			else if (a.candidate_text.matches("^(http://)?([A-Za-z]+\\.)?[A-Za-z]+\\.(com|net|org|co\\.[A-Za-z]{2})$")) {}
+			else if (a.text.matches("^(http://)?([A-Za-z]+\\.)?[A-Za-z]+\\.(com|net|org|co\\.[A-Za-z]{2})$")) {}
 			
 			else {
 				new_answers.add(a);

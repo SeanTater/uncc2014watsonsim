@@ -33,7 +33,7 @@ public class MergeByText extends Researcher {
 				for (Answer example : block) {
 					// Look through the examples in this topic
 					// If it matches, choose to put it in this block and quit.
-					if (syn.matchViaLevenshtein(original.candidate_text, example.candidate_text)) {
+					if (syn.matchViaLevenshtein(original.text, example.text)) {
 						block.add(original);
 						continue each_answer;
 					}

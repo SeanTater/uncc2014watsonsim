@@ -33,6 +33,12 @@ public class Passage extends Phrase {
 		this.engine_name = engine_name;
 		this.title = StringEscapeUtils.unescapeXml(title);
 	}
+	
+	// Copy constructor
+	public Passage(Passage original) {
+		this(original.engine_name, original.title, original.text, original.reference);
+		scores = original.scores.clone();
+	}
     
     /** Return the value of this Score for this answer, or null */
     public double score(String name) {

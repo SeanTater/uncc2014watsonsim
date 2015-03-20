@@ -44,7 +44,7 @@ public class WatsonSim {
 	        while (command.matches("[0-9]+")) {
 	        	Answer a = answers.get(Integer.parseInt(command));
 	        	System.out.println("First full text for ["
-	        			+ a.candidate_text + "]: \n"
+	        			+ a.text + "]: \n"
 	        			+ a.passages.get(0).text + "\n");
 	        	command = br.readLine();
 	        }

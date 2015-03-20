@@ -20,7 +20,7 @@ public class Correct extends AnswerScorer {
 		if (q.answer == null) {
 			return 0;
 		} else {
-			return (syn.matchViaLevenshtein(q.answer.candidate_text, a.candidate_text)) ? 1 : 0;
+			return (syn.matchViaLevenshtein(q.answer.text, a.text)) ? 1 : 0;
 		}
         
 	}

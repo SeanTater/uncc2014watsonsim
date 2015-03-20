@@ -16,7 +16,7 @@ public class WPPageViews extends AnswerScorer {
 	@Override
 	public synchronized double scoreAnswer(Question q, Answer a) {
 		try {
-			popularity_statement.setString(1, a.candidate_text);
+			popularity_statement.setString(1, a.text);
 			ResultSet rs = popularity_statement.executeQuery();
 			
 			if (rs.next()) {
