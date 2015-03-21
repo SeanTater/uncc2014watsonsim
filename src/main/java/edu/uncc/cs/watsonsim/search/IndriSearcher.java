@@ -27,14 +27,18 @@ public class IndriSearcher extends Searcher {
 	 * @param config  The configuration Properties
 	 */
 	public IndriSearcher(Environment env) {
-		try {
-			q.addIndex(env.getOrDie("indri_index"));
-		} catch (Exception e) {
-			System.out.println("Setting up the Indri index failed."
-					+ " Is the index in the correct location?"
-					+ " Is indri_jni included?");
-			e.printStackTrace();
-			enabled=false;
+		if (env.getOrDie("indri_enabled") == "false") {
+			enabled = false;
+		} else {
+			try {
+				q.addIndex(env.getOrDie("indri_index"));
+			} catch (Exception e) {
+				System.out.println("Setting up the Indri index failed."
+						+ " Is the index in the correct location?"
+						+ " Is indri_jni included?");
+				e.printStackTrace();
+				enabled=false;
+			}
 		}
 		Score.register("INDRI_ANSWER_SCORE", -1, Merge.Mean);
 		Score.register("INDRI_ANSWER_RANK", -1, Merge.Mean);
