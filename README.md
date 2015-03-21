@@ -38,6 +38,7 @@ This list isn't exhaustive, but it should be a good overview
     - Fedora 20+: `yum install java-1.8.0-openjdk`
     - [Windows, Mac, all others](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
   - [Indri search library (native)](http://www.lemurproject.org/indri.php), needs to be compiled with SWIG and Java, afterward copy the libindri_jni.* into uncc2014watsonsim/lib
+    - To skip this step, set `indri_enabled = false` in config.properties.
   - libSVM machine learning library (native)
     - Ubuntu, Fedora: install `libsvm-java`
     - [Windows](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) ([instructions](http://stackoverflow.com/questions/25060178/which-weka-and-libsvm-jar-files-to-use-in-java-code-for-svm-classification))
