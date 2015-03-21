@@ -8,7 +8,7 @@ Keep in mind that the program may change faster than its documentation. If you a
 Watsonsim works using a pipeline of operations on questions, candidate answers, and their supporting passages. In many ways it is similar to [IBM's Watson](http://en.wikipedia.org/wiki/Watson_%28computer%29), and [Petr's YodaQA](https://github.com/brmson/yodaqa). It's not all that similar to more logic based systems like [OpenCog](http://opencog.org/) or [Wolfram Alpha](www.wolframalpha.com). But there are significant differences even from Watson and YodaQA.
 
 - We don't use a standard UIMA pipeline, which is a product of our student-project history. Sometimes this is a hindrance but typically it has little impact. We suspect it reduces the learning overhead and boilerplate code.
-- Unlike YodaQA, we target Jeopardy! questions, but we do incorporate their method of Lexical Anawer Type (LAT) checking, in addition to our own.
+- Unlike YodaQA, we target Jeopardy! questions, but we do incorporate their method of Lexical Answer Type (LAT) checking, in addition to our own.
 - Our framework is rather heavyweight in terms of computation. Depending on what modules are enabled, it can take between about 1 second and 2 minutes to answer a question. We use Indri to improve accuracy but if you prefer, you can disable it in the code for a large speedup. (We are investigating alternatives as well.)
 - We include (relatively) large amounts of preprocessed article text from Wikipedia as our inputs. Be prepared to use about 100GB of space if you want to try it out at its full power.
 
