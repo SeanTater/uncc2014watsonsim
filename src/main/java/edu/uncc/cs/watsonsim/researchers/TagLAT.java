@@ -2,7 +2,9 @@ package edu.uncc.cs.watsonsim.researchers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -55,14 +57,20 @@ public class TagLAT extends Researcher {
 			for (Phrase p: a.passages) {
 				List<Pair<String, String>> types = p.memo(SupportCandidateType::extract);
 				for (Pair<String, String> name_and_type : types) {
-					if (syn.matchViaSearch(name_and_type.first, a.text)) {
-						a.lexical_types.add(name_and_type.second);
+					String name = name_and_type.first;
+					String type = name_and_type.second;
+					if (syn.matchViaSearch(name, a.text)) {
+						a.lexical_types.add(type);
 						support_types++;
-					} else if (syn.matchViaSearch(name_and_type.second, q.simple_lat)) {
-						log.info("Suggesting " + name_and_type.first);
-						Answer suggestion = new Answer(name_and_type.first);
-						suggestion.lexical_types = Arrays.asList(name_and_type.second);
-						suggestions.add(suggestion);
+					} else if (syn.matchViaSearch(type, q.simple_lat)) {
+						Answer suggestion = new Answer(name);
+						suggestion.lexical_types = Arrays.asList(type);
+						if (!(suggestions.contains(suggestion)
+								|| answers.contains(suggestion))) {
+							log.info("Suggesting " + name);
+							suggestions.add(suggestion);
+						}
+						
 					}
 				}
 			}
@@ -72,9 +80,9 @@ public class TagLAT extends Researcher {
 		// This is the chain magic:
 		// We can pull the new suggestions through the pipeline and merge them!
 		List<Answer> new_answers = new ArrayList<>();
-		new_answers.addAll(answers);
 		if (!suggestions.isEmpty() && depth < 3)
 			new_answers.addAll(pull(q, suggestions, depth+1));
+		new_answers.addAll(answers);
 		
 
 		//System.out.println(text + " could be any of " + types);

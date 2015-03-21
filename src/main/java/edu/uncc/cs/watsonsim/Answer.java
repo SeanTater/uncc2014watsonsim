@@ -62,14 +62,6 @@ public class Answer extends Phrase implements Comparable<Answer> {
     }
 
     @Override
-    /** How to handle inexact matches this way?? */
-    public int hashCode() {
-        int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.text);
-        return hash;
-    }
-
-    @Override
     public String toString() {
     	// Make a short view of the engines as single-letter abbreviations
     	String engines = "";
