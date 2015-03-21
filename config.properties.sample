@@ -4,6 +4,7 @@
 lucene_index = data/v1.1/lucene_index
 jena_lucene_index = data/rdf/lucene
 indri_index = data/v1.1/indri_index
+indri_enabled = true
 terrier_index = OPTIONAL UNTIL TERRIER IS IMPLEMENTED
 
 bing_api_key = FILL ME IN
