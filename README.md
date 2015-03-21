@@ -16,10 +16,10 @@ Watsonsim works using a pipeline of operations on questions, candidate answers, 
 This list isn't exhaustive, but it should be a good overview
 
 - Search
-  - Text search from Lucene and Indri
+  - Text search from Lucene and Indri (Terrier upcoming)
   - Web search from Bing (Google is in the works)
   - Relational queries using PostgreSQL
-  - Linked Data queries using Jena
+  - Linked data queries using Jena
 - Sources
   - Text from all the articles in Wikipedia, Wiktionary, and Wikiquotes
   - Linked data from DBPedia, used for LAT
@@ -27,6 +27,7 @@ This list isn't exhaustive, but it should be a good overview
   - Source, target, and label from all links in Wikipedia
 - Machine learning with Weka and libSVM
 - Text parsing and dependency generation from CoreNLP and OpenNLP
+- Parsing logic in Prolog (with TuProlog)
 
 ## Installing the Simulator
 - For the program
@@ -64,7 +65,7 @@ This list isn't exhaustive, but it should be a good overview
 
 ### Notes:
 - We once used SQLite but with many connections (200-500+), corruption seems to be a problem. We may make the SQL pluggable to avoid this extra setup step but probably not until someone requests it.
-- The data is sizable and growing, especially for statistics reports.
+- The data is sizable and growing, especially for statistics reports; 154.5 GB as of the time of this writing.
 - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
 
 ## Tools
