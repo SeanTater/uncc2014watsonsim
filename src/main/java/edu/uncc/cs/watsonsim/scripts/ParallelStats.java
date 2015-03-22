@@ -65,7 +65,7 @@ class SingleTrainingResult extends Thread {
 	}
 	
 	public void run() {
-		String sql = String.format(", cache where (query = question) ORDER BY question LIMIT %d OFFSET %d", groupsize, offset);
+		String sql = String.format("cached ORDER BY random() LIMIT %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
 			new StatsGenerator("Extra commonSupport merge - Test", sql, run_start).run();
