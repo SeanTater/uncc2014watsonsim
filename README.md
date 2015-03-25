@@ -49,7 +49,7 @@ This list isn't exhaustive, but it should be a good overview
   - [Postgres](http://www.postgresql.org/download/) (we use 9.3)
   - The latest Lucene and Indri indexes. Just unzip into the data/ subdirectory.
   - The latest database snapshot. Load it into Postgres using `pg_restore -d watsonsim [more options as necessary] data-snapshot.pgdump`.
-  - [You can download both using BitTorrent](https://dl.dropboxusercontent.com/u/92563044/watsonsim/watsonsim.torrent)
+  - [You can download both using BitTorrent](https://dl.dropboxusercontent.com/u/92563044/watsonsim/torrent/0.5.0.torrent)
   - The snapshots are updated weekly via a cron job.
 - For Bing web search
   - copy config.properties.sample to config.properties
