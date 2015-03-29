@@ -16,6 +16,7 @@ import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
@@ -25,7 +26,7 @@ import edu.stanford.nlp.util.CacheMap;
 *@author Jagan Vujjini
 */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
-	private static Analyzer analyzer = new EnglishAnalyzer(Version.LUCENE_47);
+	private static Analyzer analyzer = new StandardAnalyzer();
 	private static Database db = new Database(); // Used for semantic distribution
 	public static final int CONTEXT_LENGTH = 1000;
 	

@@ -68,13 +68,11 @@ public class Passage extends Phrase {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((tokens == null) ? 0 : tokens.hashCode());
-		result = prime * result
-				+ ((engine_name == null) ? 0 : engine_name.hashCode());
-		result = prime * result
-				+ ((reference == null) ? 0 : reference.hashCode());
-		result = prime * result + ((text == null) ? 0 : text.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + tokens.hashCode();
+		result = prime * result + engine_name.hashCode();
+		result = prime * result + reference.hashCode();
+		result = prime * result + text.hashCode();
+		result = prime * result + title.hashCode();
 		return result;
 	}
 
@@ -87,30 +85,15 @@ public class Passage extends Phrase {
 		if (getClass() != obj.getClass())
 			return false;
 		Passage other = (Passage) obj;
-		if (tokens == null) {
-			if (other.tokens != null)
-				return false;
-		} else if (!tokens.equals(other.tokens))
+		if (!tokens.equals(other.tokens))
 			return false;
-		if (engine_name == null) {
-			if (other.engine_name != null)
-				return false;
-		} else if (!engine_name.equals(other.engine_name))
+		else if (!engine_name.equals(other.engine_name))
 			return false;
-		if (reference == null) {
-			if (other.reference != null)
-				return false;
-		} else if (!reference.equals(other.reference))
+		else if (!reference.equals(other.reference))
 			return false;
-		if (text == null) {
-			if (other.text != null)
-				return false;
-		} else if (!text.equals(other.text))
+		else if (!text.equals(other.text))
 			return false;
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		} else if (!title.equals(other.title))
+		else if (!title.equals(other.title))
 			return false;
 		return true;
 	}

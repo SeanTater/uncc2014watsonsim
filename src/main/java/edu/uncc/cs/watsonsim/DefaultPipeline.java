@@ -84,7 +84,7 @@ public class DefaultPipeline {
 			// You may want to cache Bing results
 			// new BingSearcher(config),
 			new CachingSearcher(env, new BingSearcher(env), "bing"),
-			new TestAnagrams()
+			//new TestAnagrams()
 		};
 		early_researchers = Researcher.pipe(
 			//new RedirectSynonyms(env),
@@ -117,6 +117,7 @@ public class DefaultPipeline {
 			//new DistSemCosQPScore(),
 			//new SentenceSimilarity(),
 			new CoreNLPSentenceSimilarity(),
+			//new AnswerPOSTagger(),
 		};
 		late_researchers = Researcher.pipe(
 			new WekaTee(run_start),

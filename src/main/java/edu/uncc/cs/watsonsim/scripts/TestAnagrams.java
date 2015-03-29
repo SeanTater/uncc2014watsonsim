@@ -65,27 +65,22 @@ public class TestAnagrams extends Searcher {
 		Arrays.sort(charArray);
 		// String searchKey = String.valueOf(charArray);
 		List<String> entries = mp.get(String.valueOf(charArray));
-		if (entries != null) {
-			for (String line : entries) {
-				System.out.println(line);
-			}
-		}
-		else
+		if (entries == null)
 		{
 			entries = new ArrayList<>();
 		}
+		entries.remove(keys);
 		return entries;
 	}
 
 	@Override
 	public List<Passage> query(String query) {
-		// TODO Auto-generated method stub
 		String command1 = "";
 
 		Pattern pattern = Pattern.compile("\"([A-z ]+)\"|: ([A-z ]+)");
 		Matcher matcher = pattern.matcher(query);
 
-		if (matcher.find()) {
+		if (matcher.find() && matcher.group(1) != null) {
 			command1 = matcher.group(1);
 			System.out.println(command1);
 		}

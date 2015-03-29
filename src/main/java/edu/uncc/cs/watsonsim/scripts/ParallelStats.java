@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
@@ -24,6 +22,10 @@ import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.StringUtils;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 /**
  * @author Sean Gallagher
  * @author Matt Gibson
@@ -35,6 +37,9 @@ public class ParallelStats {
      * @throws Exception 
      */
     public static void main(String[] args) throws Exception {
+        BasicConfigurator.configure();
+        Logger.getRootLogger().setLevel(Level.WARN);
+        
     	// Oversubscribing makes scheduling the CPU-scheduler's problem
         ExecutorService pool = Executors.newFixedThreadPool(50);
         long run_start = System.currentTimeMillis();
@@ -47,7 +52,8 @@ public class ParallelStats {
         try {
             pool.awaitTermination(2, TimeUnit.DAYS);
         } catch (InterruptedException ex) {
-            Logger.getLogger(ParallelStats.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getRootLogger().setLevel(Level.INFO);
+            Logger.getRootLogger().info(ex);
         }
         System.out.println("Done.");
     }
@@ -65,10 +71,10 @@ class SingleTrainingResult extends Thread {
 	}
 	
 	public void run() {
-		String sql = String.format("cached ORDER BY random() LIMIT %d", groupsize, offset);
+		String sql = String.format("cached LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("Extra commonSupport merge - Test", sql, run_start).run();
+			new StatsGenerator("Indri combine", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.toString());
@@ -220,7 +226,9 @@ class StatsGenerator {
 	/** Run statistics, then upload to the server */
 	public void run() {
 		final long start_time = System.nanoTime();
-
+		
+        //BasicConfigurator.configure();
+        //Logger.getRootLogger().setLevel(Level.INFO);
 		
 		System.out.println("Asking Questions");
 		DefaultPipeline pipe = new DefaultPipeline(run_start); 

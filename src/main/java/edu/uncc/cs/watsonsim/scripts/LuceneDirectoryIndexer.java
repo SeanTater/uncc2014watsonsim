@@ -8,8 +8,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -46,15 +48,15 @@ public class LuceneDirectoryIndexer {
     public static void main(String[] args) {
 
         try {
-            Directory dir = FSDirectory.open(new File(indexDirectory));
+            Directory dir = FSDirectory.open(Paths.get(indexDirectory));
             
             File inDir = new File(INPUT_DIR);
             File[] inFiles = inDir.listFiles();
             
             //here we are using a standard analyzer, there are a lot of analyzers available to our use.
-            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46);
+            Analyzer analyzer = new StandardAnalyzer();
 
-            IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_46, analyzer);
+            IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 
             //this mode by default overwrites the previous index, not a very good option in real usage
             iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);

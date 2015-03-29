@@ -1,6 +1,6 @@
 is_type_statement(A, B) :-
-    (nsubj(A, B); nsubj(B, A)),
-    (cop(A, _); cop(B, _)).
+    (nsubj(A, B), cop(B, _), det(B, _));
+    (nsubj(B, A), cop(B, _), det(B, _)).
 
 /* A plain type */
 type_a(Name, Type) :-

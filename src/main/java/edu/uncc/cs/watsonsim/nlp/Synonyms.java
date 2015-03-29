@@ -24,14 +24,14 @@ import edu.uncc.cs.watsonsim.search.LucenePassageSearcher;
 public class Synonyms {
 	private final Database db;
 	private final PreparedStatement link_statement;
-	private final IndexSearcher lucene;
+	private final Environment env;
 	/**
 	 * Create a Synonyms module using shared resources. 
 	 * @param env
 	 */
 	public Synonyms(Environment env) {
-		db = env.db;
-		lucene = env.lucene;
+		this.db = env.db;
+		this.env = env;
 		/*
 		 * select count(*), trim(both ' .-’`''' from lower(target)) as name
 		 * 	from wiki_links
@@ -73,24 +73,13 @@ public class Synonyms {
 	public boolean matchViaSearch(String left, String right) {
 		final int K = 3;
 		final int Q = K/2;
-		try {
-			ScoreDoc[] left_hits = lucene.search(
-					LucenePassageSearcher.queryFromWords(left),
-					3).scoreDocs;
-			Set<ScoreDoc> lefts = new HashSet<>(Arrays.asList(left_hits));
-			ScoreDoc[] right_hits = lucene.search(
-					LucenePassageSearcher.queryFromWords(right),
-					3).scoreDocs;
-			Set<ScoreDoc> rights = new HashSet<>(Arrays.asList(right_hits));
-			return left_hits.length >0 && right_hits.length > 0 && left_hits[0].doc == right_hits[0].doc;
-			//lefts.retainAll(rights);
-			//return lefts.size() > Q;
-			
-		} catch (IOException e) {
-			System.out.println("Failed to query Lucene. Is the index in the correct location?");
-			e.printStackTrace();
-		}
-		return false;
+		ScoreDoc[] left_hits = env.simpleLuceneQuery(left, K);
+		Set<ScoreDoc> lefts = new HashSet<>(Arrays.asList(left_hits));
+		ScoreDoc[] right_hits = env.simpleLuceneQuery(right, K);
+		Set<ScoreDoc> rights = new HashSet<>(Arrays.asList(right_hits));
+		return left_hits.length >0 && right_hits.length > 0 && left_hits[0].doc == right_hits[0].doc;
+		//lefts.retainAll(rights);
+		//return lefts.size() > Q;
 	}
 	
 	

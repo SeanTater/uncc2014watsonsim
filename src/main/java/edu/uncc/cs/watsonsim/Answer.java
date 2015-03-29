@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Phani Rahul
  * @author Sean Gallagher
@@ -106,12 +108,9 @@ public class Answer extends Phrase implements Comparable<Answer> {
     	return Double.compare(getOverallScore(), other.getOverallScore());
 	}
     
-    /** Change this Answer to include all the information of another
-     * HACK: We average the scores but we should probably use a
-     * pluggable binary operator*/
+    /** Change this Answer to include all the information of others */
     public static Answer merge(List<Answer> others) {
         List<Passage> passages = new ArrayList<>();
-        String candidate_text;
         
         // Merge all the passages
     	for (Answer other : others)
@@ -123,8 +122,9 @@ public class Answer extends Phrase implements Comparable<Answer> {
     	for (Answer other : others)
     		scores = Score.merge(scores, other.scores);
     	
+
     	// Pick the first candidate answer
-    	candidate_text = others.get(0).text;
+    	String candidate_text = others.get(0).text;
     	
     	// Now make an answer from it
     	return new Answer(passages, scores, candidate_text);

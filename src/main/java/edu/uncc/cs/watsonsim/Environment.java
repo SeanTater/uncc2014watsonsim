@@ -6,16 +6,28 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
+import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.MMapDirectory;
+import org.apache.lucene.util.QueryBuilder;
+import org.apache.lucene.util.Version;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.tdb.TDBFactory;
 
@@ -39,6 +51,14 @@ public class Environment {
 	public final Database db = new Database();
 	public final Dataset rdf;
 	public final IndexSearcher lucene;
+	private final QueryBuilder lucene_query_builder = new QueryBuilder(new StandardAnalyzer());
+	private final Logger log = Logger.getLogger(getClass());
+	private static final Cache<String, ScoreDoc[]> recent_lucene_searches =
+            CacheBuilder.newBuilder()
+		    	.concurrencyLevel(50)
+		    	.softValues()
+		    	.maximumSize(1000)
+		    	.build();
 	
 	/**
 	 * Create a (possibly) shared NLP environment. The given data directory
@@ -109,12 +129,45 @@ public class Environment {
 		// Lucene indexes have huge overhead so avoid re-instantiating by putting them in the Environment
 		IndexReader reader;
 		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(getOrDie("lucene_index"))));
+			reader = DirectoryReader.open(new MMapDirectory(Paths.get(getOrDie("lucene_index"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("The candidate-answer Lucene index failed to open.");
 		}
 		lucene = new IndexSearcher(reader);
+	}
+	
+	/**
+	 * Run a vanilla boolean Lucene query
+	 * @param query
+	 * @param count
+	 * @return
+	 */
+	public ScoreDoc[] simpleLuceneQuery(String query, int count) {
+		if (query.length() < 3) return new ScoreDoc[0];
+		try {
+			return recent_lucene_searches.get(query, () -> forcedSimpleLuceneQuery(query, count));
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			return new ScoreDoc[0];
+		}
+	}
+	
+	/**
+	 * Run a vanilla boolean Lucene query
+	 * @param query		Terms to query lucene with, using SHOULD (a kind of OR)
+	 * @param count		The number of results to return
+	 * @return			An array of ScoreDocs
+	 * @throws IOException
+	 *  We  
+	 */
+	private ScoreDoc[] forcedSimpleLuceneQuery(String query, int count) throws IOException {
+		Query bquery = lucene_query_builder.createBooleanQuery("text", query);
+		if (bquery != null) {
+			return lucene.search(bquery, count).scoreDocs;
+		} else {
+			return new ScoreDoc[0];
+		}
 	}
 	
 

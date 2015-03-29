@@ -15,7 +15,7 @@ group = "edu.uncc"
 repositories {
     mavenCentral()
     maven {url "https://repo.eclipse.org/content/groups/releases/"}
-    maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
+//    maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
     flatDir {dirs "lib"}
 }
 
@@ -33,11 +33,13 @@ dependencies {
     compile group: "org.eclipse.jgit",               name: "org.eclipse.jgit",        version: "3.2.0.201312181205-r"
 
     // Search Engines
-    compile group: "org.apache.lucene",              name: "lucene-core",             version: "4.7.2"
-    compile group: "org.apache.lucene",              name: "lucene-queryparser",      version: "4.7.2"
-    compile group: "org.apache.lucene",              name: "lucene-analyzers-common", version: "4.7.2"
-    compile group: "org.apache.lucene",              name: "lucene-highlighter",      version: "4.7.2"
-    compile group: "lemurproject.indri",             name: "indri",                   version: "5.6"
+    compile group: "org.apache.lucene",              name: "lucene-core",             version: "5.0.0"
+    compile group: "org.apache.lucene",              name: "lucene-queryparser",      version: "5.0.0"
+    compile group: "org.apache.lucene",              name: "lucene-analyzers-common", version: "5.0.0"
+    compile group: "org.apache.lucene",              name: "lucene-highlighter",      version: "5.0.0"
+    compile 'org.apache.lucene:lucene-backward-codecs:5.0.0'
+
+    compile group: "lemurproject.indri",             name: "indri",                   version: "5.7"
     compile group: "com.google.api-client",          name: "google-api-client",       version: "1.17.0-rc"
     compile 'com.google.apis:google-api-services-customsearch:v1-rev34-1.17.0-rc'
     compile "com.google.http-client:google-http-client-jackson2:1.17.0-rc"
@@ -45,7 +47,8 @@ dependencies {
     compile "org.jsoup:jsoup:1.7.3"
 
     // Approximate String Matching
-    compile 'org.apache.commons:commons-lang3:3.2.1'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'commons-dbutils:commons-dbutils:1.6'
 
     // Indri native library
 //    natives "libindri-jni:libindri-jni:5.6"
@@ -125,7 +128,7 @@ run {
     standardInput = System.in
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
-    main "edu.uncc.cs.watsonsim.WatsonSim"
+    main "edu.uncc.cs.watsonsim.$target"
 }
 
 task(train, type:JavaExec) {

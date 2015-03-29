@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ParameterizedSparqlString;
@@ -119,7 +120,7 @@ class LuceneDBPediaSearch {
 	public LuceneDBPediaSearch(Environment env) {
 		IndexReader reader;
 		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File(
+			reader = DirectoryReader.open(FSDirectory.open(Paths.get(
 					env.pathMustExist("rdf/lucene"))));
 		} catch (IOException e) {
 			e.printStackTrace();

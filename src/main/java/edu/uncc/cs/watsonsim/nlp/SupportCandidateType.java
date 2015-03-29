@@ -6,11 +6,17 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.CharSetUtils;
 import org.apache.log4j.Logger;
 
 import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.MalformedGoalException;
+import alice.tuprolog.NoMoreSolutionException;
+import alice.tuprolog.NoSolutionException;
 import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Theory;
+import alice.tuprolog.UnknownVarException;
 
 import com.google.common.io.Files;
 import com.hp.hpl.jena.rdf.model.InfModel;
@@ -31,6 +37,7 @@ import edu.stanford.nlp.semgraph.SemanticGraphEdge;
 import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.util.IterableIterator;
 import edu.stanford.nlp.util.Pair;
+import edu.stanford.nlp.util.StringUtils;
 import edu.uncc.cs.watsonsim.Phrase;
 
 public class SupportCandidateType {
@@ -39,20 +46,17 @@ public class SupportCandidateType {
 			Rule.rulesFromURL("file:src/main/parse.rules"));
 	private static final Logger log = Logger.getLogger(SupportCandidateType.class);
 	
-	/**
-	 * Make a resource to represent a word
-	 */
-	private static Resource wordResource(Model model, IndexedWord word) {
-		return model.createResource("urn:sent:" + word.index());
+	private static String clean(String text) {
+        return CharSetUtils.keep(text.toLowerCase(), "abcdefghijklmnopqrstuvwxyz_");
 	}
 	
-	/**
-	 * Extract the word from a resource, inverse of wordResource
-	 */
-	private static IndexedWord resourceWord(SemanticGraph graph, Resource res) {
-		// Turn urn:stmt:digits into digits as int
-		int id= Integer.parseInt(res.getURI().split(":")[2]);
-		return graph.getNodeByIndex(id);
+	private static String wordID(IndexedWord word) {
+		return "w" + clean(word.word())  + "_" + word.index();
+	}
+	
+	private static IndexedWord idWord(SemanticGraph graph, String id) {
+		int idx = Integer.parseInt(id.substring(id.lastIndexOf('_')+1));
+		return graph.getNodeByIndex(idx);
 	}
 
 	/**
@@ -96,22 +100,8 @@ public class SupportCandidateType {
 	public static List<Pair<String, String>> extract(Phrase p) {
 		List<Pair<String, String>> names_and_types = new ArrayList<>();
 		for (SemanticGraph graph: p.graphs){
-			//Query qry = new Query("consult",
-			//		new Term[] {new Atom("src/main/parse.pl")});
-			/*Prolog engine = new Prolog();
-			try {
-				engine.setTheory(new Theory(
-						Files.toString(new File("src/main/parse.pl"), Charset.forName("UTF-8"))));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidTheoryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-			//engine.setTheory(new Theory());
+			StringBuilder theory = new StringBuilder();
 			// Load data into a model
-			Model model = ModelFactory.createMemModelMaker().createFreshModel();
 			
 			// Add all the edges
 			for (SemanticGraphEdge edge : graph.edgeIterable()) {
@@ -122,40 +112,57 @@ public class SupportCandidateType {
 				if ( (rel.getShortName().equals("prep")
 						|| rel.getShortName().equals("conj"))
 						&& rel.getSpecific() != null
-						&& rel.getSpecific().isEmpty())
-					relation_name = rel.getShortName() + "_" + rel.getSpecific();
-				model.add(
-						wordResource(model, edge.getGovernor()),
-						model.createProperty("urn:sent:" + relation_name),
-						wordResource(model, edge.getDependent()));
+						&& !rel.getSpecific().isEmpty()) {
+					relation_name = rel.getShortName() + "_" + CharSetUtils.keep(rel.getSpecific().toLowerCase(), "abcdefghijklmnopqrstuvwxyz");
+				}
+				theory.append(relation_name);
+				theory.append('(');
+				theory.append(wordID(edge.getGovernor()));
+				theory.append(',');
+				theory.append(wordID(edge.getDependent()));
+				theory.append(").\n");
 			}
 			// Index the words
-			Property tag_property = model.createProperty("urn:sent:tag"); 
 			for (IndexedWord word : graph.vertexSet()) {
-				model.add(
-						wordResource(model, word),
-						tag_property,
-						model.createResource("urn:sent:" + word.tag()));
+				theory.append("tag(");
+				theory.append(wordID(word));
+				theory.append(',');
+				String tag = clean(word.tag());
+				theory.append(tag.isEmpty() ? "misc" : tag);
+				theory.append(").\n");
 			}
-			// Create an inference model
-			InfModel infmodel = ModelFactory.createInfModel(reasoner, model);
-			// Query the model
-			StmtIterator iter = infmodel.listStatements(
-					(Resource)null,
-					model.createProperty("urn:sent:type"),
-					(RDFNode)null);
-			
-			// Get the resulting matches
-			for (Statement stmt : new IterableIterator<Statement>(iter)) {
-				IndexedWord subj_idx = resourceWord(graph, stmt.getSubject());
-				IndexedWord obj_idx = resourceWord(graph, stmt.getObject().asResource());
-				if (subj_idx.tag().startsWith("NN")
-						&& obj_idx.tag().startsWith("NN")) {
-					String noun = concatNoun(graph, subj_idx);
-					String type = concatNoun(graph, obj_idx);
-					log.info("Discovered " + noun + " is a(n) " + type);
-					names_and_types.add(new Pair<>(noun,type));
+
+			Prolog engine = new Prolog();
+			try {
+				engine.setTheory(new Theory(
+						Files.toString(new File("src/main/parse.pl"), Charset.forName("UTF-8"))));
+				engine.addTheory(new Theory(theory.toString()));
+				
+				SolveInfo info = engine.solve("type_c(X, Y).");
+
+				// Get the resulting matches
+				while (info.isSuccess()) {
+					IndexedWord subj_idx = idWord(graph, info.getTerm("X").toString());
+					IndexedWord obj_idx = idWord(graph, info.getTerm("Y").toString());
+					if (subj_idx.tag().startsWith("NN")
+							&& obj_idx.tag().startsWith("NN")) {
+						String noun = concatNoun(graph, subj_idx);
+						String type = obj_idx.originalText(); //concatNoun(graph, obj_idx);
+						log.info("Discovered " + noun + " is a(n) " + type);
+						names_and_types.add(new Pair<>(noun,type));
+					}
+					if (engine.hasOpenAlternatives()) {
+						info = engine.solveNext();
+					} else {
+						break;
+					}
 				}
+				
+			} catch (IOException | InvalidTheoryException
+					| MalformedGoalException | NoSolutionException
+					| NoMoreSolutionException | UnknownVarException e) {
+                System.out.println(theory);
+				e.printStackTrace();
 			}
 		}
 		return names_and_types;
