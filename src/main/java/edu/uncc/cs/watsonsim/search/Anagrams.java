@@ -17,8 +17,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.jena.atlas.logging.Log;
+
 import edu.uncc.cs.watsonsim.Passage;
+import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.StringUtils;
+import edu.uncc.cs.watsonsim.scorers.Merge;
 
 public class Anagrams extends Searcher {
 
@@ -47,6 +51,7 @@ public class Anagrams extends Searcher {
 		{
 			e.printStackTrace();
 		}
+		Score.register("IS_ONLY_ANAGRAM", 0.0, Merge.Min);
 	}
 
 	public static void main(String args[]) throws IOException {
@@ -74,34 +79,40 @@ public class Anagrams extends Searcher {
 
 	@Override
 	public List<Passage> query(String query) {
-		String command1 = "";
-
-		Pattern pattern = Pattern.compile("\"([A-z ]+)\"|: ([A-z ]+)");
-		Matcher matcher = pattern.matcher(query);
-
+		// Some anagrams come in a very clear syntax:
+		//    either in quotes, or after a colon. Find them.
+		Matcher matcher = Pattern.compile("\"([A-z ]+)\"|: ([A-z ]+)")
+				.matcher(query);
+		
+		List<String> entries = new ArrayList<>();
 		if (matcher.find() && matcher.group(1) != null) {
-			command1 = matcher.group(1);
-			System.out.println(command1);
-		}
-		List<String> entries = search_key(command1, mp);
-		// for generic case
-		String[] s = query.split(" ");
-		if (s.length < 2) {
-			// this words for questions like "Nuke Air" -> Ukariane no need to
-			// split
-			query = query.replace(" ", "");
-			entries.addAll(search_key(query, mp));
+			// Good news. We found a quoted string to generate anagrams from.
+			entries.addAll(search_key(matcher.group(1), mp));
+			if (!entries.isEmpty()) {
+				Log.info(getClass(), "Found " + entries.size()
+						+ " quoted anagrams");	
+			}
 		} else {
-			for (String s1 : s) {
-				entries.addAll(search_key(s1, mp));
+			// Bad news. We have to guess all the words.
+			String[] words = query.split(" ");
+			if (words.length <= 2) {
+				// When there are so few words, the whole question is likely 
+				// an anagram. For example, "Nuke Air" -> "Ukariane"
+				entries.addAll(search_key(query.replace(" ", ""), mp));
+			} else {
+				// Otherwise, consider each word separately.
+				for (String word : words) {
+					entries.addAll(search_key(word, mp));
+				}
 			}
 		}
+		
 		List<Passage> results = new ArrayList<>();
 		for (String text : entries) {
 			results.add(new edu.uncc.cs.watsonsim.Passage("lucene", // Engine
 					text, // Title
 					text, // Text
-					"anagram:" + text));
+					"anagram:" + text).score("IS_ONLY_ANAGRAM", 1.0));
 
 		}
 		return results;

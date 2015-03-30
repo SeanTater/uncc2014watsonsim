@@ -1,19 +1,19 @@
 @relation 'Watsonsim captured question stream'
 
-@attribute ANSWER_IN_QUESTION_SCORER numeric
 @attribute ANSWER_LENGTH numeric
+@attribute ANSWER_POS numeric
 @attribute BING_ANSWER_PRESENT numeric
 @attribute BING_ANSWER_RANK numeric
-@attribute CORE_NLPSENTENCE_SIMILARITY_MAX numeric
-@attribute CORE_NLPSENTENCE_SIMILARITY_MEAN numeric
-@attribute CORE_NLPSENTENCE_SIMILARITY_MEDIAN numeric
-@attribute CORE_NLPSENTENCE_SIMILARITY_MIN numeric
+@attribute COMMON_CONSTITUENTS_MAX numeric
+@attribute COMMON_CONSTITUENTS_MEAN numeric
+@attribute COMMON_CONSTITUENTS_MEDIAN numeric
+@attribute COMMON_CONSTITUENTS_MIN numeric
 @attribute CORRECT {0,1}
 @attribute COUNT numeric
-@attribute DIST_SEM_COS_QASCORE numeric
 @attribute INDRI_ANSWER_PRESENT numeric
 @attribute INDRI_ANSWER_RANK numeric
 @attribute INDRI_ANSWER_SCORE numeric
+@attribute IS_ONLY_ANAGRAM numeric
 @attribute LATCHECK numeric
 @attribute LUCENE_ANSWER_PRESENT numeric
 @attribute LUCENE_ANSWER_RANK numeric

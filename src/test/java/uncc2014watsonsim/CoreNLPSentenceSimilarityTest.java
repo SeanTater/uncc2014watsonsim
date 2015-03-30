@@ -9,7 +9,7 @@ import org.junit.Test;
 import edu.stanford.nlp.trees.Tree;
 import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.nlp.Trees;
-import edu.uncc.cs.watsonsim.scorers.CoreNLPSentenceSimilarity;
+import edu.uncc.cs.watsonsim.scorers.CommonConstituents;
 
 public class CoreNLPSentenceSimilarityTest {
 
@@ -40,7 +40,7 @@ public class CoreNLPSentenceSimilarityTest {
 
 	@Test
 	public void testScorePhrases() {
-		CoreNLPSentenceSimilarity scorer = new CoreNLPSentenceSimilarity();
+		CommonConstituents scorer = new CommonConstituents();
 		
 		// These are in large part to make sure that it does not accidentally change.
 		assertEquals(

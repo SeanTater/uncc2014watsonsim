@@ -19,7 +19,7 @@ import edu.uncc.cs.watsonsim.nlp.Trees;
  * This scorer can be very slow.
  */
 
-public class CoreNLPSentenceSimilarity extends PassageScorer {
+public class CommonConstituents extends PassageScorer {
 	/**
 	 * Score the similarity of two sentences according to
 	 * sum([ len(x) | x of X, y of Y, if x == y ])

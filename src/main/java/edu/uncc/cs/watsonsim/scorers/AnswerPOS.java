@@ -12,9 +12,9 @@ import edu.uncc.cs.watsonsim.Question;
  * @author Yeshvant
  *
  */
-public class AnswerPOSTagger extends AnswerScorer {
+public class AnswerPOS extends AnswerScorer {
 
-	public AnswerPOSTagger() {
+	public AnswerPOS() {
 	}
 
 	public double scoreAnswer(Question q, Answer a) {
