@@ -1,4 +1,4 @@
-package edu.uncc.cs.watsonsim.scripts;
+package edu.uncc.cs.watsonsim.search;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,18 +19,17 @@ import java.util.regex.Pattern;
 
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.StringUtils;
-import edu.uncc.cs.watsonsim.search.Searcher;
 
-public class TestAnagrams extends Searcher {
+public class Anagrams extends Searcher {
 
 	private final Map<String, List<String>> mp = new HashMap<>();
 
-	public TestAnagrams()  {
+	public Anagrams()  {
 		try
 		{
 		for (String line : Files.readAllLines(Paths.get("data", "words"))) {
 			// condition of different anagram questions:
-			// usally anagram questions are coming for word coming after :
+			// usually anagram questions are coming for word coming after :
 			// regular expression for searching if a : is coming in the question
 
 			char[] charArray = line.toLowerCase().toCharArray();
@@ -51,7 +50,7 @@ public class TestAnagrams extends Searcher {
 	}
 
 	public static void main(String args[]) throws IOException {
-		TestAnagrams ta = new TestAnagrams();
+		Anagrams ta = new Anagrams();
 		System.out.println("Enter the Jeopardy Anagram Question:");
 		BufferedReader br2 = new BufferedReader(
 				new InputStreamReader(System.in));

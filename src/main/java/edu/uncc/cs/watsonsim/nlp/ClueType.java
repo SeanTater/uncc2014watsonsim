@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.log4j.Logger;
 
 import static edu.uncc.cs.watsonsim.nlp.Trees.concat;
 import static edu.uncc.cs.watsonsim.nlp.Trees.parse;
@@ -85,8 +86,8 @@ public class ClueType {
 				l = merge(l, detectPart(kid));
 			return l;
 		}
+		
 	}
-	
 	/**
 	 * Detect the LAT using a simple rule-based approach
 	 * @return The most general single-word noun LAT

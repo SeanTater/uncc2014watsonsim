@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.log4j.Logger;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -78,10 +79,9 @@ public class Phrase {
 		    List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 		    List<Tree> trees = new ArrayList<>();
 		    List<SemanticGraph> graphs = new ArrayList<>();
-		    
-		    
+		    	    
 		    for(CoreMap sentence: sentences) {
-		      // this is the parse tree of the current sentence
+		    // this is the parse tree of the current sentence
 		    	trees.add(sentence.get(TreeAnnotation.class));
 		    	graphs.add(sentence.get(CollapsedCCProcessedDependenciesAnnotation.class));
 		    }

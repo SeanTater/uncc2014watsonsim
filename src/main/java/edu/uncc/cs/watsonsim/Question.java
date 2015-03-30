@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.jena.atlas.logging.Log;
 import org.apache.log4j.Logger;
 import org.apache.uima.jcas.JCas;
 
@@ -19,6 +20,7 @@ public class Question extends Phrase {
     private QType type;
     public final String simple_lat;
     
+ 
     /**
      * Create a question from it's raw text
      */
@@ -34,6 +36,8 @@ public class Question extends Phrase {
         	log.info("Looking for a " + simple_lat);
         
         log.info("Looks like a " + type.toString().toLowerCase() + " question");
+    	
+    	
     }
 
 	/**

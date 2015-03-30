@@ -74,7 +74,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format("cached LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("Indri combine", sql, run_start).run();
+			new StatsGenerator("Indri combine -test", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.toString());
