@@ -3,13 +3,11 @@ package edu.uncc.cs.watsonsim.scripts;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
 import edu.uncc.cs.watsonsim.Database;

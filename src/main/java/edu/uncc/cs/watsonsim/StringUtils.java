@@ -6,19 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
-import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.util.Version;
 
 import edu.stanford.nlp.util.CacheMap;
 
@@ -30,7 +24,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	private static Database db = new Database(); // Used for semantic distribution
 	public static final int CONTEXT_LENGTH = 1000;
 	
-	private static final int CONTEXT_HASH_COUNT = 20;
+	//private static final int CONTEXT_HASH_COUNT = 20;
 	private static final int CACHE_SIZE = 256;
 	private static CacheMap<String, ArrayList<Double>> context_cache_map = new CacheMap<String, ArrayList<Double>>(CACHE_SIZE);
 	

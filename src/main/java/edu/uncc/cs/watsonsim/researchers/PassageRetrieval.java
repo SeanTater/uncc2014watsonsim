@@ -1,7 +1,6 @@
 package edu.uncc.cs.watsonsim.researchers;
 
 import java.util.List;
-import java.util.Properties;
 import java.util.regex.Matcher;
 
 import org.apache.log4j.Logger;

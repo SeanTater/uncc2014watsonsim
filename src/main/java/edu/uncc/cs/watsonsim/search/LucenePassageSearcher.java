@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
-import org.apache.jena.atlas.logging.Log;
-import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -18,7 +16,6 @@ import org.apache.lucene.search.TermQuery;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Score;
-import edu.uncc.cs.watsonsim.StringUtils;
 import edu.uncc.cs.watsonsim.scorers.Merge;
 
 /**

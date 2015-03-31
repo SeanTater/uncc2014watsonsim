@@ -2,15 +2,12 @@ package edu.uncc.cs.watsonsim.search;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Score;
-import edu.uncc.cs.watsonsim.StringUtils;
 import edu.uncc.cs.watsonsim.Translation;
 import edu.uncc.cs.watsonsim.scorers.Merge;
-import lemurproject.indri.ParsedDocument;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
 

@@ -34,7 +34,6 @@ public class OpenNlpTests {
 	public  String modelsPath="data/"; //models directory
 	private File parserMFile; 
 	private File sentDetectorMFile;
-	private File chunkerMFile;
 	private File posMFile;
 
 	public SentenceModel sentenceModel; //sentence detection model 
@@ -64,7 +63,6 @@ public class OpenNlpTests {
 
 		this.parserMFile = new File(modelsDir, "en-parser-chunking.bin");
 		this.sentDetectorMFile = new File(modelsDir, "en-sent.bin");
-		this.chunkerMFile=new File(modelsDir,"en-chunker.bin");
 		this.posMFile = new File(modelsDir,"en-pos-maxent.bin");
 
 		InputStream sentModelIn = null;

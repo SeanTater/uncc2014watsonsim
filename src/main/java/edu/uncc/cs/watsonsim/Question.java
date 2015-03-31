@@ -1,17 +1,8 @@
 package edu.uncc.cs.watsonsim;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.jena.atlas.logging.Log;
 import org.apache.log4j.Logger;
-import org.apache.uima.jcas.JCas;
 
-import edu.stanford.nlp.trees.Tree;
 import edu.uncc.cs.watsonsim.nlp.ClueType;
-import edu.uncc.cs.watsonsim.nlp.Trees;
 
 
 public class Question extends Phrase {
@@ -83,13 +74,5 @@ public class Question extends Phrase {
     public void setType(QType type) {
         this.type = type;
     }
-	
-	public boolean addPassages(Collection<Passage> ps) {
-		boolean added_any = false;
-		for (Passage p: ps) {
-			//added_any |= add(new Answer(p));
-		}
-		return added_any;
-	}
         
 }

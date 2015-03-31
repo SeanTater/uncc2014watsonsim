@@ -1,6 +1,5 @@
 package edu.uncc.cs.watsonsim.nlp;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,16 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.lucene.document.Document;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 
-import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Database;
 import edu.uncc.cs.watsonsim.Environment;
-import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.StringUtils;
-import edu.uncc.cs.watsonsim.search.LucenePassageSearcher;
 
 public class Synonyms {
 	private final Database db;

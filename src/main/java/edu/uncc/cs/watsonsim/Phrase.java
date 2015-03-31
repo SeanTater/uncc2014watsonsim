@@ -3,14 +3,11 @@ package edu.uncc.cs.watsonsim;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.log4j.Logger;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -36,7 +33,7 @@ public class Phrase {
 	public final List<String> tokens;
 	public final List<Tree> trees;
 	public final List<SemanticGraph> graphs;
-	private final ConcurrentHashMap<Function, Object> memos;
+	private final ConcurrentHashMap<Function<Phrase, ?>, Object> memos;
 	
 	// Create a pipeline
 	static final StanfordCoreNLP pipeline;
@@ -104,7 +101,9 @@ public class Phrase {
 	/**
 	 * Lightweight functional annotations. Either apply the function and get
 	 * the result, or if it has been done, return the existing value.
+	 * This casts internally but it's type-safe.
 	 */
+	@SuppressWarnings("unchecked")
 	public <X> X memo(Function<Phrase, X> app) {
 		return (X) memos.computeIfAbsent(app, (key) -> app.apply(this));
 	}

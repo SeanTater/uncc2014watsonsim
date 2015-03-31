@@ -61,8 +61,8 @@ public class QClassDetection {
 	 */
 	public static void main(String... str) {
 		//test data
-		String text1 = "my test ___ phrase\"";
-		String text2 = "Some other test text 78; second line.";
+		//String text1 = "my test ___ phrase\"";
+		//String text2 = "Some other test text 78; second line.";
 		String text3 = " Yet _ more__ text. W___ith further ___ in dd z\"it.";
 		String testText = text3;
 		String count = "01234567890123456789012345678901234567890";

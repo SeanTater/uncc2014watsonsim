@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.uima.analysis_engine.AnalysisEngine;
 
 import edu.uncc.cs.watsonsim.researchers.*;
 import edu.uncc.cs.watsonsim.scorers.*;

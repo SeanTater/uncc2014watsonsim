@@ -13,18 +13,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.QueryBuilder;
-import org.apache.lucene.util.Version;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -52,7 +48,6 @@ public class Environment {
 	public final Dataset rdf;
 	public final IndexSearcher lucene;
 	private final QueryBuilder lucene_query_builder = new QueryBuilder(new StandardAnalyzer());
-	private final Logger log = Logger.getLogger(getClass());
 	private static final Cache<String, ScoreDoc[]> recent_lucene_searches =
             CacheBuilder.newBuilder()
 		    	.concurrencyLevel(50)

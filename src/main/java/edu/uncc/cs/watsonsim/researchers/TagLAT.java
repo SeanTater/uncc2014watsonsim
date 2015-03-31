@@ -2,19 +2,15 @@ package edu.uncc.cs.watsonsim.researchers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.util.Pair;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
-import edu.uncc.cs.watsonsim.nlp.ClueType;
 import edu.uncc.cs.watsonsim.nlp.DBPediaCandidateType;
 import edu.uncc.cs.watsonsim.nlp.SupportCandidateType;
 import edu.uncc.cs.watsonsim.nlp.Synonyms;

@@ -1,14 +1,12 @@
 package edu.uncc.cs.watsonsim.scorers;
 
 import java.util.HashSet;
-import java.util.List;
 
 import edu.stanford.nlp.trees.Tree;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
-import edu.uncc.cs.watsonsim.nlp.Trees;
 
 /* @author Wlodek
  * @author Sean Gallagher

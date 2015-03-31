@@ -5,9 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.client.fluent.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
@@ -18,7 +16,6 @@ import org.jsoup.nodes.Element;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Score;
-import edu.uncc.cs.watsonsim.StringUtils;
 import edu.uncc.cs.watsonsim.scorers.Merge;
 
 /**

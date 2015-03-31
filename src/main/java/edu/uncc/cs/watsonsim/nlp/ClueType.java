@@ -1,19 +1,13 @@
 package edu.uncc.cs.watsonsim.nlp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.log4j.Logger;
 
 import static edu.uncc.cs.watsonsim.nlp.Trees.concat;
-import static edu.uncc.cs.watsonsim.nlp.Trees.parse;
-import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.trees.Tree;
-import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
-import edu.stanford.nlp.util.CoreMap;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Phrase;
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
-import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Question;
 
 /** Researchers can modify questions and have the guarantee of running

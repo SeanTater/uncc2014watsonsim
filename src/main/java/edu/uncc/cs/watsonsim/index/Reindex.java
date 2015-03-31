@@ -18,13 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
-import org.apache.commons.dbutils.ResultSetIterator;
-
-import edu.stanford.nlp.util.ArrayMap;
 import edu.uncc.cs.watsonsim.Database;
 import edu.uncc.cs.watsonsim.Passage;
 
@@ -66,9 +60,11 @@ public class Reindex {
 					+ " You can create one by making a copy of"
 					+ " config.properties.sample. Check the README as well.");
 		}
-		// Now make properties immutable.
+		
+		// Now make properties immutable, and call it a Map<String, String>
 		Map<Object, Object> m = new HashMap<>();
 		m.putAll(props);
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		Map<String, String> config = Collections.unmodifiableMap((Map) m);
 		
 		indexers = Arrays.asList(

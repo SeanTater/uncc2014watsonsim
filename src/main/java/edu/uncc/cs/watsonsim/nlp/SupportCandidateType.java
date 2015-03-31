@@ -19,31 +19,16 @@ import alice.tuprolog.Theory;
 import alice.tuprolog.UnknownVarException;
 
 import com.google.common.io.Files;
-import com.hp.hpl.jena.rdf.model.InfModel;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.reasoner.Reasoner;
-import com.hp.hpl.jena.reasoner.rulesys.GenericRuleReasoner;
-import com.hp.hpl.jena.reasoner.rulesys.Rule;
 
 import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphEdge;
 import edu.stanford.nlp.trees.GrammaticalRelation;
-import edu.stanford.nlp.util.IterableIterator;
 import edu.stanford.nlp.util.Pair;
-import edu.stanford.nlp.util.StringUtils;
 import edu.uncc.cs.watsonsim.Phrase;
 
 public class SupportCandidateType {
 
-	private static final Reasoner reasoner = new GenericRuleReasoner(
-			Rule.rulesFromURL("file:src/main/parse.rules"));
 	private static final Logger log = Logger.getLogger(SupportCandidateType.class);
 	
 	private static String clean(String text) {

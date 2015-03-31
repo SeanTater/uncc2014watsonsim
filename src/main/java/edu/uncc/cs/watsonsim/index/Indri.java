@@ -1,9 +1,7 @@
 package edu.uncc.cs.watsonsim.index;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.function.Consumer;
 
 import edu.uncc.cs.watsonsim.Passage;
 import lemurproject.indri.IndexEnvironment;

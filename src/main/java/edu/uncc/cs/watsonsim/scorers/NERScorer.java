@@ -35,7 +35,6 @@ public class NERScorer {
 	public  String modelsPath="/home/varsha/opennlpModels"; //models directory
 	private File parserMFile; 
 	private File sentDetectorMFile;
-	private File chunkerMFile;
 	private File posMFile;
 	private File nerMFile;
 
@@ -67,7 +66,6 @@ public class NERScorer {
 
 		this.parserMFile = new File(modelsDir, "en-parser-chunking.bin");
 		this.sentDetectorMFile = new File(modelsDir, "en-sent.bin");
-		this.chunkerMFile=new File(modelsDir,"en-chunker.bin");
 		this.posMFile = new File(modelsDir,"en-pos-maxent.bin");
 		this.nerMFile = new File(modelsDir,"en-ner-person.bin");
 		

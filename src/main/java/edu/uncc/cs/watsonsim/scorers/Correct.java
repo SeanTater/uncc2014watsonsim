@@ -3,7 +3,6 @@ package edu.uncc.cs.watsonsim.scorers;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
-import edu.uncc.cs.watsonsim.StringUtils;
 import edu.uncc.cs.watsonsim.nlp.Synonyms;
 
 public class Correct extends AnswerScorer {

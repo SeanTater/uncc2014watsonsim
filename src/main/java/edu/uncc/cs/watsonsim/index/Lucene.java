@@ -2,10 +2,6 @@ package edu.uncc.cs.watsonsim.index;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
