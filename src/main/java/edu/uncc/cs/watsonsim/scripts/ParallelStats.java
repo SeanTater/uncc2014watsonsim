@@ -52,8 +52,7 @@ public class ParallelStats {
         try {
             pool.awaitTermination(2, TimeUnit.DAYS);
         } catch (InterruptedException ex) {
-            Logger.getRootLogger().setLevel(Level.INFO);
-            Logger.getRootLogger().info(ex);
+            Logger.getRootLogger().error(ex);
         }
         System.out.println("Done.");
     }
@@ -75,7 +74,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format("cached LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("anagram test", sql, run_start).run();
+			new StatsGenerator("extra pos tagger -train", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			log.error("Database missing, invalid, or out of date. Check that you "
@@ -232,7 +231,7 @@ class StatsGenerator {
         //BasicConfigurator.configure();
         //Logger.getRootLogger().setLevel(Level.INFO);
 		
-		System.out.println("Asking Questions");
+		log.info("Asking Questions");
 		DefaultPipeline pipe = new DefaultPipeline(run_start); 
 		for (int i=0; i<questionsource.size(); i++) {
 			Question q = questionsource.get(i);

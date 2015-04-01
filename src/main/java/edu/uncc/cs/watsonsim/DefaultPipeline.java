@@ -114,6 +114,7 @@ public class DefaultPipeline {
 			//new DistSemCosQPScore(),
 			new CommonConstituents(),
 			new AnswerPOS(),
+			new TopPOS()
 		};
 		late_researchers = Researcher.pipe(
 			new WekaTee(run_start),

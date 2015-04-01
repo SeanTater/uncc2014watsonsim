@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphEdge;
 import edu.uncc.cs.watsonsim.Passage;
 
 public class Edges implements Segment {
 	private final ConcurrentHashMap<String, Integer> relations = new ConcurrentHashMap<>();
-	public Edges() {
-		
-	}
+	private final Logger log = Logger.getLogger(getClass());
 	
 	public void flush() throws IOException {
 		// Make space-separated lines
@@ -48,11 +48,12 @@ public class Edges implements Segment {
 							+ e.getTarget().word(),
 						1,
 						(a, b) -> a+b);
+		// Try to keep it from absorbing all available memory
 		if (relations.size() > 100_000_000) {
 			try {
 				flush();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} catch (IOException failed_flush) {
+				log.error(failed_flush);
 			}
 		}
 	}

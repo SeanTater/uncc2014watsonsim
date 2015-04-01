@@ -24,6 +24,14 @@ abstract public class Researcher {
 	 */
 	protected Researcher chain = NIL;
 	
+	/**
+	 * Join together segments of a (recursive) Researcher pipeline.
+	 * The idea of it is that you can "pull" a question through it by passing
+	 * it to pull() of the last Researcher segment.
+	 * 
+	 * @param segments  Pipe segments, which will be mutated (for the chain)
+	 * @return  The last Researcher in the line
+	 */
 	public static Researcher pipe(Researcher... segments) {
 		Researcher prev = NIL;
 		for (Researcher link : segments) {

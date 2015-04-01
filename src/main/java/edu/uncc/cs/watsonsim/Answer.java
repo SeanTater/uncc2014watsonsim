@@ -10,7 +10,6 @@ import java.util.List;
  */
 public class Answer extends Phrase implements Comparable<Answer> {
     
-    
     public double[] scores = Score.empty();
     private double overall_score = Double.NaN;
     public List<Passage> passages = new ArrayList<>();

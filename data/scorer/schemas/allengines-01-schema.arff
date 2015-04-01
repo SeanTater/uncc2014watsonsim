@@ -42,6 +42,7 @@
 @attribute SKIP_BIGRAM_MEAN numeric
 @attribute SKIP_BIGRAM_MEDIAN numeric
 @attribute SKIP_BIGRAM_MIN numeric
+@attribute TOP_POS numeric
 @attribute WORD_PROXIMITY_MAX numeric
 @attribute WORD_PROXIMITY_MEAN numeric
 @attribute WORD_PROXIMITY_MEDIAN numeric
@@ -49,3 +50,4 @@
 @attribute WPPAGE_VIEWS numeric
 
 @data
+

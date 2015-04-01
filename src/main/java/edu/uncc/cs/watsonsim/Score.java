@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import edu.uncc.cs.watsonsim.scorers.Merge;
 
@@ -155,6 +156,49 @@ public class Score {
 		return center;
 	}
 	
+	/**
+	 * Normalize a set of scores against one another.
+	 * This is intended to be run once per question.
+	 * Afterward, the mean will be 0 and the stdev 1.
+	 */
+	public static double[][] normalizeGroup(double[][] mat) {
+		synchronized (metas) {
+			// Defensive copy
+			mat = mat.clone();
+			// Update the rows
+			for (int row=0; row<mat.length; row++) {
+				mat[row] = Score.update(mat[row]);
+			}
+			// Generate sum
+			double[] sum = new double[versions.size()];
+			for (double[] row : mat) {
+				for (int i=0; i<sum.length; i++) {
+					sum[i] += row[i];
+				}
+			}
+			// Generate variance
+			double[] variance = new double[versions.size()];
+			for (double[] row : mat) {
+				for (int i=0; i<sum.length; i++) {
+					double diff = sum[i] - row[i];
+					variance[i] += diff * diff;
+				}
+			}
+			// Generate stdev
+			double[] stdev = variance.clone();
+			for (int i=0; i<sum.length; i++) {
+				stdev[i] = Math.sqrt(stdev[i]);
+			}
+			// Scale the copy
+			for (int row=0; row<mat.length; row++) {
+				for (int col=0; col<sum.length; col++) {
+					mat[row][col] = (mat[row][col] - sum[col]) / stdev[col];
+				}
+			}
+			return mat;
+		}
+	}
+	
 	/** Register the answer score for automatically generated model data
 	 * 
 	 * This function is idempotent.
@@ -242,7 +286,7 @@ public class Score {
 	 * The short of it: You can keep the dense, plain double[] and still evolve
 	 * the schema for it.
 	 */
-	private static final List<String[]> versions = new ArrayList<>();
+	private static final List<String[]> versions = new Vector<>();
 	
 	// Lucene and Indri decide how many passages to retrieve for a candidate answer using this
 	public static final int MAX_PASSAGE_COUNT = 50;
