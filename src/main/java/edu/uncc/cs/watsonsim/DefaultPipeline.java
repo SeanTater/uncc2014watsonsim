@@ -89,6 +89,7 @@ public class DefaultPipeline {
 			new HyphenTrimmer(),
 			new StrictFilters(),
 			new MergeByText(env),
+			new MergeAnswers(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(env),
 			new MergeByCommonSupport(),
@@ -117,6 +118,7 @@ public class DefaultPipeline {
 			new TopPOS()
 		};
 		late_researchers = Researcher.pipe(
+			new Normalize(),
 			new WekaTee(run_start),
 			new CombineScores(),
 			new StatsDump(run_start)

@@ -44,6 +44,8 @@ public class WekaTee extends Researcher {
 		for (Answer a : answers) {
 			new_entries.add(a.scores.clone());
 		}
+		
+		
 		dump(new_entries, start_time);
 		return answers;
 	}

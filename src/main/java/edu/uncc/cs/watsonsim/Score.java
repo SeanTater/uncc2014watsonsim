@@ -161,38 +161,37 @@ public class Score {
 	 * This is intended to be run once per question.
 	 * Afterward, the mean will be 0 and the stdev 1.
 	 */
-	public static double[][] normalizeGroup(double[][] mat) {
+	public static List<Answer> normalizeGroup(List<Answer> mat) {
 		synchronized (metas) {
-			// Defensive copy
-			mat = mat.clone();
+			final int len = versions.size() - 1;
 			// Update the rows
-			for (int row=0; row<mat.length; row++) {
-				mat[row] = Score.update(mat[row]);
+			for (Answer a : mat) {
+				a.scores = Score.update(a.scores);
 			}
 			// Generate sum
-			double[] sum = new double[versions.size()];
-			for (double[] row : mat) {
-				for (int i=0; i<sum.length; i++) {
-					sum[i] += row[i];
+			double[] sum = new double[len];
+			for (Answer row : mat) {
+				for (int i=0; i<len; i++) {
+					sum[i] += row.scores[i];
 				}
 			}
 			// Generate variance
-			double[] variance = new double[versions.size()];
-			for (double[] row : mat) {
-				for (int i=0; i<sum.length; i++) {
-					double diff = sum[i] - row[i];
+			double[] variance = new double[len];
+			for (Answer row : mat) {
+				for (int i=0; i<len; i++) {
+					double diff = sum[i] - row.scores[i];
 					variance[i] += diff * diff;
 				}
 			}
 			// Generate stdev
 			double[] stdev = variance.clone();
-			for (int i=0; i<sum.length; i++) {
+			for (int i=0; i<len; i++) {
 				stdev[i] = Math.sqrt(stdev[i]);
 			}
 			// Scale the copy
-			for (int row=0; row<mat.length; row++) {
-				for (int col=0; col<sum.length; col++) {
-					mat[row][col] = (mat[row][col] - sum[col]) / stdev[col];
+			for (Answer row: mat) {
+				for (int col=0; col<len; col++) {
+					row.scores[col] = (row.scores[col] - sum[col]) / stdev[col];
 				}
 			}
 			return mat;

@@ -3,10 +3,15 @@ package edu.uncc.cs.watsonsim.index;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.log4j.Logger;
+
+import edu.stanford.nlp.util.IterableIterator;
 import edu.uncc.cs.watsonsim.Passage;
 
 /**
@@ -16,28 +21,39 @@ import edu.uncc.cs.watsonsim.Passage;
 public class Bigrams implements Segment {
 	private final ConcurrentHashMap<String, Integer> unigrams = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<String, Integer> bigrams = new ConcurrentHashMap<>();
+	private final Logger log = Logger.getLogger(getClass());
 	
 	public Bigrams() {
 	}
 
 	@Override
 	public void close() throws IOException {
+		flush();
+	}
+	
+	public void flush() throws IOException {
 		// Make space-separated lines
-		List<String> lines = unigrams.entrySet().stream()
+		Stream<String> lines = unigrams.entrySet().stream()
 				.map((pair) ->
-					pair.getKey() + " " + pair.getValue())
-				.collect(Collectors.toList());
+					pair.getKey() + " " + pair.getValue());
+		unigrams.clear();
 		Files.write(
-				Paths.get("data", "unigrams"),
-				lines);
-		
+				Paths.get("/media/sean/DATA", "unigrams"),
+				new IterableIterator<String>(lines.iterator()),
+				StandardOpenOption.CREATE,
+				StandardOpenOption.WRITE,
+				StandardOpenOption.APPEND);
+		// Make space-separated lines
 		lines = bigrams.entrySet().stream()
 				.map((pair) ->
-					pair.getKey() + " " + pair.getValue())
-				.collect(Collectors.toList());
+					pair.getKey() + " " + pair.getValue());
+		bigrams.clear();
 		Files.write(
-				Paths.get("data", "bigrams"),
-				lines);
+				Paths.get("/media/sean/DATA", "bigrams"),
+				new IterableIterator<String>(lines.iterator()),
+				StandardOpenOption.CREATE,
+				StandardOpenOption.WRITE,
+				StandardOpenOption.APPEND);
 	}
 
 	@Override
@@ -49,6 +65,15 @@ public class Bigrams implements Segment {
 			String key = t.tokens.get(i) + " " + t.tokens.get(i+1);
 			bigrams.merge(key, 1, (a, b) -> a+b);
 			unigrams.merge(t.tokens.get(i+1), 1, (a, b) -> a+b);
+		}
+		// Try to keep it from absorbing all available memory
+		if (unigrams.size() > 100_000
+				|| bigrams.size() > 100_000) {
+			try {
+				flush();
+			} catch (IOException failed_flush) {
+				log.error(failed_flush);
+			}
 		}
 	}
 

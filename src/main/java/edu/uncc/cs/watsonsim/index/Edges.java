@@ -26,7 +26,7 @@ public class Edges implements Segment {
 				.collect(Collectors.toList());
 		relations.clear();
 		Files.write(
-				Paths.get("data", "edges"),
+				Paths.get("/media/sean/DATA", "edges"),
 				lines,
 				StandardOpenOption.CREATE,
 				StandardOpenOption.WRITE,
@@ -49,7 +49,7 @@ public class Edges implements Segment {
 						1,
 						(a, b) -> a+b);
 		// Try to keep it from absorbing all available memory
-		if (relations.size() > 100_000_000) {
+		if (relations.size() > 100_000) {
 			try {
 				flush();
 			} catch (IOException failed_flush) {

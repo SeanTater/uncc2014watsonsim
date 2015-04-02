@@ -130,6 +130,7 @@ run {
     standardInput = System.in
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
+    //jvmArgs "-XX:-UseCompressedOops"
     main "edu.uncc.cs.watsonsim.$target"
 }
 

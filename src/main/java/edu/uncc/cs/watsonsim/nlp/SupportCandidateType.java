@@ -121,7 +121,7 @@ public class SupportCandidateType {
 			try {
 				engine.setTheory(new Theory(
 						Files.toString(new File("src/main/parse.pl"), Charset.forName("UTF-8"))));
-				log.info(theory);
+				log.debug(theory);
 				engine.addTheory(new Theory(theory.toString()));
 				
 				SolveInfo info = engine.solve("type_c(X, Y).");
