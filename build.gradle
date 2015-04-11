@@ -131,6 +131,9 @@ run {
     // Find Indri
     systemProperty "java.library.path", file("$projectDir/lib")
     //jvmArgs "-XX:-UseCompressedOops"
+    jvmArgs "-XX:hashCode=5"
+    //jvmArgs "-Xns:100m"
+    //jvmArgs "-Xgcprio:throughput"
     main "edu.uncc.cs.watsonsim.$target"
 }
 

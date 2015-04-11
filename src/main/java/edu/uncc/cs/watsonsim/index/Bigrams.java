@@ -19,8 +19,8 @@ import edu.uncc.cs.watsonsim.Passage;
  * @author Sean Gallaghers
  */
 public class Bigrams implements Segment {
-	private final ConcurrentHashMap<String, Integer> unigrams = new ConcurrentHashMap<>();
-	private final ConcurrentHashMap<String, Integer> bigrams = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, Integer> unigrams = new ConcurrentHashMap<>(1_000_000, (float) 0.75, 50);
+	private ConcurrentHashMap<String, Integer> bigrams = new ConcurrentHashMap<>(1_000_000, (float) 0.75, 50);
 	private final Logger log = Logger.getLogger(getClass());
 	
 	public Bigrams() {
@@ -36,7 +36,7 @@ public class Bigrams implements Segment {
 		Stream<String> lines = unigrams.entrySet().stream()
 				.map((pair) ->
 					pair.getKey() + " " + pair.getValue());
-		unigrams.clear();
+		unigrams= new ConcurrentHashMap<>(1_000_000, (float) 0.75, 50);
 		Files.write(
 				Paths.get("/media/sean/DATA", "unigrams"),
 				new IterableIterator<String>(lines.iterator()),
@@ -47,7 +47,7 @@ public class Bigrams implements Segment {
 		lines = bigrams.entrySet().stream()
 				.map((pair) ->
 					pair.getKey() + " " + pair.getValue());
-		bigrams.clear();
+		bigrams =new ConcurrentHashMap<>(1_000_000, (float) 0.75, 50);
 		Files.write(
 				Paths.get("/media/sean/DATA", "bigrams"),
 				new IterableIterator<String>(lines.iterator()),
@@ -67,8 +67,8 @@ public class Bigrams implements Segment {
 			unigrams.merge(t.tokens.get(i+1), 1, (a, b) -> a+b);
 		}
 		// Try to keep it from absorbing all available memory
-		if (unigrams.size() > 100_000
-				|| bigrams.size() > 100_000) {
+		if (unigrams.size() > 1_000_000
+				|| bigrams.size() > 1_000_000) {
 			try {
 				flush();
 			} catch (IOException failed_flush) {

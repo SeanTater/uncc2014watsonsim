@@ -102,6 +102,8 @@ public class Anagrams extends Searcher {
 			}
 		}
 		
+		entries.removeAll(Arrays.asList("Si","shit","Ni"));
+		
 		List<Passage> results = new ArrayList<>();
 		for (String text : entries) {
 			results.add(new edu.uncc.cs.watsonsim.Passage("lucene", // Engine
@@ -110,6 +112,9 @@ public class Anagrams extends Searcher {
 					"anagram:" + text).score("IS_ONLY_ANAGRAM", 1.0));
 
 		}
+		
+		
+		
 		return results;
 	}
 }

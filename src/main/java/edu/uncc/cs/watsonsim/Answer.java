@@ -121,6 +121,11 @@ public class Answer extends Phrase implements Comparable<Answer> {
 
     	// Pick the first candidate answer
     	String candidate_text = others.get(0).text;
+    	for (Answer a: others) {
+    		if (a.text.length() < candidate_text.length()) {
+    			candidate_text = a.text;
+    		}
+    	}
     	
     	// Now make an answer from it
     	return new Answer(passages, scores, candidate_text);

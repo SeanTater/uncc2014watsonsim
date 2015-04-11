@@ -164,6 +164,7 @@ public class Score {
 	public static List<Answer> normalizeGroup(List<Answer> mat) {
 		synchronized (metas) {
 			final int len = versions.size() - 1;
+			int preserve_attr = Arrays.binarySearch(versions.get(len), "CORRECT");
 			// Update the rows
 			for (Answer a : mat) {
 				a.scores = Score.update(a.scores);
@@ -174,6 +175,10 @@ public class Score {
 				for (int i=0; i<len; i++) {
 					sum[i] += row.scores[i];
 				}
+			}
+			// Make sum an average
+			for (int i=0; i<len; i++) {
+				sum[i] /= mat.size();
 			}
 			// Generate variance
 			double[] variance = new double[len];
@@ -191,7 +196,10 @@ public class Score {
 			// Scale the copy
 			for (Answer row: mat) {
 				for (int col=0; col<len; col++) {
-					row.scores[col] = (row.scores[col] - sum[col]) / stdev[col];
+					if (col != preserve_attr
+							&& stdev[col] != 0) {
+						row.scores[col] = (row.scores[col] - sum[col]) / stdev[col];
+					}
 				}
 			}
 			return mat;

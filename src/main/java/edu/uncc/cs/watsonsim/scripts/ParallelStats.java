@@ -41,10 +41,11 @@ public class ParallelStats {
         Logger.getRootLogger().setLevel(Level.WARN);
         
     	// Oversubscribing makes scheduling the CPU-scheduler's problem
-        ExecutorService pool = Executors.newFixedThreadPool(50);
+        ExecutorService pool = Executors.newWorkStealingPool();
+        
         long run_start = System.currentTimeMillis();
-        int groupsize = 2000/50;
-    	for (int i=0; i < 2000; i += groupsize) {
+        int groupsize = 5000/50;
+    	for (int i=2000; i < 7000; i += groupsize) {
     		pool.execute(new SingleTrainingResult(i, run_start, groupsize));
     	}
         pool.shutdown();
@@ -74,7 +75,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format("cached LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("Normalize -train", sql, run_start).run();
+			new StatsGenerator("mergeanswer percentage test", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			log.error("Database missing, invalid, or out of date. Check that you "
