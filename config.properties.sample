@@ -13,3 +13,6 @@ bing_api_key = FILL ME IN
 google_app_name = FILL ME IN
 google_api_key = FILL ME IN
 google_custom_search_id = FILL ME IN
+
+# Setup your SQL database (you may need to edit this)
+jdbc_connection_string = jdbc:postgresql:watsonsim

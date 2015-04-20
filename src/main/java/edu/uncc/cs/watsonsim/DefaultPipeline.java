@@ -99,23 +99,24 @@ public class DefaultPipeline {
 		);
 		scorers = new Scorer[]{
 			new AnswerLength(),
-			new WordProximity(),
+			new AnswerPOS(),
+			new CommonConstituents(),
 			new Correct(env),
-			new SkipBigram(),
+			new LATCheck(env),
+			new LuceneEcho(),
+			new NGram(),
 			new PassageTermMatch(),
 			new PassageCount(),
 			new PassageQuestionLengthRatio(),
 			new QPKeywordMatch(),
 			new QAKeywordMatch(),
-			new NGram(),
-			new LATCheck(env),
-			new WPPageViews(),
+			new SkipBigram(),
+			new TopPOS(),
+			new WordProximity(),
+			new WPPageViews()
 			//new RandomIndexingCosineSimilarity(),
 			//new DistSemCosQAScore(),
 			//new DistSemCosQPScore(),
-			new CommonConstituents(),
-			new AnswerPOS(),
-			new TopPOS()
 		};
 		late_researchers = Researcher.pipe(
 			new Normalize(),

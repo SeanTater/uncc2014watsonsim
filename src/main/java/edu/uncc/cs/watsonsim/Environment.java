@@ -44,7 +44,7 @@ import com.hp.hpl.jena.tdb.TDBFactory;
 public class Environment {
 	private final String data_path;
 	public final Map<String, String> config;
-	public final Database db = new Database();
+	public final Database db = new Database(this);
 	public final Dataset rdf;
 	public final IndexSearcher lucene;
 	private final QueryBuilder lucene_query_builder = new QueryBuilder(new StandardAnalyzer());

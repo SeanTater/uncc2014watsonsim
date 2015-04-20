@@ -68,7 +68,11 @@ public class Answer extends Phrase implements Comparable<Answer> {
     			engines += e.engine_name.substring(0, 1);
     	
     	// Should look like: [0.9998 gil] Flying Waterbuffalos ... 
-    	return String.format("[%01f %-3s] %s", getOverallScore(), engines, text);
+    	return String.format("[%01f %-3s]%s %s",
+    			getOverallScore(),
+    			engines,
+    			Score.get(scores, "CORRECT", 0) == 1 ? "!" : " ",
+    			text);
     }
     
     public String toJSON() {

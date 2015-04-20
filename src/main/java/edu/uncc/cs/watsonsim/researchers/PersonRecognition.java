@@ -68,7 +68,6 @@ public class PersonRecognition extends Researcher {
             }
         }
         if (!ret.toString().isEmpty()){
-        	//answer.text = ret.toString();
         	return new Answer(answer, ret.toString());
         }
         return answer;	

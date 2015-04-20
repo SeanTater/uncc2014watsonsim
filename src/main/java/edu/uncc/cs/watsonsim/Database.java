@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class Database {
 	private Connection conn;
 	
-	public Database() {
+	public Database(Environment env) {
 		try {
 			/* The following code was used for the SQLite driver.
 			 * There is a serious problem with using SQLite and JDBC: SQLite
@@ -34,7 +34,7 @@ public class Database {
 			 */
 			
 			Class.forName("org.postgresql.Driver");
-			conn = DriverManager.getConnection("jdbc:postgresql://cci-text-01.local/watsonsim?user=sean&password=supersecret");
+			conn = DriverManager.getConnection(env.getOrDie("jdbc_connection_string"));
 
 		} catch (SQLException | ClassNotFoundException e2) {
 			e2.printStackTrace();

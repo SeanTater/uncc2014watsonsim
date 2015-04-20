@@ -26,7 +26,6 @@ public class StrictFilters extends Researcher {
 			
 			// J! Archive has answers
 			if (a.text.contains("J! Archive")) {}
-				
 			
 			// "List of" is a bad sign 
 			else if (a.text.contains("List of")) {}

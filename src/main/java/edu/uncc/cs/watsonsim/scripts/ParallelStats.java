@@ -75,7 +75,7 @@ class SingleTrainingResult extends Thread {
 		String sql = String.format("cached LIMIT %d OFFSET %d", groupsize, offset);
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("mergeanswer percentage test", sql, run_start).run();
+			new StatsGenerator("answer search match -test", sql, run_start).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			log.error("Database missing, invalid, or out of date. Check that you "

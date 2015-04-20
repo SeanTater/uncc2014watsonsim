@@ -11,6 +11,10 @@ import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.search.*;
 
+/**
+ * Search for documents having relevance to both the question and a candidate
+ * answer.
+ */
 public class PassageRetrieval extends Researcher {
 	private final Searcher[] searchers;
 	private final Logger log = Logger.getLogger(this.getClass());
@@ -29,10 +33,10 @@ public class PassageRetrieval extends Researcher {
 		int total_passages=0; // logging
 		
 		for (Answer a: answers) {
-	    	String sr = getPassageQuery(q, a);
 	    	// Query every engine
 	    	for (Searcher s : searchers) {
-	    		List<Passage> passages = s.query(sr);
+	    		List<Passage> passages = s.query(
+	    				q.text + " " + Matcher.quoteReplacement(a.text));
 	    		total_passages += passages.size();
 	    		a.passages.addAll(passages);
 	    	}
@@ -40,11 +44,6 @@ public class PassageRetrieval extends Researcher {
 		
 		log.info("Found " + total_passages + " supporting passages.");
 		return answers;
-	}
-	
-	
-	private String getPassageQuery(Question q, Answer a) {
-		return q.text + " " + Matcher.quoteReplacement(a.text);
 	}
 
 }

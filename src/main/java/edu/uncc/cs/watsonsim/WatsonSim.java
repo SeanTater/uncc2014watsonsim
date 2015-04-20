@@ -16,6 +16,7 @@ public class WatsonSim {
         System.out.print("Watsonsim CLI\n"
         		+ "Enter any natural language question to have it answered.\n"
         		+ "(Keep in mind phrasing it like Jeopardy! improves results.)\n"
+        		+ "Place the correct answer after a | to check an answer.\n"
         		+ ">>> ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = br.readLine();
@@ -24,13 +25,19 @@ public class WatsonSim {
         Logger.getRootLogger().setLevel(Level.INFO);
         DefaultPipeline pipe = new DefaultPipeline();
     	while (!command.isEmpty()) {
-    		Question question = new Question(command);
+    		Question question;
+    		if (command.contains("|")) {
+    			String[] parts = command.split("\\|");
+    			question = Question.known(parts[0].trim(), parts[1].trim());
+    		} else {
+        		question = new Question(command);	
+    		}
     		List<Answer> answers = pipe.ask(question);
 	        
 	        // Print out a simple one-line summary of each answer
 	        for (int i=0; i<answers.size() && i < 10; i++) {
-	        	Answer r = answers.get(i);
-	        	System.out.println(String.format("%2d: %s", i, r));
+	        	Answer answer = answers.get(i);
+	        	System.out.println(String.format("%2d: %s", i, answer));
 	        }
 	        if (answers.size() > 10) {
 	        	System.out.println((answers.size() - 10)
