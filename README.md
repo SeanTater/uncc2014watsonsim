@@ -71,7 +71,7 @@ But, if you prefer, you can also use Eclipse. First create a project.
 ```sh
 gradle eclipse
 ```
-Then remove apache-jena-libs-*.pom since Eclipse cannot handle .pom in the build path, and all the necessary dependencies it references will have already been included.
+Then remove apache-jena-libs-*.pom since Eclipse cannot handle .pom in the build path, and all the necessary dependencies it references will have already been included. Then you can run WatsonSim.java directly.
 
 ### Notes:
 - We once used SQLite but with many connections (200-500+), corruption seems to be a problem. We may make the SQL pluggable to avoid this extra setup step but probably not until someone requests it.
