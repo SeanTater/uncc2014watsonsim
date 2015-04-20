@@ -25,11 +25,11 @@ public class IndriSearcher extends Searcher {
 	 */
 	public IndriSearcher(Environment env) {
 		super(env);
-		if (env.getOrDie("indri_enabled") == "false") {
+		if (env.getConfOrDie("indri_enabled") == "false") {
 			enabled = false;
 		} else {
 			try {
-				q.addIndex(env.getOrDie("indri_index"));
+				q.addIndex(env.getConfOrDie("indri_index"));
 				q.setMemory(1<<28);
 			} catch (Exception e) {
 				System.out.println("Setting up the Indri index failed."

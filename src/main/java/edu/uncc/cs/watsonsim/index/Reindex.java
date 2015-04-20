@@ -48,7 +48,7 @@ public class Reindex {
 	final List<Segment> indexers;
 	
 	public Reindex() throws IOException {
-		db = new Database(new Environment("data/"));
+		db = new Database(new Environment());
     	// Read the configuration
 		Properties props = null;
 		for (String prefix : new String[]{"data/", ""}) {

@@ -41,9 +41,7 @@ import com.hp.hpl.jena.tdb.TDBFactory;
  * 
  * @author Sean Gallagher
  */
-public class Environment {
-	private final String data_path;
-	public final Map<String, String> config;
+public class Environment extends Configuration {
 	public final Database db;
 	public final Dataset rdf;
 	public final IndexSearcher lucene;
@@ -65,57 +63,9 @@ public class Environment {
 	 * config.properties can be either in the data directory or the working
 	 * directory. This is to allow sharing (read-only) indices while still
 	 * allowing separate development configurations.  
-	 * 
-	 * @param data_path The path to the data directory as a String.
-	 * @throws IOException 
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" }) // From Properties -> Map
-	public Environment(String data_path) throws IOException {
-		/*
-		 * The excess verbosity here is because it is probably the entry point
-		 * for first-time users of the program.
-		 */
-		
-		// Check the data path
-		if (data_path == null
-				|| data_path.isEmpty()) {
-			throw new IOException("Cannot use an empty or null directory. "
-					+ "Pick \"data/\" if you are unsure.");
-		}
-		File f = new File(data_path);
-		if (!(f.exists() && f.isDirectory())) {
-			throw new IOException(data_path + " should be a directory.");
-		}
-		
-		this.data_path = data_path.endsWith(File.separator) ?
-				data_path : (data_path + File.separator);
-		
-		// Read the configuration
-		Properties props = null;
-		for (String prefix : new String[]{this.data_path, ""}) {
-			try (Reader s = new InputStreamReader(
-					new FileInputStream(prefix + "config.properties"), "UTF-8")){
-				// Make it, then link it if it works.
-				Properties _local_props = new Properties();
-				_local_props.load(s);
-				props = _local_props;
-			} catch (FileNotFoundException e) {
-				// This is only an error if none are found.
-			}
-		}
-		// If it didn't link, all the reads failed.
-		if (props == null) {
-			throw new IOException("Failed to read config.properties in either "
-					+ this.data_path
-					+ " or "
-					+ System.getProperty("user.dir") // CWD
-					+ " You can create one by making a copy of"
-					+ " config.properties.sample. Check the README as well.");
-		}
-		// Now make properties immutable.
-		Map<Object, Object> m = new HashMap<>();
-		m.putAll(props);
-		this.config = Collections.unmodifiableMap((Map) m);
+	public Environment() {
 		
 		// Now do some per-thread setup
 		db = new Database(this);
@@ -125,7 +75,7 @@ public class Environment {
 		// Lucene indexes have huge overhead so avoid re-instantiating by putting them in the Environment
 		IndexReader reader;
 		try {
-			reader = DirectoryReader.open(new MMapDirectory(Paths.get(getOrDie("lucene_index"))));
+			reader = DirectoryReader.open(new MMapDirectory(Paths.get(getConfOrDie("lucene_index"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("The candidate-answer Lucene index failed to open.");
@@ -164,33 +114,5 @@ public class Environment {
 		} else {
 			return new ScoreDoc[0];
 		}
-	}
-	
-
-	/**
-	 * Convenience method for getting a setting.
-	 * @param config Map from the configuration file (config.properties) 
-	 * @param key The key that must exist in the properties
-	 * @return The non-null String value, or else throw a RuntimeException.
-	 */
-	public String getOrDie(String key) {
-		String value = config.get(key);
-		if (value == null) throw new RuntimeException("Required key (" + key + ") missing from configuration file.");
-		return value;
-	}
-	
-	/**
-	 * Get the path to a resource, ensuring it exists.
-	 * This is mostly to give helpful errors and fail fast if you missed a
-	 * step setting up.
-	 * @param resource The relative path of the resource without leading /
-	 */
-	public String pathMustExist(String resource) {
-		String path = data_path + File.separator + resource;
-		if (!new File(path).exists()) {
-			throw new RuntimeException("The data directory is missing the"
-					+ " expected resource: " + path);
-		}
-		return path;
 	}
 }

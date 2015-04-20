@@ -40,7 +40,7 @@ public class BingSearcher extends Searcher {
 		super(env);
 		Score.register("BING_ANSWER_RANK", -1, Merge.Mean);
 		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Or);
-		key = env.getOrDie("bing_api_key");
+		key = env.getConfOrDie("bing_api_key");
 	}
 	
 	public List<Passage> query(String query) {

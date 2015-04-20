@@ -1,6 +1,5 @@
 package edu.uncc.cs.watsonsim;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,13 +63,7 @@ public class DefaultPipeline {
 	 * @param millis Millis since the Unix epoch, as in currentTimeMillis()
 	 */
 	public DefaultPipeline(long millis) {
-		Environment env;
-		try {
-			env = new Environment("data/");
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("No environment: cannot create a pipeline.");
-		} 
+		Environment env = new Environment();
 		run_start = new Timestamp(millis);
 		
 		/*

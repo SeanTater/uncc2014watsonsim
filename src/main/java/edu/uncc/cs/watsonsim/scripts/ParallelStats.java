@@ -77,7 +77,7 @@ class SingleTrainingResult extends Thread {
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
 			new StatsGenerator("answer search match -test", sql, run_start).run();
-		} catch (IOException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			log.error("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.", e);
@@ -141,9 +141,9 @@ class StatsGenerator {
 	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public StatsGenerator(String dataset, String question_query, long run_start) throws SQLException, IOException {
+	public StatsGenerator(String dataset, String question_query, long run_start) throws SQLException{
 		this.dataset = dataset;
-		questionsource = new DBQuestionSource(new Environment("data/"), question_query);
+		questionsource = new DBQuestionSource(new Environment(), question_query);
 		this.run_start = run_start;
 	}
 	

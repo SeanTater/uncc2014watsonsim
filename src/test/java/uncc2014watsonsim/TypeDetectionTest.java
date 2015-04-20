@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import edu.uncc.cs.watsonsim.Configuration;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.nlp.ClueType;
 
@@ -30,7 +31,7 @@ public class TypeDetectionTest {
 	public void testHasAll(String source, String[] targets) {
 		List<String> types = new ArrayList<>();
 		try {
-			Environment env = new Environment("data/");
+			Configuration env = new Environment();
 			types = new ClueType(env).viaDBPedia(source);
 		} catch (RuntimeException | IOException e) {
 			// If this goes wrong, it probably just means we are disconnected

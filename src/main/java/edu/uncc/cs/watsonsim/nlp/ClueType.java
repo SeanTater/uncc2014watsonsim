@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import static edu.uncc.cs.watsonsim.nlp.Trees.concat;
 import edu.stanford.nlp.trees.Tree;
-import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.Configuration;
 import edu.uncc.cs.watsonsim.Phrase;
 
 /**
@@ -16,7 +16,7 @@ import edu.uncc.cs.watsonsim.Phrase;
  */
 public class ClueType {
 	
-	public ClueType(Environment env) {
+	public ClueType(Configuration env) {
 	}
 	
 	/**

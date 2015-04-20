@@ -15,6 +15,7 @@ import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
+import edu.uncc.cs.watsonsim.Configuration;
 import edu.uncc.cs.watsonsim.Environment;
 
 import org.apache.lucene.document.Document;
@@ -116,7 +117,7 @@ public class DBPediaCandidateType {
 class LuceneDBPediaSearch {
 	private final IndexSearcher searcher;
 	
-	public LuceneDBPediaSearch(Environment env) {
+	public LuceneDBPediaSearch(Configuration env) {
 		IndexReader reader;
 		try {
 			reader = DirectoryReader.open(FSDirectory.open(Paths.get(

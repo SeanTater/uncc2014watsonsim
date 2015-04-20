@@ -24,7 +24,7 @@ public class WikipediaViewCounter {
 	
 	public static void main(String[] args) throws IOException {
 
-		Database db = new Database(new Environment("data/"));
+		Database db = new Database(new Environment());
 		PreparedStatement statement = db.prep("UPDATE meta SET pageviews = pageviews + ? WHERE title = ?;");
 		String[] filenames = {
 				"pagecounts-20081005-130000.gz",

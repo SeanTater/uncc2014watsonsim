@@ -52,7 +52,7 @@ public class Anagrams extends Searcher {
 	}
 
 	public static void main(String args[]) throws IOException {
-		Anagrams ta = new Anagrams(new Environment("data/"));
+		Anagrams ta = new Anagrams(new Environment());
 		System.out.println("Enter the Jeopardy Anagram Question:");
 		BufferedReader br2 = new BufferedReader(
 				new InputStreamReader(System.in));
