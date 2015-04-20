@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Database;
+import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;
 
@@ -15,18 +16,11 @@ import edu.uncc.cs.watsonsim.Score;
 /** Pipe Answer scores to an ARFF file for Weka */
 public class StatsDump extends Researcher {
 	
-	private Database db = new Database();
-	private PreparedStatement add_run = db.prep(
-			"INSERT INTO results_runs(id) VALUES (?);");
-	private PreparedStatement add_question = db.prep(
-			"INSERT INTO results_questions(run_id, question) VALUES (?, ?) "
-			+ "RETURNING id;");
-	private PreparedStatement add_answer = db.prep(
-			"INSERT INTO results_answers(results_questions_id, candidate_text)"
-			+ " VALUES (?, ?) RETURNING id;");
-	private PreparedStatement add_score = db.prep(
-			"INSERT INTO results_scores(results_answers_id, key, value)"
-			+ " VALUES (?, ?, ?);");
+	private final Database db;
+	private final PreparedStatement add_run;
+	private final PreparedStatement add_question;
+	private final PreparedStatement add_answer;
+	private final PreparedStatement add_score;
 	
 	private Timestamp run_id;
 	private boolean broken = false;
@@ -34,8 +28,21 @@ public class StatsDump extends Researcher {
 	/**
 	 * Start a new run in the reports tables.
 	 */
-	public StatsDump(Timestamp run_id) {
+	public StatsDump(Timestamp run_id, Environment env) {
 		this.run_id = run_id;
+		db = env.db;
+		add_run = db.prep(
+				"INSERT INTO results_runs(id) VALUES (?);");
+		add_question = db.prep(
+				"INSERT INTO results_questions(run_id, question) VALUES (?, ?) "
+				+ "RETURNING id;");
+		add_answer = db.prep(
+				"INSERT INTO results_answers(results_questions_id, candidate_text)"
+				+ " VALUES (?, ?) RETURNING id;");
+		add_score = db.prep(
+				"INSERT INTO results_scores(results_answers_id, key, value)"
+				+ " VALUES (?, ?, ?);");
+
 		try {
 			add_run.setTimestamp(1, run_id);
 			add_run.execute();

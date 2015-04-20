@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.apache.jena.atlas.logging.Log;
 
+import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.scorers.Merge;
@@ -23,7 +24,8 @@ public class Anagrams extends Searcher {
 
 	private final Map<String, List<String>> mp = new HashMap<>();
 
-	public Anagrams()  {
+	public Anagrams(Environment env)  {
+		super(env);
 		try
 		{
 		for (String line : Files.readAllLines(Paths.get("data", "words"))) {
@@ -50,7 +52,7 @@ public class Anagrams extends Searcher {
 	}
 
 	public static void main(String args[]) throws IOException {
-		Anagrams ta = new Anagrams();
+		Anagrams ta = new Anagrams(new Environment("data/"));
 		System.out.println("Enter the Jeopardy Anagram Question:");
 		BufferedReader br2 = new BufferedReader(
 				new InputStreamReader(System.in));

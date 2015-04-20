@@ -25,6 +25,7 @@ public class LuceneSearcher extends Searcher {
 	private final IndexSearcher lucene;
 	
 	public LuceneSearcher(Environment env) {
+		super(env);
 		lucene = env.lucene;
 		Score.register("LUCENE_ANSWER_RANK", -1, Merge.Mean);
 		Score.register("LUCENE_ANSWER_SCORE", -1, Merge.Mean);

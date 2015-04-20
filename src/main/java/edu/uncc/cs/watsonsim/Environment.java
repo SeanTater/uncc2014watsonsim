@@ -44,7 +44,7 @@ import com.hp.hpl.jena.tdb.TDBFactory;
 public class Environment {
 	private final String data_path;
 	public final Map<String, String> config;
-	public final Database db = new Database(this);
+	public final Database db;
 	public final Dataset rdf;
 	public final IndexSearcher lucene;
 	private final QueryBuilder lucene_query_builder = new QueryBuilder(new StandardAnalyzer());
@@ -118,6 +118,7 @@ public class Environment {
 		this.config = Collections.unmodifiableMap((Map) m);
 		
 		// Now do some per-thread setup
+		db = new Database(this);
 		rdf = TDBFactory.assembleDataset(
 				pathMustExist("rdf/jena-lucene.ttl"));
 		

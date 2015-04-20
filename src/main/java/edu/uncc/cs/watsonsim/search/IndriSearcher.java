@@ -24,6 +24,7 @@ public class IndriSearcher extends Searcher {
 	 * @param config  The configuration Properties
 	 */
 	public IndriSearcher(Environment env) {
+		super(env);
 		if (env.getOrDie("indri_enabled") == "false") {
 			enabled = false;
 		} else {

@@ -6,13 +6,12 @@ import java.util.ArrayList;
 
 public class DBQuestionSource extends ArrayList<Question> {
 	private static final long serialVersionUID = 1L;
-	private static final Database db = new Database();
 	
 	/** Run an arbitrary query on the database to get questions.
 	 */
-	public DBQuestionSource(String conditions) throws SQLException {
+	public DBQuestionSource(Environment env, String conditions) throws SQLException {
 		// Get a list of questions, ordered so that it is consistent
-		PreparedStatement query = db.prep("select question, answer, category from questions "
+		PreparedStatement query = env.db.prep("select question, answer, category from questions "
 				+ conditions + ";");
 		read_results(query.executeQuery());
 	}

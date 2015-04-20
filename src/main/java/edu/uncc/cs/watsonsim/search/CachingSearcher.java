@@ -17,10 +17,9 @@ public class CachingSearcher extends Searcher {
 	private Random gen = new Random();
 	private Searcher searcher;
 	String engine_name;
-	private Database db;
 
 	public CachingSearcher(Environment env, Searcher searcher, String engine_name) {
-		this.db = env.db;
+		super(env);
 		this.searcher = searcher;
 		this.engine_name = engine_name;
 	}

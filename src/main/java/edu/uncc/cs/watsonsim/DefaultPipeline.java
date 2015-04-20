@@ -82,7 +82,7 @@ public class DefaultPipeline {
 			// You may want to cache Bing results
 			// new BingSearcher(config),
 			new CachingSearcher(env, new BingSearcher(env), "bing"),
-			new Anagrams()
+			new Anagrams(env)
 		};
 		early_researchers = Researcher.pipe(
 			//new RedirectSynonyms(env),
@@ -113,7 +113,7 @@ public class DefaultPipeline {
 			new SkipBigram(),
 			new TopPOS(),
 			new WordProximity(),
-			new WPPageViews()
+			new WPPageViews(env)
 			//new RandomIndexingCosineSimilarity(),
 			//new DistSemCosQAScore(),
 			//new DistSemCosQPScore(),
@@ -122,7 +122,7 @@ public class DefaultPipeline {
 			new Normalize(),
 			new WekaTee(run_start),
 			new CombineScores(),
-			new StatsDump(run_start)
+			new StatsDump(run_start, env)
 		);
 	}
 	

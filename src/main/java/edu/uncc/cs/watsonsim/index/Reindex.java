@@ -30,6 +30,7 @@ import com.google.common.collect.Queues;
 import edu.stanford.nlp.util.Triple;
 import static edu.stanford.nlp.util.Triple.makeTriple;
 import edu.uncc.cs.watsonsim.Database;
+import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
 
 /**
@@ -43,10 +44,11 @@ public class Reindex {
     /**
      * the input file which has to be indexed. This is a database made from TRECtext's
      */
-    final Database db = new Database();
+    private final Database db;
 	final List<Segment> indexers;
 	
 	public Reindex() throws IOException {
+		db = new Database(new Environment("data/"));
     	// Read the configuration
 		Properties props = null;
 		for (String prefix : new String[]{"data/", ""}) {

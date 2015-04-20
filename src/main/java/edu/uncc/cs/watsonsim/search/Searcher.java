@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uncc.cs.watsonsim.Database;
+import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
 
 /*
@@ -21,8 +22,10 @@ import edu.uncc.cs.watsonsim.Passage;
  * @author Phani Rahul
  */
 public abstract class Searcher {
-	
-	final Database db = new Database();
+	final Database db;
+	public Searcher(Environment env) {
+		db = env.db;
+	}
 
     /**
      * Runs the <i>query</i>, populating a list of ResultSets

@@ -26,6 +26,7 @@ public class LucenePassageSearcher extends Searcher {
 	private final Environment env;
 	
 	public LucenePassageSearcher(Environment env) {
+		super(env);
 		this.lucene = env.lucene;
 		this.env = env;
 		Score.register("LUCENE_SCORE", -1, Merge.Mean);

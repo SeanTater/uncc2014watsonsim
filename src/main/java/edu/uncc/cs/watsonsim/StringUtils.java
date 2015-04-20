@@ -21,7 +21,7 @@ import edu.stanford.nlp.util.CacheMap;
 */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	private static Analyzer analyzer = new StandardAnalyzer();
-	private static Database db = new Database(); // Used for semantic distribution
+	//private static Database db = new Database(); // Used for semantic distribution
 	public static final int CONTEXT_LENGTH = 1000;
 	
 	//private static final int CONTEXT_HASH_COUNT = 20;
@@ -107,7 +107,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @param phrase
 	 * @return the merged phrase vector, unless an error occurred.
 	 */
-	public static ArrayList<Double> getPhraseContextSafe(String phrase) {
+	/*public static ArrayList<Double> getPhraseContextSafe(String phrase) {
 		ArrayList<Double> merged_context = context_cache_map.get(	phrase);
 		if (merged_context == null) {
 			merged_context = new ArrayList<>();
@@ -140,7 +140,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 		context_cache_map.put(phrase, merged_context);
 		return merged_context;
-	}
+	}*/
     
 	/**
 	 * Find the cosine similarity between two vectors

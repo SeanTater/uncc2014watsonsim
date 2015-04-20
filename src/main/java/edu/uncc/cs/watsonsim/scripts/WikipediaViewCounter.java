@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.zip.GZIPInputStream;
 
 import edu.uncc.cs.watsonsim.Database;
+import edu.uncc.cs.watsonsim.Environment;
 
 /**
  * This script takes a page view file from Wikimedia at
@@ -20,9 +21,10 @@ import edu.uncc.cs.watsonsim.Database;
  *
  */
 public class WikipediaViewCounter {
-	static Database db = new Database();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+
+		Database db = new Database(new Environment("data/"));
 		PreparedStatement statement = db.prep("UPDATE meta SET pageviews = pageviews + ? WHERE title = ?;");
 		String[] filenames = {
 				"pagecounts-20081005-130000.gz",

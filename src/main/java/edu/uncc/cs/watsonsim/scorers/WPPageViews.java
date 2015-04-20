@@ -6,12 +6,17 @@ import java.sql.SQLException;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Database;
+import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
 
 public class WPPageViews extends AnswerScorer {
-	Database db = new Database();
-	PreparedStatement popularity_statement = db.prep(
-			"SELECT pageviews FROM meta WHERE title = ? LIMIT 1;");
+	private final Database db;
+	private final PreparedStatement popularity_statement;
+	public WPPageViews(Environment env) {
+		db = env.db;
+		popularity_statement = db.prep(
+				"SELECT pageviews FROM meta WHERE title = ? LIMIT 1;");
+	}
 
 	@Override
 	public synchronized double scoreAnswer(Question q, Answer a) {

@@ -18,6 +18,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.DBQuestionSource;
 import edu.uncc.cs.watsonsim.DefaultPipeline;
+import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.StringUtils;
@@ -76,7 +77,7 @@ class SingleTrainingResult extends Thread {
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
 			new StatsGenerator("answer search match -test", sql, run_start).run();
-		} catch (SQLException e) {
+		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 			log.error("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.", e);
@@ -137,11 +138,12 @@ class StatsGenerator {
 	 * To understand the query, see {@link DBQuestionSource}.
 	 * @param dataset  What to name the result when it is posted online.
 	 * @param question_query  The SQL filters for the questions. 
+	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public StatsGenerator(String dataset, String question_query, long run_start) throws SQLException {
+	public StatsGenerator(String dataset, String question_query, long run_start) throws SQLException, IOException {
 		this.dataset = dataset;
-		questionsource = new DBQuestionSource(question_query);
+		questionsource = new DBQuestionSource(new Environment("data/"), question_query);
 		this.run_start = run_start;
 	}
 	
