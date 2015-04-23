@@ -95,6 +95,7 @@ public class DefaultPipeline {
 			new AnswerPOS(),
 			new CommonConstituents(),
 			new Correct(env),
+			new DateMatches(),
 			new LATCheck(env),
 			new LuceneEcho(),
 			new NGram(),
