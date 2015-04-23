@@ -37,6 +37,8 @@ import weka.core.Utils;
  * 
  * Sorts and reverses the result, so that the top answer is at rank 0.
  * 
+ * As of April 23, the best SVM settings at are at C=8 gamma=0.5
+ * 
  * @author Walid Shalaby
  */
 public class CombineScores extends Researcher {

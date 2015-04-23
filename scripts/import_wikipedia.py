@@ -136,11 +136,14 @@ def WikiDocument(id, title, text, source_tag, db):
 	# And we are not advanced enough to get anything from it if we tried.
 	if paragraph.count(' '):
             content_id = random.getrandbits(63)
-            c.execute("INSERT INTO meta (id, title, source, paragraph, reference) "
-                "VALUES (%s, %s, %s, %s, %s);",
-                (content_id, title, source_tag, paragraph_index, "WDB:%i" % content_id))
-            c.execute("INSERT INTO content (id, text) VALUES (%s, %s);",
-                (content_id, paragraph))
+            c.execute("INSERT into sources (id,text,title, source, paragraph,reference)"
+             "VALUES (%s, %s, %s, %s, %s, %s);",
+              (content_id,paragraph,title, source_tag, paragraph_index, "WDB:%i" % content_id))
+           #c.execute("INSERT INTO meta (id, title, source, paragraph, reference) "
+              #  "VALUES (%s, %s, %s, %s, %s);",
+              #  (content_id, title, source_tag, paragraph_index, "WDB:%i" % content_id))
+            #c.execute("INSERT INTO content (id, text) VALUES (%s, %s);",
+            #    (content_id, paragraph))
         
         paragraph_index += 1
     

@@ -25,7 +25,7 @@ public class ClueType {
 	private static final class Analysis {
 		public final Tree dt, nn;	// Determiner, Noun// This is from worst to best! That way -1 is the worse-than-worst;
 		private static final List<String> DT_RANK = Arrays.asList(new String[]{
-				"those", "that", "these", "this"
+				"those", "that", "these", "which", "what", "this"
 		});
 		public Analysis(Tree d, Tree n){
 			dt = d; nn = n;
@@ -68,6 +68,7 @@ public class ClueType {
 	 */
 	private static Analysis detectPart(Tree t) {
 		switch (t.value()) {
+		case "WDT":
 		case "DT": return new Analysis(t, null);
 		case "NN":
 		case "NNS": return new Analysis(null, t);
