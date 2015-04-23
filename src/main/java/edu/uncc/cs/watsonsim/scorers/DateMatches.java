@@ -26,7 +26,9 @@ public class DateMatches extends AnswerScorer {
 	
 	public static boolean maybeDate(String in) {
 		boolean years=false, months=false, days=false;
-		Matcher m = Pattern.compile("([^- ,/]+)[- ,/]+([^- ,/]+)([- ,/]+[^- ,/]+)?").matcher(in);
+		Matcher m = Pattern
+				.compile("([^- ,/]+)[- ,/]+([^- ,/]+)([- ,/]+[^- ,/]+)?")
+				.matcher(in);
 		if (m.find()) {
 			for (int group=0; group<m.groupCount(); group++) {
 				years |= maybeYear(m.group(group));
@@ -35,7 +37,8 @@ public class DateMatches extends AnswerScorer {
 			}
 		}
 		return (months && days)  // year optional
-				|| (years && months); // day optional
+				|| (years && months) // day optional
+				|| years; // Only year. Strange, but TREC does this.
 	}
 
 	@Override
