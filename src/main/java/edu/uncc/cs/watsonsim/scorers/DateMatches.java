@@ -12,7 +12,7 @@ import edu.uncc.cs.watsonsim.Question;
  */
 public class DateMatches extends AnswerScorer {
 	public static boolean maybeMonth(String in) {
-		return in.matches("[Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec]\\.?\\w*"
+		return in.matches("(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\.?\\w*"
 				+ "|\\d{1,2}");
 	}
 	
@@ -21,12 +21,12 @@ public class DateMatches extends AnswerScorer {
 	}
 	
 	public static boolean maybeDay(String in) {
-		return in.matches("\\d{1,2}\\w*");
+		return in.matches("\\d{1,2}[a-z]*");
 	}
 	
 	public static boolean maybeDate(String in) {
 		boolean years=false, months=false, days=false;
-		Matcher m = Pattern.compile("([^- ,/]+)[- ,/]+([^- ,/]+)[- ,/]+([^- ,/]+)?").matcher(in);
+		Matcher m = Pattern.compile("([^- ,/]+)[- ,/]+([^- ,/]+)([- ,/]+[^- ,/]+)?").matcher(in);
 		if (m.find()) {
 			for (int group=0; group<m.groupCount(); group++) {
 				years |= maybeYear(m.group(group));
