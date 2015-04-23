@@ -3,7 +3,7 @@
 * @author Walid Shalaby
 */
 
-package uncc2014watsonsim;
+package edu.uncc.cs.watsonsim;
 import edu.uncc.cs.watsonsim.researchers.CombineScores;
 
 

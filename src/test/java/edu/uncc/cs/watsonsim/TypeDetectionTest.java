@@ -1,4 +1,4 @@
-package uncc2014watsonsim;
+package edu.uncc.cs.watsonsim;
 
 import static org.junit.Assert.*;
 
