@@ -29,7 +29,20 @@ public class WatsonSim {
 		for (int i=0; i<answers.size() && i < max; i++) {
         	Answer answer = answers.get(i);
         	System.out.println(String.format("%2d: %s", i, answer.toLongString()));
+	        if (answers.size() > max) {
+	        	System.out.println((answers.size() - max)
+	        			+ " additional candidates are hidden.");
+	        }
         }
+    }
+    
+    private static Question readQuestion(String command) {
+		if (command.contains("|")) {
+			String[] parts = command.split("\\|");
+			return Question.known(parts[0].trim(), parts[1].trim());
+		} else {
+    		return new Question(command);	
+		}
     }
     
     private static void prompt() throws IOException {
@@ -38,31 +51,21 @@ public class WatsonSim {
 	    DefaultPipeline pipe = new DefaultPipeline();
 	    
     	while (!command.isEmpty()) {
-    		Question question;
-    		if (command.contains("|")) {
-    			String[] parts = command.split("\\|");
-    			question = Question.known(parts[0].trim(), parts[1].trim());
-    		} else {
-        		question = new Question(command);	
-    		}
+    		Question question = readQuestion(command);
     		List<Answer> answers = pipe.ask(question);
 	        
 	        // Print out a simple one-line summary of each answer
 	        listAnswers(answers, 10);
-	        if (answers.size() > 10) {
-	        	System.out.println((answers.size() - 10)
-	        			+ " additional candidates are hidden.");
-	        }
 	
-	        // Read in the next command from the console
-	        System.out.println("Enter \"...\" to see the hidden candidates,\n"
-	        		+ "an answer index to see an explanation,\n"
-	        		+ "a question to search again, or enter to quit\n>>> ");
-	        command = br.readLine();
-	        while (true) {
-	        	Answer a = answers.get(Integer.parseInt(command));
+	        do {
+		        // Read in the next command from the console
+		        System.out.println("Enter \"...\" to see the hidden candidates,\n"
+		        		+ "an answer index to see an explanation,\n"
+		        		+ "a question to search again, or enter to quit\n>>> ");
+		        command = br.readLine();
 	        	if (StringUtils.isNumeric(command)) {
 	        		// Explain
+		        	Answer a = answers.get(Integer.parseInt(command));
 	        		System.out.println(a);
 	        		System.out.println(a.explain());
 	        	} else if (command.equals("...")) {
@@ -72,9 +75,7 @@ public class WatsonSim {
 	        		// Done with this question
 	        		break;
 	        	}
-	        	// Only if we are not done with this question
-	        	command = br.readLine();
-	        }
+	        } while (true);
     	}
     }
 }
