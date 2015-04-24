@@ -176,11 +176,11 @@ public class DefaultPipeline {
 					}
 				}
 			}
-        	answers_updated.add( new Answer(ans, text));
+        	answers_updated.add( ans.withText(text));
         }
         
-        for(int i=0;i<answers.size();i++)
-        	System.out.println(answers.get(i).text+"//"+answers_updated.get(i).text);
+        //for(int i=0;i<answers.size();i++)
+        //	System.out.println(answers.get(i).text+"//"+answers_updated.get(i).text);
         
         
         /*	for(int i=answer_array_length - 1;i>=0;i--){

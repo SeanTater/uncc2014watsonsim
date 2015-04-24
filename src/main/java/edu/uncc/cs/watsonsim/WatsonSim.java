@@ -29,10 +29,10 @@ public class WatsonSim {
 		for (int i=0; i<answers.size() && i < max; i++) {
         	Answer answer = answers.get(i);
         	System.out.println(String.format("%2d: %s", i, answer.toLongString()));
-	        if (answers.size() > max) {
-	        	System.out.println((answers.size() - max)
-	        			+ " additional candidates are hidden.");
-	        }
+        }
+        if (answers.size() > max) {
+        	System.out.println((answers.size() - max)
+        			+ " additional candidates are hidden.");
         }
     }
     
@@ -66,7 +66,7 @@ public class WatsonSim {
 	        	if (StringUtils.isNumeric(command)) {
 	        		// Explain
 		        	Answer a = answers.get(Integer.parseInt(command));
-	        		System.out.println(a);
+	        		System.out.println("Explanation for " + a);
 	        		System.out.println(a.explain());
 	        	} else if (command.equals("...")) {
 	        		// List all

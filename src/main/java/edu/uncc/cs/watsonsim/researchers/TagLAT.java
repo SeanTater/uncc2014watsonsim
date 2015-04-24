@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import edu.stanford.nlp.util.Pair;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.nlp.DBPediaCandidateType;
@@ -47,25 +48,32 @@ public class TagLAT extends Researcher {
 		List<Answer> suggestions = new ArrayList<>();
 		
 		for (Answer a: answers) {
+			
+			// Handle DBPedia types
+			
 			a.lexical_types = dbpedia.viaDBPedia(a.text);
 			for (String type: a.lexical_types) {
 				a.log(this, "DBPedia says it's a %s", type);
 			}
+			if (a.lexical_types.isEmpty())
+				a.log(this, "DBPedia has no type information for it.");
 			dbpedia_types += a.lexical_types.size(); 
 			
-			for (Phrase p: a.passages) {
+			// Handle Support types
+			
+			for (Passage p: a.passages) {
 				List<Pair<String, String>> types = p.memo(SupportCandidateType::extract);
 				for (Pair<String, String> name_and_type : types) {
 					String name = name_and_type.first;
 					String type = name_and_type.second;
 					if (syn.matchViaSearch(name, a.text)) {
-						a.log(this, "Read that it's a %s.", type);
+						a.log(this, "Passage %s says it's a %s.", p.reference, type);
 						a.lexical_types.add(type);
 						support_types++;
 					} else if (syn.matchViaSearch(type, q.simple_lat)) {
 						Answer suggestion = new Answer(name);
 						suggestion.lexical_types = Arrays.asList(type);
-						suggestion.log(this, "Found it's a %s, while reading about %s", type, a);
+						suggestion.log(this, "Found it's a %s, while reading about %s in %s", type, a, p.reference);
 						if (!(suggestions.contains(suggestion)
 								|| answers.contains(suggestion))) {
 							log.info("Suggesting " + name);

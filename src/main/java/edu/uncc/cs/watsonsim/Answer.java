@@ -52,17 +52,23 @@ public class Answer extends Phrase implements Comparable<Answer> {
     	super(candidate_text);
     }
     
-    // Copy with one mutation: the text
-    public Answer(Answer original, String text)
+    /**
+     * Return a *new answer* that is a copy of the original with new text
+     */
+    public Answer withText(String text)
     {
-    	super(text);
-    	evidence.addAll(original.evidence);
-    	scores = original.scores.clone();
-    	for (Passage p : original.passages) {
-    		passages.add(new Passage(p));
+    	Answer a = new Answer(text);
+    	a.evidence.addAll(evidence);
+    	a.scores = scores.clone();
+    	for (Passage p : passages) {
+    		a.passages.add(new Passage(p));
     	}
+    	return a;
     }
     
+    /**
+     * Return the answer text alone
+     */
     @Override
     public String toString() {
     	return text;
