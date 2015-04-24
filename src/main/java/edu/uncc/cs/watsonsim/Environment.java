@@ -1,16 +1,7 @@
 package edu.uncc.cs.watsonsim;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -64,7 +55,6 @@ public class Environment extends Configuration {
 	 * directory. This is to allow sharing (read-only) indices while still
 	 * allowing separate development configurations.  
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" }) // From Properties -> Map
 	public Environment() {
 		
 		// Now do some per-thread setup

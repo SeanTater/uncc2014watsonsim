@@ -2,7 +2,11 @@
 package edu.uncc.cs.watsonsim;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 /**
  * @author Phani Rahul
@@ -14,6 +18,7 @@ public class Answer extends Phrase implements Comparable<Answer> {
     private double overall_score = Double.NaN;
     public List<Passage> passages = new ArrayList<>();
     public List<String> lexical_types = new ArrayList<>();
+    private final Queue<Evidence> evidence = new ConcurrentLinkedQueue<>();
 
     /**
      * Create an Answer with one implicitly defined Passage
@@ -30,8 +35,7 @@ public class Answer extends Phrase implements Comparable<Answer> {
     		String candidate_text) {
     	super(candidate_text);
     	this.passages = passages;
-    	this.scores = scores;
-    	
+    	this.scores = scores;	
     }
     
     /**
@@ -46,21 +50,28 @@ public class Answer extends Phrase implements Comparable<Answer> {
      */
     public Answer(String candidate_text) {
     	super(candidate_text);
-    	
     }
     
     // Copy with one mutation: the text
     public Answer(Answer original, String text)
     {
     	super(text);
+    	evidence.addAll(original.evidence);
     	scores = original.scores.clone();
     	for (Passage p : original.passages) {
     		passages.add(new Passage(p));
     	}
     }
-
+    
     @Override
     public String toString() {
+    	return text;
+    }
+    
+    /**
+     * Return a more detailed version of the answer, including scores.
+     */
+    public String toLongString() {
     	// Make a short view of the engines as single-letter abbreviations
     	String engines = "";
     	for (Passage e: this.passages)
@@ -102,7 +113,27 @@ public class Answer extends Phrase implements Comparable<Answer> {
 	public void score(String name, double score) {
 		scores = Score.set(scores, name, score);
 	}
-    
+	
+	/**
+	 * Provide some evidence for this class.
+	 * @param source (any class)
+	 * @param note
+	 */
+	public void log(Object source, String note, Object... attachments) {
+		note = String.format(note, attachments);
+		evidence.add(new Evidence(source.getClass().getSimpleName(), note));
+	}
+	
+	/**
+	 * Explain why this answer was given (format and return the log)
+	 */
+    public String explain() {
+    	return evidence.stream()
+    		.map(e -> String.format("[%s: about \"%s\"] %s", e.source, text, e.note))
+    		.reduce((x, y) -> x + "\n" + y)
+    		.orElse("No evidence recorded.");
+    }
+	
     @Override
 	public int compareTo(Answer other) {
     	return Double.compare(getOverallScore(), other.getOverallScore());
@@ -112,18 +143,17 @@ public class Answer extends Phrase implements Comparable<Answer> {
     public static Answer merge(List<Answer> others) {
         List<Passage> passages = new ArrayList<>();
         
-        // Merge all the passages
+        // Merge the passages
     	for (Answer other : others)
     		passages.addAll(other.passages);
     	
     	// Merge the scores
-
     	double[] scores = Score.empty();
     	for (Answer other : others)
     		scores = Score.merge(scores, other.scores);
     	
 
-    	// Pick the first candidate answer
+    	// Merge the text
     	String candidate_text = others.get(0).text;
     	for (Answer a: others) {
     		if (a.text.length() < candidate_text.length()) {
@@ -131,9 +161,25 @@ public class Answer extends Phrase implements Comparable<Answer> {
     		}
     	}
     	
-    	// Now make an answer from it
-    	return new Answer(passages, scores, candidate_text);
+    	// Merge the evidence
+    	Queue<Evidence> evidence = new ConcurrentLinkedQueue<>();
+    	for (Answer a: others) {
+    		evidence.addAll(a.evidence);
+    	}
+    	
+    	// Make an answer and add evidence
+    	Answer a = new Answer(passages, scores, candidate_text);
+    	a.evidence.addAll(evidence);
+    	
+    	return a;
     }
-    
+}
 
+class Evidence {
+	public final String source;
+	public final String note;
+	public Evidence(String source, String note) {
+		this.source = source;
+		this.note = note;
+	}
 }

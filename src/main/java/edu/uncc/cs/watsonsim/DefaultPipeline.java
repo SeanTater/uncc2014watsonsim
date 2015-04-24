@@ -176,7 +176,7 @@ public class DefaultPipeline {
 					}
 				}
 			}
-        	answers_updated.add( new Answer(ans.passages, ans.scores, text));
+        	answers_updated.add( new Answer(ans, text));
         }
         
         for(int i=0;i<answers.size();i++)
@@ -205,13 +205,6 @@ public class DefaultPipeline {
         }
         
         answers = late_researchers.pull(question, answers_updated);*/
-        
-        
-        
-        
-        
-        
-       
         
         answers = late_researchers.pull(question, answers_updated); 
         

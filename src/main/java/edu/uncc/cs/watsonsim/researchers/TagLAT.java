@@ -48,6 +48,9 @@ public class TagLAT extends Researcher {
 		
 		for (Answer a: answers) {
 			a.lexical_types = dbpedia.viaDBPedia(a.text);
+			for (String type: a.lexical_types) {
+				a.log(this, "DBPedia says it's a %s", type);
+			}
 			dbpedia_types += a.lexical_types.size(); 
 			
 			for (Phrase p: a.passages) {
@@ -56,11 +59,13 @@ public class TagLAT extends Researcher {
 					String name = name_and_type.first;
 					String type = name_and_type.second;
 					if (syn.matchViaSearch(name, a.text)) {
+						a.log(this, "Read that it's a %s.", type);
 						a.lexical_types.add(type);
 						support_types++;
 					} else if (syn.matchViaSearch(type, q.simple_lat)) {
 						Answer suggestion = new Answer(name);
 						suggestion.lexical_types = Arrays.asList(type);
+						suggestion.log(this, "Found it's a %s, while reading about %s", type, a);
 						if (!(suggestions.contains(suggestion)
 								|| answers.contains(suggestion))) {
 							log.info("Suggesting " + name);

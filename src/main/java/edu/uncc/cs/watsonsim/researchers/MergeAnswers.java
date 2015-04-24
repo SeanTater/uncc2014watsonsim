@@ -49,6 +49,7 @@ public class MergeAnswers extends Researcher{
 					
 					if (count >= 3 || percentCorrect >= 0.5) {
 						System.out.println(example_terms);
+						original.log(this, "It restates %s", original);
 						block.add(original);
 						continue each_answer;
 					}

@@ -40,17 +40,18 @@ public class DateMatches extends AnswerScorer {
 				|| (years && months) // day optional
 				|| years; // Only year. Strange, but TREC does this.
 	}
-
-	@Override
-	public double scoreAnswer(Question q, Answer a) {
-		
+	
+	public double scoreAnswer(Question q, Answer a) {	
+		boolean matches = false;
 		switch (q.simple_lat.toLowerCase()) {
-		case "year": return maybeYear(a.text)? 1 : 0;
+		case "year": matches = maybeYear(a.text);
 		case "date":
-		case "day": return maybeDate(a.text)? 1 : 0;
+		case "day": matches = maybeDate(a.text);
 		}
-		
-		return 0;
+
+		if (matches) a.log(this, "The date matches the question's format.");
+
+		return matches ? 1 : 0;
 	}
 	
 }
