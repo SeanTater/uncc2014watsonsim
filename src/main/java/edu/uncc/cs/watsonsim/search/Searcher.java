@@ -9,6 +9,7 @@ import java.util.List;
 import edu.uncc.cs.watsonsim.Database;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
+import edu.uncc.cs.watsonsim.Question;
 
 /*
  * This interface might change; Please be ready to accommodate the changes.
@@ -42,7 +43,12 @@ public abstract class Searcher {
      * @throws Exception 
      */
     
-	public abstract List<Passage> query(String query);
+	public List<Passage> query(String query) {
+		return new ArrayList<>();
+	};
+	public List<Passage> query(Question q) {
+		return query(q.text);
+	};
 
     /**
      * How many results should Lucene and Indri return?

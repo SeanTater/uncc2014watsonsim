@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -98,7 +99,7 @@ public class Environment extends Configuration {
 	 *  We  
 	 */
 	private ScoreDoc[] forcedSimpleLuceneQuery(String query, int count) throws IOException {
-		Query bquery = lucene_query_builder.createBooleanQuery("text", query);
+		Query bquery = lucene_query_builder.createBooleanQuery("text", query, Occur.MUST);
 		if (bquery != null) {
 			return lucene.search(bquery, count).scoreDocs;
 		} else {

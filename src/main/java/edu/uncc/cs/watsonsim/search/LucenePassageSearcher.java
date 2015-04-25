@@ -33,17 +33,6 @@ public class LucenePassageSearcher extends Searcher {
 		Score.register("LUCENE_RANK", -1, Merge.Mean);
 	}
 	
-	/**
-	 * Create a Lucene Query using the words as SHOULD clauses
-	 */
-	public static BooleanQuery queryFromWords(String text) {
-		BooleanQuery q = new BooleanQuery();
-		for (String word : text.split("\\W+")) {
-			q.add(new TermQuery(new Term("text", word)), BooleanClause.Occur.SHOULD);
-		}
-		return q;
-	}
-	
 	public List<Passage> query(String question_text) {
 		List<Passage> results = new ArrayList<>();
 		try {

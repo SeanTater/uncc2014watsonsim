@@ -43,7 +43,7 @@ public class MergeAnswers extends Researcher{
 		            example_terms.retainAll(original_terms);
 		            int count = example_terms.size();
 		            
-		            double percentCorrect = count/sizeExample;
+		            double percentCorrect = Math.max(count/sizeExample, 0.01);
 
 					/** Merge by word count of 3 only */
 					

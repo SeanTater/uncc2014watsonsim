@@ -92,8 +92,21 @@ public class Answer extends Phrase implements Comparable<Answer> {
     			text);
     }
     
+    /**
+     * Format an Answer for serialization (e.g. for a web frontend)
+     */
     public String toJSON() {
-    	return String.format("{\"score\": %01f, \"title\": \"%s\"}", getOverallScore(), text.replace("\"", "\\\""));
+    	return String.format("{\"score\": %01f, \"title\": \"%s\", \"evidence\": [%s]}",
+    			getOverallScore(),
+    			text.replace("\"", "\\\""),
+    			evidence.stream()
+	        		.map(e -> String.format("{\"source\": \"%s\", \"note\": \"%s\"}",
+	    					StringUtils.sanitize(e.source),
+	    					StringUtils.sanitize(e.note))
+	    				)
+	    			.reduce((x, y) -> x + "," + y)
+	    			.orElse("")
+    			);
     }
     
     /**

@@ -3,8 +3,11 @@ package edu.uncc.cs.watsonsim.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
+import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.Translation;
 import edu.uncc.cs.watsonsim.scorers.Merge;
@@ -18,6 +21,8 @@ import lemurproject.indri.ScoredExtentResult;
 public class IndriSearcher extends Searcher {
 	private final QueryEnvironment q = new QueryEnvironment();
 	private boolean enabled = true;
+	private final Logger log = Logger.getLogger(getClass());
+	
 	/**
 	 * Setup the Indri Query Environment.
 	 * The "indri_index" property is the Indri index path
@@ -44,10 +49,12 @@ public class IndriSearcher extends Searcher {
 		Score.register("INDRI_ANSWER_PRESENT", 0.0, Merge.Or);
 	}
 	
-	public List<Passage> query(String query) {
+	public List<Passage> query(String query){
 		if (!enabled) return new ArrayList<>();
 		// Run the query
-		query = Translation.getIndriQuery(query);
+		query = q.reformulateQuery(Translation.getIndriQuery(query));
+		//query = String.format("#band( %s %s )", query.replaceAll("#combine", "#uw"), query);
+		log.info("executing query " + query);
 		
 		ScoredExtentResult[] ser;
 		// Fetch all titles, texts
@@ -56,10 +63,16 @@ public class IndriSearcher extends Searcher {
 		//ParsedDocument[] full_texts;
 		String[] titles;
 		try {
-			ser = q.runQuery(q.reformulateQuery(query), MAX_RESULTS);
+			ser = q.runQuery(query, MAX_RESULTS);
 			docnos = q.documentMetadata(ser, "docno");
+			/*ser = new ScoredExtentResult[0];
+			docnos = new String[0];
+			ser = q.runQuery(query + " moo", MAX_RESULTS);
+			docnos = q.documentMetadata(ser, "docno");
+			ser = q.runQuery(query + " bar", MAX_RESULTS);
+			docnos = q.documentMetadata(ser, "docno");*/
 			//full_texts = IndriSearcher.q.documents(ser);
-			titles = q.documentMetadata(ser, "title");
+			//titles = q.documentMetadata(ser, "title");
 		} catch (Exception e) {
 			// If any other step fails, give a more general message but don't die.
 			System.out.println("Querying Indri failed. Is the index in the correct location? Is indri_jni included?");
@@ -72,7 +85,7 @@ public class IndriSearcher extends Searcher {
 		for (int i=0; i<ser.length; i++) {
 	    	results.add(new Passage(
     			"indri",         	// Engine
-    			titles[i],	        // Title
+    			"",//titles[i],	        // Title
     			"",                 // Full Text
 				docnos[i])          // Reference
 			.score("INDRI_ANSWER_RANK", (double) i)

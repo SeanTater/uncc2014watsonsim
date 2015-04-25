@@ -135,24 +135,28 @@ public class Score {
 	public static double[] merge(double[] left, double[] right) {
 		left = update(left);
 		right = update(right);
-		double[] center = new double[left.length];
 		double left_count = get(left, "COUNT", 1),
 		       right_count = get(right, "COUNT", 1);
-		int i = 0;
-		for ( Meta m : metas.values() ) {
-			switch (m.merge_type) {
-			case Mean:
-				center[i] = left_count * left[i] + right_count * right[i];
-				center[i] /= left_count + right_count;
-				break;
-			case Or: center[i] = left[i] + right[i] > 0 ? 1.0 : 0.0; break;
-			case Min: center[i] = Math.min(left[i], right[i]); break;
-			case Max: center[i] = Math.max(left[i], right[i]); break;
-			case Sum: center[i] = left[i] + right[i]; break; 
+		if (left_count + right_count > 0) {
+			double[] center = new double[left.length];
+			int i = 0;
+			for ( Meta m : metas.values() ) {
+				switch (m.merge_type) {
+				case Mean:
+					center[i] = left_count * left[i] + right_count * right[i];
+					center[i] /= left_count + right_count;
+					break;
+				case Or: center[i] = left[i] + right[i] > 0 ? 1.0 : 0.0; break;
+				case Min: center[i] = Math.min(left[i], right[i]); break;
+				case Max: center[i] = Math.max(left[i], right[i]); break;
+				case Sum: center[i] = left[i] + right[i]; break; 
+				}
+				i++;
 			}
-			i++;
+			return center;
+		} else {
+			return left.clone();
 		}
-		return center;
 	}
 	
 	/**

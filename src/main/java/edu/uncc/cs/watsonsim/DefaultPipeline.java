@@ -132,7 +132,7 @@ public class DefaultPipeline {
 		l.info("Generating candidate answers..");
 		List<Answer> answers = new ArrayList<>();
 		for (Searcher s: searchers)
-			for (Passage p : s.query(question.text))
+			for (Passage p : s.query(question))
 				answers.add(new Answer(p));
 		l.info("Generated " + answers.size() + " candidate answers.");
 		
