@@ -84,7 +84,11 @@ public class DefaultPipeline {
 			new MergeByText(env),
 			new MergeAnswers(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
-			new PassageRetrieval(env),
+			new PassageRetrieval(env,
+					new LucenePassageSearcher(env),
+					new IndriSearcher(env)
+					//new CachingSearcher(new BingSearcher(env), "bing"),
+				),
 			new MergeByCommonSupport(),
 			new PersonRecognition(),
 			new TagLAT(env),
@@ -149,7 +153,7 @@ public class DefaultPipeline {
         for(int x=0;x<answers.size();x++) {
         	Answer ans = answers.get(x);
         	String text = ans.text;
-        	System.out.println(text);
+        	//System.out.println(text);
         	String[] answer_array = text.split(" ");
         	int answer_array_length = answer_array.length;
         	

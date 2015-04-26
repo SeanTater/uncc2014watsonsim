@@ -99,7 +99,7 @@ public class Environment extends Configuration {
 	 *  We  
 	 */
 	private ScoreDoc[] forcedSimpleLuceneQuery(String query, int count) throws IOException {
-		Query bquery = lucene_query_builder.createBooleanQuery("text", query, Occur.MUST);
+		Query bquery = lucene_query_builder.createBooleanQuery("text", query, Occur.SHOULD);
 		if (bquery != null) {
 			return lucene.search(bquery, count).scoreDocs;
 		} else {

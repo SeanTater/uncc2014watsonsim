@@ -11,6 +11,7 @@ import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.Translation;
 import edu.uncc.cs.watsonsim.scorers.Merge;
+import lemurproject.indri.QueryAnnotation;
 import lemurproject.indri.QueryEnvironment;
 import lemurproject.indri.ScoredExtentResult;
 
@@ -35,7 +36,6 @@ public class IndriSearcher extends Searcher {
 		} else {
 			try {
 				q.addIndex(env.getConfOrDie("indri_index"));
-				q.setMemory(1<<28);
 			} catch (Exception e) {
 				System.out.println("Setting up the Indri index failed."
 						+ " Is the index in the correct location?"
@@ -53,17 +53,20 @@ public class IndriSearcher extends Searcher {
 		if (!enabled) return new ArrayList<>();
 		// Run the query
 		query = q.reformulateQuery(Translation.getIndriQuery(query));
+		query = query.replaceAll("#combine", "#uw");
 		//query = String.format("#band( %s %s )", query.replaceAll("#combine", "#uw"), query);
 		log.info("executing query " + query);
 		
 		ScoredExtentResult[] ser;
+		QueryAnnotation aq;
 		// Fetch all titles, texts
 		String[] docnos;
 		// If they have them, get the titles and full texts
 		//ParsedDocument[] full_texts;
 		String[] titles;
 		try {
-			ser = q.runQuery(query, MAX_RESULTS);
+			aq = q.runAnnotatedQuery(query, MAX_RESULTS);
+			ser = aq.getResults();
 			docnos = q.documentMetadata(ser, "docno");
 			/*ser = new ScoredExtentResult[0];
 			docnos = new String[0];

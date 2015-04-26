@@ -43,12 +43,11 @@ public class MergeAnswers extends Researcher{
 		            example_terms.retainAll(original_terms);
 		            int count = example_terms.size();
 		            
-		            double percentCorrect = Math.max(count/sizeExample, 0.01);
+		            double percentCorrect = count/(sizeExample + 0.01);
 
 					/** Merge by word count of 3 only */
 					
 					if (count >= 3 || percentCorrect >= 0.5) {
-						System.out.println(example_terms);
 						original.log(this, "It restates %s", original);
 						block.add(original);
 						continue each_answer;

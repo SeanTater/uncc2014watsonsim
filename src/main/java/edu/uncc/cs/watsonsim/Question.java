@@ -18,7 +18,7 @@ public class Question extends Phrase {
     public Question(String text) {
     	super(text);
         this.type = QClassDetection.detectType(this);
-        simple_lat = ClueType.fromClue(new Phrase(text).trees.get(0));
+        simple_lat = ClueType.fromClue(trees.get(0));
         
         Logger log = Logger.getLogger(getClass());
         if (simple_lat.isEmpty())

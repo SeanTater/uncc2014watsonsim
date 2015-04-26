@@ -1,4 +1,4 @@
-@relation 'Watsonsim captured question stream-weka.filters.unsupervised.attribute.NumericToNominal-R9-weka.filters.supervised.instance.Resample-B50.0-S1-Z3.0-no-replacement-weka.filters.unsupervised.attribute.Remove-R23-24'
+@relation 'Watsonsim captured question stream'
 
 @attribute ANSWER_LENGTH numeric
 @attribute ANSWER_POS numeric
@@ -10,6 +10,7 @@
 @attribute COMMON_CONSTITUENTS_MIN numeric
 @attribute CORRECT {0,1}
 @attribute COUNT numeric
+@attribute DATE_MATCHES numeric
 @attribute INDRI_ANSWER_PRESENT numeric
 @attribute INDRI_ANSWER_RANK numeric
 @attribute INDRI_ANSWER_SCORE numeric
@@ -22,6 +23,8 @@
 @attribute LUCENE_ECHO_MEAN numeric
 @attribute LUCENE_ECHO_MEDIAN numeric
 @attribute LUCENE_ECHO_MIN numeric
+@attribute LUCENE_RANK numeric
+@attribute LUCENE_SCORE numeric
 @attribute NGRAM_MAX numeric
 @attribute NGRAM_MEAN numeric
 @attribute NGRAM_MEDIAN numeric

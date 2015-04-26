@@ -112,7 +112,6 @@ public class CombineScores extends Researcher {
 	public double score(double[] attributesValues) throws Exception {
 		Instance inst = new Instance(1, attributesValues);
 		inst.setDataset(qResultsDataset);
-		//System.out.println(qResultsDataset.classAttribute().value((int)scorerM	odel.classifyInstance(inst)));
 		return scorerModel.distributionForInstance(inst)[1];
 		//return scorerModel.classifyInstance(inst);
 	}

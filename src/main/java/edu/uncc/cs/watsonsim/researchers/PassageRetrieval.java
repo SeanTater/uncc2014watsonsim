@@ -19,28 +19,26 @@ public class PassageRetrieval extends Researcher {
 	private final Searcher[] searchers;
 	private final Logger log = Logger.getLogger(this.getClass());
 	
-	public PassageRetrieval(Environment env) {
-		searchers = new Searcher[]{
-			new LucenePassageSearcher(env),
-			//new IndriSearcher(env),
-			//new CachingSearcher(new BingSearcher(env), "bing"),
-		};
+	public PassageRetrieval(Environment env, Searcher... searchers) {
+		this.searchers = searchers;
 	}
 	
 	
 	@Override
 	public List<Answer> question(Question q, List<Answer> answers) {
-		int total_passages=0; // logging
 		
-		for (Answer a: answers) {
-	    	// Query every engine
+		int total_passages = answers.parallelStream().mapToInt(a -> {
+			// Query every engine
+			int count = 0;
 	    	for (Searcher s : searchers) {
 	    		List<Passage> passages = s.query(
 	    				q.text + " " + Matcher.quoteReplacement(a.text));
-	    		total_passages += passages.size();
 	    		a.passages.addAll(passages);
+	    		count += passages.size();
 	    	}
-		}
+	    	return count;
+		}).sum();
+	    	
 		
 		log.info("Found " + total_passages + " supporting passages.");
 		return answers;
