@@ -27,7 +27,7 @@ public class PassageRetrieval extends Researcher {
 	@Override
 	public List<Answer> question(Question q, List<Answer> answers) {
 		
-		int total_passages = answers.parallelStream().mapToInt(a -> {
+		int total_passages = answers.stream().mapToInt(a -> {
 			// Query every engine
 			int count = 0;
 	    	for (Searcher s : searchers) {
