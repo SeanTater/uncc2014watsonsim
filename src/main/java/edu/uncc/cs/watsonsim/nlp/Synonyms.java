@@ -27,17 +27,17 @@ public class Synonyms {
 		this.db = env.db;
 		this.env = env;
 		/*
-		 * select count(*), trim(both ' .-’`''' from lower(target)) as name
-		 * 	from wiki_links
-		 * 	where link in ('author','Author', 'writer', 'Writer', 'novelist', 'Novelist')
-		 *  group by name having count(*) > 1 
-		 *  order by count(*) desc;
+		 * It's possible to send arrays of keys instead but the syntax is not
+		 * consistent across PSQL and SQLite so I'm issuing many small queries.
+		 * Postgres -> "WHERE link = ANY (?)"
+		 * SQLite   -> "WHERE link IN (?)"
+		 * So there may be real overhead.
 		 */
 		link_statement = db.prep(
-				"SELECT count(*), trim(both ' .-’`''' FROM lower(target)) AS name"
+				"SELECT count(*), trim_target"
 				+ " FROM wiki_links"
-				+ " WHERE link = ANY (?)"
-				+ " GROUP BY name HAVING count(*) > 1" 
+				+ " WHERE link = ?"
+				+ " GROUP BY trim_target HAVING count(*) > 1" 
 				+ " ORDER BY count(*) DESC;");
 	}
 	
@@ -51,11 +51,13 @@ public class Synonyms {
 	 */
 	public List<Weighted<String>> viaWikiLinks(String[] sources) {
 		try {
-			link_statement.setArray(1, db.createArrayOf("text", sources));
-			ResultSet rows = link_statement.executeQuery();
 			List<Weighted<String>> synonyms = new ArrayList<>();
-			while (rows.next()) {
-				synonyms.add(new Weighted<>(rows.getString(2), rows.getDouble(1)));
+			for (String source : sources){
+				link_statement.setString(1, source);
+				ResultSet rows = link_statement.executeQuery();
+				while (rows.next()) {
+					synonyms.add(new Weighted<>(rows.getString(2), rows.getDouble(1)));
+				}
 			}
 			return synonyms;
 		} catch (SQLException e) {

@@ -71,7 +71,7 @@ public class DefaultPipeline {
 		 */
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
-			new IndriSearcher(env),
+			new IndriSearcher(env, false),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
 			new CachingSearcher(env, new BingSearcher(env), "bing"),
@@ -86,7 +86,7 @@ public class DefaultPipeline {
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(env,
 					new LucenePassageSearcher(env),
-					new IndriSearcher(env)
+					new IndriSearcher(env, true)
 					//new CachingSearcher(new BingSearcher(env), "bing"),
 				),
 			new MergeByCommonSupport(),
@@ -148,7 +148,7 @@ public class DefaultPipeline {
         	s.scoreQuestion(question, answers);
         
         l.info("Computing confidence..");
-        
+        /*
         List<Answer> answers_updated = new ArrayList<>();
         for(int x=0;x<answers.size();x++) {
         	Answer ans = answers.get(x);
@@ -181,38 +181,15 @@ public class DefaultPipeline {
 				}
 			}
         	answers_updated.add( ans.withText(text));
-        }
+        }*/
         
         //for(int i=0;i<answers.size();i++)
         //	System.out.println(answers.get(i).text+"//"+answers_updated.get(i).text);
         
         
-        /*	for(int i=answer_array_length - 1;i>=0;i--){
-        		for(int j=0;j<answer_array_length;j++){
-        			StringBuilder sb = new StringBuilder();
-        			for(int k=j;k<=i;k++){
-        				//System.out.println("i="+i+", j="+j+", k");
-        				sb.append(answer_array[k]);
-        				if(k!=i)
-        				sb.append(" ");
-        			}
-        			if(question.text.contains(sb.toString())){
-        				text =text.toString().replace(sb.toString(), "");
-        				answer_array = text.split(" ");
-        				answer_array_length = answer_array.length;
-        				i = answer_array_length -1 ;
-        				      				j=0;
-        			}
-        		}
-        	}
-        	answers_updated.add( new Answer(ans.passages, ans.scores, text));
-        }
+        //answers = late_researchers.pull(question, answers_updated); 
         
-        answers = late_researchers.pull(question, answers_updated);*/
-        
-        answers = late_researchers.pull(question, answers_updated); 
-        
-       // answers = late_researchers.pull(question, answers);
+        answers = late_researchers.pull(question, answers);
         return answers;
     }
 }

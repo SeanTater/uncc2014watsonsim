@@ -67,6 +67,8 @@ public class WekaTee extends Researcher {
 				for (double[] row : new_entries)
 					saver.writeIncremental(new Instance(1.0, Score.update(row.clone())));
 			}
+			// There are synchronization issues otherwise.
+			saver.getWriter().flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to write Weka Log!");

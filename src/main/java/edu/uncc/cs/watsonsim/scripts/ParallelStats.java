@@ -1,8 +1,9 @@
 package edu.uncc.cs.watsonsim.scripts;
 
-import static org.junit.Assert.fail;
-
+import java.io.BufferedReader;
+import java.io.Console;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,17 +48,26 @@ public class ParallelStats {
         BasicConfigurator.configure();
         Logger.getRootLogger().setLevel(Level.WARN);
         Logger log = Logger.getLogger(ParallelStats.class);
-
-		String sql = String.format("cached LIMIT %d OFFSET %d", 5000, 2000);
+        
+        
+        //String mode = System.console().readLine("Train or test [test]:");
+        System.out.print("Train or test [test]: ");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String mode = br.readLine();
+        String sql;
+        if (mode.equals("train")) {
+        	sql = String.format("cached LIMIT %d OFFSET %d", 2000, 0);
+        } else {
+        	sql = String.format("cached LIMIT %d OFFSET %d", 5000, 2000);
+        }
+		
 		//String sql = "ORDER BY random() LIMIT 100";
 		try {
-			new StatsGenerator("indri passage retrieval -test", sql, System.currentTimeMillis()).run();
+			new StatsGenerator("indri strictness -" + mode, sql, System.currentTimeMillis()).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			log.error("Database missing, invalid, or out of date. Check that you "
 					+ "have the latest version.", e);
-			fail("Database missing, invalid, or out of date. Check that you "
-					+ "have the latest version.");
 		}
 		
         System.out.println("Done.");
@@ -99,6 +109,8 @@ class StatsGenerator {
 	private final DBQuestionSource questionsource;
 	private AtomicInteger available = new AtomicInteger(0);
 	private AtomicDouble total_inverse_rank = new AtomicDouble(0);
+	private AtomicInteger total_questions = new AtomicInteger(0);
+	private AtomicInteger total_correct = new AtomicInteger(0);
 	private int total_answers = 0;
 	
 	private double runtime;
@@ -127,20 +139,35 @@ class StatsGenerator {
         //BasicConfigurator.configure();
         //Logger.getRootLogger().setLevel(Level.INFO);
 		
-		log.info("Asking Questions");
-		// Limited to 100 threads
+		log.info("Performing train/test session\n"
+				+ "    #=top    x=top3    .=recall    ' '=missing");
 		ConcurrentHashMap<Long, DefaultPipeline> pipes =
 				new ConcurrentHashMap<>();
 		
 		int[] all_ranks = questionsource.parallelStream().mapToInt(q -> {
 			long tid = Thread.currentThread().getId();
 			DefaultPipeline pipe = pipes.computeIfAbsent(tid, (i) -> new DefaultPipeline(run_start));
-			List<Answer> answers = pipe.ask(q);
+			
+			List<Answer> answers;
+			try{
+				answers = pipe.ask(q);
+			} catch (Exception e) {
+				log.fatal(e, e);
+				return 99;
+			}
+			
+			int tq = total_questions.incrementAndGet();
+			if (tq % 50 == 0) {
+				System.out.println(
+						String.format("[%d]: %d accurate",
+								total_questions.get(), total_correct.get()));
+				
+			}
 			
 			int correct_rank = 99;
 			
 			if (answers.size() == 0) {
-				System.out.print('.');
+				System.out.print('!');
 				return 99;
 			}
 			
@@ -154,11 +181,14 @@ class StatsGenerator {
 				}
 			}
 			if (correct_rank == 0) {
-				System.out.print('^');
+				total_correct.incrementAndGet();
+				System.out.print('#');
 			} else if (correct_rank < 3) {
-				System.out.print('-');
-			} else {
+				System.out.print('o');
+			} else if (correct_rank < 99) {
 				System.out.print('.');
+			} else {
+				System.out.print(' ');
 			}
 			
 			total_answers += answers.size();

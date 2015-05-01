@@ -53,7 +53,7 @@ dependencies {
     // Indri native library
 //    natives "libindri-jni:libindri-jni:5.6"
     // Sqlite native library (but it comes in a jar)
-    compile "org.xerial:sqlite-jdbc:3.7.2"
+    compile "org.xerial:sqlite-jdbc:3.8.7"
     // PostgreSQL
     compile 'org.postgresql:postgresql:9.3-1101-jdbc41'
     // Connection pooling (revisit this later)

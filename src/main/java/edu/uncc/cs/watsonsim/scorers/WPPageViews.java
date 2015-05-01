@@ -15,7 +15,7 @@ public class WPPageViews extends AnswerScorer {
 	public WPPageViews(Environment env) {
 		db = env.db;
 		popularity_statement = db.prep(
-				"SELECT pageviews FROM meta WHERE title = ? LIMIT 1;");
+				"SELECT pageviews FROM sources WHERE title = ? LIMIT 1;");
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class Phrase {
 	    // Use the faster but slow-loading shift-reduce models
 	    props.put("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
 	    // When you find something untokenizable, delete it and don't whine
-	    props.put("tokenize.untokenizable", "noneDelete");
+	    props.put("tokenize.options", "untokenizable=noneDelete");
 	    pipeline = new StanfordCoreNLP(props);
 	    // Save time by caching some, but not too many, recent parses.
 	    recent = CacheBuilder.newBuilder()

@@ -15,6 +15,7 @@ import org.apache.lucene.search.TermQuery;
 
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
+import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.scorers.Merge;
 
@@ -29,7 +30,7 @@ public class LuceneSearcher extends Searcher {
 		lucene = env.lucene;
 		Score.register("LUCENE_ANSWER_RANK", -1, Merge.Mean);
 		Score.register("LUCENE_ANSWER_SCORE", -1, Merge.Mean);
-		Score.register("LUCENE_ANSWER_PRESENT", 0.0, Merge.Or);
+		Score.register("LUCENE_ANSWER_PRESENT", 0.0, Merge.Sum);
 	}
 	
 	/**
@@ -54,11 +55,11 @@ public class LuceneSearcher extends Searcher {
 	}
 	
 	
-	public List<Passage> query(String question_text) {
+	public List<Passage> query(Question question) {
 		List<Passage> results = new ArrayList<>();
 		try {
 			ScoreDoc[] hits = lucene.search(
-					queryFromSkipBigrams(question_text),
+					queryFromSkipBigrams(question.text + " " + question.getCategory()),
 					MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {

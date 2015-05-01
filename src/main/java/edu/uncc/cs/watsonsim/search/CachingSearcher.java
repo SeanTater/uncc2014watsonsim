@@ -95,14 +95,14 @@ public class CachingSearcher extends Searcher {
 					set_cache.addBatch();
 					setScores(p, id);
 				} catch (SQLException e) {
-					System.out.println("Failed to set cache to SQLite. (DB missing?) Ignoring.");
+					System.out.println("Failed to add cache entry. (DB missing?) Ignoring.");
 					e.printStackTrace();
 				}
 			}
 			try {
 				set_cache.executeBatch();
 			} catch (SQLException e) {
-				System.out.println("Failed to set cache to SQLite. (DB missing?) Ignoring.");
+				System.out.println("Failed to add cache entry. (DB missing?) Ignoring.");
 				e.printStackTrace();
 			}
 		}

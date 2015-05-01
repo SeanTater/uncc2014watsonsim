@@ -16,14 +16,14 @@ import edu.uncc.cs.watsonsim.scorers.AnswerScorer;
  * @author Sean
  *
  */
-public class LATCheck extends AnswerScorer {
+public class LATMentions extends AnswerScorer {
 	private final Synonyms syn;
 	private final Logger log = Logger.getLogger(getClass());
 	
 	/**
 	 * Create a new LATCheck using a shared environment
 	 */
-	public LATCheck(Environment env) {
+	public LATMentions(Environment env) {
 		syn = new Synonyms(env);
 	}
 	

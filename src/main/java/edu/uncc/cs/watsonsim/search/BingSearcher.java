@@ -39,7 +39,7 @@ public class BingSearcher extends Searcher {
 	public BingSearcher(Environment env) {
 		super(env);
 		Score.register("BING_ANSWER_RANK", -1, Merge.Mean);
-		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Or);
+		Score.register("BING_ANSWER_PRESENT", 0.0, Merge.Sum);
 		key = env.getConfOrDie("bing_api_key");
 	}
 	
