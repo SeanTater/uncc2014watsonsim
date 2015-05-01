@@ -60,7 +60,7 @@ This list isn't exhaustive, but it should be a good overview
 - Parsing logic in Prolog (with TuProlog)
 
 ### Notes:
-- You should probably consider using PostgreSQL if you scale this project to more than a few cores, or any distributed environment (200-500+). It should support both engines nicely.
+- You should probably consider using PostgreSQL if you scale this project to more than a few cores, or any distributed environment. It should support both engines nicely.
 - The data is sizable and growing, especially for statistics reports; 154.5 GB as of the time of this writing.
 - Can't find libindri-jni? Make sure you enabled Java and SWIG and had the right dependencies when compiling Indri.
 
