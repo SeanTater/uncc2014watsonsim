@@ -35,7 +35,7 @@ public class Database {
 			
 			//Class.forName("org.postgresql.Driver");
 			conn = DriverManager.getConnection(env.getConfOrDie("jdbc_connection_string"));
-			System.err.println(conn.getClass().getName());
+			//System.err.println(conn.getClass().getName());
 
 		} catch (SQLException e2) {
 			e2.printStackTrace();

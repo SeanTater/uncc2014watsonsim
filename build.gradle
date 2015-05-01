@@ -96,7 +96,8 @@ dependencies {
     compile 'it.unibo.alice.tuprolog:tuprolog:2.1.1'
     // Persistent Data Structures for sane transactional semantics
     compile "org.functionaljava:functionaljava-java8:4.2"
-
+    // LZ4 for efficiently compressing text
+    compile 'net.jpountz.lz4:lz4:1.3'
 }
 
 task environment << {
