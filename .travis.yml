@@ -3,7 +3,7 @@ jdk:
   - openjdk7
 
 install:
-  - TERM=dumb gradle assemble
+  - TERM=dumb gradle -Ptarget assemble
 
 script:
-    - TERM=dumb gradle --info check
+    - TERM=dumb gradle -Ptarget --info check
