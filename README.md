@@ -28,9 +28,6 @@ Watsonsim works using a pipeline of operations on questions, candidate answers, 
 - [Download the latest data](https://github.com/SeanTater/uncc2014watsonsim/wiki/Data-Sources). Decompress the whole archive, placing the content in the data/ folder.
   - Load the included database snapshot into Postgres using `pg_restore -d watsonsim [more options as necessary] data-snapshot.pgdump`.
 - Possibly enable some [Optional Features](https://github.com/SeanTater/uncc2014watsonsim/wiki/Optional-Features)
-- For the scripts, which you do not need for simple queries:
-  - Python 2.6+
-  - psycopg2, which you can install with `pip install psycopg2`, or as python-psycopg2 in ubuntu and fedora
 
 ### Running the Simulator
 We recommend running the simulator with Gradle:
