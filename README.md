@@ -37,7 +37,7 @@ gradle run -Ptarget=WatsonSim
 
 But, if you prefer, you can also use Eclipse. First create a project.
 ```sh
-gradle eclipse
+gradle eclipse -Ptarget
 ```
 Then remove apache-jena-libs-*.pom since Eclipse cannot handle .pom in the build path, and all the necessary dependencies it references will have already been included. Then you can run WatsonSim.java directly.
 
