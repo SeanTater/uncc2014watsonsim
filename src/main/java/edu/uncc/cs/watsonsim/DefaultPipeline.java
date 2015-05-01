@@ -101,6 +101,7 @@ public class DefaultPipeline {
 			new Correct(env),
 			new DateMatches(),
 			new LATCheck(env),
+			new LATMentions(),
 			new LuceneEcho(),
 			new NGram(),
 			new PassageTermMatch(),
