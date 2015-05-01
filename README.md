@@ -23,10 +23,9 @@ Watsonsim works using a pipeline of operations on questions, candidate answers, 
   - For Ubuntu and Fedora: install `libsvm-java`
   - otherwise, for [Windows](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) follow some  [instructions](http://stackoverflow.com/questions/25060178/which-weka-and-libsvm-jar-files-to-use-in-java-code-for-svm-classification)
 - Download [Gradle](http://gradle.org/downloads) (just unzip it; keep in mind it updates very often)
+- Download the [latest data](https://github.com/SeanTater/uncc2014watsonsim/wiki/Data-Sources) and place them in the data/ directory
+- Copy the configuration file `config.properties.sample` to `config.properties` and customize to your liking
 - Run `gradle eclipse -Ptarget` in `uncc2014watsonsim/` to download platform-independent dependencies and create an Eclipse project.
-- Install [Postgres](http://www.postgresql.org/download/) (we use 9.3)
-- [Download the latest data](https://github.com/SeanTater/uncc2014watsonsim/wiki/Data-Sources). Decompress the whole archive, placing the content in the data/ folder.
-  - Load the included database snapshot into Postgres using `pg_restore -d watsonsim [more options as necessary] data-snapshot.pgdump`.
 - Possibly enable some [Optional Features](https://github.com/SeanTater/uncc2014watsonsim/wiki/Optional-Features)
 
 ### Running the Simulator
