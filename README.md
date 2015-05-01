@@ -18,11 +18,11 @@ This list isn't exhaustive, but it should be a good overview
 - Search
   - Text search from Lucene and Indri (Terrier upcoming)
   - Web search from Bing (Google is in the works)
-  - Relational queries using PostgreSQL
+  - Relational queries using PostgreSQL ans SQLite
   - Linked data queries using Jena
 - Sources
-  - Text from all the articles in Wikipedia, Wiktionary, and Wikiquotes
-  - Linked data from DBPedia, used for LAT
+  - Text from all the articles in Wikipedia, Simple Wikipedia, Wiktionary, and Wikiquotes
+  - Linked data from DBPedia, used for LAT detection
   - Wikipedia pageviews organized by article
   - Source, target, and label from all links in Wikipedia
 - Machine learning with Weka and libSVM
