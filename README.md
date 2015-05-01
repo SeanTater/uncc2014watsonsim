@@ -13,17 +13,17 @@ Watsonsim works using a pipeline of operations on questions, candidate answers, 
 - We include (relatively) large amounts of preprocessed article text from Wikipedia as our inputs. Be prepared to use about 100GB of space if you want to try it out at its full power.
 
 ## Installing the Simulator
-- [git](http://git-scm.com/downloads) clone https://github.com/SeanTater/uncc2014watsonsim.git
-- Java 8, either:
+- Use [git](http://git-scm.com/downloads) to clone this repository, as in: `git clone https://github.com/SeanTater/uncc2014watsonsim.git`
+- Install Java 8, either:
   - [Bundled with Eclipse](https://www.eclipse.org/downloads/)
-  - Ubuntu utopic+: `sudo apt-get install openjdk-8-jdk`
-  - Fedora 20+: `yum install java-1.8.0-openjdk`
-  - [Windows, Mac, all others](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+  - or on Ubuntu utopic+: `sudo apt-get install openjdk-8-jdk`
+  - or on Fedora 20+: `yum install java-1.8.0-openjdk`
+  - or on [Windows, Mac, all others](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - libSVM machine learning library (native)
-  - Ubuntu, Fedora: install `libsvm-java`
-  - [Windows](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) ([instructions](http://stackoverflow.com/questions/25060178/which-weka-and-libsvm-jar-files-to-use-in-java-code-for-svm-classification))
-- [Gradle](http://gradle.org/downloads) (just unzip; no install necessary, keep in mind it updates very often)
-- Run `gradle eclipse` in `uncc2014watsonsim/` to download platform-independent dependencies and create an Eclipse project. Your path to the gradle binary will be different. (e.g. `/home/josh/Downloads/gradle-2.22/bin/gradle eclipse`)
+  - For Ubuntu and Fedora: install `libsvm-java`
+  - otherwise, for [Windows](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) follow some  [instructions](http://stackoverflow.com/questions/25060178/which-weka-and-libsvm-jar-files-to-use-in-java-code-for-svm-classification)
+- Download [Gradle](http://gradle.org/downloads) (just unzip it; keep in mind it updates very often)
+- Run `gradle eclipse -Ptarget` in `uncc2014watsonsim/` to download platform-independent dependencies and create an Eclipse project.
 - Install [Postgres](http://www.postgresql.org/download/) (we use 9.3)
 - [Download the latest data](https://github.com/SeanTater/uncc2014watsonsim/wiki/Data-Sources). Decompress the whole archive, placing the content in the data/ folder.
   - Load the included database snapshot into Postgres using `pg_restore -d watsonsim [more options as necessary] data-snapshot.pgdump`.
