@@ -37,6 +37,10 @@ gradle eclipse -Ptarget
 ```
 Then remove apache-jena-libs-*.pom since Eclipse cannot handle .pom in the build path, and all the necessary dependencies it references will have already been included. Then you can run WatsonSim.java directly.
 
+You can also run the accuracy tests using a script:
+```sh
+gradle run -Ptarget=scripts.ParallelStats
+```
 
 ## Technologies Involved
 This list isn't exhaustive, but it should be a good overview
