@@ -23,9 +23,9 @@ public class WebFrontend {
 		externalStaticFileLocation("public");
 		get("/ask", (Request request, Response response) -> {
     		Question question = new Question(request.queryParams("query"));
-    		Logger l = Logger.getLogger(WebFrontend.class);
+    		
     		OutputStream st = response.raw().getOutputStream();
-    		l.addAppender(
+    		Logger.getRootLogger().addAppender(
     				new WriterAppender(
     						new SimpleLayout(),
     						st));
