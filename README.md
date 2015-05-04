@@ -6,7 +6,7 @@ Watsonsim works using a pipeline of operations on questions, candidate answers, 
 
 - We don't use a standard UIMA pipeline, which is a product of our student-project history. Sometimes this is a hindrance but typically it has little impact. We suspect it reduces the learning overhead and boilerplate code.
 - Unlike YodaQA, we target Jeopardy! questions, but we do incorporate their method of Lexical Answer Type (LAT) checking, in addition to our own.
-- Our framework is rather heavyweight in terms of computation. Depending on what modules are enabled, it can take between about 1 second and 2 minutes to answer a question. We use Indri to improve accuracy but if you prefer, you can disable it in the code for a large speedup. (We are investigating alternatives as well.)
+- Our framework is rather heavyweight in terms of computation. Depending on what modules are enabled, it can take between about 1 second and 2 minutes to answer a question. We use Indri to improve accuracy but it is now an [optional feature](https://github.com/SeanTater/uncc2014watsonsim/wiki/Optional-Features) that we highly recommend. (We are investigating alternatives as well.)
 - We include (relatively) large amounts of preprocessed article text from Wikipedia as our inputs. Be prepared to use about 100GB of space if you want to try it out at its full power.
 
 ## Installing the Simulator
