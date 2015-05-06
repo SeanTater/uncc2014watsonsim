@@ -14,8 +14,7 @@ public class AnswerTrimming extends Researcher {
 	@Override
 	public List<Answer> question(Question question, List<Answer> answers) {
         List<Answer> answers_updated = new ArrayList<>();
-        for(int x=0;x<answers.size();x++) {
-        	Answer ans = answers.get(x);
+        for(Answer ans : answers) {
         	String text = ans.text;
         	//System.out.println(text);
         	String[] answer_array = ans.text.split(" ");
@@ -32,11 +31,14 @@ public class AnswerTrimming extends Researcher {
 						if (k != i)
 							sb.append(" ");
 					}
-					if (sb.toString() != "" && question.text.toLowerCase().contains(sb.toString().toLowerCase())) {
-						text = text.toString().replace(sb.toString(), "");
-						text = text.trim().replaceAll(" +", " ");
-						text = text.replaceAll("^([^a-z|A-Z|0-9])( )*", "");
-	                    text = text.replaceAll("()*([^a-z|A-Z|0-9])$", "").trim();
+					if (sb.length() > 0 && question.text.toLowerCase().contains(sb.toString().toLowerCase())) {
+						text = text
+								.replace(sb.toString(), "")
+								.trim()
+								.replaceAll(" +", " ")
+								.replaceAll("^([^a-z|A-Z|0-9])( )*", "")
+								.replaceAll("()*([^a-z|A-Z|0-9])$", "")
+								.trim();
 						answer_array = text.split(" ");
 						answer_array_length = answer_array.length;
 						i = answer_array_length - 1;
