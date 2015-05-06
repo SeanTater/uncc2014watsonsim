@@ -48,6 +48,9 @@ public class WatsonSim {
     private static void prompt() throws IOException {
     	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    String command = br.readLine();
+	    // Defensively scroll the console so that the next error doesn't
+	    // clobber the user's text.
+	    System.out.println();
 	    DefaultPipeline pipe = new DefaultPipeline();
 	    
     	while (!command.isEmpty()) {

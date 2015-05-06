@@ -81,6 +81,7 @@ public class DefaultPipeline {
 			//new RedirectSynonyms(env),
 			new HyphenTrimmer(),
 			new StrictFilters(),
+			new AnswerTrimming(),
 			new MergeByText(env),
 			new MergeAnswers(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
@@ -149,46 +150,6 @@ public class DefaultPipeline {
         	s.scoreQuestion(question, answers);
         
         l.info("Computing confidence..");
-        /*
-        List<Answer> answers_updated = new ArrayList<>();
-        for(int x=0;x<answers.size();x++) {
-        	Answer ans = answers.get(x);
-        	String text = ans.text;
-        	//System.out.println(text);
-        	String[] answer_array = text.split(" ");
-        	int answer_array_length = answer_array.length;
-        	
-        	
-        	
-        	for (int j = 0; j < answer_array_length; j++) {
-				for (int i = answer_array_length - 1; i >= j; i--) {
-					StringBuilder sb = new StringBuilder();
-					for (int k = j; k <= i; k++) {
-						// System.out.println("i=" + i + ", j=" + j + ", k");
-						sb.append(answer_array[k]);
-						if (k != i)
-							sb.append(" ");
-					}
-					if (sb.toString() != "" && question.text.toLowerCase().contains(sb.toString().toLowerCase())) {
-						text = text.toString().replace(sb.toString(), "");
-					text = text.trim().replaceAll(" +", " ");
-					text = text.replaceAll("^([^a-z|A-Z|0-9])( )*", "");
-                    text = text.replaceAll("()*([^a-z|A-Z|0-9])$", "").trim();
-						answer_array = text.split(" ");
-						answer_array_length = answer_array.length;
-						i = answer_array_length - 1;
-						j = 0;
-					}
-				}
-			}
-        	answers_updated.add( ans.withText(text));
-        }*/
-        
-        //for(int i=0;i<answers.size();i++)
-        //	System.out.println(answers.get(i).text+"//"+answers_updated.get(i).text);
-        
-        
-        //answers = late_researchers.pull(question, answers_updated); 
         
         answers = late_researchers.pull(question, answers);
         return answers;

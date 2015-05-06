@@ -52,10 +52,10 @@ public class Reindex {
 		Configuration conf = new Configuration();
 		db = new Database(conf);
 		indexers = Arrays.asList(
-				//new Lucene(Paths.get(conf.getConfOrDie("lucene_index"))),
-				//new Indri(conf.getConfOrDie("indri_index"))
-				new Bigrams(),
-				new Edges()
+				new Lucene(Paths.get(conf.getConfOrDie("lucene_index"))),
+				new Indri(conf.getConfOrDie("indri_index"))
+				//new Bigrams(),
+				//new Edges()
 				);
 		
 	}
@@ -93,15 +93,19 @@ public class Reindex {
     private void indexAll(String query) throws SQLException {
     	// TODO: turn off autocommit
     	PreparedStatement statements = db.prep(query);
-    	statements.setFetchSize(10000);
+    	//statements.setFetchSize(10000);
     	ResultSet rs = statements.executeQuery();
     	AtomicInteger c = new AtomicInteger();
+    	/*
     	StreamSupport.stream(
 			ResultSetIterator.iterable(rs).spliterator(), true)
 			.forEach( row -> {
+			*/
+    	while (rs.next()) { 
+    		
 				try {
 					Passage pass = new Passage(
-						"none", (String)row[0], (String)row[1], (String)row[2]);
+						"none", rs.getString(1), rs.getString(2), rs.getString(3));
 				
 		    		for (Segment i : indexers) {
 		    			i.accept(pass);
@@ -152,6 +156,6 @@ public class Reindex {
 					 */
 					return;
 				}
-	    	});
+	    	}
     }
 }
