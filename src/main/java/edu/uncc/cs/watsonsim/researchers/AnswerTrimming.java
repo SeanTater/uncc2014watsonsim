@@ -6,6 +6,10 @@ import java.util.List;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Question;
 
+/**
+ * @author Suresh Appana
+ *
+ */
 public class AnswerTrimming extends Researcher {
 	@Override
 	public List<Answer> question(Question question, List<Answer> answers) {
@@ -14,7 +18,7 @@ public class AnswerTrimming extends Researcher {
         	Answer ans = answers.get(x);
         	String text = ans.text;
         	//System.out.println(text);
-        	String[] answer_array = text.split(" ");
+        	String[] answer_array = ans.text.split(" ");
         	int answer_array_length = answer_array.length;
         	
         	
@@ -30,9 +34,9 @@ public class AnswerTrimming extends Researcher {
 					}
 					if (sb.toString() != "" && question.text.toLowerCase().contains(sb.toString().toLowerCase())) {
 						text = text.toString().replace(sb.toString(), "");
-					text = text.trim().replaceAll(" +", " ");
-					text = text.replaceAll("^([^a-z|A-Z|0-9])( )*", "");
-                    text = text.replaceAll("()*([^a-z|A-Z|0-9])$", "").trim();
+						text = text.trim().replaceAll(" +", " ");
+						text = text.replaceAll("^([^a-z|A-Z|0-9])( )*", "");
+	                    text = text.replaceAll("()*([^a-z|A-Z|0-9])$", "").trim();
 						answer_array = text.split(" ");
 						answer_array_length = answer_array.length;
 						i = answer_array_length - 1;
