@@ -7,13 +7,12 @@ import org.apache.log4j.Logger;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.Log;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.nlp.Synonyms;
 
 public class MergeByText extends Researcher {
 	private final Synonyms syn;
-	private final Logger log = Logger.getLogger(this.getClass());
-	
 	/**
 	 * Create a new merger using shared environment resources.
 	 * @param env

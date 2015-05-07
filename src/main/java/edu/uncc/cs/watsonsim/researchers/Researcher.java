@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
+import edu.uncc.cs.watsonsim.Log;
 import edu.uncc.cs.watsonsim.Question;
 
 /** Researchers can modify questions and have the guarantee of running
@@ -25,6 +26,12 @@ abstract public class Researcher {
 	protected Researcher chain = NIL;
 	
 	/**
+	 * Output to the user. (This is a multi-user app so each pipeline needs to
+	 * know where to push new results.)
+	 */
+	protected Log log = Log.NIL;
+	
+	/**
 	 * Join together segments of a (recursive) Researcher pipeline.
 	 * The idea of it is that you can "pull" a question through it by passing
 	 * it to pull() of the last Researcher segment.
@@ -32,10 +39,11 @@ abstract public class Researcher {
 	 * @param segments  Pipe segments, which will be mutated (for the chain)
 	 * @return  The last Researcher in the line
 	 */
-	public static Researcher pipe(Researcher... segments) {
+	public static Researcher pipe(Log output, Researcher... segments) {
 		Researcher prev = NIL;
 		for (Researcher link : segments) {
 			link.chain = prev;
+			link.log = output.kid(link.getClass());
 			prev = link;
 		}
 		return prev;

@@ -19,7 +19,6 @@ import edu.uncc.cs.watsonsim.StringUtils;
  */
 
 public class MergeAnswers extends Researcher{
-	private final Logger log = Logger.getLogger(this.getClass());
 	@Override
 		/** Call merge on any two similar answers */
 		public List<Answer> question(Question q, List<Answer> answers) {

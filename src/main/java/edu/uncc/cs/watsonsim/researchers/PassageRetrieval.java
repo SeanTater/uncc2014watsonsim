@@ -17,7 +17,6 @@ import edu.uncc.cs.watsonsim.search.*;
  */
 public class PassageRetrieval extends Researcher {
 	private final Searcher[] searchers;
-	private final Logger log = Logger.getLogger(this.getClass());
 	
 	public PassageRetrieval(Environment env, Searcher... searchers) {
 		this.searchers = searchers;

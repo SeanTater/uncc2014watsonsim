@@ -11,7 +11,6 @@ import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Question;
 
 public class MergeByCommonSupport extends Researcher {
-	private Logger log = Logger.getLogger(getClass());
 	
 	@Override
 	/** Call merge on any two answers, where the answers have more passages in common than different*/

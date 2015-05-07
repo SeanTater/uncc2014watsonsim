@@ -78,6 +78,7 @@ dependencies {
 
     // lightweight web framework
     compile "com.sparkjava:spark-core:2.1"
+    compile "org.java-websocket:Java-WebSocket:1.3.0"
 
     // multimaps and many other tools
     compile "com.google.guava:guava:17.0"

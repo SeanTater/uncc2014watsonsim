@@ -9,7 +9,6 @@ import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Question;
 
 public class StrictFilters extends Researcher {
-	private final Logger log = Logger.getLogger(this.getClass());
 	/**
 	 * Perform several strict filters relating mostly to game rules.
 	 * 
