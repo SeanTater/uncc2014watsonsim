@@ -1,4 +1,4 @@
-$(function() {
+/*$(function() {
     $("#search").ajaxForm({
     beforeSubmit: function() {
         $("#note").text("Asking learned grand-masters for insight.");
@@ -13,4 +13,4 @@ $(function() {
             $("#results").append(x);
         });
     }});
-});
+});*/
