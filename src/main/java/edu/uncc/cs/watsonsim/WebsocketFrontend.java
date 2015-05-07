@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -20,6 +21,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.simple.JSONArray;
 
 /**
  * A simple WebSocketServer implementation. Keeps track of a "chatroom".
@@ -28,8 +30,6 @@ public class WebsocketFrontend extends WebSocketServer {
 	private static final int CORES
 		= Runtime.getRuntime().availableProcessors();
 	private final ExecutorService es = Executors.newWorkStealingPool();
-	private final ConcurrentHashMap<WebSocket, Future<List<Answer>>> tasks
-		= new ConcurrentHashMap<>();
 	private final BlockingQueue<DefaultPipeline> free_pipes =
 			new ArrayBlockingQueue<DefaultPipeline>(CORES);
 
@@ -63,11 +63,14 @@ public class WebsocketFrontend extends WebSocketServer {
 	 * Wrapper for allocating a pipe and asking something of it.
 	 * @return The answers
 	 */
-	private List<Answer> ask(String qtext) {
+	private List<Answer> ask(WebSocket conn, String qtext) {
 		try {
 			DefaultPipeline pipe = free_pipes.poll(1, MINUTES);
+			System.out.println("Asking " + qtext);
 			if (pipe != null) {
-				return pipe.ask(qtext);
+				List<Answer> answers = pipe.ask(qtext);
+				String json = JSONArray.toJSONString(answers.stream().map(a -> a.toJSON()).collect(Collectors.toList()));
+				conn.send(json);
 			}
 			// Give up silently? (Not sure what's better here)
 		} catch (InterruptedException e) {
@@ -82,14 +85,15 @@ public class WebsocketFrontend extends WebSocketServer {
 	 * Respond to a question like "ask:blahblah"
 	 */
 	public void onMessage( WebSocket conn, String message ) {
+		System.out.println(message);
+		
 		String[] parts = message.split(":", 1);
 		if (parts.length == 2) {
 			String type = parts[0];
 			String content = parts[1];
 			switch (type) {
 			case "ask":
-				tasks.computeIfAbsent(conn,
-						(sock) -> es.submit(() -> ask(content)));
+				es.submit(() -> ask(conn, content));
 				break;
 			}
 			
