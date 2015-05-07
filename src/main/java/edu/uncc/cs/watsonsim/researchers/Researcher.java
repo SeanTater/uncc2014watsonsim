@@ -24,6 +24,11 @@ abstract public class Researcher {
 	 * The previous item in the research chain
 	 */
 	protected Researcher chain = NIL;
+	
+	/**
+	 * Output to the user. (This is a multi-user app so each pipeline needs to
+	 * know where to push new results.)
+	 */
 	protected Log log = Log.NIL;
 	
 	/**

@@ -1,6 +1,7 @@
 package edu.uncc.cs.watsonsim;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +30,7 @@ import java.util.function.Predicate;
  *
  */
 public class Log {
-	// A concurrent map of listeners to the mailboxes they own.
-	private final BlockingQueue<String> mailbox;
-	private Consumer<List<String>> listener;
+	private Consumer<String> listener;
 	//private final Optional<Log> parent;
 	private final Class<?> speaker;
 	private final long start;
@@ -41,12 +40,9 @@ public class Log {
 	public static final Log NIL = new Log(Object.class, x->{});
 	
 	// Start a root logger
-	public Log(Class<?> speaker, Consumer<List<String>> listener) {
+	public Log(Class<?> speaker, Consumer<String> listener) {
 		//this.parent = Optional.empty();
 		this.speaker = speaker;
-		ExecutorService exec = Executors.newSingleThreadExecutor();
-		exec.submit(() -> daemon(exec));
-		this.mailbox = new ArrayBlockingQueue<String>(1000);
 		this.start = System.currentTimeMillis();
 		this.listener = listener;
 	}
@@ -55,29 +51,8 @@ public class Log {
 	public Log(Class<?> speaker, Log parent) {
 		//this.parent = Optional.of(parent);
 		this.speaker = speaker;
-		this.mailbox = parent.mailbox;
 		this.start = parent.start;
-	}
-	
-	/**
-	 * Background notification-push thread
-	 */
-	private void daemon(ExecutorService exec) {
-		List<String> packet = new ArrayList<>();
-		while (true) {
-			// Wait until at least one message needs to be sent
-			String message = null;
-			try { message = mailbox.poll(5, MINUTES); }
-			catch (InterruptedException e) {}
-			// Stop pushing messages if interrupted or queue is dead
-			if (message == null) break;
-			else {
-				// Send all the remaining messages 
-				mailbox.drainTo(packet);
-				listener.accept(packet);
-				packet.clear();
-			}
-		}
+		this.listener = parent.listener;
 	}
 	
 	/**
@@ -87,7 +62,7 @@ public class Log {
 		return new Log(speaker, this);
 	}
 	
-	public void setListener(Consumer<List<String>> listener) {
+	public void setListener(Consumer<String> listener) {
 		this.listener = listener;
 	}
 	
@@ -95,7 +70,7 @@ public class Log {
 	 * Push some notifications. Listeners may lose interest.
 	 */
 	private void push(String content, Level level) {
-		mailbox.offer(String.format("%.2f [%s %s]",
+		listener.accept(String.format("%.2f [%s %s] %s",
 				(System.currentTimeMillis()-start) / 1000.0,
 				level.name(),
 				speaker.getSimpleName(),

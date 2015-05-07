@@ -123,11 +123,11 @@ public class DefaultPipeline {
 	}
 	
 	public List<Answer> ask(Question question) {
-	    return ask(question, m -> m.forEach(System.out::println));
+	    return ask(question, System.out::println);
 	}
 	
     /** Run the full standard pipeline */
-	public List<Answer> ask(Question question, Consumer<List<String>> listener) {
+	public List<Answer> ask(Question question, Consumer<String> listener) {
 		// Query every engine
 		Log l = env.log;
 		l.setListener(listener);
