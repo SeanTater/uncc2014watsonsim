@@ -44,6 +44,8 @@ public class Environment extends Configuration {
 		    	.softValues()
 		    	.maximumSize(1000)
 		    	.build();
+	public final Log log = new Log(getClass(),
+			(messages) -> messages.forEach(System.out::println));
 	
 	/**
 	 * Create a (possibly) shared NLP environment. The given data directory

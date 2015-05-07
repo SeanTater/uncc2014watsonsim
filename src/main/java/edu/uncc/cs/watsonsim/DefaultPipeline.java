@@ -3,6 +3,7 @@ package edu.uncc.cs.watsonsim;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 
@@ -44,27 +45,18 @@ import edu.uncc.cs.watsonsim.search.*;
  *
  */
 public class DefaultPipeline {
-	
-	private final Timestamp run_start;
 	private final Searcher[] searchers;
 	private final Researcher early_researchers;
 	private final Scorer[] scorers;
 	private final Researcher late_researchers;
-	
-	/**
-	 * Start a pipeline with a new timestamp for the statistics dump
-	 */
-	public DefaultPipeline() {
-		this(System.currentTimeMillis());
-	}
-	
+
+	private final Environment env = new Environment();
 	/**
 	 * Start a pipeline with an existing timestamp
 	 * @param millis Millis since the Unix epoch, as in currentTimeMillis()
 	 */
-	public DefaultPipeline(long millis) {
-		Environment env = new Environment();
-		run_start = new Timestamp(millis);
+	public DefaultPipeline() {
+		Timestamp run_start = new Timestamp(System.currentTimeMillis());
 		
 		/*
 		 * Create the pipeline
@@ -77,7 +69,7 @@ public class DefaultPipeline {
 			new CachingSearcher(env, new BingSearcher(env), "bing"),
 			new Anagrams(env)
 		};
-		early_researchers = Researcher.pipe(
+		early_researchers = Researcher.pipe(env.log,	
 			//new RedirectSynonyms(env),
 			new HyphenTrimmer(),
 			new StrictFilters(),
@@ -118,7 +110,7 @@ public class DefaultPipeline {
 			//new DistSemCosQAScore(),
 			//new DistSemCosQPScore(),
 		};
-		late_researchers = Researcher.pipe(
+		late_researchers = Researcher.pipe(env.log,
 			new Normalize(),
 			new WekaTee(run_start),
 			new CombineScores(),
@@ -130,10 +122,15 @@ public class DefaultPipeline {
 	    return ask(new Question(qtext));
 	}
 	
-    /** Run the full standard pipeline */
 	public List<Answer> ask(Question question) {
+	    return ask(question, m -> m.forEach(System.out::println));
+	}
+	
+    /** Run the full standard pipeline */
+	public List<Answer> ask(Question question, Consumer<List<String>> listener) {
 		// Query every engine
-		Logger l = Logger.getLogger(this.getClass());
+		Log l = env.log;
+		l.setListener(listener);
 		
 		l.info("Generating candidate answers..");
 		List<Answer> answers = new ArrayList<>();

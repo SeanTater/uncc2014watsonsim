@@ -61,9 +61,10 @@ public class ParallelStats {
         	sql = String.format("cached LIMIT %d OFFSET %d", 5000, 2000);
         }
 		
-		//String sql = "ORDER BY random() LIMIT 100";
+        System.out.print("Describe the setup: ");
+        String description = br.readLine();
 		try {
-			new StatsGenerator("indri strictness -" + mode, sql, System.currentTimeMillis()).run();
+			new StatsGenerator(description + ": " + mode, sql).run();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			log.error("Database missing, invalid, or out of date. Check that you "
@@ -126,10 +127,10 @@ class StatsGenerator {
 	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public StatsGenerator(String dataset, String question_query, long run_start) throws SQLException{
+	public StatsGenerator(String dataset, String question_query) throws SQLException{
 		this.dataset = dataset;
 		questionsource = new DBQuestionSource(new Environment(), question_query);
-		this.run_start = run_start;
+		this.run_start = System.currentTimeMillis();
 	}
 	
 	/** Run statistics, then upload to the server */
@@ -146,7 +147,7 @@ class StatsGenerator {
 		
 		int[] all_ranks = questionsource.parallelStream().mapToInt(q -> {
 			long tid = Thread.currentThread().getId();
-			DefaultPipeline pipe = pipes.computeIfAbsent(tid, (i) -> new DefaultPipeline(run_start));
+			DefaultPipeline pipe = pipes.computeIfAbsent(tid, (i) -> new DefaultPipeline());
 			
 			List<Answer> answers;
 			try{
