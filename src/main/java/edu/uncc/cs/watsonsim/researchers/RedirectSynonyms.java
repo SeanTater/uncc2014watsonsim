@@ -25,7 +25,6 @@ import edu.uncc.cs.watsonsim.scorers.Merge;
 public class RedirectSynonyms extends Researcher {
 	private final Database db;
 	private final PreparedStatement s;
-	private final Logger log = Logger.getLogger(this.getClass());
 	
 	public RedirectSynonyms(Environment env) {
 		db = env.db;

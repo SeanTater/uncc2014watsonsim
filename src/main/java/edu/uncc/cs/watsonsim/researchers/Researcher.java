@@ -38,7 +38,7 @@ abstract public class Researcher {
 		Researcher prev = NIL;
 		for (Researcher link : segments) {
 			link.chain = prev;
-			link.log = output;
+			link.log = output.kid(link.getClass());
 			prev = link;
 		}
 		return prev;

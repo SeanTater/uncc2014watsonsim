@@ -19,7 +19,6 @@ import edu.uncc.cs.watsonsim.nlp.Synonyms;
 
 public class TagLAT extends Researcher {
 	private final DBPediaCandidateType dbpedia;
-	private final Logger log = Logger.getLogger(this.getClass());
 	private final Synonyms syn;
 	
 	public TagLAT(Environment env) {

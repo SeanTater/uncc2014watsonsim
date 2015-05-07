@@ -13,15 +13,12 @@ import edu.uncc.cs.watsonsim.nlp.Synonyms;
 
 public class MergeByText extends Researcher {
 	private final Synonyms syn;
-	private final Log log;
-	
 	/**
 	 * Create a new merger using shared environment resources.
 	 * @param env
 	 */
 	public MergeByText(Environment env) {
 		syn = new Synonyms(env);
-		log = env.log.kid(getClass());
 	}
 	
 	@Override
