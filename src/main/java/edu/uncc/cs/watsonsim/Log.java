@@ -48,11 +48,10 @@ public class Log {
 	}
 	
 	// Start a child logger
-	public Log(Class<?> speaker, Log parent) {
+	private Log(Class<?> speaker, Log parent) {
 		//this.parent = Optional.of(parent);
 		this.speaker = speaker;
 		this.start = parent.start;
-		this.listener = parent.listener;
 	}
 	
 	/**
@@ -70,11 +69,15 @@ public class Log {
 	 * Push some notifications. Listeners may lose interest.
 	 */
 	private void push(String content, Level level) {
-		listener.accept(String.format("%.2f [%s %s] %s",
-				(System.currentTimeMillis()-start) / 1000.0,
-				level.name(),
-				speaker.getSimpleName(),
-				content));
+		if (listener == null) {
+			parent.push(content, level)
+		else {
+			listener.accept(String.format("%.2f [%s %s] %s",
+					(System.currentTimeMillis()-start) / 1000.0,
+					level.name(),
+					speaker.getSimpleName(),
+					content));
+		}
 	}
 	
 	public void error(String message) {

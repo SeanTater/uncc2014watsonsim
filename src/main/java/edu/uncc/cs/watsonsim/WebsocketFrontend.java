@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -64,19 +65,17 @@ public class WebsocketFrontend extends WebSocketServer {
 	 * @return The answers
 	 */
 	private List<Answer> ask(WebSocket conn, String qtext) {
-		try {
-			DefaultPipeline pipe = free_pipes.poll(1, MINUTES);
-			System.out.println("Asking " + qtext);
-			if (pipe != null) {
-				List<Answer> answers = pipe.ask(qtext);
-				String json = JSONArray.toJSONString(answers.stream().map(a -> a.toJSON()).collect(Collectors.toList()));
-				conn.send(json);
-			}
-			// Give up silently? (Not sure what's better here)
-		} catch (InterruptedException e) {
-			// Not much we can do here..
-			e.printStackTrace();
+		System.out.println("waiting on " + qtext);
+		DefaultPipeline pipe = new DefaultPipeline();
+		System.out.println("Asking " + qtext);
+		if (pipe != null) {
+			conn.send("{\"note\": \"The doctor is in.\"}");
+			List<Answer> answers = pipe.ask(new Question(qtext), a -> conn.send(a));
+			conn.send("{\"note\": \"The doctor is finished.\"}");
+			String json = JSONArray.toJSONString(answers.stream().map(a -> a.toJSON()).collect(Collectors.toList()));
+			conn.send(json);
 		}
+		// Give up silently? (Not sure what's better here)
 		return Collections.emptyList();
 	}
 	
@@ -87,7 +86,9 @@ public class WebsocketFrontend extends WebSocketServer {
 	public void onMessage( WebSocket conn, String message ) {
 		System.out.println(message);
 		
-		String[] parts = message.split(":", 1);
+		String[] parts = message.split(":", 2);
+		
+		System.out.println(Arrays.toString(parts));
 		if (parts.length == 2) {
 			String type = parts[0];
 			String content = parts[1];
