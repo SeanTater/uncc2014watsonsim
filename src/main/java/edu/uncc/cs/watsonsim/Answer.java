@@ -8,6 +8,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
+import org.json.simple.JSONObject;
+
 /**
  * @author Phani Rahul
  * @author Sean Gallagher
@@ -95,10 +97,12 @@ public class Answer extends Phrase implements Comparable<Answer> {
     /**
      * Format an Answer for serialization (e.g. for a web frontend)
      */
-    public String toJSON() {
-    	return String.format("{\"score\": %01f, \"title\": \"%s\", \"evidence\": [%s]}",
-    			getOverallScore(),
-    			text.replace("\"", "\\\""),
+    @SuppressWarnings("unchecked")
+	public String toJSON() {
+    	JSONObject jo = new JSONObject();
+    	jo.put("score", getOverallScore());
+    	jo.put("text", text);
+    	jo.put("evidence", 
     			evidence.stream()
 	        		.map(e -> String.format("{\"source\": \"%s\", \"note\": \"%s\"}",
 	    					StringUtils.sanitize(e.source),
@@ -107,6 +111,7 @@ public class Answer extends Phrase implements Comparable<Answer> {
 	    			.reduce((x, y) -> x + "," + y)
 	    			.orElse("")
     			);
+    	return jo.toJSONString();
     }
     
     /**
