@@ -2,42 +2,31 @@ body {
     margin: 0;
 }
 
-
 header {
     background: #4FA5C2;
+}
+
+.navbar-brand {
     font-family: 'Alegreya Sans', sans-serif;
-    font-weight: 500;
-    display: block;
-}
-
-header form {
-    display: inline-block;
-}
-
-header .logo {
     color: white;
-    font-size: 3.5em;
+    font-size: 225%;
     margin: 0 5em 0 2em;
     vertical-align: middle;
+}
+
+.navbar-brand small {
+	position: relative;
+	top: 4px;
+	right: 5px;
+	display: inline-block;
+	transform: rotate(-20deg);
+    color: #ccc;
+	font-size: 65%;
 }
 
 header #note {
     color: white;
     margin-left: 3em;
-}
-
-header button {
-    border-radius: 4px;
-    height: 2em;
-    background: #055773;
-    color: white;
-    font-size: 11pt;
-    font-weight: 700;
-    transition: background-color 0.2s;
-}
-
-header button:hover {
-    background: #1F7513;
 }
 
 header input {
@@ -61,4 +50,17 @@ header input {
     padding: 1em;
     background: #C8DAE0;
     font-size: large;
+}
+
+#console {
+    margin: 0 auto;
+    width: 80%;
+    height: 20em;
+    list-style-type: none;
+    background-color: black;
+    color: #ddd;
+    font-family: monospace;
+    overflow-y: scroll;
+    position: relative;
+    bottom: 0;
 }

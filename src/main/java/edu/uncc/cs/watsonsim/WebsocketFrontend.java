@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -21,6 +22,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
 /**
@@ -59,24 +61,30 @@ public class WebsocketFrontend extends WebSocketServer {
 		
 	}
 	
+	private void send(WebSocket conn, String flag, Object message) {
+		JSONObject jo = new JSONObject();
+		jo.put("flag", flag);
+		jo.put("message", message);
+		conn.send(jo.toJSONString());
+	}
+	
 	/**
 	 * Wrapper for allocating a pipe and asking something of it.
 	 * @return The answers
 	 */
 	private List<Answer> ask(WebSocket conn, String qtext) {
-		try {
-			DefaultPipeline pipe = free_pipes.poll(1, MINUTES);
-			System.out.println("Asking " + qtext);
-			if (pipe != null) {
-				List<Answer> answers = pipe.ask(qtext);
-				String json = JSONArray.toJSONString(answers.stream().map(a -> a.toJSON()).collect(Collectors.toList()));
-				conn.send(json);
-			}
-			// Give up silently? (Not sure what's better here)
-		} catch (InterruptedException e) {
-			// Not much we can do here..
-			e.printStackTrace();
+		System.out.println("waiting on " + qtext);
+		DefaultPipeline pipe = new DefaultPipeline();
+		System.out.println("Asking " + qtext);
+		if (pipe != null) {
+			List<Answer> answers = pipe.ask(new Question(qtext), a -> send(conn, "log", a));
+			List<JSONObject> json = answers
+					.stream()
+					.map(a -> a.toJSON())
+					.collect(Collectors.toList());
+			send(conn, "result", json);
 		}
+		// Give up silently? (Not sure what's better here)
 		return Collections.emptyList();
 	}
 	
@@ -87,7 +95,9 @@ public class WebsocketFrontend extends WebSocketServer {
 	public void onMessage( WebSocket conn, String message ) {
 		System.out.println(message);
 		
-		String[] parts = message.split(":", 1);
+		String[] parts = message.split(":", 2);
+		
+		System.out.println(Arrays.toString(parts));
 		if (parts.length == 2) {
 			String type = parts[0];
 			String content = parts[1];
