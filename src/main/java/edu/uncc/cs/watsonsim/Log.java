@@ -31,7 +31,7 @@ import java.util.function.Predicate;
  */
 public class Log {
 	private Consumer<String> listener;
-	//private final Optional<Log> parent;
+	private final Log parent;
 	private final Class<?> speaker;
 	private final long start;
 	
@@ -41,7 +41,7 @@ public class Log {
 	
 	// Start a root logger
 	public Log(Class<?> speaker, Consumer<String> listener) {
-		//this.parent = Optional.empty();
+		this.parent = null;
 		this.speaker = speaker;
 		this.start = System.currentTimeMillis();
 		this.listener = listener;
@@ -49,7 +49,7 @@ public class Log {
 	
 	// Start a child logger
 	private Log(Class<?> speaker, Log parent) {
-		//this.parent = Optional.of(parent);
+		this.parent = parent;
 		this.speaker = speaker;
 		this.start = parent.start;
 	}
@@ -69,14 +69,14 @@ public class Log {
 	 * Push some notifications. Listeners may lose interest.
 	 */
 	private void push(String content, Level level) {
-		if (listener == null) {
-			parent.push(content, level)
-		else {
+		if (listener != null) {
 			listener.accept(String.format("%.2f [%s %s] %s",
 					(System.currentTimeMillis()-start) / 1000.0,
 					level.name(),
 					speaker.getSimpleName(),
 					content));
+		} else if (parent != null) {
+			parent.push(content, level);
 		}
 	}
 	

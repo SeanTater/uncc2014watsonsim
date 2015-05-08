@@ -78,8 +78,8 @@ public class DefaultPipeline {
 			new MergeAnswers(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
 			new PassageRetrieval(env,
-					new LucenePassageSearcher(env),
-					new IndriSearcher(env, true)
+					new LucenePassageSearcher(env)
+					//new IndriSearcher(env, true)
 					//new CachingSearcher(new BingSearcher(env), "bing"),
 				),
 			new MergeByCommonSupport(),
