@@ -5,8 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import edu.uncc.cs.watsonsim.Database;
 import edu.uncc.cs.watsonsim.Environment;
@@ -24,30 +28,14 @@ public class CachingSearcher extends Searcher {
 		this.engine_name = engine_name;
 	}
 	
-	private void getScores(Passage p, long passage_id) throws SQLException {
-		PreparedStatement cache = db.prep(
-				"SELECT name, value FROM cache_scores WHERE (passage_id = ?);");
-		cache.setLong(1, passage_id);
-		ResultSet sql = cache.executeQuery();
-		while (sql.next()) {
-			// Only the ENGINE_NAME* scores were saved, so no filtering needs to happen here
-			p.score(sql.getString("name"), sql.getDouble("value"));
+	@SuppressWarnings("unchecked")
+	private String setScoresFromJSON(Passage p, String json) {
+		JSONObject jo = (JSONObject) JSONValue.parse(json);
+		for (Object o : jo.entrySet()) {
+			Map.Entry<String, Double> entry = (Map.Entry<String, Double>) o;
+			Score.set(p.scores, entry.getKey(), entry.getValue());
 		}
-	}
-	
-	private void setScores(Passage p, long passage_id) throws SQLException {
-		PreparedStatement cache = db.prep(
-				"INSERT INTO cache_scores(passage_id, name, value) VALUES (?, ?, ?);");
-		cache.setLong(1, passage_id);
-		for (Entry<String, Double> score: Score.asMap(p.scores).entrySet()) {
-			// Only save scores that prefix this engine, to avoid breaking other scores
-			if (score.getKey().toLowerCase().startsWith(this.engine_name)) {
-				cache.setString(2, score.getKey());		
-				cache.setDouble(3, score.getValue());
-				cache.addBatch();
-			}
-		}
-		cache.executeBatch();
+		return JSONObject.toJSONString(Score.asMap(p.scores));
 	}
 	
 	public List<Passage> query(String query) {
@@ -55,7 +43,7 @@ public class CachingSearcher extends Searcher {
 		try {
 			// Part 1: Find any existing cache, use it if possible
 			PreparedStatement cache = db.prep(
-					"SELECT id, title, fulltext, reference FROM cache WHERE (query = ? AND engine = ?);");
+					"SELECT id, title, fulltext, reference, scores FROM cache WHERE (query = ? AND engine = ?);");
 			cache.setString(1, query);
 			cache.setString(2, engine_name);
 			ResultSet sql = cache.executeQuery();
@@ -68,7 +56,7 @@ public class CachingSearcher extends Searcher {
 						sql.getString("fulltext"),
 						sql.getString("reference"));
 				results.add(p);
-				getScores(p, sql.getLong("id"));
+				setScoresFromJSON(p, sql.getString("scores"));
 			}
 		} catch (SQLException e) {
 			// If retrieving fails, that is OK. We will simply revert to the searcher.
@@ -79,14 +67,8 @@ public class CachingSearcher extends Searcher {
 		if (results.isEmpty()) {
 			// If the SQL search didn't return anything, then run the Searcher.
 			List<Passage> query_results = searcher.query(query);
-			try {
-				db.prep("BEGIN;").execute();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			PreparedStatement set_cache = db.prep(
-					"INSERT INTO cache (id, query, engine, title, fulltext, reference) VALUES (?,?,?,?,?,?);");
+					"INSERT INTO cache (id, query, engine, title, fulltext, reference, scores) VALUES (?,?,?,?,?,?,?);");
 			for (Passage p : query_results) {
 				// Add every Answer to the cache
 				results.add(p);
@@ -98,14 +80,14 @@ public class CachingSearcher extends Searcher {
 					set_cache.setString(4, p.title);
 					set_cache.setString(5, p.text);
 					set_cache.setString(6, p.reference);
-					set_cache.addBatch();
-					setScores(p, id);
+					set_cache.setString(7, JSONObject.toJSONString(Score.asMap(p.scores)));
+					set_cache.execute();
 				} catch (SQLException e) {
 					System.out.println("Failed to add cache entry. (DB missing?) Ignoring.");
 					e.printStackTrace();
 				}
 			}
-			try {
+			/*try {
 				set_cache.executeBatch();
 				db.prep("COMMIT;").execute();
 			} catch (SQLException e) {
@@ -115,7 +97,7 @@ public class CachingSearcher extends Searcher {
 				try {
 					db.prep("ROLLBACK;").execute();
 				} catch (SQLException e) {}
-			}
+			}*/
 		}
 		return results;
 	}
