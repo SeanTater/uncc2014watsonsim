@@ -98,20 +98,16 @@ public class Answer extends Phrase implements Comparable<Answer> {
      * Format an Answer for serialization (e.g. for a web frontend)
      */
     @SuppressWarnings("unchecked")
-	public String toJSON() {
+	public JSONObject toJSON() {
     	JSONObject jo = new JSONObject();
     	jo.put("score", getOverallScore());
     	jo.put("text", text);
     	jo.put("evidence", 
     			evidence.stream()
-	        		.map(e -> String.format("{\"source\": \"%s\", \"note\": \"%s\"}",
-	    					StringUtils.sanitize(e.source),
-	    					StringUtils.sanitize(e.note))
-	    				)
-	    			.reduce((x, y) -> x + "," + y)
-	    			.orElse("")
-    			);
-    	return jo.toJSONString();
+	        		.map(e -> e.toJSON())
+	    			.collect(Collectors.toList()));
+    	return jo;
+    	
     }
     
     /**
@@ -205,5 +201,12 @@ class Evidence {
 	public Evidence(String source, String note) {
 		this.source = source;
 		this.note = note;
+	}
+	
+	public JSONObject toJSON() {
+		JSONObject jo = new JSONObject();
+		jo.put("source", source);
+		jo.put("note", note);
+		return jo;
 	}
 }

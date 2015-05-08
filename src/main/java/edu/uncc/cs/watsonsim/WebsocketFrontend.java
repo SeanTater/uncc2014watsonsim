@@ -22,6 +22,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
 /**
@@ -60,6 +61,13 @@ public class WebsocketFrontend extends WebSocketServer {
 		
 	}
 	
+	private void send(WebSocket conn, String flag, Object message) {
+		JSONObject jo = new JSONObject();
+		jo.put("flag", flag);
+		jo.put("message", message);
+		conn.send(jo.toJSONString());
+	}
+	
 	/**
 	 * Wrapper for allocating a pipe and asking something of it.
 	 * @return The answers
@@ -69,11 +77,12 @@ public class WebsocketFrontend extends WebSocketServer {
 		DefaultPipeline pipe = new DefaultPipeline();
 		System.out.println("Asking " + qtext);
 		if (pipe != null) {
-			conn.send("{\"note\": \"The doctor is in.\"}");
-			List<Answer> answers = pipe.ask(new Question(qtext), a -> conn.send(a));
-			conn.send("{\"note\": \"The doctor is finished.\"}");
-			String json = JSONArray.toJSONString(answers.stream().map(a -> a.toJSON()).collect(Collectors.toList()));
-			conn.send(json);
+			List<Answer> answers = pipe.ask(new Question(qtext), a -> send(conn, "log", a));
+			List<JSONObject> json = answers
+					.stream()
+					.map(a -> a.toJSON())
+					.collect(Collectors.toList());
+			send(conn, "result", json);
 		}
 		// Give up silently? (Not sure what's better here)
 		return Collections.emptyList();
