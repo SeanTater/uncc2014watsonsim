@@ -84,4 +84,13 @@ public class Database {
 			throw new RuntimeException("Can't create an SQL array from \"" + elements + "\"");
 		}
 	}
+	
+	public void release() {
+		try {
+			conn.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

@@ -149,6 +149,7 @@ public class DefaultPipeline {
         l.info("Computing confidence..");
         
         answers = late_researchers.pull(question, answers);
+        env.db.release();
         return answers;
     }
 }

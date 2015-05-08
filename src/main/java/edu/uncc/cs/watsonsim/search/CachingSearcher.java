@@ -26,7 +26,7 @@ public class CachingSearcher extends Searcher {
 	
 	private void getScores(Passage p, long passage_id) throws SQLException {
 		PreparedStatement cache = db.prep(
-				"select name, value from cache_scores where (passage_id = ?);");
+				"SELECT name, value FROM cache_scores WHERE (passage_id = ?);");
 		cache.setLong(1, passage_id);
 		ResultSet sql = cache.executeQuery();
 		while (sql.next()) {
@@ -37,7 +37,7 @@ public class CachingSearcher extends Searcher {
 	
 	private void setScores(Passage p, long passage_id) throws SQLException {
 		PreparedStatement cache = db.prep(
-				"insert into cache_scores(passage_id, name, value) values (?, ?, ?);");
+				"INSERT INTO cache_scores(passage_id, name, value) VALUES (?, ?, ?);");
 		cache.setLong(1, passage_id);
 		for (Entry<String, Double> score: Score.asMap(p.scores).entrySet()) {
 			// Only save scores that prefix this engine, to avoid breaking other scores
@@ -55,7 +55,7 @@ public class CachingSearcher extends Searcher {
 		try {
 			// Part 1: Find any existing cache, use it if possible
 			PreparedStatement cache = db.prep(
-					"select id, title, fulltext, reference from cache where (query = ? and engine = ?);");
+					"SELECT id, title, fulltext, reference FROM cache WHERE (query = ? AND engine = ?);");
 			cache.setString(1, query);
 			cache.setString(2, engine_name);
 			ResultSet sql = cache.executeQuery();
@@ -79,8 +79,14 @@ public class CachingSearcher extends Searcher {
 		if (results.isEmpty()) {
 			// If the SQL search didn't return anything, then run the Searcher.
 			List<Passage> query_results = searcher.query(query);
+			try {
+				db.prep("BEGIN;").execute();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			PreparedStatement set_cache = db.prep(
-					"insert into cache (id, query, engine, title, fulltext, reference) values (?,?,?,?,?,?);");
+					"INSERT INTO cache (id, query, engine, title, fulltext, reference) VALUES (?,?,?,?,?,?);");
 			for (Passage p : query_results) {
 				// Add every Answer to the cache
 				results.add(p);
@@ -101,9 +107,14 @@ public class CachingSearcher extends Searcher {
 			}
 			try {
 				set_cache.executeBatch();
+				db.prep("COMMIT;").execute();
 			} catch (SQLException e) {
 				System.out.println("Failed to add cache entry. (DB missing?) Ignoring.");
 				e.printStackTrace();
+			} finally {
+				try {
+					db.prep("ROLLBACK;").execute();
+				} catch (SQLException e) {}
 			}
 		}
 		return results;
