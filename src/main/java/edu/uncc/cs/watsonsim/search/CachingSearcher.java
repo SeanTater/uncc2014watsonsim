@@ -29,13 +29,12 @@ public class CachingSearcher extends Searcher {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private String setScoresFromJSON(Passage p, String json) {
+	private void setScoresFromJSON(Passage p, String json) {
 		JSONObject jo = (JSONObject) JSONValue.parse(json);
 		for (Object o : jo.entrySet()) {
 			Map.Entry<String, Double> entry = (Map.Entry<String, Double>) o;
 			Score.set(p.scores, entry.getKey(), entry.getValue());
 		}
-		return JSONObject.toJSONString(Score.asMap(p.scores));
 	}
 	
 	public List<Passage> query(String query) {
@@ -82,6 +81,7 @@ public class CachingSearcher extends Searcher {
 					set_cache.setString(6, p.reference);
 					set_cache.setString(7, JSONObject.toJSONString(Score.asMap(p.scores)));
 					set_cache.execute();
+					db.release();
 				} catch (SQLException e) {
 					System.out.println("Failed to add cache entry. (DB missing?) Ignoring.");
 					e.printStackTrace();
