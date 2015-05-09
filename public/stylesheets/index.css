@@ -1,15 +1,14 @@
 body {
     margin: 0;
 	min-height: 100%;
+	font-family: sans-serif;
 }
-
-#console { display: none; }
 
 .navbar-brand {
     font-family: 'Alegreya Sans', sans-serif;
     color: white;
     font-size: 225%;
-    margin: 0 5em 0 2em;
+    /*margin: 0 5em 0 2em;*/
     vertical-align: middle;
 }
 
@@ -23,32 +22,18 @@ body {
 	font-size: 65%;
 }
 
-header #note {
-    color: white;
-    margin-left: 3em;
-}
-
-header input {
-    border-radius: 4px;
-    height: 2em;
-    width: 20em;
-    margin-right: 1em;
-    font-family: 'Alegreya Sans', sans-serif;
-    font-weight: 500;
-    font-size: 11pt;
+#search {
 }
 
 #results {
-    font-family: 'Share Tech Mono', sans-serif;
     list-style-type: none;
 }
 
 #results>li {
     width: 80%;
     margin: 1em auto;
-    padding: 0.25em 0.75em;
+    padding: 1em;
     background: #C8DAE0;
-    color: auto;
 }
 
 #results>li summary {
@@ -60,6 +45,7 @@ header input {
 }
 
 #console {
+	display: none; 
     margin: 0 auto;
     width: 80%;
     height: 20em;
