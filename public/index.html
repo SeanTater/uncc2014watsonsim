@@ -27,9 +27,7 @@
             <div class="navbar-header">
                 <span class='navbar-brand'> Crick <small>beta</small></span>
                 <form id="search" class="navbar-form navbar-right">
-                    <div class="form-group">
-                        <input type="search" name="query" placeholder="Who wrote Emma?" class="form-control"/>
-                    </div>
+					<input type="search" name="query" placeholder="Who wrote Emma?" class="form-control"/>
                     <button class="btn btn-success"> Investigate </button>
                 </form>
                 <span id="note"><span>
@@ -41,11 +39,13 @@
 			<ul id="console"></ul>
 		</div>
 		<ul id="results"></ul>
+		<ul id="res"></ul>
 	</div>
     <script type="text/javascript">
         $("#search").submit(function (event) {
 			// Clean the screen
 			$("#console li").remove()
+			$("#console").slideDown()
 			$("#results li").remove()
 			
 			// Open a channel
@@ -55,31 +55,13 @@
                 query_channel.send("ask:" + $("#search [name=query]").val());
                 write_log("Sending query...");
             }
-            query_channel.onmessage = function (event) {
-				// Handle incoming messages
-                console.log(event.data);
-                var content = JSON.parse(event.data);
-                switch (content.flag) { // flag
-                case "log":
-					write_log(content.message);
-					break;
-				case "result":
-					$("#results").append(content.message.map(function (a){
-						// For every answer, names a
-						var d = $("<details>")
-						d.append($("<summary>Evidence</summary>"));
-						var dul = $("<ul>");
-						dul.append(a.evidence.map(function (e) {
-							return $("<li>").text(e.source + " : " + e.note + "\n");
-						}));
-						d.append(dul);
-						return $("<li>").text(a.score + " " + a.text).append(d);
-					}));
-					break;
-                }
-            }
+            query_channel.onmessage = handle_message;
             event.preventDefault();
         });
     </script>
+    <div class='container'><center>
+		<hr />
+		Based on the open source <a href="http://github.com/SeanTater/uncc2014watsonsim">Watsonsim Project</a> at UNCC. We welcome your contribution!
+    </center></div>
 </body>
 </html>
