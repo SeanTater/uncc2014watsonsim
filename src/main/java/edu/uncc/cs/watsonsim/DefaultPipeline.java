@@ -73,6 +73,7 @@ public class DefaultPipeline {
 			//new RedirectSynonyms(env),
 			new HyphenTrimmer(),
 			new StrictFilters(),
+			new URLExpander(),
 			new AnswerTrimming(),
 			new MergeByText(env),
 			new MergeAnswers(),
