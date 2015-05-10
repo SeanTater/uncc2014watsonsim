@@ -1,47 +1,48 @@
-
-/*query_channel.onmessage = function (event) {
-	console.log(event.data);
-	$("#console").append($("<li>").text(event.data));
-	$(".messages").animate({ scrollTop: $("#console").height() }, "slow");
-}*/
-function format_results(content) {
-	$("#results").append(content.message.map(function (a){
-		// For every answer
-		var d = $("<details>")
-		d.append($("<summary>Evidence</summary>"));
-		var dul = $("<ul>");
-		dul.append(a.evidence.map(function (e) {
-			// For every unit of evidence
-			return $("<li>").text(e.source + " : " + e.note + "\n");
-		}));
-		d.append(dul);
-		return $("<li>")
-			.text(Math.round(a.score*10000)/100 + "% " + a.text)
-			.append(d)
-			.css("background",
-				"linear-gradient(to right, #648880 "
-				+ (a.score*100)
-				+ "%, #293f50 " + (a.score*100)
-				+ "%)");
-	}));
-	$("#console").slideUp();
-}
-
-function handle_message(event) {
-	// Handle incoming messages
-	console.log(event.data);
-	var content = JSON.parse(event.data);
-	switch (content.flag) { // flag
-	case "log":
-		write_log(content.message);
-		break;
-	case "result":
-		format_results(content);
-		break;
-	}
-}
-
 function write_log(text) {
 	$("#console").append($("<li>").text(text));
 	$("#console").animate({ scrollTop: $("#console").prop("scrollHeight") }, "slow");
 }
+
+
+angular.module('queryApp', [])
+  .controller('QueryController', function($scope) {
+    var queryDetail = this;
+    queryDetail.answers = [
+		{text: "Some sample data", score: 0.8976},
+		{text: "Moo! bar bax", score: 0.4926},
+		{text: "Another example", score: 0.207}
+	];
+	queryDetail.handle_message = function(event) {
+		// Handle incoming messages
+		console.log(event.data);
+		var content = JSON.parse(event.data);
+		switch (content.flag) { // flag
+		case "log":
+			write_log(content.message);
+			break;
+		case "result":
+			queryDetail.answers = content.message;
+			$("#console").slideUp();
+			break;
+		}
+	};
+	queryDetail.begin = function () {
+		// Clean the screen
+		$("#console li").remove();
+		$("#console").slideDown();
+		$("#results li").remove();
+		
+		// Open a channel
+		var query_channel = new WebSocket("ws://watsonphd.com/asklive");
+		query_channel.onopen = function (event) {
+			// Ask the question
+			query_channel.send("ask:" + $("#search [name=query]").val());
+			write_log("Sending query...");
+		};
+		query_channel.onmessage = function(e) {
+			queryDetail.handle_message(e);
+			$scope.$apply();
+		};
+		//event.preventDefault();
+	};
+  });

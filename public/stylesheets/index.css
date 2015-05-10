@@ -4,6 +4,10 @@ body {
 	font-family: sans-serif;
 }
 
+.navbar {
+	margin-bottom: 0;
+}
+
 .navbar-brand {
     font-family: 'Alegreya Sans', sans-serif;
     color: white;
@@ -25,23 +29,59 @@ body {
 #search {
 }
 
+body, .jumbotron {
+	background: rgb(245, 235, 207);
+}
+
 #results {
+	font-family: 'Schoolbell', cursive;
+    font-size:  120%;
+	background: #9b9;
     list-style-type: none;
-}
-
-#results>li {
-    width: 80%;
     margin: 1em auto;
-    padding: 1em;
-    background: #C8DAE0;
+    width: 80%;
+    padding: -1em 1em 1em 1em;
+	border: 8px solid #ddd;
+	border-bottom-width: 15px;
+    box-shadow: 0.5px 0.5px 4px #333;
 }
 
-#results>li summary {
-	color: auto;
+#results>li.answer_wrapper {
+    color: white;
 }
 
-#results>li summary .confidence {
-	color: auto;
+#results>li .answer {
+    display: block;
+    /*width:  30em;*/
+    margin: 0.2em;
+	font-size: x-large;
+}
+
+#results>li .answer_text {
+    display:  inline-block;
+    margin:  0.35em 1em 0.15em 0;
+    /*border: 2px solid white;
+    border-radius:  3px;*/
+    padding: 0.15em;
+    width:  89%;
+	font-size: large;
+    background-color: #f7f7f7;
+	background:
+		url(/chalk-left-end.png) left center no-repeat,
+		url(/chalk-bar.png) left center repeat-x,
+		url(/chalk-right-end.png) right center no-repeat;
+	background-size: 10px, 220px, 10px;
+    color:  black;
+	text-align: right;
+	
+}
+
+#console, .console {
+    list-style-type: none;
+    background-color: black;
+    color: #ddd;
+    font-family: monospace;
+	font-size: medium;
 }
 
 #console {
@@ -49,10 +89,6 @@ body {
     margin: 0 auto;
     width: 80%;
     height: 20em;
-    list-style-type: none;
-    background-color: black;
-    color: #ddd;
-    font-family: monospace;
     overflow-y: scroll;
     position: relative;
     bottom: 0;
