@@ -64,6 +64,7 @@ public class DefaultPipeline {
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
 			new IndriSearcher(env, false),
+			//new SemanticVectorSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
 			new CachingSearcher(env, new BingSearcher(env), "bing"),
@@ -150,7 +151,6 @@ public class DefaultPipeline {
         l.info("Computing confidence..");
         
         answers = late_researchers.pull(question, answers);
-        env.db.release();
         return answers;
     }
 }

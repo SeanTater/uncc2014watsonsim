@@ -89,17 +89,6 @@ public class CachingSearcher extends Searcher {
 					e.printStackTrace();
 				}
 			}
-			/*try {
-				set_cache.executeBatch();
-				db.prep("COMMIT;").execute();
-			} catch (SQLException e) {
-				System.out.println("Failed to add cache entry. (DB missing?) Ignoring.");
-				e.printStackTrace();
-			} finally {
-				try {
-					db.prep("ROLLBACK;").execute();
-				} catch (SQLException e) {}
-			}*/
 		}
 		return results;
 	}

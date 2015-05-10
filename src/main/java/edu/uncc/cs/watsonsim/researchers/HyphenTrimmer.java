@@ -11,7 +11,6 @@ public class HyphenTrimmer extends Researcher {
 		String[] improved_answer_parts = a.text.split("[-:(|]");
 		
 		if (improved_answer_parts.length>0) {
-			a.log(this, "Trimming superfluous info");
 			return a.withText(improved_answer_parts[0].trim());
 		}
 		return a;

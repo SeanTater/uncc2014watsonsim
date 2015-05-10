@@ -101,6 +101,7 @@ public class Answer extends Phrase implements Comparable<Answer> {
 	public JSONObject toJSON() {
     	JSONObject jo = new JSONObject();
     	jo.put("score", getOverallScore());
+    	jo.put("scores", Score.asMap(scores));
     	jo.put("text", text);
     	jo.put("evidence", 
     			evidence.stream()
