@@ -31,6 +31,12 @@ public class URLExpander extends Researcher {
 					"Mozilla/5.0",
 					"10 May 2015"));
 	
+	public URLExpander() {
+		fetcher.setConnectionTimeout(2000);
+		fetcher.setSocketTimeout(2000);
+		fetcher.setMaxRetryCount(1);
+	}
+	
 	public Answer answer(Question q, Answer a) {
 		a.passages.replaceAll(p -> {
 			if (p.reference.startsWith("http") && p.reference.contains(".htm")) {

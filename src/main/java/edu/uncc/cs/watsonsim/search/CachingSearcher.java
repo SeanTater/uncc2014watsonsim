@@ -82,7 +82,6 @@ public class CachingSearcher extends Searcher {
 					set_cache.setString(6, p.reference);
 					set_cache.setString(7, JSONObject.toJSONString(Score.asMap(p.scores)));
 					set_cache.execute();
-					db.release();
 				} catch (SQLException e) {
 					System.out.println("Failed to add cache entry. (DB missing?) Ignoring.");
 					e.printStackTrace();
