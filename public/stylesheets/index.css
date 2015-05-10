@@ -1,16 +1,18 @@
 body {
     margin: 0;
+	min-height: 100%;
+	font-family: sans-serif;
 }
 
-header {
-    background: #4FA5C2;
+.navbar {
+	margin-bottom: 0;
 }
 
 .navbar-brand {
     font-family: 'Alegreya Sans', sans-serif;
     color: white;
     font-size: 225%;
-    margin: 0 5em 0 2em;
+    /*margin: 0 5em 0 2em;*/
     vertical-align: middle;
 }
 
@@ -24,42 +26,69 @@ header {
 	font-size: 65%;
 }
 
-header #note {
-    color: white;
-    margin-left: 3em;
+#search {
 }
 
-header input {
-    border-radius: 4px;
-    height: 2em;
-    width: 20em;
-    margin-right: 1em;
-    font-family: 'Alegreya Sans', sans-serif;
-    font-weight: 500;
-    font-size: 11pt;
+body, .jumbotron {
+	background: rgb(245, 235, 207);
 }
 
 #results {
-    font-family: 'Share Tech Mono', sans-serif;
+	font-family: 'Schoolbell', cursive;
+    font-size:  120%;
+	background: #9b9;
     list-style-type: none;
-}
-
-#results li {
-    width: 80%;
     margin: 1em auto;
-    padding: 1em;
-    background: #C8DAE0;
-    font-size: large;
+    width: 80%;
+    padding: -1em 1em 1em 1em;
+	border: 8px solid #ddd;
+	border-bottom-width: 15px;
+    box-shadow: 0.5px 0.5px 4px #333;
 }
 
-#console {
-    margin: 0 auto;
-    width: 80%;
-    height: 20em;
+#results>li.answer_wrapper {
+    color: white;
+}
+
+#results>li .answer {
+    display: block;
+    /*width:  30em;*/
+    margin: 0.2em;
+	font-size: x-large;
+}
+
+#results>li .answer_text {
+    display:  inline-block;
+    margin:  0.35em 1em 0.15em 0;
+    /*border: 2px solid white;
+    border-radius:  3px;*/
+    padding: 0.15em;
+    width:  89%;
+	font-size: large;
+    background-color: #f7f7f7;
+	background:
+		url(/chalk-left-end.png) left center no-repeat,
+		url(/chalk-bar.png) left center repeat-x,
+		url(/chalk-right-end.png) right center no-repeat;
+	background-size: 10px, 220px, 10px;
+    color:  black;
+	text-align: right;
+	
+}
+
+#console, .console {
     list-style-type: none;
     background-color: black;
     color: #ddd;
     font-family: monospace;
+	font-size: medium;
+}
+
+#console {
+	display: none; 
+    margin: 0 auto;
+    width: 80%;
+    height: 20em;
     overflow-y: scroll;
     position: relative;
     bottom: 0;

@@ -1,5 +1,8 @@
 package edu.uncc.cs.watsonsim;
 
+import java.util.stream.Collectors;
+import org.json.simple.JSONObject;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 
@@ -56,6 +59,16 @@ public class Passage extends Phrase {
     public Passage score(String name, double value) {
     	scores = Score.set(scores, name, value);
     	return this;
+    }
+    
+    /** Return a JSON object with the same fields */
+    public JSONObject toJSON() {
+		JSONObject jo = new JSONObject();
+		jo.put("text", text);
+		jo.put("title", title);
+		jo.put("reference", reference);
+		jo.put("engine_name", engine_name);
+		return jo;
     }
 	
 	/******************************************************

@@ -33,9 +33,8 @@ public class CachingSearcher extends Searcher {
 		JSONObject jo = (JSONObject) JSONValue.parse(json);
 		for (Object o : jo.entrySet()) {
 			Map.Entry<String, Double> entry = (Map.Entry<String, Double>) o;
-			System.out.println(p);
-			System.out.println(entry);
-			Score.set(p.scores, entry.getKey(), entry.getValue());
+			if (entry.getValue() != null)
+				Score.set(p.scores, entry.getKey(), entry.getValue());
 		}
 	}
 	

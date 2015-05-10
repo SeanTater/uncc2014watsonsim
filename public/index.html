@@ -1,85 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="queryApp">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link href='//fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Alegreya+Sans:500,700' rel='stylesheet' type='text/css'> 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="stylesheets/index.css" />
-    
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.49/jquery.form.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-    <script src="scripts/index.js"></script>
-    <script src="scripts/query.js"></script>
-    <title>
-        Crick - Investigate Intelligently.
-    </title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Schoolbell' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type='text/css'
+		href='//fonts.googleapis.com/css?family=Share+Tech+Mono'>
+	<link rel="stylesheet" type='text/css' 
+		href='//fonts.googleapis.com/css?family=Alegreya+Sans:500,700'> 
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="stylesheets/index.css" />
+	
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+	<script async src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.49/jquery.form.js"></script>
+	<script async src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script async src="scripts/index.js"></script>
+	<script src="scripts/query.js"></script>
+	
+	
+	<script defer type="text/javascript">
+	$( function(){  // Cutely suggest a question
+		var suggestions = [
+			"Who was the first man to walk on the moon?",
+			"Who founded Google?",
+			"Who wrote Emma?"];
+		$("#search input")
+			.prop("placeholder",
+				suggestions[Math.random() * suggestions.length | 0]);
+	});
+	</script>
+	<title> Watson Ph.D - Investigate Intelligently. </title>
 </head>
-<body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <span class='navbar-brand'> Crick <small>beta</small></span>
-                <form id="search" class="navbar-form navbar-right">
-                    <div class="form-group">
-                        <input type="search" name="query" placeholder="Who wrote Emma?" class="form-control"/>
-                    </div>
-                    <button class="btn btn-success"> Investigate </button>
-                </form>
-                <span id="note"><span>
-            </div>
-        </div>
-    </nav>
-    <div class="jumbotron">
-		<div id="console_wrapper">
-			<ul id="console"></ul>
+<body ng-controller="QueryController as queryDetail">
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<span class='navbar-brand'>
+				Watson, Ph.D <small>alpha</small>
+			</span>
+			<form id="search" class="navbar-form navbar-right" ng-submit="queryDetail.begin()">
+				<input
+					type="search"
+					name="query"
+					placeholder="Who wrote Emma?"
+					size="60"
+					class="form-control"
+					autofocus />
+				<button class="btn btn-success"> Investigate! </button>
+			</form>
 		</div>
-		<ul id="results"></ul>
+	</nav>
+	<div class="jumbotron" >
+		<ul id="console"></ul>
+		
+		<ul id="results">
+			<li ng-repeat="answer in queryDetail.answers" class="answer_wrapper">
+				<span class="answer">
+					<span class="answer_text" style="width: {{answer.score*90}}%;">
+					&nbsp;
+					</span>{{answer.score*100 | number : 0}}%
+					<details><summary>{{answer.text}}</summary>
+						<ul class='console'>
+							<li ng-repeat="evidence in answer.evidence">
+								[{{evidence.source}}] {{evidence.note}}
+							</li>
+						</ul>
+					</details>
+				</span>
+			</li>
+		</ul>
+		<ul id="res"></ul>
 	</div>
-    <script type="text/javascript">
-        $("#search").submit(function (event) {
-			// Clean the screen
-			$("#console li").remove()
-			$("#results li").remove()
-			
-			// Open a channel
-            var query_channel = new WebSocket("ws://watsonphd.com/asklive");
-            query_channel.onopen = function (event) {
-				// Ask the question
-                query_channel.send("ask:" + $("#search [name=query]").val());
-                write_log("Sending query...");
-            }
-            query_channel.onmessage = function (event) {
-				// Handle incoming messages
-                console.log(event.data);
-                var content = JSON.parse(event.data);
-                switch (content.flag) { // flag
-                case "log":
-					write_log(content.message);
-					break;
-				case "result":
-					$("#results").append(content.message.map(function (a){
-						// For every answer, names a
-						var d = $("<details>")
-						d.append($("<summary>Evidence</summary>"));
-						var dul = $("<ul>");
-						dul.append(a.evidence.map(function (e) {
-							return $("<li>").text(e.source + " : " + e.note + "\n");
-						}));
-						d.append(dul);
-						return $("<li>").text(a.score + " " + a.text).append(d);
-					}));
-					break;
-                }
-            }
-            event.preventDefault();
-        });
-    </script>
+	<div class='container'><center>
+		<hr />
+		Based on the open source
+		<a href="http://github.com/SeanTater/uncc2014watsonsim">
+			Watsonsim project
+		</a> at <a href="http://uncc.edu">UNCC</a>.
+		We welcome your contribution!
+	</center></div>
 </body>
 </html>
