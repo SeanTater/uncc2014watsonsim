@@ -63,7 +63,7 @@ public class DefaultPipeline {
 		 */
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
-			new IndriSearcher(env, false),
+			//new IndriSearcher(env, false),
 			//new SemanticVectorSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
@@ -87,7 +87,7 @@ public class DefaultPipeline {
 			new MergeByCommonSupport(),
 			new PersonRecognition(),
 			new TagLAT(env),
-			//new MergeByCommonSupport()
+			new MergeByCommonSupport()
 		);
 		scorers = new Scorer[]{
 			new AnswerLength(),
