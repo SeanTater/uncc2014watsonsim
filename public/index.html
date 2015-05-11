@@ -55,21 +55,63 @@
 			</form>
 		</div>
 	</nav>
-	<div class="jumbotron" >
-		<ul id="console"></ul>
-		
-		<ul id="results">
-			<li ng-repeat="answer in queryDetail.answers" class="answer_wrapper">
+	<ul id="console" class="console container"></ul>
+	<div class="jumbotron container">
+		<center> {{queryDetail.note}} </center>
+		<ul id="results" class="container">
+			<li ng-repeat="answer in queryDetail.answers">
 				<span class="answer">
-					<span class="answer_text" style="width: {{answer.score*90}}%;">
+					<span class="answer-bar" style="width: {{answer.score*90}}%;">
 					&nbsp;
 					</span>{{answer.score*100 | number : 0}}%
-					<details><summary>{{answer.text}}</summary>
-						<ul class='console'>
-							<li ng-repeat="evidence in answer.evidence">
-								[{{evidence.source}}] {{evidence.note}}
-							</li>
+					<details class='answer-details container'>
+						<summary class='answer-text'>{{answer.text}}</summary>
+						<ul class='nav nav-tabs'>
+							<li role='presentation' class='active'></li>
 						</ul>
+						<div class='col-md-12 col-md-height'>
+							<div class="panel panel-default">
+								<div class="panel-heading"> Sources </div>
+								<div class="panel-body">
+									<dl>
+										<span ng-repeat="passage in answer.passages" class="dl-horizontal">
+											<dt title="{{passage.title}}">{{passage.title}}</dt>
+											<dd>
+												<details><summary>{{passage.reference}}</summary>
+													{{passage.text}}
+												</details>
+											</dd>
+										</span>
+									</dl>
+								</div>
+							</div>
+						</div>
+						<div class='col-md-12 col-md-height'>
+							<div class="panel panel-default">
+								<div class="panel-heading"> Scores </div>
+								<div class="panel-body">
+									<dl>
+										<span ng-repeat="(key, val) in answer.scores" class="dl-horizontal">
+											<dt>{{key}}</dt>
+											<dd>{{val}}</dd>
+										</span>
+									</dl>
+								</div>
+							</div>
+						</div>
+						<div class='col-md-12'>
+							<div class="panel panel-default">
+								<div class="panel-heading">  Research Log </div>
+								<div class="panel-body">
+									<dl>
+										<span ng-repeat="evidence in answer.evidence" class="dl-horizontal">
+											<dt>[{{evidence.source}}]</dt>
+											<dd>{{evidence.note}}</dd>
+										</span>
+									</dl>
+								</div>
+							</div>
+						</div>
 					</details>
 				</span>
 			</li>
