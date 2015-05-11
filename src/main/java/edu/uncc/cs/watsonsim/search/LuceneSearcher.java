@@ -58,6 +58,7 @@ public class LuceneSearcher extends Searcher {
 	public List<Passage> query(Question question) {
 		List<Passage> results = new ArrayList<>();
 		try {
+			//ScoreDoc[] hits = env.simpleLuceneQuery(question.text, MAX_RESULTS);
 			ScoreDoc[] hits = lucene.search(
 					queryFromSkipBigrams(question.text + " " + question.getCategory()),
 					MAX_RESULTS).scoreDocs;

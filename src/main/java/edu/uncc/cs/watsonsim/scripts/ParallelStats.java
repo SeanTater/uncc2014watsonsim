@@ -137,8 +137,8 @@ class StatsGenerator {
 	public void run() {
 		final long start_time = System.nanoTime();
 		
-        //BasicConfigurator.configure();
-        //Logger.getRootLogger().setLevel(Level.INFO);
+        BasicConfigurator.configure();
+        Logger.getRootLogger().setLevel(Level.ERROR);
 		
 		log.info("Performing train/test session\n"
 				+ "    #=top    x=top3    .=recall    ' '=missing");
@@ -151,7 +151,7 @@ class StatsGenerator {
 			
 			List<Answer> answers;
 			try{
-				answers = pipe.ask(q);
+				answers = pipe.ask(q, message -> {});
 			} catch (Exception e) {
 				log.fatal(e, e);
 				return 99;

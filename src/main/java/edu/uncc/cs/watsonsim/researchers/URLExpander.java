@@ -56,6 +56,7 @@ public class URLExpander extends Researcher {
 							p.reference);
 					a.log(this, "Filled in passage from %s", p.reference);
 				} catch (BaseFetchException
+						//| ClientProtocolException
 						| BoilerpipeProcessingException e) {}
 			}
 			return p;

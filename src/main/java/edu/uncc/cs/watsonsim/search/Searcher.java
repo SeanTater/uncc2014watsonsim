@@ -23,8 +23,10 @@ import edu.uncc.cs.watsonsim.Question;
  * @author Phani Rahul
  */
 public abstract class Searcher {
-	final Database db;
+	protected final Database db;
+	protected final Environment env;
 	public Searcher(Environment env) {
+		this.env = env;
 		db = env.db;
 	}
 

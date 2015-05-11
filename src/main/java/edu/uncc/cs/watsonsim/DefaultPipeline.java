@@ -74,8 +74,8 @@ public class DefaultPipeline {
 			//new RedirectSynonyms(env),
 			new HyphenTrimmer(),
 			new StrictFilters(),
-			new URLExpander(),
-			new AnswerTrimming(),
+			//new URLExpander(),
+			//new AnswerTrimming(),
 			new MergeByText(env),
 			new MergeAnswers(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),
@@ -87,7 +87,7 @@ public class DefaultPipeline {
 			new MergeByCommonSupport(),
 			new PersonRecognition(),
 			new TagLAT(env),
-			new MergeByCommonSupport()
+			//new MergeByCommonSupport()
 		);
 		scorers = new Scorer[]{
 			new AnswerLength(),
