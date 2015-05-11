@@ -23,7 +23,7 @@ import edu.uncc.cs.watsonsim.Question;
 
 /** Fill in the full text of an answer from it's URL, if it has one */
 public class URLExpander extends Researcher {
-	private SimpleHttpFetcher fetcher = new SimpleHttpFetcher(5,
+	private SimpleHttpFetcher fetcher = new SimpleHttpFetcher(50,
 			new UserAgent(
 					"Watsonsim QA engine (bot)",
 					"stgallag@gmail.com",

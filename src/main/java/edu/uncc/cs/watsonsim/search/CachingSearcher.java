@@ -32,9 +32,18 @@ public class CachingSearcher extends Searcher {
 	private void setScoresFromJSON(Passage p, String json) {
 		JSONObject jo = (JSONObject) JSONValue.parse(json);
 		for (Object o : jo.entrySet()) {
-			Map.Entry<String, Double> entry = (Map.Entry<String, Double>) o;
-			if (entry.getValue() != null)
-				Score.set(p.scores, entry.getKey(), entry.getValue());
+			Map.Entry<String, Object> entry = (Map.Entry<String, Object>) o;
+			if (entry.getValue() != null) {
+				double val;
+				if (entry.getValue() instanceof Long) {
+					// Long disguised as Object -> long -> double
+					val = (long) entry.getValue();
+				} else {
+					// Double disguised as Object -> Double -> double 
+					val = (Double) entry.getValue();
+				}
+				Score.set(p.scores, entry.getKey(), val);
+			}
 		}
 	}
 	
