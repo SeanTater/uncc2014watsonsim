@@ -84,4 +84,8 @@ public class Database {
 			throw new RuntimeException("Can't create an SQL array from \"" + elements + "\"");
 		}
 	}
+	
+	public String backend() {
+		return conn.getClass().getSimpleName();
+	}
 }

@@ -52,15 +52,21 @@ dependencies {
 
     // Indri native library
 //    natives "libindri-jni:libindri-jni:5.6"
+
+    ////  Persistence Libraries
     // Sqlite native library (but it comes in a jar)
     compile "org.xerial:sqlite-jdbc:3.8.7"
     // PostgreSQL
     compile 'org.postgresql:postgresql:9.3-1101-jdbc41'
+    // LMDB (for fast concurrent kv-storage)
+    compile 'org.deephacks.lmdbjni:lmdbjni:0.3.2'
+    compile 'org.deephacks.lmdbjni:lmdbjni-linux64:0.3.2'
+    compile 'org.deephacks.lmdbjni:lmdbjni-osx64:0.3.2'
+    compile 'org.deephacks.lmdbjni:lmdbjni-win64:0.3.2'
 
-    
+    ////  NLP Libraries
     // OpenNLP
     compile "org.apache.opennlp:opennlp-tools:1.5.3"
-
     // Stanford CoreNLP
     compile 'edu.stanford.nlp:stanford-corenlp:3.4.1'
     compile 'edu.stanford.nlp:stanford-corenlp:3.4.1:models'

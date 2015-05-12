@@ -13,6 +13,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
@@ -20,6 +21,8 @@ import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcess
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
+import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
+import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
 
 /**
  * A String, tokenized, parsed into Trees, and as a semantic graph.
@@ -34,13 +37,14 @@ public class Phrase {
 	public final List<Tree> trees;
 	public final List<SemanticGraph> graphs;
 	private final ConcurrentHashMap<Function<Phrase, ?>, Object> memos;
+	private final List<String> lemmas;
 	
 	// Create a pipeline
 	static final StanfordCoreNLP pipeline;
 	static {
 		// Creates an NLP pipeline missing lemma, ner, and dcoref 
 	    Properties props = new Properties();
-	    props.put("annotators", "tokenize, ssplit, pos, parse");
+	    props.put("annotators", "tokenize, ssplit, pos, lemma, parse");
 	    // Use the faster but slow-loading shift-reduce models
 	    props.put("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
 	    // When you find something untokenizable, delete it and don't whine
@@ -65,6 +69,7 @@ public class Phrase {
 		if (cache_entry != null) {
 			this.text = cache_entry.text;
 			this.tokens = cache_entry.tokens;
+			this.lemmas = cache_entry.lemmas;
 			this.trees = cache_entry.trees;
 			this.graphs = cache_entry.graphs;
 			// Memos are mutable but private and thread-safe.
@@ -84,13 +89,19 @@ public class Phrase {
 		    List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 		    List<Tree> trees = new ArrayList<>();
 		    List<SemanticGraph> graphs = new ArrayList<>();
-		    	    
+		    List<String> lemmas = new ArrayList<>();
 		    for(CoreMap sentence: sentences) {
 		    // this is the parse tree of the current sentence
 		    	trees.add(sentence.get(TreeAnnotation.class));
 		    	graphs.add(sentence.get(CollapsedCCProcessedDependenciesAnnotation.class));
+		    	for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
+	                // Retrieve and add the lemma for each word into the
+	                // list of lemmas
+	                lemmas.add(token.get(LemmaAnnotation.class));
+	            }
 		    }
 
+		    this.lemmas = Collections.unmodifiableList(lemmas);
 			this.tokens = Collections.unmodifiableList(StringUtils.tokenize(this.text));
 		    this.trees = Collections.unmodifiableList(trees);
 		    this.graphs = Collections.unmodifiableList(graphs);

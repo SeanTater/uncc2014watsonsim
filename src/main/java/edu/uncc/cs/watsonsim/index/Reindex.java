@@ -16,9 +16,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -54,10 +57,10 @@ public class Reindex {
 	public Reindex() throws IOException {
 		db = new Database(conf);
 		indexers = Arrays.asList(
-				new Lucene(Paths.get(conf.getConfOrDie("lucene_index"))),
-				new Indri(conf.getConfOrDie("indri_index"))
+				//new Lucene(Paths.get(conf.getConfOrDie("lucene_index"))),
+				//new Indri(conf.getConfOrDie("indri_index"))
 				//new Bigrams(),
-				//new Edges()
+				new Edges()
 				);
 		
 	}
@@ -72,18 +75,31 @@ public class Reindex {
     public void run() throws SQLException {
     	try {
 	        indexAll("SELECT title, text, reference FROM sources;");
-	        
-	        /*indexAll("SELECT "
-	        			+ "title, "
-	        			+ "string_agg(text, ' ') as text,"
-	        			+ "min(reference) as reference "
-	    			+ "FROM sources "
-					+ "GROUP BY title;");*/
+	        if (db.backend().startsWith("SQLite")) {
+	        	// I highly recommend SQLite. The indexing will run much faster
+	        	// because it has a more efficient query plan for this
+		        indexAll("SELECT "
+		        			+ "title, "
+		        			+ "group_concat(text, ' ') as text,"
+		        			+ "min(reference) as reference "
+		    			+ "FROM sources "
+						+ "GROUP BY title;");
+	        } else {
+	        	indexAll("SELECT "
+			    			+ "title, "
+			    			+ "string_agg(text, ' ') as text,"
+			    			+ "min(reference) as reference "
+						+ "FROM sources "
+						+ "GROUP BY title;");
+	        	
+	        }
 	        
 	        // SemanticVectors Post-processing
 	    	BuildIndex.main(new String[]{
-	    			"-luceneindexpath",
-	    			conf.getConfOrDie("lucene_index")});
+	    			"-luceneindexpath", conf.getConfOrDie("lucene_index"),
+	    			"-docidfield", "docno",
+	    			"-docindexing", "incremental",
+	    			"-contentsfields", "text"});
 		} catch (IllegalArgumentException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,52 +122,65 @@ public class Reindex {
     	//statements.setFetchSize(10000);
     	ResultSet rs = statements.executeQuery();
     	AtomicInteger c = new AtomicInteger();
+    	Stream.generate(() -> {
+    		try {
+				if (rs.next()) return Triple.makeTriple(rs.getString(1), rs.getString(2), rs.getString(3));
+				else return null;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+    	}).parallel().flatMap((row) -> {
     	/*
     	StreamSupport.stream(
 			ResultSetIterator.iterable(rs).spliterator(), true)
 			.forEach( row -> {
 			*/
-    	while (rs.next()) { 
-    		
-				try {
-					Passage pass = new Passage(
-						"none", rs.getString(1), rs.getString(2), rs.getString(3));
-				
-		    		for (Segment i : indexers) {
-		    			i.accept(pass);
-		    		}
-		    		int count = c.getAndIncrement();
-		    		if (count % 1000 == 0) {
-		    			System.out.println("Indexed " + count);
-		    		}
-				} catch (IllegalArgumentException ex) {
-					/*
-					 *  On extremely rare occasions (< 0.00000593% of passages)
-					 *  it will throw an error like the following:
-					 *  
-					 *  Exception in thread "main" java.lang.IllegalArgumentException: No head rule defined for SYM using class edu.stanford.nlp.trees.SemanticHeadFinder in SYM-10
-				        at edu.stanford.nlp.trees.AbstractCollinsHeadFinder.determineNonTrivialHead(AbstractCollinsHeadFinder.java:233)
-				        at edu.stanford.nlp.trees.SemanticHeadFinder.determineNonTrivialHead(SemanticHeadFinder.java:409)
-				        at edu.stanford.nlp.trees.AbstractCollinsHeadFinder.determineHead(AbstractCollinsHeadFinder.java:187)
-				        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:292)
-				        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:290)
-				        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:290)
-				        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:290)
-				        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:290)
-				        at edu.stanford.nlp.trees.GrammaticalStructure.<init>(GrammaticalStructure.java:103)
-				        at edu.stanford.nlp.trees.EnglishGrammaticalStructure.<init>(EnglishGrammaticalStructure.java:86)
-				        at edu.stanford.nlp.trees.EnglishGrammaticalStructure.<init>(EnglishGrammaticalStructure.java:66)
-				        at edu.stanford.nlp.trees.EnglishGrammaticalStructureFactory.newGrammaticalStructure(EnglishGrammaticalStructureFactory.java:29)
-				        at edu.stanford.nlp.trees.EnglishGrammaticalStructureFactory.newGrammaticalStructure(EnglishGrammaticalStructureFactory.java:5)
-				        at edu.stanford.nlp.pipeline.ParserAnnotatorUtils.fillInParseAnnotations(ParserAnnotatorUtils.java:50)
-				        at edu.stanford.nlp.pipeline.ParserAnnotator.finishSentence(ParserAnnotator.java:249)
-				        at edu.stanford.nlp.pipeline.ParserAnnotator.doOneSentence(ParserAnnotator.java:228)
-				        at edu.stanford.nlp.pipeline.SentenceAnnotator.annotate(SentenceAnnotator.java:95)
-				        at edu.stanford.nlp.pipeline.AnnotationPipeline.annotate(AnnotationPipeline.java:67)
-				        at edu.stanford.nlp.pipeline.StanfordCoreNLP.annotate(StanfordCoreNLP.java:847)
-					 */
-					return;
-				}
+    			if (row != null) {
+					try {
+						Passage pass = new Passage(
+							"none", row.first, row.second, row.third);
+					
+			    		for (Segment i : indexers) {
+			    			i.accept(pass);
+			    		}
+			    		int count = c.getAndIncrement();
+			    		if (count % 1000 == 0) {
+			    			System.out.println("Indexed " + count);
+			    		}
+					} catch (IllegalArgumentException ex) {
+						/*
+						 *  On extremely rare occasions (< 0.00000593% of passages)
+						 *  it will throw an error like the following:
+						 *  
+						 *  Exception in thread "main" java.lang.IllegalArgumentException: No head rule defined for SYM using class edu.stanford.nlp.trees.SemanticHeadFinder in SYM-10
+					        at edu.stanford.nlp.trees.AbstractCollinsHeadFinder.determineNonTrivialHead(AbstractCollinsHeadFinder.java:233)
+					        at edu.stanford.nlp.trees.SemanticHeadFinder.determineNonTrivialHead(SemanticHeadFinder.java:409)
+					        at edu.stanford.nlp.trees.AbstractCollinsHeadFinder.determineHead(AbstractCollinsHeadFinder.java:187)
+					        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:292)
+					        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:290)
+					        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:290)
+					        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:290)
+					        at edu.stanford.nlp.trees.TreeGraphNode.percolateHeads(TreeGraphNode.java:290)
+					        at edu.stanford.nlp.trees.GrammaticalStructure.<init>(GrammaticalStructure.java:103)
+					        at edu.stanford.nlp.trees.EnglishGrammaticalStructure.<init>(EnglishGrammaticalStructure.java:86)
+					        at edu.stanford.nlp.trees.EnglishGrammaticalStructure.<init>(EnglishGrammaticalStructure.java:66)
+					        at edu.stanford.nlp.trees.EnglishGrammaticalStructureFactory.newGrammaticalStructure(EnglishGrammaticalStructureFactory.java:29)
+					        at edu.stanford.nlp.trees.EnglishGrammaticalStructureFactory.newGrammaticalStructure(EnglishGrammaticalStructureFactory.java:5)
+					        at edu.stanford.nlp.pipeline.ParserAnnotatorUtils.fillInParseAnnotations(ParserAnnotatorUtils.java:50)
+					        at edu.stanford.nlp.pipeline.ParserAnnotator.finishSentence(ParserAnnotator.java:249)
+					        at edu.stanford.nlp.pipeline.ParserAnnotator.doOneSentence(ParserAnnotator.java:228)
+					        at edu.stanford.nlp.pipeline.SentenceAnnotator.annotate(SentenceAnnotator.java:95)
+					        at edu.stanford.nlp.pipeline.AnnotationPipeline.annotate(AnnotationPipeline.java:67)
+					        at edu.stanford.nlp.pipeline.StanfordCoreNLP.annotate(StanfordCoreNLP.java:847)
+						 */
+					}
+    			}
+    			// It's looking for the first non-empty stream
+    			if (row == null) return Stream.of("done");
+    			else return Stream.empty();
 	    	}
+    	).findFirst();
     }
 }
