@@ -11,12 +11,10 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-import org.fusesource.lmdbjni.BufferCursor;
-import org.fusesource.lmdbjni.Database;
-import org.fusesource.lmdbjni.Env;
-import org.fusesource.lmdbjni.Transaction;
+import org.iq80.leveldb.*;
+import static org.fusesource.leveldbjni.JniDBFactory.*;
+import java.io.*;
 
-import static org.fusesource.lmdbjni.Constants.*;
 import edu.stanford.nlp.process.Morphology;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphEdge;
@@ -24,40 +22,47 @@ import edu.stanford.nlp.util.IterableIterator;
 import edu.uncc.cs.watsonsim.Passage;
 
 public class Edges implements Segment {
-	private Env lmdb_env = new Env("data/edges-db"); 
-	private Database lmdb = lmdb_env.openDatabase();
 	private ConcurrentSkipListMap<String, Integer> relations = new ConcurrentSkipListMap<>();
 	private final Logger log = Logger.getLogger(getClass());
+	private DB db;
 	
-	public void flush() {
-		// Take a snapshot
-		ConcurrentSkipListMap<String, Integer> rels = relations;
-		relations = new ConcurrentSkipListMap<>();
-		/*
-		 * This feature does not come until 0.4.0 which is not on maven central
-		
-		try (Transaction tx = lmdb_env.createWriteTransaction();
-				BufferCursor cursor = lmdb.bufferCursor(tx)){
-		*/
-		rels.forEach((key, value) -> {
-			byte[] bkey = bytes(key);
-			if (lmdb.get(bkey) != null)
-				value += Integer.parseInt(string(lmdb.get(bkey)));
-			lmdb.put(bkey, bytes(value.toString()));
+	public Edges() {
+		Options options = new Options();
+		options.createIfMissing(true);
+		try {
+			db = factory.open(new File("data/edges-leveldb"), options);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void flush() throws IOException {
+		try (WriteBatch batch = db.createWriteBatch()) {
+			// Take a snapshot
+			ConcurrentSkipListMap<String, Integer> rels = relations;
+			relations = new ConcurrentSkipListMap<>();
 			
-			
-			/* Sequential, but inserts don't make sense
-			byte[] bkey = bytes(key);
-			cursor.seek(bkey);
-			
-			if (Arrays.equals(bkey, cursor.keyBytes())) {
-				cursor.valWriteInt(cursor.valInt(0) + value);
-			} else {
-				cursor.valWriteInt(value);
-			}
-			cursor.put();
-			*/
-		});
+			rels.forEach((key, value) -> {
+				byte[] bkey = bytes(key);
+				byte[] dbval = db.get(bkey);
+				if (dbval != null)
+					value += Integer.parseInt(asString(dbval));
+				batch.put(bkey, bytes(value.toString()));
+				/* Sequential, but inserts don't make sense
+				byte[] bkey = bytes(key);
+				cursor.seek(bkey);
+				
+				if (Arrays.equals(bkey, cursor.keyBytes())) {
+					cursor.valWriteInt(cursor.valInt(0) + value);
+				} else {
+					cursor.valWriteInt(value);
+				}
+				cursor.put();
+				*/
+			});
+			db.write(batch);
+		}
 		/*
 		// Make space-separated lines
 		IterableIterator<String> lines = new IterableIterator<>(
@@ -96,7 +101,13 @@ public class Edges implements Segment {
 						(a, b) -> a+b);
 			}
 		// Try to keep it from absorbing all available memory
-		if (relations.size() > 100_000) flush();
+		if (relations.size() > 100_000)
+			try {
+				flush();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	}
 
 }

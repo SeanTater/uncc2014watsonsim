@@ -63,6 +63,8 @@ dependencies {
     compile 'org.deephacks.lmdbjni:lmdbjni-linux64:0.3.2'
     compile 'org.deephacks.lmdbjni:lmdbjni-osx64:0.3.2'
     compile 'org.deephacks.lmdbjni:lmdbjni-win64:0.3.2'
+    // Leveldb for fast writes
+    compile 'org.fusesource.leveldbjni:leveldbjni-all:1.8'
 
     ////  NLP Libraries
     // OpenNLP
