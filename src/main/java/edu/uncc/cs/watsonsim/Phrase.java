@@ -128,7 +128,6 @@ public class Phrase {
 		    // this is the parse tree of the current sentence
 		    	trees.add(sentence.get(TreeAnnotation.class));
 		    	graphs.add(sentence.get(CollapsedCCProcessedDependenciesAnnotation.class));
-		    	System.out.println(sentence.keySet());
 		    	Map<Integer, CorefChain> refs = sentence.get(CorefChainAnnotation.class);
 		    	if (refs != null)
 		    		refs.forEach((key, chain) -> {
