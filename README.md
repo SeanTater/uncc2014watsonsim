@@ -35,11 +35,14 @@ But, if you prefer, you can also use Eclipse. First create a project.
 ```sh
 gradle eclipse -Ptarget
 ```
-Then remove apache-jena-libs-*.pom since Eclipse cannot handle .pom in the build path, and all the necessary dependencies it references will have already been included. Then you can run WatsonSim.java directly.
+Then you can run WatsonSim.java directly.
 
-You can also run the accuracy tests using a script:
+There are a few other features as well
 ```sh
+# Generate statistics reports for accuracy and other measurements
 gradle run -Ptarget=scripts.ParallelStats
+# Regenerate the Indri, Lucene, SemanticVectors, Bigram and Edge indices
+gradle run -Ptarget=index.Reindex
 ```
 
 ## Technologies Involved
