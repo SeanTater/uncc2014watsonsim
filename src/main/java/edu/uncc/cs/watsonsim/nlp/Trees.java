@@ -12,10 +12,13 @@ import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation;
+import edu.stanford.nlp.semgraph.SemanticGraphEdge;
+import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
@@ -74,6 +77,53 @@ public class Trees {
 		}
 		b.deleteCharAt(b.length()-1);
 		return b.toString();
+	}
+	
+	/**
+	 * Most of the time it's more helpful to know the more specific grammatical
+	 * relations like "prep_of" than it is to bridge two words across an "of".
+	 * @param A more specific relation, if one is known. Otherwise it's just
+	 *        the result of .getRelation()
+	 */
+	public static String getSpecificPreps(GrammaticalRelation rel) {
+		String rel_name = rel.getShortName();
+		if (rel.getSpecific() != null) {
+			rel_name += "_" + rel.getSpecific();
+		}
+		return rel_name;
+	}
+
+	/**
+	 * The bare one-word nouns are usually not very good.
+	 * "group", "set" and such are especially bad as they are basically just
+	 * container types: "group of diseases", "set of rules"
+	 * So we concat a few kinds of links to nouns.
+	 */
+	public static String concatNoun(SemanticGraph graph, IndexedWord rightmost) {
+		if (rightmost.tag().startsWith("NN")) {
+			StringBuilder phrase = new StringBuilder();
+			// Only actually build on nouns
+			for (SemanticGraphEdge edge : graph.outgoingEdgeIterable(rightmost)) {
+				switch (edge.getRelation().getShortName()) {
+				case "nn":
+				case "cd":
+				//case "amod":
+					phrase.append(edge.getDependent().lemma());
+					phrase.append(' ');
+					break;
+				case "prep":
+					if (getSpecificPreps(edge.getRelation())
+							.equals("prep_of")) {
+						phrase.append(edge.getDependent().lemma());
+						phrase.append(' ');
+					}
+					break;
+				}
+			}
+			return phrase.append(rightmost.originalText()).toString();
+		} else {
+			return rightmost.originalText();
+		}
 	}
 }
 

@@ -63,19 +63,22 @@ public class DefaultPipeline {
 		 */
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
-			//new IndriSearcher(env, false),
-			//new SemanticVectorSearcher(env),
+			new IndriSearcher(env, false),
+			new SemanticVectorSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
 			new CachingSearcher(env, new BingSearcher(env), "bing"),
 			new Anagrams(env)
 		};
-		early_researchers = Researcher.pipe(env.log,	
+		early_researchers = Researcher.pipe(env.log,
+			// Most of the suggestions are garbage
 			//new RedirectSynonyms(env),
 			new HyphenTrimmer(),
 			new StrictFilters(),
-			//new URLExpander(),
-			//new AnswerTrimming(),
+			// This causes too much network traffic.
+			//new URLExpander(), // needs a proxy!
+			// Often trims good parts of correct answers
+			//new AnswerTrimming(), // Overshoots
 			new MergeByText(env),
 			new MergeAnswers(),
 			//new ChangeFitbAnswerToContentsOfBlanks(),

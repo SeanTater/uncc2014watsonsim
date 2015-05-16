@@ -18,12 +18,15 @@ public class Indri implements Segment {
 			// create means to replace
 			// TODO: ask the user
 			index.create(path);
+			//index.open(path);
 			index.setMemory(1<<30);
 			index.setIndexedFields(new String[]{"text"});
 			index.setStoreDocs(false);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Can't create Indri index. Please check that you entered the right path in UserSpecificConstants.java.");
+			throw new RuntimeException("Can't create Indri index."
+					+ " Please check that you entered the right path in "
+					+ "config.properties");
 		}
 	}
 

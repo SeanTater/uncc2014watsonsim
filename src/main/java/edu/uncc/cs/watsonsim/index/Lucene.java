@@ -11,6 +11,7 @@ import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -25,8 +26,8 @@ public class Lucene implements Segment {
         Analyzer analyzer = new StandardAnalyzer();
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
         //this mode by default overwrites the previous index, not a very good option in real usage
-        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-        
+        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+        iwc.setSimilarity(new BM25Similarity());
         index = new IndexWriter(dir, iwc);
 	}
 	
@@ -34,7 +35,7 @@ public class Lucene implements Segment {
 		// Index with Lucene
         Document doc = new Document();
         doc.add(new TextField("title", p.title, Field.Store.NO));
-        doc.add(new TextField("text", p.text, Field.Store.NO));
+        doc.add(new TextField("text", p.text, Field.Store.YES));
         doc.add(new StoredField("docno", p.reference));
         try {
 			index.addDocument(doc);

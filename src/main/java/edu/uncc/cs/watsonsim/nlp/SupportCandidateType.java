@@ -45,35 +45,6 @@ public class SupportCandidateType {
 	}
 
 	/**
-	 * The bare one-word nouns are usually not very good.
-	 * "group", "set" and such are especially bad as they are basically just
-	 * container types: "group of diseases", "set of rules"
-	 * So we concat a few kinds of links to nouns.
-	 */
-	public static String concatNoun(SemanticGraph graph, IndexedWord rightmost) {
-		StringBuilder phrase = new StringBuilder();
-		for (SemanticGraphEdge edge : graph.outgoingEdgeIterable(rightmost)) {
-			switch (edge.getRelation().getShortName()) {
-			case "nn":
-			case "cd":
-			case "amod":
-				phrase.append(edge.getDependent().originalText());
-				phrase.append(' ');
-				break;
-			case "prep":
-				if (edge.getRelation().getSpecific() != null
-						&& edge.getRelation().getSpecific().equals("of")) {
-					phrase.append(edge.getDependent().originalText());
-					phrase.append(' ');
-				}
-				break;
-			}
-		}
-		phrase.append(rightmost.originalText());
-		return phrase.toString();
-	}
-
-	/**
 	 * Find simple statements of type in regular text, such as "Diabetes is a
 	 * common disease"
 	 * 
@@ -132,7 +103,7 @@ public class SupportCandidateType {
 					IndexedWord obj_idx = idWord(graph, info.getTerm("Y").toString());
 					if (subj_idx.tag().startsWith("NN")
 							&& obj_idx.tag().startsWith("NN")) {
-						String noun = concatNoun(graph, subj_idx);
+						String noun = Trees.concatNoun(graph, subj_idx);
 						String type = obj_idx.originalText(); //concatNoun(graph, obj_idx);
 						log.info("Discovered " + noun + " is a(n) " + type);
 						names_and_types.add(new Pair<>(noun,type));
