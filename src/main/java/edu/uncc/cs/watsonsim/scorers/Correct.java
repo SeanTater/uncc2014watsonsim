@@ -17,12 +17,12 @@ public class Correct extends AnswerScorer {
 	 * @returns correctness		0.0 -> incorrect, 1.0 -> correct
 	 * */
 	public double scoreAnswer(Question q, Answer a) {
-		if (q.answer == null) {
+		if (q.correct_answer == null) {
 			return 0;
 		} else {
-			return (syn.matchViaLevenshtein(q.answer.text, a.text)
-					|| syn.matchViaSearch(q.answer.text, a.text)
-					|| StringUtils.containsIgnoreCase(a.text, q.answer.text)) ? 1 : 0;
+			return (syn.matchViaLevenshtein(q.correct_answer.text, a.text)
+					|| syn.matchViaSearch(q.correct_answer.text, a.text)
+					|| StringUtils.containsIgnoreCase(a.text, q.correct_answer.text)) ? 1 : 0;
 		}
         
 	}

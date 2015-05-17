@@ -39,7 +39,7 @@ public class PassageRetrieval extends Researcher {
 		}).sum();
 	    	
 		
-		log.info("Found " + total_passages + " supporting passages.");
+		q.log.info("Found " + total_passages + " supporting passages.");
 		return answers;
 	}
 
