@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.nlp.ClueType;
 import edu.uncc.cs.watsonsim.nlp.Synonyms;
 import edu.uncc.cs.watsonsim.nlp.Weighted;
 import edu.uncc.cs.watsonsim.scorers.AnswerScorer;
@@ -61,7 +62,7 @@ public class LATCheck extends AnswerScorer {
 			}
 		}*/
 		for (String lextype : a.lexical_types) {
-			if (syn.matchViaSearch(q.simple_lat, lextype))
+			if (syn.matchViaSearch(q.memo(ClueType::fromClue), lextype))
 				return 1.0;
 		}
 		return -1.0;

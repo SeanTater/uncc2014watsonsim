@@ -1,26 +1,17 @@
 package edu.uncc.cs.watsonsim.index;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.iq80.leveldb.*;
 import org.junit.Test;
-
-import com.google.common.hash.BloomFilter;
-import com.google.common.hash.Funnels;
 
 import static org.fusesource.leveldbjni.JniDBFactory.*;
 import static org.junit.Assert.assertEquals;

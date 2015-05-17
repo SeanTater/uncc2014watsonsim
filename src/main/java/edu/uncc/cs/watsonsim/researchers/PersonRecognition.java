@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.uncc.cs.watsonsim.Answer;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.QType;
 import edu.uncc.cs.watsonsim.Question;
 import opennlp.tools.namefind.NameFinderME;
@@ -51,7 +52,7 @@ public class PersonRecognition extends Researcher {
     }
 
     @Override
-    public Answer answer(Question q, Answer answer) {
+    public Answer answer(Phrase q, Answer answer) {
         Span nameSpans[] = null;
         String[] sentence = null;
         sentence = answer.text.split("[,'()  ]+");

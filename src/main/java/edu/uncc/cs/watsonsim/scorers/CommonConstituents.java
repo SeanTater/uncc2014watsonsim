@@ -6,7 +6,6 @@ import edu.stanford.nlp.trees.Tree;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Phrase;
-import edu.uncc.cs.watsonsim.Question;
 
 /* @author Wlodek
  * @author Sean Gallagher
@@ -45,7 +44,7 @@ public class CommonConstituents extends PassageScorer {
 	/** Generate a simple score based on scorePhrases.
 	 * 
 	 */
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 		return scorePhrases(p, new Phrase(a.text));
 	}
 }

@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 
+import edu.uncc.cs.watsonsim.nlp.ClueType;
 import edu.uncc.cs.watsonsim.researchers.*;
 import edu.uncc.cs.watsonsim.scorers.*;
 import edu.uncc.cs.watsonsim.search.*;
@@ -64,7 +65,7 @@ public class DefaultPipeline {
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
 			new IndriSearcher(env, false),
-			new SemanticVectorSearcher(env),
+			//new SemanticVectorSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
 			new CachingSearcher(env, new BingSearcher(env), "bing"),
@@ -143,7 +144,6 @@ public class DefaultPipeline {
 			for (Passage p : s.query(question))
 				answers.add(new Answer(p));
 		l.info("Generated " + answers.size() + " candidate answers.");
-		
 		
 		answers = early_researchers.pull(question, answers);
     	

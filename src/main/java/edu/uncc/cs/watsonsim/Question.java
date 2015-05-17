@@ -9,26 +9,14 @@ public class Question extends Phrase {
 	public Answer answer;
     private String category = "unknown";
     private QType type;
-    public final String simple_lat;
-    
- 
     /**
      * Create a question from it's raw text
      */
     public Question(String text) {
     	super(text);
         this.type = QClassDetection.detectType(this);
-        simple_lat = ClueType.fromClue(trees.get(0));
-        
         Logger log = Logger.getLogger(getClass());
-        if (simple_lat.isEmpty())
-        	log.info("Couldn't find a LAT.");
-        else
-        	log.info("Looking for a " + simple_lat);
-        
         log.info("Looks like a " + type.toString().toLowerCase() + " question");
-    	
-    	
     }
 
 	/**

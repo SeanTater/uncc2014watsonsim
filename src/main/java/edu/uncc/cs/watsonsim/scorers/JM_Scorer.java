@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
-import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.Phrase;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
 import opennlp.tools.parser.Parser;
@@ -59,7 +59,7 @@ public class JM_Scorer extends PassageScorer{
 		return score;
 	}
 	
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 		try {
 			p.score("JM_Scorer", scoreStructure(q.text, a.text, p.text, false));
 		} catch (InvalidFormatException e) {

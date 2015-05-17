@@ -2,12 +2,12 @@ package edu.uncc.cs.watsonsim.scorers;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
-import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.Phrase;
 
 //Score is Percent of words in common / the average distance between the words
 public class PercentWordsInCommon extends PassageScorer {
 	
-public double scorePassage(Question q, Answer a, Passage p) {
+public double scorePassage(Phrase q, Answer a, Passage p) {
 		String[] questionTextArray = q.text.split(" ");
 		int[] distanceBetweenWords = new int[q.text.length()];
 		int distanceIndex = 0;

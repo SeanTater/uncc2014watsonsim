@@ -12,6 +12,7 @@ import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.nlp.ClueType;
 import edu.uncc.cs.watsonsim.nlp.DBPediaCandidateType;
 import edu.uncc.cs.watsonsim.nlp.SupportCandidateType;
 import edu.uncc.cs.watsonsim.nlp.Synonyms;
@@ -69,7 +70,7 @@ public class TagLAT extends Researcher {
 						a.log(this, "Passage %s says it's a %s.", p.reference, type);
 						a.lexical_types.add(type);
 						support_types++;
-					} else if (syn.matchViaSearch(type, q.simple_lat)) {
+					} else if (syn.matchViaSearch(type, q.memo(ClueType::fromClue))) {
 						Answer suggestion = new Answer(name);
 						suggestion.lexical_types = Arrays.asList(type);
 						suggestion.log(this, "Found it's a %s, while reading about %s in %s", type, a, p.reference);

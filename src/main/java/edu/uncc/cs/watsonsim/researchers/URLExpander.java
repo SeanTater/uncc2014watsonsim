@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 
 
+
 import crawlercommons.fetcher.BaseFetchException;
 import crawlercommons.fetcher.http.SimpleHttpFetcher;
 import crawlercommons.fetcher.http.UserAgent;
@@ -18,7 +19,7 @@ import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
-import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.Phrase;
 
 
 /** Fill in the full text of an answer from it's URL, if it has one */
@@ -37,7 +38,7 @@ public class URLExpander extends Researcher {
 		fetcher.setMaxRetryCount(1);
 	}
 	
-	public Answer answer(Question q, Answer a) {
+	public Answer answer(Phrase q, Answer a) {
 		a.passages.replaceAll(p -> {
 			if (p.reference.startsWith("http") && p.reference.contains(".htm")) {
 				try {

@@ -87,11 +87,14 @@ public class ClueType {
 	 * Detect the LAT using a simple rule-based approach
 	 * @return The most general single-word noun LAT
 	 */
-	public static String fromClue(Tree t) {
-		Analysis lat = detectPart(t);
+	public static String fromClue(Phrase phrase) {
+		Analysis lat = detectPart(phrase.trees.get(0));
 		if (lat.ok() && lat.rank() >= 0) {
-			return concat(lat.nn);
+			String latname = concat(lat.nn);
+			phrase.log.info("Target lexical type: " + latname); 
+			return latname;
 		} else {
+			phrase.log.info("Unknown target lexical type.");
 			return "";
 		}
 	}

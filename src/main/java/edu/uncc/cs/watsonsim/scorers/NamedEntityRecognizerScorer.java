@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
-import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.StringUtils;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -21,7 +21,7 @@ import opennlp.tools.util.Span;
  * 
  */
 public class NamedEntityRecognizerScorer extends PassageScorer {
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 
 		// Jane Austen
 		String c_t = StringUtils.join(p.text, " ");

@@ -43,7 +43,7 @@ public class QClassDetection {
 	 * @param question the Question object we are attempting to classify
 	 * @return true/false
 	 */
-	private static boolean isFITB(Question question) {
+	private static boolean isFITB(Phrase question) {
 		//TODO: Another, more common, indication of FITB is quoted phrases adjacent to the focus.
 		// Use focus detection (and LAT detection) to identify these.
 		

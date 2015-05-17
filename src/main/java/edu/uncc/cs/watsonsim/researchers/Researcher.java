@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Log;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
 
 /** Researchers can modify questions and have the guarantee of running
@@ -77,7 +78,7 @@ abstract public class Researcher {
 	 * 
 	 * @return TODO
 	 */
-	public Answer answer(Question q, Answer a) {
+	public Answer answer(Phrase q, Answer a) {
 		return a;
 	}
 }

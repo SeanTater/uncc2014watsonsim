@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
-import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.StringUtils;
 
 /**
@@ -20,7 +20,7 @@ import edu.uncc.cs.watsonsim.StringUtils;
  *
  */
 public class PassageTermMatch extends PassageScorer { 
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 		
 		// Jane Austen
 		String c_t = StringUtils.join(p.text, " ");

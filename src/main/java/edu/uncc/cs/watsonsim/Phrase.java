@@ -11,7 +11,6 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -48,6 +47,7 @@ public class Phrase {
 	private final ConcurrentHashMap<Function<Phrase, ?>, Object> memos;
 	private final List<String> lemmas;
 	public final Map<Integer, Pair<CorefMention, CorefMention>> unpronoun;
+	public Log log = Log.NIL;
 	
 	// Create a pipeline
 	static final StanfordCoreNLP pipeline;

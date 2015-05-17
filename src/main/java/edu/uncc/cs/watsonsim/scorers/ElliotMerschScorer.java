@@ -2,11 +2,11 @@ package edu.uncc.cs.watsonsim.scorers;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
-import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.Phrase;
 
 public class ElliotMerschScorer extends PassageScorer{
 	
-	public double Scorer (Question q, Answer a, Passage p){
+	public double Scorer (Phrase q, Answer a, Passage p){
 		
 				String Qraw = q.text;
 				String Ptext = p.text;

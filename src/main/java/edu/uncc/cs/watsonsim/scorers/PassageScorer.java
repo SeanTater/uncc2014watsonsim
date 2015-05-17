@@ -6,6 +6,7 @@ import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;
 
@@ -68,7 +69,7 @@ public abstract class PassageScorer implements Scorer {
 	 * @param a		Input Answer, varies medium
 	 * @param p		Input Passage, varies fastest
 	 */
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 		return Double.NaN;
 	}
 }

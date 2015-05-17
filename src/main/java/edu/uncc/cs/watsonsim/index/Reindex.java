@@ -72,7 +72,7 @@ public class Reindex {
     	new Reindex().run();
     }
     
-    public void run() throws SQLException {
+    public void run() {
     	try {
 	        //indexAll("SELECT title, text, reference FROM sources;");
 	        if (db.backend().startsWith("SQLite")) {
@@ -93,7 +93,7 @@ public class Reindex {
 						+ "GROUP BY title;");
 	        	
 	        }
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException | SQLException e) {
 			e.printStackTrace();
 		} finally {
 			// Even if the process is interrupted, save the indices!

@@ -10,6 +10,7 @@ import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
@@ -115,7 +116,7 @@ public class KensNLPScorer extends PassageScorer {
 	
 
 	@Override
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 		
 		int countOfQuestionNPsInPassage = 0;
 		try {
@@ -174,7 +175,7 @@ public class KensNLPScorer extends PassageScorer {
 	public static void main(String[] args) {
 
 		//initialize test data
-		Question q = new Question("This person invented the automobile");
+		Phrase q = new Question("This person invented the automobile");
 		Passage p = new Passage("ken", "the automobile", "Henry Ford invented the automobile .  He was a great man.  The automobile industry was tranformed into a vast, new opportunity.", "1000");
 		Answer a = new Answer("test", "test2", "test3", "test4");
 

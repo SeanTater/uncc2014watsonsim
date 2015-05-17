@@ -9,11 +9,11 @@ import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
-import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.StringUtils;
 
 public class NGram extends PassageScorer {
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 		// Jane Austen
 		List<String> a_set = generateNgrams(3, StringUtils.tokenize(a.text));
 		

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
 
 public class WordProximity extends PassageScorer {
@@ -20,7 +21,7 @@ public class WordProximity extends PassageScorer {
 	}
 	
 	@Override
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 		double distance = 1;
 		double average_log_distance = 0;
 		

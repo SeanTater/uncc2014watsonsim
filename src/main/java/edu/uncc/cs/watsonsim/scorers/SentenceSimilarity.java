@@ -14,7 +14,7 @@ import java.util.List;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Passage;
-import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.StringUtils;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
@@ -182,7 +182,7 @@ public class SentenceSimilarity extends PassageScorer {
 	 * 
 	 */
 	//TODO divide by passage length containing the matches, not the full passage length
-	public double scorePassage(Question q, Answer a, Passage p) {
+	public double scorePassage(Phrase q, Answer a, Passage p) {
 		boolean verbose = true;
 		
 		// Tokenize the text, necessary for simple and NLP searches

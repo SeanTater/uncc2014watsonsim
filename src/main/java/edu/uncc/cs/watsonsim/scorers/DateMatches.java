@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Question;
+import edu.uncc.cs.watsonsim.nlp.ClueType;
 
 /**
  * Check if: the question needs a date, and the answer is one 
@@ -43,7 +44,7 @@ public class DateMatches extends AnswerScorer {
 	
 	public double scoreAnswer(Question q, Answer a) {	
 		boolean matches = false;
-		switch (q.simple_lat.toLowerCase()) {
+		switch (q.memo(ClueType::fromClue).toLowerCase()) {
 		case "year": matches = maybeYear(a.text);
 		case "date":
 		case "day": matches = maybeDate(a.text);

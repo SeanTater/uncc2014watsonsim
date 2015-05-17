@@ -40,17 +40,17 @@ public class Log {
 	public static final Log NIL = new Log(Object.class, x->{});
 	
 	// Start a root logger
-	public Log(Class<?> speaker, Consumer<String> listener) {
+	public Log(Object speaker, Consumer<String> listener) {
 		this.parent = null;
-		this.speaker = speaker;
+		this.speaker = speaker.getClass();
 		this.start = System.currentTimeMillis();
 		this.listener = listener;
 	}
 	
 	// Start a child logger
-	private Log(Class<?> speaker, Log parent) {
+	private Log(Object speaker, Log parent) {
 		this.parent = parent;
-		this.speaker = speaker;
+		this.speaker = speaker.getClass();
 		this.start = parent.start;
 	}
 	
