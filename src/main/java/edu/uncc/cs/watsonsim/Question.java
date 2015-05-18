@@ -15,6 +15,12 @@ public class Question extends Phrase {
     private final String category;
     private final QType type;
     
+    /**
+     * Construct a new question for analysis.
+     * @param question   The natural language clue
+     * @param correct_answer  The target answer, if available (or null)
+     * @param category  The category of the problem, also natural language
+     */
     public Question(String question, Answer correct_answer, String category) {
     	super(question);
     	this.correct_answer = correct_answer;
@@ -24,23 +30,29 @@ public class Question extends Phrase {
         log.info("Looks like a " + type.toString().toLowerCase() + " question");
     }
     
+    /**
+     * Create a simple question without bells and whistles
+     */
+    public Question(String question) {
+    	this(question, null, "");
+    }
+    
 	/**
-     * Create a question given it's raw text and category
+     * Create a question from a clue and a hint about it's category
      */
     public Question(String question, String category) {
         this(question, null, category);
     }
 
     /**
-     * Create a question to which the raw text and answer are known but not the
-     * category
+     * Create a question with a clue and plain string answer but no category
      */
     public static Question known(String question, String answer) {
         return known(question, answer, "");
     }
 
     /**
-     * Create a question to which the raw text, answer, and category are known
+     * Create a question with a clue, a plain string answer, and category
      */
     public static Question known(String question, String answer, String category) {
         return new Question(question,
