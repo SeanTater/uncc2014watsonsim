@@ -55,7 +55,7 @@ public class Phrase {
 		// Creates an NLP pipeline missing ner, and dcoref 
 	    Properties props = new Properties();
 	    props.put("annotators", "tokenize, cleanxml, ssplit, pos, lemma, parse");
-	    // Use the faster but slow-loading shift-reduce models
+	    // Use the faster parsing but slower loading shift-reduce models
 	    props.put("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
 	    // When you find something untokenizable, delete it and don't whine
 	    props.put("tokenize.options", "untokenizable=noneDelete");

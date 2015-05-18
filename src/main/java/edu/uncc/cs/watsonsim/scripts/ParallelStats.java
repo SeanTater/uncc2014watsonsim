@@ -160,8 +160,8 @@ class StatsGenerator {
 			int tq = total_questions.incrementAndGet();
 			if (tq % 50 == 0) {
 				System.out.println(
-						String.format("[%d]: %d accurate",
-								total_questions.get(), total_correct.get()));
+						String.format("[%d]: %d accurate (%.02d%% accurate)",
+								total_questions.get(), total_correct.get(), (double) total_correct.get() / total_questions.get()));
 				
 			}
 			

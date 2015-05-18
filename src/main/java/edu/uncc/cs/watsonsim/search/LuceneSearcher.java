@@ -64,7 +64,7 @@ public class LuceneSearcher extends Searcher {
 					queryFromSkipBigrams(
 							question.text
 							+ " "
-							+ defaultString(question.getCategory())),
+							+ question.getCategory()),
 					MAX_RESULTS).scoreDocs;
 			// This isn't range based because we need the rank
 			for (int i=0; i < hits.length; i++) {
