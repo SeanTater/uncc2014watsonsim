@@ -1,5 +1,6 @@
 package edu.uncc.cs.watsonsim;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +14,10 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import edu.stanford.nlp.dcoref.CorefChain;
 import edu.stanford.nlp.dcoref.CorefChain.CorefMention;
@@ -41,13 +46,13 @@ public class Phrase {
 	private static final Cache<String, Phrase> recent; 
 
 	// Cached Fields
-	public final List<String> tokens;
-	public final List<Tree> trees;
-	public final List<SemanticGraph> graphs;
-	private final ConcurrentHashMap<Function<Phrase, ?>, Object> memos;
-	private final List<String> lemmas;
-	public final Map<Integer, Pair<CorefMention, CorefMention>> unpronoun;
-	public Log log = Log.NIL;
+	public transient final List<String> tokens;
+	public transient final List<Tree> trees;
+	public transient final List<SemanticGraph> graphs;
+	private transient final ConcurrentHashMap<Function<? extends Phrase, ?>, Object> memos;
+	private transient final List<String> lemmas;
+	public transient final Map<Integer, Pair<CorefMention, CorefMention>> unpronoun;
+	public transient Log log = Log.NIL;
 	
 	// Create a pipeline
 	static final StanfordCoreNLP pipeline;
@@ -67,6 +72,7 @@ public class Phrase {
 	    	.weakValues()
 	    	.build();
 	}
+	
 	/**
 	 * Create a new NLP parsed phrase.
 	 * When finished, all public fields are final, immutable, and non-null.
@@ -162,8 +168,8 @@ public class Phrase {
 	 * This casts internally but it's type-safe.
 	 */
 	@SuppressWarnings("unchecked")
-	public <X> X memo(Function<Phrase, X> app) {
-		return (X) memos.computeIfAbsent(app, (key) -> app.apply(this));
+	public <X, T extends Phrase> X memo(Function<T, X> app) {
+		return (X) memos.computeIfAbsent(app, unused -> app.apply((T) this));
 	}
 
 
@@ -191,4 +197,19 @@ public class Phrase {
 			return false;
 		return true;
 	}
+	
+
+	/**
+	 * Deserialize JSON into a Phrase.
+	 * SemanticGraph, Tree and friends have cycles and we can regenerate them
+	 * anyway so just mark them transient and reparse the Phrase later.
+	 */
+	public static class Deserializer implements JsonDeserializer<Phrase> {
+		@Override
+		public Phrase deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
+			return new Phrase(json.getAsJsonObject().get("text").getAsString());
+		}
+	}
 }
+

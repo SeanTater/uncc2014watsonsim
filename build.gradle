@@ -111,6 +111,8 @@ dependencies {
     compile 'com.google.code.crawler-commons:crawler-commons:0.5'
     // Semantic Vectors for improved Lucene scoring
     compile 'pitt.search:semanticvectors:5.8'
+    // GSON for cache persistence
+    compile 'com.google.code.gson:gson:2.3.1'
 }
 
 task environment << {

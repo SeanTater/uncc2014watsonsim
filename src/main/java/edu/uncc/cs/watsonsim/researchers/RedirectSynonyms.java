@@ -47,7 +47,7 @@ public class RedirectSynonyms extends Researcher {
 							new ArrayList<>(a.passages),
 							a.scores.clone(),
 							StringEscapeUtils.unescapeXml(results.getString("source")));
-					Score.set(a.scores, "IS_WIKI_REDIRECT", 1.0);
+					a.scores.put("IS_WIKI_REDIRECT", 1.0);
 					new_answers.add(new_answer);
 				}
 			} catch (SQLException e) {

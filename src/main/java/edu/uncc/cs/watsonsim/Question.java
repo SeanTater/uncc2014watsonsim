@@ -8,6 +8,10 @@ import edu.uncc.cs.watsonsim.nlp.ClueType;
  * An immutable natural language phrase intended to be evaluated as a question
  * or clue.
  * 
+ * Available annotators (there may be more, these just get you started)
+ * ClueType.fromClue
+ * QClassDetection.detectType
+ * 
  * @author Sean
  */
 public class Question extends Phrase {
@@ -26,6 +30,7 @@ public class Question extends Phrase {
     	this.correct_answer = correct_answer;
     	this.category = category;
         this.type = QClassDetection.detectType(this);
+        this.memo(QClassDetection::detectType);
         Logger log = Logger.getLogger(getClass());
         log.info("Looks like a " + type.toString().toLowerCase() + " question");
     }

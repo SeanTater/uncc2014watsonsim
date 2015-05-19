@@ -13,7 +13,7 @@ public class Passage extends Phrase {
 	public final String title;
 	
 	// Mutable
-    public double[] scores = Score.empty();
+    public Score scores = Score.empty();
     
     /**
      * Create a new Passage
@@ -43,12 +43,6 @@ public class Passage extends Phrase {
 		scores = original.scores.clone();
 	}
     
-    /** Return the value of this Score for this answer, or null */
-    public double score(String name) {
-    	scores = Score.update(scores);
-    	return Score.get(scores, name, -1);
-    }
-    
     /** Set the value of this Score for this passage, returning the passage.
      * 
      * The intended use is something like this:
@@ -57,7 +51,7 @@ public class Passage extends Phrase {
      * @param value
      */
     public Passage score(String name, double value) {
-    	scores = Score.set(scores, name, value);
+    	scores.put(name, value);
     	return this;
     }
     

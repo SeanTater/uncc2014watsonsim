@@ -10,7 +10,7 @@ public abstract class AnswerScorer implements Scorer {
 	String name;
 	{
 		name = this.getClass().getSimpleName().replaceAll("([a-z])([A-Z]+)", "$1_$2").toUpperCase();
-		Score.register(name, Double.NaN, Merge.Mean);
+		Score.register(name, 0.0, Merge.Sum);
 	}
 	/**
 	 * By default, score every answer to a question.
@@ -30,6 +30,6 @@ public abstract class AnswerScorer implements Scorer {
 	 * @return	The score for this answer, or NaN if not applicable.
 	 */
 	public double scoreAnswer(Question q, Answer a) {
-		return Double.NaN;
+		return 0.0;
 	}
 }

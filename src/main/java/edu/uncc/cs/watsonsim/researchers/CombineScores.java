@@ -80,7 +80,7 @@ public class CombineScores extends Researcher {
 	public List<Answer> question(Question question, List<Answer> answers) {
 		for (Answer a: answers) {
 			try {
-				a.setOverallScore(score(Score.getEach(a.scores, names)));
+				a.setOverallScore(score(a.scores.getEach(names)));
 			} catch (Exception e) {
 				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
 				e.printStackTrace();

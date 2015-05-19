@@ -12,7 +12,7 @@ public class LuceneEcho extends PassageScorer {
 
 	@Override
 	public double scorePassage(Phrase q, Answer a, Passage p) {
-		return Score.get(p.scores, "LUCENE_SCORE", -1);
+		return p.scores.get("LUCENE_SCORE");
 	}
 	
 }

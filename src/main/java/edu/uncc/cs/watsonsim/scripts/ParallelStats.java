@@ -51,14 +51,16 @@ public class ParallelStats {
         
         
         //String mode = System.console().readLine("Train or test [test]:");
-        System.out.print("Train or test [test]: ");
+        System.out.print("Train, test or minitest [minitest]: ");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String mode = br.readLine();
         String sql;
         if (mode.equals("train")) {
         	sql = String.format("cached LIMIT %d OFFSET %d", 2000, 0);
-        } else {
+        } else if (mode.equals("train")) {
         	sql = String.format("cached LIMIT %d OFFSET %d", 5000, 2000);
+        } else {
+        	sql = String.format("cached LIMIT %d OFFSET %d", 1000, 2000);
         }
 		
         System.out.print("Describe the setup: ");
@@ -140,7 +142,7 @@ class StatsGenerator {
         BasicConfigurator.configure();
         Logger.getRootLogger().setLevel(Level.ERROR);
 		
-		log.info("Performing train/test session\n"
+		System.out.println("Performing train/test session\n"
 				+ "    #=top    x=top3    .=recall    ' '=missing");
 		ConcurrentHashMap<Long, DefaultPipeline> pipes =
 				new ConcurrentHashMap<>();
@@ -160,9 +162,11 @@ class StatsGenerator {
 			int tq = total_questions.incrementAndGet();
 			if (tq % 50 == 0) {
 				System.out.println(
-						String.format("[%d]: %d accurate (%.02d%% accurate)",
-								total_questions.get(), total_correct.get(), (double) total_correct.get() / total_questions.get()));
-				
+					String.format(
+						"[%d]: %d (%.02f%%) accurate",
+						total_questions.get(),
+						total_correct.get(),
+						total_correct.get() * 100.0 / total_questions.get()));
 			}
 			
 			int correct_rank = 99;
@@ -174,7 +178,7 @@ class StatsGenerator {
 			
 			for (int rank=0; rank<answers.size(); rank++) {
 				Answer candidate = answers.get(rank);
-				if (Score.get(candidate.scores, "CORRECT", 0.0) > 0.99) {
+				if (candidate.scores.get("CORRECT") > 0.99) {
 					total_inverse_rank.addAndGet(1 / ((double)rank + 1));
 					available.incrementAndGet();
 					if (rank < 100) correct_rank = rank;

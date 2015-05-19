@@ -52,9 +52,9 @@ public class DefaultPipeline {
 	private final Researcher late_researchers;
 
 	private final Environment env = new Environment();
+	
 	/**
-	 * Start a pipeline with an existing timestamp
-	 * @param millis Millis since the Unix epoch, as in currentTimeMillis()
+	 * Start a new question answering pipeline.
 	 */
 	public DefaultPipeline() {
 		Timestamp run_start = new Timestamp(System.currentTimeMillis());
@@ -65,7 +65,7 @@ public class DefaultPipeline {
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
 			new IndriSearcher(env, false),
-			//	new SemanticVectorSearcher(env),
+			//new SemanticVectorSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
 			new CachingSearcher(env, new BingSearcher(env), "bing"),

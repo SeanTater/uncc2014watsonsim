@@ -65,7 +65,7 @@ public class StatsDump extends Researcher {
 			
 			ja.put("text", a.text);
 			ja.put("evidence", a.explain());
-			boolean correct = Score.get(a.scores, "CORRECT", 0) > 0.99;
+			boolean correct = a.scores.get("CORRECT") > 0.99;
 			ja.put("correct", correct);
 			
 			// Convenience attributes

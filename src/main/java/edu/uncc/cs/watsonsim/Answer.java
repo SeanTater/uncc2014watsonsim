@@ -16,8 +16,8 @@ import org.json.simple.JSONObject;
  */
 public class Answer extends Phrase implements Comparable<Answer> {
     
-    public double[] scores = Score.empty();
-    private double overall_score = Double.NaN;
+    public Score scores = Score.empty();
+    private double overall_score = 0.0;
     public List<Passage> passages = new ArrayList<>();
     public List<String> lexical_types = new ArrayList<>();
     private final Queue<Evidence> evidence = new ConcurrentLinkedQueue<>();
@@ -33,7 +33,7 @@ public class Answer extends Phrase implements Comparable<Answer> {
     }
     
     public Answer(List<Passage> passages,
-    		double[] scores,
+    		Score scores,
     		String candidate_text) {
     	super(candidate_text);
     	this.passages = passages;
@@ -90,7 +90,7 @@ public class Answer extends Phrase implements Comparable<Answer> {
     	return String.format("[%01f %-3s]%s %s",
     			getOverallScore(),
     			engines,
-    			Score.get(scores, "CORRECT", 0) == 1 ? "!" : " ",
+    			scores.get("CORRECT") == 1 ? "!" : " ",
     			text);
     }
     
@@ -134,7 +134,7 @@ public class Answer extends Phrase implements Comparable<Answer> {
      * @param score		Double value of score (or NaN)
      */
 	public void score(String name, double score) {
-		scores = Score.set(scores, name, score);
+		scores.put(name, score);
 	}
 	
 	/**
@@ -171,7 +171,7 @@ public class Answer extends Phrase implements Comparable<Answer> {
     		passages.addAll(other.passages);
     	
     	// Merge the scores
-    	double[] scores = Score.empty();
+    	Score scores = Score.empty();
     	for (Answer other : others)
     		scores = Score.merge(scores, other.scores);
     	
