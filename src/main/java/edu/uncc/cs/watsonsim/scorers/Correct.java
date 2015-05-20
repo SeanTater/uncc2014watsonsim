@@ -22,6 +22,7 @@ public class Correct extends AnswerScorer {
 		} else {
 			return (syn.matchViaLevenshtein(q.correct_answer.text, a.text)
 					|| syn.matchViaSearch(q.correct_answer.text, a.text)
+					|| syn.matchViaRedirect(q.correct_answer.text, a.text)
 					|| StringUtils.containsIgnoreCase(a.text, q.correct_answer.text)) ? 1 : 0;
 		}
         

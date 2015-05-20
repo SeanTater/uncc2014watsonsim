@@ -55,7 +55,7 @@ public class SupportCandidateType {
 	 */
 	public static List<Pair<String, String>> extract(Phrase p) {
 		List<Pair<String, String>> names_and_types = new ArrayList<>();
-		for (SemanticGraph graph: p.graphs){
+		for (SemanticGraph graph: p.getGraphs()){
 			StringBuilder theory = new StringBuilder();
 			// Load data into a model
 			

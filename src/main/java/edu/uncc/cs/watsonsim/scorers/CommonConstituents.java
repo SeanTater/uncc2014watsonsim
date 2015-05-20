@@ -29,8 +29,8 @@ public class CommonConstituents extends PassageScorer {
 		
 		HashSet<Tree> t1_subtrees = new HashSet<>();
 		HashSet<Tree> t2_subtrees = new HashSet<>();
-		for (Tree x : t1.trees) t1_subtrees.addAll(x);
-		for (Tree y : t2.trees) t2_subtrees.addAll(y);
+		for (Tree x : t1.getTrees()) t1_subtrees.addAll(x);
+		for (Tree y : t2.getTrees()) t2_subtrees.addAll(y);
 		t1_subtrees.retainAll(t2_subtrees);
 		
 		double score = 0.0;

@@ -18,7 +18,7 @@ public class NGram extends PassageScorer {
 		List<String> a_set = generateNgrams(3, StringUtils.tokenize(a.text));
 		
 		// Romantic novelist Jane Austen once wrote -the- book Emma.
-		List<String> p_set = generateNgrams(3, p.tokens);
+		List<String> p_set = generateNgrams(3, p.getTokens());
 		
 		a_set.retainAll(p_set);
 		return a_set.size();

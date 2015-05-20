@@ -25,12 +25,11 @@ import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Score;
 
 public class CachingSearcher extends Searcher {
+	private final Database writedb = new Database(env);
 	private final Random gen = new Random();
 	private final Searcher searcher;
 	private final String engine_name;
-	private final Gson gson = new GsonBuilder()
-		.registerTypeHierarchyAdapter(
-				Phrase.class, new Phrase.Deserializer()).create();
+	private final Gson gson = new GsonBuilder().create();
 
 	public CachingSearcher(Environment env, Searcher searcher, String engine_name) {
 		super(env);
@@ -54,21 +53,23 @@ public class CachingSearcher extends Searcher {
 			Type clazz) {
 		try {
 			// Check cache
-			PreparedStatement general_cache_check = db.prep(
+			PreparedStatement general_cache_check = writedb.prep(
 					"SELECT value, created_on FROM kv_cache "
 					+ "WHERE (key=?);");
 			general_cache_check.setString(1, key);
 			ResultSet result = general_cache_check.executeQuery();
 			if (result.next()) {
 				// Load cache
-				return new Gson().fromJson(result.getString(1), clazz);
+				return gson.fromJson(result.getString(1), clazz);
 			} else {
+				result.close();
+				general_cache_check.close();
 				// Fill cache
-				PreparedStatement set_cache = db.prep(
+				PreparedStatement set_cache = writedb.prep(
 						"INSERT INTO kv_cache (key, value) VALUES (?,?);");
 				X value = func.apply(key);
 				set_cache.setString(1, key);
-				set_cache.setString(2, new Gson().toJson(value));
+				set_cache.setString(2, gson.toJson(value));
 				set_cache.executeUpdate();
 				return value;
 			}

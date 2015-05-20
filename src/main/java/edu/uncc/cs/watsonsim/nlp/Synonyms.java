@@ -42,6 +42,24 @@ public class Synonyms {
 	}
 	
 	/**
+	 * Match using Wiki redirects
+	 */
+	public boolean matchViaRedirect(String left, String right) {
+		try {
+			PreparedStatement stmt = db.prep(
+					"SELECT count(*) FROM wiki_redirects WHERE "
+					+ "(source=? AND target=?) OR (source=? AND target=?);");
+			stmt.setString(1, left);
+			stmt.setString(2, right);
+			stmt.setString(3, left);
+			stmt.setString(4, right);
+			return db.then(stmt).getInt(1) > 0;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+	
+	/**
 	 * Find paraphrases and synonyms of a set of phrases.
 	 * You can enter multiple sources, which are an array for syntactic
 	 * convenience. The scoring will be combined between all the sources.

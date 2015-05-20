@@ -64,11 +64,12 @@ public class DefaultPipeline {
 		 */
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
-			new IndriSearcher(env, false),
+			//new IndriSearcher(env, false),
+			new CachingSearcher(env, new IndriSearcher(env, false), "indri"),
 			//new SemanticVectorSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
-			new CachingSearcher(env, new BingSearcher(env), "bing"),
+			//new CachingSearcher(env, new BingSearcher(env), "bing"),
 			new Anagrams(env)
 		};
 		early_researchers = Researcher.pipe(env.log,

@@ -19,7 +19,7 @@ public class AnswerPOS extends AnswerScorer {
 
 	public double scoreAnswer(Question q, Answer a) {
 		
-		for (SemanticGraph graph : a.graphs) {
+		for (SemanticGraph graph : a.getGraphs()) {
 
 			if(!graph.getRoots().isEmpty())
 			{
@@ -51,7 +51,7 @@ public class AnswerPOS extends AnswerScorer {
 		// System.err.println(a.graphs.size());
 		// System.out.println("hello");
 		double score = 0;
-		for (SemanticGraph graph : a.graphs) {
+		for (SemanticGraph graph : a.getGraphs()) {
 
 			if (graph.getFirstRoot().tag().contains("NN")) {
 				for (SemanticGraphEdge edge : graph.edgeIterable()) {

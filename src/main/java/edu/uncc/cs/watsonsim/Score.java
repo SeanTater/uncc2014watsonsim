@@ -111,7 +111,10 @@ public class Score extends HashMap<String, Double> implements Map<String, Double
 	 * @param name		The name of the score
 	 */
 	public double get(String name) {
-		return getOrDefault(name, template.get(name).default_value);
+		if (template.containsKey(name))
+			return getOrDefault(name, template.get(name).default_value);
+		else
+			return 0.0;
 	}
 	/**
 	 * Get a bunch of scores in a new order.

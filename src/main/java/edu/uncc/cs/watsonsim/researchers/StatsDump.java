@@ -48,9 +48,9 @@ public class StatsDump extends Researcher {
 		JSONObject jquestion = new JSONObject();
 		jquestion.put("text", q.text);
 		jquestion.put("category", q.getCategory());
-		jquestion.put("graphs", q.graphs.toString());
-		jquestion.put("trees", q.trees.toString());
-		jquestion.put("tokens", q.tokens.toString());
+		jquestion.put("graphs", q.getGraphs().toString());
+		jquestion.put("trees", q.getTrees().toString());
+		jquestion.put("tokens", q.getTokens().toString());
 		// defaults
 		jquestion.put("correct", false);
 		jquestion.put("rank", -1);

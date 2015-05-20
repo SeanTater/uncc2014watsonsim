@@ -140,9 +140,9 @@ public class Edges implements Segment {
 	public static List<Edge> generatePronounEdges(
 			SemanticGraph g, IndexedWord w, Phrase t) {
 		List<Edge> edges = new ArrayList<>();
-		if (t.unpronoun.containsKey(w.index())) {
+		if (t.getUnpronoun().containsKey(w.index())) {
 			// Use what we know about the pronoun
-			Pair<CorefMention, CorefMention> mention_edge = t.unpronoun.get(w.index());
+			Pair<CorefMention, CorefMention> mention_edge = t.getUnpronoun().get(w.index());
 			String main_noun = Trees.concatNoun(g, g.getNodeByIndex(mention_edge.second.headIndex));
 			
 			Animacy is_animate = mention_edge.first.animacy;
@@ -178,7 +178,7 @@ public class Edges implements Segment {
 	public static String getMainMention(
 			Phrase phrase, SemanticGraph graph, IndexedWord word) {
 		Pair<CorefMention, CorefMention> linked_refs =
-				phrase.unpronoun.get(word.index());
+				phrase.getUnpronoun().get(word.index());
 		if (linked_refs == null) {
 			return Trees.concatNoun(graph, word);
 		} else {
@@ -236,7 +236,7 @@ public class Edges implements Segment {
 	 */
 	public static List<Edge> generateEdges(Phrase phrase) {
 		List<Edge> edges = new ArrayList<>();
-		phrase.graphs.forEach(g -> {
+		phrase.getGraphs().forEach(g -> {
 			g.edgeIterable().forEach(e -> {
 				if (e.getRelation().getShortName() != "nn") {
 					// "nn" is garbled by the concatNoun() anyway

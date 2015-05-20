@@ -88,7 +88,7 @@ public class ClueType {
 	 * @return The most general single-word noun LAT
 	 */
 	public static String fromClue(Phrase phrase) {
-		Analysis lat = detectPart(phrase.trees.get(0));
+		Analysis lat = detectPart(phrase.getTrees().get(0));
 		if (lat.ok() && lat.rank() >= 0) {
 			String latname = concat(lat.nn);
 			phrase.log.info("Target lexical type: " + latname); 
@@ -106,7 +106,7 @@ public class ClueType {
 	 */
 	public static String fromClue(String text) {
 		Phrase p = new Phrase(text);
-		for (Tree t : p.trees) {
+		for (Tree t : p.getTrees()) {
 			Analysis lat = detectPart(t);
 			if (lat.ok() && lat.rank() >= 0) {
 				return concat(lat.nn).toLowerCase();

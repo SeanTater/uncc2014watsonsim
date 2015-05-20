@@ -75,7 +75,7 @@ public class Passage extends Phrase {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + tokens.hashCode();
+		result = prime * result + getTokens().hashCode();
 		result = prime * result + engine_name.hashCode();
 		result = prime * result + reference.hashCode();
 		result = prime * result + text.hashCode();
@@ -92,7 +92,7 @@ public class Passage extends Phrase {
 		if (getClass() != obj.getClass())
 			return false;
 		Passage other = (Passage) obj;
-		if (!tokens.equals(other.tokens))
+		if (!getTokens().equals(other.getTokens()))
 			return false;
 		else if (!engine_name.equals(other.engine_name))
 			return false;

@@ -6,18 +6,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 
 import edu.stanford.nlp.dcoref.CorefChain;
 import edu.stanford.nlp.dcoref.CorefChain.CorefMention;
@@ -25,6 +28,7 @@ import edu.stanford.nlp.dcoref.CorefCoreAnnotations.CorefChainAnnotation;
 import edu.stanford.nlp.dcoref.Dictionaries;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
@@ -46,12 +50,7 @@ public class Phrase {
 	private static final Cache<String, Phrase> recent; 
 
 	// Cached Fields
-	public transient final List<String> tokens;
-	public transient final List<Tree> trees;
-	public transient final List<SemanticGraph> graphs;
-	private transient final ConcurrentHashMap<Function<? extends Phrase, ?>, Object> memos;
-	private transient final List<String> lemmas;
-	public transient final Map<Integer, Pair<CorefMention, CorefMention>> unpronoun;
+	private transient ConcurrentHashMap<Function<? extends Phrase, ?>, Object> memos;
 	public transient Log log = Log.NIL;
 	
 	// Create a pipeline
@@ -74,9 +73,18 @@ public class Phrase {
 	}
 	
 	/**
+	 * This no-args constructor exists solely for deserialization
+	 */
+	private Phrase() {
+		text = "";
+		memos = new ConcurrentHashMap<>();
+		log = Log.NIL;
+	}
+	
+	/**
 	 * Create a new NLP parsed phrase.
-	 * When finished, all public fields are final, immutable, and non-null.
 	 * This will throw an NPE rather than take null text.
+	 * The memo system is lazy and phrases are cached so this is quite cheap.
 	 */
 	public Phrase(String text) {
 		if (text == null)
@@ -84,80 +92,11 @@ public class Phrase {
 		Phrase cache_entry = recent.getIfPresent(text);
 		if (cache_entry != null) {
 			this.text = cache_entry.text;
-			this.tokens = cache_entry.tokens;
-			this.lemmas = cache_entry.lemmas;
-			this.trees = cache_entry.trees;
-			this.graphs = cache_entry.graphs;
-			this.unpronoun = cache_entry.unpronoun;
 			// Memos are mutable but private and thread-safe.
 			this.memos = cache_entry.memos;
 		} else {
 			this.memos = new ConcurrentHashMap<>();
 			this.text = StringEscapeUtils.unescapeXml(text);
-			
-		    // create an empty Annotation just with the given text
-		    Annotation document = new Annotation(text);
-		    
-		    try{
-		    	// run all Annotators on this text
-		    	pipeline.annotate(document);
-			} catch (IllegalArgumentException | NullPointerException ex) {
-				/*
-				 *  On extremely rare occasions (< 0.00000593% of passages)
-				 *  it will throw an error like the following:
-				 *  
-				 *  Exception in thread "main" java.lang.IllegalArgumentException:
-				 *  No head rule defined for SYM using class edu.stanford.nlp.trees.SemanticHeadFinder in SYM-10
-				 *  
-				 *  On more frequent occasions, you get the following:
-				 *  Exception in thread "main" java.lang.NullPointerException
-        		 *  at edu.stanford.nlp.dcoref.RuleBasedCorefMentionFinder.findHead(RuleBasedCorefMentionFinder.java:276)
-				 */
-				this.tokens = Collections.emptyList();
-				this.trees = Collections.emptyList();
-				this.lemmas = Collections.emptyList();
-				this.graphs = Collections.emptyList();
-				this.unpronoun = Collections.emptyMap();
-				return;
-			}
-		    
-		    // these are all the sentences in this document
-		    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
-		    List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-		    List<Tree> trees = new ArrayList<>();
-		    List<SemanticGraph> graphs = new ArrayList<>();
-		    List<String> lemmas = new ArrayList<>();
-		    // Transform CorefChain into a pronoun-busting map
-		    Map<Integer, Pair<CorefMention, CorefMention>> unpronoun = new HashMap<>();
-		    
-		    for(CoreMap sentence: sentences) {
-		    // this is the parse tree of the current sentence
-		    	trees.add(sentence.get(TreeAnnotation.class));
-		    	graphs.add(sentence.get(CollapsedCCProcessedDependenciesAnnotation.class));
-		    	Map<Integer, CorefChain> refs = sentence.get(CorefChainAnnotation.class);
-		    	if (refs != null)
-		    		refs.forEach((key, chain) -> {
-			    		CorefMention main = chain.getRepresentativeMention();
-			    		chain.getMentionsInTextualOrder().forEach(mention -> {
-			    			if (mention != main) {
-			    				unpronoun.put(mention.headIndex, makePair(mention, main));
-			    			}
-			    		});
-			    	});
-		    	
-		    	
-		    	sentence.get(TokensAnnotation.class).forEach(token -> {
-	                // Retrieve and add the lemma for each word into the
-	                // list of lemmas
-	                lemmas.add(token.get(LemmaAnnotation.class));
-	            });
-		    }
-
-		    this.lemmas = Collections.unmodifiableList(lemmas);
-			this.tokens = Collections.unmodifiableList(StringUtils.tokenize(this.text));
-		    this.trees = Collections.unmodifiableList(trees);
-		    this.graphs = Collections.unmodifiableList(graphs);
-		    this.unpronoun = Collections.unmodifiableMap(unpronoun);
 			recent.put(text, this);
 		}
 	}
@@ -165,14 +104,162 @@ public class Phrase {
 	/**
 	 * Lightweight functional annotations. Either apply the function and get
 	 * the result, or if it has been done, return the existing value.
-	 * This casts internally but it's type-safe.
+	 * 
+	 * Here's the cute part: The phrase given to the annotator is not 'this'.
+	 * It is a copy with a separate memo table, preventing deadlocks and
+	 * allowing you to annotate recursively without fear.
+	 * 
+	 * There are caveats: You need to be sure your function input type matches
+	 * the type you are annotating or you will get runtime errors. The output
+	 * types, however, are compile time type checked.
+	 * Also, if your annotator returns null, it will not be cached.
 	 */
 	@SuppressWarnings("unchecked")
 	public <X, T extends Phrase> X memo(Function<T, X> app) {
-		return (X) memos.computeIfAbsent(app, unused -> app.apply((T) this));
+		/*
+		 * Atomicity is not necessary here because the functions are
+		 * idempotent. Enforcing atomicity can cause a deadlock, because
+		 * memo() needs to be reentrant. Instead, just allow duplicate put()'s
+		 */
+		X output = (X) memos.get(app);
+		if (output == null)
+			output = app.apply((T) this);
+		if (output != null)
+			memos.put(app, output);
+		return output;
+	}
+	
+	/*
+	 * Convenience functions for common annotations
+	 */
+	
+	private static Annotation coreNLP(Phrase p) {
+		// create an empty Annotation just with the given text
+	    Annotation document = new Annotation(p.text);
+	    
+	    try{
+	    	// run all Annotators on this text
+	    	pipeline.annotate(document);
+		} catch (IllegalArgumentException | NullPointerException ex) {
+			/*
+			 *  On extremely rare occasions (< 0.00000593% of passages)
+			 *  it will throw an error like the following:
+			 *  
+			 *  Exception in thread "main" java.lang.IllegalArgumentException:
+			 *  No head rule defined for SYM using class edu.stanford.nlp.trees.SemanticHeadFinder in SYM-10
+			 *  
+			 *  On more frequent occasions, you get the following:
+			 *  Exception in thread "main" java.lang.NullPointerException
+    		 *  at edu.stanford.nlp.dcoref.RuleBasedCorefMentionFinder.findHead(RuleBasedCorefMentionFinder.java:276)
+			 */
+		}
+	    return document;
+		
+	}
+	
+	/**
+	 * Return CoreNLP sentences.
+	 * Never returns null, only empty collections.
+	 */
+	private static List<CoreMap> sentences(Phrase p) {
+	    return Optional.ofNullable(
+	    			p.memo(Phrase::coreNLP)
+	    				.get(SentencesAnnotation.class))
+    				.orElse(Collections.emptyList());
+	    			
+	}
+	
+	/**
+	 * Return CoreNLP constituency trees
+	 */
+	public static List<Tree> trees(Phrase p) {
+		return p.memo(Phrase::sentences)
+				.stream()
+				.map(s -> s.get(TreeAnnotation.class))
+				.collect(toList());
+	}
+	
+	/**
+	 * Return Lucene tokens
+	 */
+	public static List<String> tokens(Phrase p) {
+		return StringUtils.tokenize(p.text);
+	}
+	
+	/**
+	 * Return CoreNLP dependency trees
+	 */
+	public static List<SemanticGraph> graphs(Phrase p) {
+		return p.memo(Phrase::sentences)
+				.stream()
+				.map(s -> s.get(CollapsedCCProcessedDependenciesAnnotation.class))
+				.collect(toList());
+	}
+	
+	/**
+	 * Annotation for lemmatized tokens 
+	 */
+	public static List<String> lemmas(Phrase p) {
+		return p.memo(Phrase::sentences)
+				.stream()
+				.flatMap(s -> s.get(TokensAnnotation.class).stream())
+				.map( t -> t.get(LemmaAnnotation.class))
+				.collect(toList());
+	}
+	
+	/**
+	 * Get a map for finding the main mention of any Coref
+	 */
+	public static Map<Integer, Pair<CorefMention, CorefMention>> unpronoun(Phrase p) {
+		Stream<Pair<CorefMention, CorefMention>> s =
+				Stream.of(p.memo(Phrase::coreNLP).get(CorefChainAnnotation.class))
+			.filter(Objects::nonNull)  // Do nothing with an empty map
+			.flatMap(chains -> chains.entrySet().stream()) // Disassemble the map
+		    .flatMap(entry -> {
+				// Link each entry to it's main mention
+				CorefMention main = entry.getValue().getRepresentativeMention();
+				return entry.getValue().getMentionsInTextualOrder().stream()
+					.filter(mention -> mention != main)
+					.map(mention -> makePair(mention, main));
+			});
+		// Type inference chokes here so write it down then return.
+		return s.collect(HashMap::new,
+				(m, pair) -> m.put(pair.first.headIndex, pair),
+				(l, r) -> {});
 	}
 
+	/**
+	 * Transitional shortcut for memo(Phrase:tokens)
+	 * @deprecated
+	 */
+	public List<String> getTokens() {
+		return memo(Phrase::tokens);
+	}
 
+	/**
+	 * Transitional shortcut for memo(Phrase:trees)
+	 * @deprecated
+	 */
+	public List<Tree> getTrees() {
+		return memo(Phrase::trees);
+	}
+
+	/**
+	 * Transitional shortcut for memo(Phrase:graphs)
+	 * @deprecated
+	 */
+	public List<SemanticGraph> getGraphs() {
+		return memo(Phrase::graphs);
+	}
+
+	/**
+	 * Transitional shortcut for memo(Phrase:unpronoun)
+	 * @deprecated
+	 */
+	public Map<Integer, Pair<CorefMention, CorefMention>> getUnpronoun() {
+		return memo(Phrase::unpronoun);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -197,19 +284,19 @@ public class Phrase {
 			return false;
 		return true;
 	}
-	
+
 
 	/**
 	 * Deserialize JSON into a Phrase.
 	 * SemanticGraph, Tree and friends have cycles and we can regenerate them
 	 * anyway so just mark them transient and reparse the Phrase later.
-	 */
+	 
 	public static class Deserializer implements JsonDeserializer<Phrase> {
 		@Override
 		public Phrase deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
 			return new Phrase(json.getAsJsonObject().get("text").getAsString());
 		}
-	}
+	}*/
 }
 

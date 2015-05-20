@@ -13,7 +13,7 @@ public class TopPOS extends AnswerScorer {
 	private final Logger log = Logger.getLogger(getClass());
 
 	public double scoreAnswer(Question q, Answer a) {
-		for (Tree tree : a.trees) {
+		for (Tree tree : a.getTrees()) {
 			for (Tree child : tree.children()) {
 				log.debug(a.text + " is a " + child.label().value() + " : " + (child.label().value().hashCode() % 100) / 100.0);
 				return (child.label().value().hashCode() % 10) / 10.0;	

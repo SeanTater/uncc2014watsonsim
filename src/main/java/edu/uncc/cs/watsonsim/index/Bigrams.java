@@ -58,13 +58,13 @@ public class Bigrams implements Segment {
 
 	@Override
 	public void accept(Passage t) {
-		if (!t.tokens.isEmpty()) {
-			unigrams.merge(t.tokens.get(0), 1, (a, b) -> a+b); 
+		if (!t.getTokens().isEmpty()) {
+			unigrams.merge(t.getTokens().get(0), 1, (a, b) -> a+b); 
 		}
-		for (int i=0; i < t.tokens.size() - 1; i++) {
-			String key = t.tokens.get(i) + " " + t.tokens.get(i+1);
+		for (int i=0; i < t.getTokens().size() - 1; i++) {
+			String key = t.getTokens().get(i) + " " + t.getTokens().get(i+1);
 			bigrams.merge(key, 1, (a, b) -> a+b);
-			unigrams.merge(t.tokens.get(i+1), 1, (a, b) -> a+b);
+			unigrams.merge(t.getTokens().get(i+1), 1, (a, b) -> a+b);
 		}
 		// Try to keep it from absorbing all available memory
 		if (unigrams.size() > 1_000_000

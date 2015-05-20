@@ -13,9 +13,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.jena.atlas.logging.Log;
-
 import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.Log;
 import edu.uncc.cs.watsonsim.Passage;
 import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.scorers.Merge;
@@ -23,9 +22,11 @@ import edu.uncc.cs.watsonsim.scorers.Merge;
 public class Anagrams extends Searcher {
 
 	private final Map<String, List<String>> mp = new HashMap<>();
+	private Log log;
 
 	public Anagrams(Environment env)  {
 		super(env);
+		log = env.log.kid(getClass());
 		try
 		{
 		for (String line : Files.readAllLines(Paths.get("data", "words"))) {
@@ -86,7 +87,7 @@ public class Anagrams extends Searcher {
 			// Good news. We found a quoted string to generate anagrams from.
 			entries.addAll(search_key(matcher.group(1), mp));
 			if (!entries.isEmpty()) {
-				Log.info(getClass(), "Found " + entries.size()
+				log.info("Found " + entries.size()
 						+ " quoted anagrams");	
 			}
 		} else {

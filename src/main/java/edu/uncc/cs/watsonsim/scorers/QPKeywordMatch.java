@@ -26,7 +26,7 @@ public class QPKeywordMatch extends PassageScorer {
 			List<String> questionTextArray = StringUtils.tokenize(q.text);
 			int count = 0;
 			for (String word : questionTextArray)
-				if (p.tokens.contains(word))
+				if (p.getTokens().contains(word))
 					count += 1;
 			return (count / (double)questionTextArray.size());
 	}

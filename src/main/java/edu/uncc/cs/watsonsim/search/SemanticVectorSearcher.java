@@ -73,10 +73,10 @@ public class SemanticVectorSearcher extends Searcher {
 					        fconfig, question.tokens.toArray(new String[]{})),*/
 			        new VectorSearcher.VectorSearcherMinSim(
 					        queryVecReader, resultsVecReader, luceneUtils, 
-					        fconfig, question.tokens.toArray(new String[]{})),
+					        fconfig, question.getTokens().toArray(new String[]{})),
 			        new VectorSearcher.VectorSearcherSubspaceSim(
 					        queryVecReader, resultsVecReader, luceneUtils, 
-					        fconfig, question.tokens.toArray(new String[]{})),
+					        fconfig, question.getTokens().toArray(new String[]{})),
 			};
 		
 			System.out.println("sv_searchers = " + sv_searchers);

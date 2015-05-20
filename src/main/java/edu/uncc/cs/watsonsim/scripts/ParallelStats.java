@@ -143,7 +143,7 @@ class StatsGenerator {
         Logger.getRootLogger().setLevel(Level.ERROR);
 		
 		System.out.println("Performing train/test session\n"
-				+ "    #=top    x=top3    .=recall    ' '=missing");
+				+ "    #=top    o=top3    .=recall    ' '=missing");
 		ConcurrentHashMap<Long, DefaultPipeline> pipes =
 				new ConcurrentHashMap<>();
 		

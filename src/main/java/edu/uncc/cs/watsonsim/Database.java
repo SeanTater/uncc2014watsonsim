@@ -88,4 +88,13 @@ public class Database {
 	public String backend() {
 		return conn.getClass().getSimpleName();
 	}
+	
+	public void commit() {
+		try {
+			conn.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
