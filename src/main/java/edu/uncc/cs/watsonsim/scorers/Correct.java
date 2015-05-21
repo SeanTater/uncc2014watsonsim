@@ -2,6 +2,7 @@ package edu.uncc.cs.watsonsim.scorers;
 
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.StringUtils;
 import edu.uncc.cs.watsonsim.nlp.Synonyms;
@@ -20,10 +21,7 @@ public class Correct extends AnswerScorer {
 		if (q.correct_answer == null) {
 			return 0;
 		} else {
-			return (syn.matchViaLevenshtein(q.correct_answer.text, a.text)
-					|| syn.matchViaSearch(q.correct_answer.text, a.text)
-					|| syn.matchViaRedirect(q.correct_answer.text, a.text)
-					|| StringUtils.containsIgnoreCase(a.text, q.correct_answer.text)) ? 1 : 0;
+			return syn.implies(q.correct_answer, a) ? 1 : 0;
 		}
         
 	}

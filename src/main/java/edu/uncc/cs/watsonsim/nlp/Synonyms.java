@@ -13,6 +13,7 @@ import org.apache.lucene.search.ScoreDoc;
 
 import edu.uncc.cs.watsonsim.Database;
 import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.StringUtils;
 
 public class Synonyms {
@@ -117,6 +118,14 @@ public class Synonyms {
 				2);
         // -1 means "uncertain, but greater than the threshold"
 		return (0 <= dist && dist < 2);
+	}
+	
+	public boolean implies(Phrase left, Phrase right) {
+		return matchViaLevenshtein(left.text, right.text)
+				|| matchViaSearch(left.text, right.text)
+				|| matchViaRedirect(left.text, right.text)
+				|| right.memo(Phrase::lemmas).containsAll(left.memo(Phrase::lemmas))
+				|| StringUtils.containsIgnoreCase(right.text, left.text);
 	}
 	
 }

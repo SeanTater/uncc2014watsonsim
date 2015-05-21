@@ -50,7 +50,6 @@ public class DefaultPipeline {
 	private final Researcher early_researchers;
 	private final Scorer[] scorers;
 	private final Researcher late_researchers;
-
 	private final Environment env = new Environment();
 	
 	/**
@@ -64,12 +63,11 @@ public class DefaultPipeline {
 		 */
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
-			//new IndriSearcher(env, false),
-			new CachingSearcher(env, new IndriSearcher(env, false), "indri"),
+			new IndriSearcher(env, false),
 			//new SemanticVectorSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),
-			//new CachingSearcher(env, new BingSearcher(env), "bing"),
+			new CachingSearcher(env, new BingSearcher(env), "bing"),
 			new Anagrams(env)
 		};
 		early_researchers = Researcher.pipe(env.log,
@@ -78,7 +76,7 @@ public class DefaultPipeline {
 			new HyphenTrimmer(),
 			new StrictFilters(),
 			// This causes too much network traffic.
-			//new URLExpander(), // needs a proxy!
+			new URLExpander(env),
 			// Often trims good parts of correct answers
 			//new AnswerTrimming(), // Overshoots
 			new MergeByText(env),

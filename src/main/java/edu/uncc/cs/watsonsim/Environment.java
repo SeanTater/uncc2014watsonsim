@@ -1,8 +1,13 @@
 package edu.uncc.cs.watsonsim;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Paths;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
@@ -17,6 +22,7 @@ import org.apache.lucene.util.QueryBuilder;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.gson.Gson;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.tdb.TDBFactory;
 
@@ -107,6 +113,50 @@ public class Environment extends Configuration {
 			return lucene.search(bquery, count).scoreDocs;
 		} else {
 			return new ScoreDoc[0];
+		}
+	}
+	
+	/**
+	 * Evaluate a function with a long term persistent cache. It's slower and
+	 * more espensive than memcached but it is meant for very expensive
+	 * functions like searching Bing.
+	 * 
+	 * @param key    The unique key used to find the cache entry
+	 * @param func   The function we are memoizing
+	 * @param dump   Deserialize func's output
+	 * @param load   Serialize func's output
+	 * @return       Output of func(key)
+	 */
+	public synchronized <X> X computeIfAbsent(String key,
+			Function<String, X> func,
+			Type clazz) {
+		try {
+			// Check cache
+			PreparedStatement general_cache_check = db.prep(
+					"SELECT value, created_on FROM kv_cache "
+					+ "WHERE (key=?);");
+			general_cache_check.setString(1, key);
+			ResultSet result = general_cache_check.executeQuery();
+			if (result.next()) {
+				// Load cache
+				return new Gson().fromJson(result.getString(1), clazz);
+			} else {
+				result.close();
+				general_cache_check.close();
+				// Fill cache
+				PreparedStatement set_cache = db.prep(
+						"INSERT INTO kv_cache (key, value) VALUES (?,?);");
+				X value = func.apply(key);
+				set_cache.setString(1, key);
+				set_cache.setString(2, new Gson().toJson(value));
+				set_cache.executeUpdate();
+				set_cache.close();
+				return value;
+			}
+		} catch (SQLException e) {
+			// Oh no! Back to just evaluating.
+			e.printStackTrace();
+			return func.apply(key);
 		}
 	}
 }

@@ -16,6 +16,7 @@
 @attribute INDRI_ANSWER_SCORE numeric
 @attribute IS_ONLY_ANAGRAM numeric
 @attribute LATCHECK numeric
+@attribute LATMENTIONS numeric
 @attribute LUCENE_ANSWER_PRESENT numeric
 @attribute LUCENE_ANSWER_RANK numeric
 @attribute LUCENE_ANSWER_SCORE numeric

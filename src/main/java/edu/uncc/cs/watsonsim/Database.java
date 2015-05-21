@@ -6,21 +6,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class Database {
-	private Connection conn;
+	private static Connection conn;
 	
 	public Database(Configuration env) {
 		try {
-			/* The following code was used for the SQLite driver.
-			 * There is a serious problem with using SQLite and JDBC: SQLite
-			 * has OK support for concurrency (not great, but OK) and 40 cores
-			 * times probably more than 1 connection each, and possibly using
-			 * it on multiple workstations, is too much.
-			 * PostgreSQL is way better at this but there is a hitch: copying
-			 * a PSQL database is not copy and paste. The result: a more
-			 * complicated setup. Sorry!
-			 */
 			
 			//Class.forName("org.sqlite.JDBC");
 		    //Properties props = new Properties();
@@ -34,7 +26,9 @@ public class Database {
 			 
 			
 			//Class.forName("org.postgresql.Driver");
-			conn = DriverManager.getConnection(env.getConfOrDie("jdbc_connection_string"));
+			if (conn == null)
+				conn = DriverManager.getConnection(env.getConfOrDie("jdbc_connection_string"));
+			//conn.createStatement().execute("PRAGMA busy_timeout = 30000;");
 			//System.err.println(conn.getClass().getName());
 
 		} catch (SQLException e2) {
@@ -87,14 +81,5 @@ public class Database {
 	
 	public String backend() {
 		return conn.getClass().getSimpleName();
-	}
-	
-	public void commit() {
-		try {
-			conn.commit();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

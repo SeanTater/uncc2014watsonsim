@@ -64,15 +64,15 @@ public class TagLAT extends Researcher {
 			for (Passage p: a.passages) {
 				List<Pair<String, String>> types = p.memo(SupportCandidateType::extract);
 				for (Pair<String, String> name_and_type : types) {
-					String name = name_and_type.first;
-					String type = name_and_type.second;
-					if (syn.matchViaSearch(name, a.text)) {
+					Phrase name = new Phrase(name_and_type.first);
+					Phrase type = new Phrase(name_and_type.second);
+					if (syn.implies(a, name)) {
 						a.log(this, "Passage %s says it's a %s.", p.reference, type);
-						a.lexical_types.add(type);
+						a.lexical_types.add(type.text);
 						support_types++;
-					} else if (syn.matchViaSearch(type, q.memo(ClueType::fromClue))) {
-						Answer suggestion = new Answer(name);
-						suggestion.lexical_types = Arrays.asList(type);
+					} else if (syn.implies(type, new Phrase(q.memo(ClueType::fromClue)))) {
+						Answer suggestion = new Answer(name.text);
+						suggestion.lexical_types = Arrays.asList(type.text);
 						suggestion.log(this, "Found it's a %s, while reading about %s in %s", type, a, p.reference);
 						if (!(suggestions.contains(suggestion)
 								|| answers.contains(suggestion))) {

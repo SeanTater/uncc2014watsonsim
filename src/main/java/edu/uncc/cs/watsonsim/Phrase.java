@@ -176,6 +176,7 @@ public class Phrase {
 		return p.memo(Phrase::sentences)
 				.stream()
 				.map(s -> s.get(TreeAnnotation.class))
+				.filter(Objects::nonNull)
 				.collect(toList());
 	}
 	
@@ -193,6 +194,7 @@ public class Phrase {
 		return p.memo(Phrase::sentences)
 				.stream()
 				.map(s -> s.get(CollapsedCCProcessedDependenciesAnnotation.class))
+				.filter(Objects::nonNull)
 				.collect(toList());
 	}
 	

@@ -63,20 +63,20 @@ public class SemanticVectorSearcher extends Searcher {
 		VectorSearcher[] sv_searchers;
 		try {
 			sv_searchers = new VectorSearcher[]{
-					/*new VectorSearcher.VectorSearcherCosine( 
+					new VectorSearcher.VectorSearcherCosine( 
 					        queryVecReader, resultsVecReader, luceneUtils, 
-					        fconfig, question.tokens.toArray(new String[]{})),
-			        new VectorSearcher.VectorSearcherLucene(luceneUtils, 
-					        fconfig, question.tokens.toArray(new String[]{})),
+					        fconfig, question.getTokens().toArray(new String[]{})),
+			        /*new VectorSearcher.VectorSearcherLucene(luceneUtils, 
+					        fconfig, question.getTokens().toArray(new String[]{})),
 			        new VectorSearcher.VectorSearcherMaxSim( 
 					        queryVecReader, resultsVecReader, luceneUtils, 
-					        fconfig, question.tokens.toArray(new String[]{})),*/
+					        fconfig, question.getTokens().toArray(new String[]{})),*/
 			        new VectorSearcher.VectorSearcherMinSim(
 					        queryVecReader, resultsVecReader, luceneUtils, 
 					        fconfig, question.getTokens().toArray(new String[]{})),
-			        new VectorSearcher.VectorSearcherSubspaceSim(
+			        /*new VectorSearcher.VectorSearcherSubspaceSim(
 					        queryVecReader, resultsVecReader, luceneUtils, 
-					        fconfig, question.getTokens().toArray(new String[]{})),
+					        fconfig, question.getTokens().toArray(new String[]{})),*/
 			};
 		
 			System.out.println("sv_searchers = " + sv_searchers);
@@ -86,11 +86,11 @@ public class SemanticVectorSearcher extends Searcher {
 				System.out.println("result = " + results);
 				int rank = 0;
 				for (SearchResult result: results) {
-					passages.add(new edu.uncc.cs.watsonsim.Passage(
+					passages.add(new Passage(
 							"semvec", 											// Engine
-							result.toSimpleString(),	// Title
-							result.getObjectVector().getObject().toString(),	// Text
-							"")													// Reference
+							"",	// Title
+							"",	// Text
+							result.getObjectVector().getObject().toString())													// Reference
 							.score("SEMVEC_RANK", (double) rank++)				// Rank
 							.score("SEMVEC_SCORE", (double) result.getScore())	// Score
 							.score("SEMVEC_PRESENT", 1.0)
@@ -104,7 +104,7 @@ public class SemanticVectorSearcher extends Searcher {
 		// TODO: Under what circumstances does this happen?
 		e.printStackTrace();
 		}
-		return passages;
+		return fillFromSources(passages);
 	}
 
 }
