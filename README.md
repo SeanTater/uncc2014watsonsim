@@ -1,4 +1,4 @@
-[Watsonsim Question Answering System](http://watsonsim.blogspot.com) [![Build Status](https://travis-ci.org/SeanTater/uncc2014watsonsim.png?branch=master)](https://travis-ci.org/SeanTater/uncc2014watsonsim)
+[Watsonsim Question Answering System](http://blog.watsonphd.com) [![Build Status](https://travis-ci.org/SeanTater/uncc2014watsonsim.png?branch=master)](https://travis-ci.org/SeanTater/uncc2014watsonsim)
 ======
 
 ## Quick Intro
