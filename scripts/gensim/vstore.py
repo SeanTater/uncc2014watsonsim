@@ -2,6 +2,7 @@
 #  Provides a nice wrapper for GloVe data and other already-processed vectors
 import lmdb
 import numpy
+numpy.set_printoptions(threshold=20)
 
 class VStore(object):
 	_allenvs = {}
@@ -9,7 +10,7 @@ class VStore(object):
 		''' Create a lmdb-backed VStore using a cached environment '''
 		if filename not in self._allenvs:
 			self._allenvs[filename] = lmdb.Environment(filename,
-				map_size=1<<30,
+				map_size=100<<30,
 				max_dbs=100)
 		self._env = self._allenvs[filename]
 		self._db = self._env.open_db(name);
@@ -39,5 +40,8 @@ class VStore(object):
 
 	def load(self, gen):
 		with self._txn(write=True) as txn:
-			for name, value in gen:
-				txn.put(name, numpy.getbuffer(value))
+			try:
+				for name, value in gen:
+					txn.put(name, numpy.getbuffer(value))
+			except lmdb.BadValsizeError as e:
+				print name, value.shape, value

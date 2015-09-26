@@ -23,9 +23,12 @@ def loader():
 	for loaded, line in enumerate(args.source):
 		line = line.split()
 		name = line.pop(0)
+		## Tokenization errors can cause a word to be too long for lmdb
+		if len(name) > 100:
+			continue
 		if loaded % 10000 == 0:
 			print "Loaded {} rows".format(loaded)
 
 		yield name, numpy.array(line, dtype=numpy.float32)
 table.load(loader())
-print "Finished loading. Creating similarity index."
+print "Finished loading"
