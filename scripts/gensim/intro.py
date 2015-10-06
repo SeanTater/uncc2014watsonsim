@@ -4,61 +4,84 @@ import os
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 from gensim import corpora, models, similarities, matutils
 from stoplist import stoplist
+from vstore import VStore
 
 ### Create the corpus out of the documents
-if os.path.exists('word8-lines.short.corpus.mm'):
+if os.path.exists('word8.corpus.mm'):
     # Query mode
-    unidict = corpora.Dictionary.load("word8-lines.short.dict")
-    #unicorpus = corpora.MmCorpus('word8-lines.short.corpus.mm')
-    unilsi = models.LsiModel.load('word8-lines.short.unilsimodel')
-    uniindex = similarities.MatrixSimilarity.load("word8-lines.short.matsim")
+    unidict = corpora.Dictionary.load("word8.dict")
+    unilsi = models.LsiModel.load('word8.unilsimodel')
+    uniindex = similarities.MatrixSimilarity.load("word8.matsim")
 else:
     # Index mode
     # collect statistics about all tokens
-    unidict = corpora.Dictionary(line.lower().split() for line in open('word8-lines.short'))
-    # remove stop words and words that appear only once
-    stop_ids = [unidict.token2id[stopword] for stopword in stoplist
-        if stopword in unidict.token2id]
-    once_ids = [tokenid for tokenid, docfreq in unidict.dfs.iteritems()
-        if docfreq == 1]
-    unidict.filter_tokens(stop_ids + once_ids) # remove stop words and words that appear only once
+    '''unidict = corpora.Dictionary([[w] for w in open("word8").read().lower().split()])
+
+    filter_ids = set(unidict.token2id[stopword] for stopword in stoplist
+        if stopword in unidict.token2id) # stopwords
+    filter_ids.update(set([unidict.token2id[fragment] for fragment in unidict.token2id
+        if len(fragment) == 1])) # short words
+    filter_ids.update(set([tokenid for tokenid, docfreq in unidict.dfs.iteritems()
+        if docfreq == 1])) # hepax legomena
+    unidict.filter_tokens(filter_ids) # remove stop words and words that appear only once
     unidict.compactify() # remove gaps in id sequence after words that were removed
-    unidict.save('word8-lines.short.dict')
-    print(unidict)
+    unidict.save('word8.dict')
+    print(unidict)'''
+
+    unidict = corpora.Dictionary.load("word8.dict")
 
     ### Preprocessing
-    class MyCorpus(object):
+    class BOWCorpus(object):
+        def __init__(self):
+            self.words = [ w for w in open("word8").read().split() if w not in stoplist]
+
         def __len__(self): # this is O(n)
-            i=0
-            for line in open("word8-lines.short"):
-                i += 1
-            return i
+            return len(self.words)-4
 
     	def __iter__(self):
-    		for line in open('word8-lines.short'):
-    			# assume there's one document per line, tokens separated by whitespace
-    			yield unidict.doc2bow(line.lower().split())
+            for i in xrange(len(self.words)-4):
+                yield unidict.doc2bow(self.words[i:i+4])
 
-    unicorpus = MyCorpus()
-    #corpora.MmCorpus.serialize('word8-lines.short.corpus.mm', unicorpus) # store to disk, for later use
+    unicorpus = BOWCorpus()
 
     ### Creating the index
     tfidf = models.TfidfModel(unicorpus)
     corpus_tfidf = tfidf[unicorpus]
+    import code
+    code.interact(local=vars())
 
-    print "using LSI"
-    unilsi = models.LsiModel(corpus_tfidf, id2word=unidict, num_topics=300) # initialize an LSI transformation
-    unilsi.save('word8-lines.short.unilsimodel')
+    '''print "using LSI"
+    unilsivstore = VStore("vectors.lmdb", "lsi")
+    unilsi = models.LsiModel(corpus_tfidf, chunksize=1000000, id2word=unidict, num_topics=300) # initialize an LSI transformation
+    unilsi.save('word8.unilsimodel')
     unilsi.print_topics(20)
+    unilsivstore.drop()
+    unilsivstore.load(
+        (unidict[idnum].encode(), matutils.sparse2full(unilsi[[(idnum, 1)]], 300))
+        for idnum in unidict)'''
 
-    #print "using LDA"
-    #unilda = models.LdaModel(corpus_tfidf, id2word=unidict, num_topics=300) # Lda
-    #unilda.save('word8-lines.short.unildamodel')
-    #unilda.print_topics(20)
-    #corpus_lsi = unilsi[corpus_tfidf] # create a double wrapper over the original corpus: bow->tfidf->fold-in-lsi
+    print "using LDA"
+    unildavstore = VStore("vectors.lmdb", "mini-plain-lda")
+    unilda = models.LdaMulticore(unicorpus, id2word=unidict, num_topics=300, chunksize=25000, passes=10, iterations=50, workers=8, batch=True) # Lda
+    unilda.save('word8.unildamodel')
+    unilda.print_topics(20)
+    unildavstore.drop()
+    unildavstore.load(
+        (unidict[idnum].encode(), matutils.sparse2full(unilda[[(idnum, 1)]], 300))
+        for idnum in unidict)
+
+
+    '''print "using W2V"
+    uniw2vvstore = VStore("vectors.lmdb", "w2v")
+    uniw2v = models.word2vec.Word2Vec([line.split() for line in open('word8-lines.short')], size=300, window=5, min_count=5, workers=8)
+    uniw2v.save('word8-lines.short.uniw2vmodel')
+    uniw2vvstore.drop()
+    uniw2vvstore.load(
+        (unidict[idnum].encode(), matutils.sparse2full(uniw2v[[(idnum, 1)]], 300))
+         for idnum in unidict)
 
     uniindex = similarities.MatrixSimilarity(unilsi[unicorpus], num_features=300)
-    uniindex.save('word8-lines.short.matsim')
+    uniindex.save('word8-lines.short.matsim')'''
 
 ## Get a query
 '''
@@ -76,7 +99,7 @@ right = raw_input("Part 2: ")
 def wordsim(left, right):
     leftvec = unidict.doc2bow(left.lower().split())
     rightvec = unidict.doc2bow(right.lower().split())
-    leftlsi = unilsi[leftvec] #
+    leftlsi = unilsi[leftvec]
     rightlsi = unilsi[rightvec]
     #leftlda = unilda[leftvec] # matutils.sparse2full(..., 300)
     #rightlda = unilda[rightvec]

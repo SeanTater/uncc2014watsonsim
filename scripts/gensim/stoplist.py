@@ -1,5 +1,5 @@
 # This is the MySQL stoplist
-stoplist = ["a's", 'able', 'about', 'above', 'according', 'accordingly',
+stoplist = set(["a's", 'able', 'about', 'above', 'according', 'accordingly',
     'across', 'actually', 'after', 'afterwards', 'again', 'against', "ain't",
     'all', 'allow', 'allows', 'almost', 'alone', 'along', 'already', 'also',
     'although', 'always', 'am', 'among', 'amongst', 'an', 'and', 'another',
@@ -70,4 +70,4 @@ stoplist = ["a's", 'able', 'about', 'above', 'according', 'accordingly',
     'whose', 'why', 'will', 'willing', 'wish', 'with', 'within', 'without',
     "won't", 'wonder', 'would', "wouldn't", 'yes', 'yet', 'you', "you'd",
     "you'll", "you're", "you've", 'your', 'yours', 'yourself', 'yourselves',
-    'zero']
+    'zero'])
