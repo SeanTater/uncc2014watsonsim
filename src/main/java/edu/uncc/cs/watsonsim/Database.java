@@ -18,16 +18,20 @@ public class Database {
 		    //Properties props = new Properties();
 		    //props.put("busy_timeout", "30000");
 			//conn = DriverManager.getConnection("jdbc:sqlite:/mnt/NCDS/sean/06Jan2014.3.watsonsim.db", props);
-			//conn.createStatement().execute("PRAGMA journal_mode = WAL;");
-			//conn.createStatement().execute("PRAGMA busy_timeout = 30000;");
-			//conn.createStatement().execute("PRAGMA synchronous = OFF;");
+			
 			// JDBC's SQLite uses autocommit (So commit() is redundant)
 			// Furthermore, close() is a no-op as long as the results are commit()'d
 			 
 			
 			//Class.forName("org.postgresql.Driver");
-			if (conn == null)
+			if (conn == null) {
 				conn = DriverManager.getConnection(env.getConfOrDie("jdbc_connection_string"));
+				if (backend().startsWith("SQLite")) {
+					//conn.createStatement().execute("PRAGMA journal_mode = WAL;");
+					//conn.createStatement().execute("PRAGMA busy_timeout = 30000;");
+					//conn.createStatement().execute("PRAGMA synchronous = OFF;");
+				}
+			}
 			//conn.createStatement().execute("PRAGMA busy_timeout = 30000;");
 			//System.err.println(conn.getClass().getName());
 
@@ -48,6 +52,16 @@ public class Database {
 			throw new RuntimeException("Can't prepare an SQL statement \"" + sql + "\"");
 		}
 		return ps;
+	}
+	
+	public void commit() {
+		try {
+			if (!conn.getAutoCommit()) {
+				conn.commit();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 

@@ -31,6 +31,17 @@ public class SupportCandidateType {
 
 	private static final Logger log = Logger.getLogger(SupportCandidateType.class);
 	
+	private static final Prolog static_engine = new Prolog();
+	static {
+		try {
+			static_engine.setTheory(new Theory(
+					Files.toString(new File("src/main/parse.pl"), Charset.forName("UTF-8"))));
+		} catch (InvalidTheoryException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private static String clean(String text) {
         return CharSetUtils.keep(text.toLowerCase(), "abcdefghijklmnopqrstuvwxyz_");
 	}

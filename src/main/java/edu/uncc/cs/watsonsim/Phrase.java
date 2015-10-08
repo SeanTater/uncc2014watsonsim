@@ -54,22 +54,33 @@ public class Phrase {
 	public transient Log log = Log.NIL;
 	
 	// Create a pipeline
-	static final StanfordCoreNLP pipeline;
+	private static final StanfordCoreNLP pipeline;
+	private static final StanfordCoreNLP constituency_parse_pipeline;
 	static {
-		// Creates an NLP pipeline missing ner, and dcoref 
-	    Properties props = new Properties();
-	    props.put("annotators", "tokenize, cleanxml, ssplit, pos, lemma, parse");
-	    // Use the faster parsing but slower loading shift-reduce models
-	    props.put("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
-	    // When you find something untokenizable, delete it and don't whine
-	    props.put("tokenize.options", "untokenizable=noneDelete");
-	    pipeline = new StanfordCoreNLP(props);
-	    // Save time by caching some, but not too many, recent parses.
+		pipeline = makeCoreNLPPipeline("tokenize, cleanxml, ssplit, pos, lemma, depparse");
+		constituency_parse_pipeline = makeCoreNLPPipeline("tokenize, cleanxml, ssplit, pos, lemma, parse");
+		// Save time by caching some, but not too many, recent parses.
 	    recent = CacheBuilder.newBuilder()
 	    	.concurrencyLevel(50)
 	    	.maximumSize(10000)
 	    	.weakValues()
 	    	.build();
+	}
+	
+	/** We still need to use pipelines from other systems. So we make them
+	 * statically and use them elsewhere.
+	 * @param annotators
+	 * @return
+	 */
+	private static StanfordCoreNLP makeCoreNLPPipeline(String annotators) {
+		// Creates an NLP pipeline missing ner, and dcoref 
+	    Properties props = new Properties();
+	    props.put("annotators", annotators);
+	    // Use the faster parsing but slower loading shift-reduce models
+	    props.put("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
+	    // When you find something untokenizable, delete it and don't whine
+	    props.put("tokenize.options", "untokenizable=noneDelete");
+	    return new StanfordCoreNLP(props);
 	}
 	
 	/**
@@ -105,14 +116,14 @@ public class Phrase {
 	 * Lightweight functional annotations. Either apply the function and get
 	 * the result, or if it has been done, return the existing value.
 	 * 
-	 * Here's the cute part: The phrase given to the annotator is not 'this'.
-	 * It is a copy with a separate memo table, preventing deadlocks and
-	 * allowing you to annotate recursively without fear.
+	 * Here's the cute part: You to annotate recursively to make pipelines.
 	 * 
 	 * There are caveats: You need to be sure your function input type matches
 	 * the type you are annotating or you will get runtime errors. The output
-	 * types, however, are compile time type checked.
-	 * Also, if your annotator returns null, it will not be cached.
+	 * types, however, are compile time type checked. This is fixable but makes
+	 * the API uglier so we don't enforce it.
+	 * Also, if your annotator returns null, the result will not be cached. So
+	 * if your annotator is expensive, return some singleton instead.
 	 */
 	@SuppressWarnings("unchecked")
 	public <X, T extends Phrase> X memo(Function<T, X> app) {
@@ -132,8 +143,8 @@ public class Phrase {
 	/*
 	 * Convenience functions for common annotations
 	 */
-	
-	private static Annotation coreNLP(Phrase p) {
+	private static final Function<Phrase, Annotation> coreNLP = Phrase::_coreNLP;
+	private static Annotation _coreNLP(Phrase p) {
 		// create an empty Annotation just with the given text
 	    Annotation document = new Annotation(p.text);
 	    
@@ -151,10 +162,12 @@ public class Phrase {
 			 *  On more frequent occasions, you get the following:
 			 *  Exception in thread "main" java.lang.NullPointerException
     		 *  at edu.stanford.nlp.dcoref.RuleBasedCorefMentionFinder.findHead(RuleBasedCorefMentionFinder.java:276)
+    		 *  
+    		 *  Both of these are fatal for the passage.
+    		 *  Neither are a big deal for the index. Forget them.
 			 */
 		}
 	    return document;
-		
 	}
 	
 	/**
@@ -163,7 +176,7 @@ public class Phrase {
 	 */
 	private static List<CoreMap> sentences(Phrase p) {
 	    return Optional.ofNullable(
-	    			p.memo(Phrase::coreNLP)
+	    			p.memo(Phrase.coreNLP)
 	    				.get(SentencesAnnotation.class))
     				.orElse(Collections.emptyList());
 	    			
@@ -173,6 +186,28 @@ public class Phrase {
 	 * Return CoreNLP constituency trees
 	 */
 	public static List<Tree> trees(Phrase p) {
+		// create an empty Annotation just with the given text
+	    Annotation document = p.memo(Phrase.coreNLP);
+	    
+	    try{
+	    	// Run the full parse on this text
+	    	constituency_parse_pipeline.annotate(document);
+		} catch (IllegalArgumentException | NullPointerException ex) {
+			/*
+			 *  On extremely rare occasions (< 0.00000593% of passages)
+			 *  it will throw an error like the following:
+			 *  
+			 *  Exception in thread "main" java.lang.IllegalArgumentException:
+			 *  No head rule defined for SYM using class edu.stanford.nlp.trees.SemanticHeadFinder in SYM-10
+			 *  
+			 *  On more frequent occasions, you get the following:
+			 *  Exception in thread "main" java.lang.NullPointerException
+    		 *  at edu.stanford.nlp.dcoref.RuleBasedCorefMentionFinder.findHead(RuleBasedCorefMentionFinder.java:276)
+    		 *  
+    		 *  Both of these are fatal for the passage.
+    		 *  Neither are a big deal for the index. Forget them.
+			 */
+		}
 		return p.memo(Phrase::sentences)
 				.stream()
 				.map(s -> s.get(TreeAnnotation.class))
@@ -214,7 +249,7 @@ public class Phrase {
 	 */
 	public static Map<Integer, Pair<CorefMention, CorefMention>> unpronoun(Phrase p) {
 		Stream<Pair<CorefMention, CorefMention>> s =
-				Stream.of(p.memo(Phrase::coreNLP).get(CorefChainAnnotation.class))
+				Stream.of(p.memo(Phrase.coreNLP).get(CorefChainAnnotation.class))
 			.filter(Objects::nonNull)  // Do nothing with an empty map
 			.flatMap(chains -> chains.entrySet().stream()) // Disassemble the map
 		    .flatMap(entry -> {

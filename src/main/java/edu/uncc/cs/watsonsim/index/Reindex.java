@@ -104,6 +104,7 @@ public class Reindex {
 					e.printStackTrace();
 				}	
 			});
+			db.commit();
 		}
 
         
@@ -128,30 +129,36 @@ public class Reindex {
     	ResultSet rs = statements.executeQuery();
     	AtomicInteger c = new AtomicInteger();
     	Stream.generate(() -> {
+    		List<Triple<String,String,String>> block = new ArrayList<>(300);
     		try {
-				if (rs.next()) return Triple.makeTriple(
-						rs.getString(1), rs.getString(2), rs.getString(3));
-				else return null;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
+    			synchronized(rs) {
+    				while (block.size() < 300 && !rs.isAfterLast() && rs.next()) {
+    					// The usual case, another result
+    					block.add(Triple.makeTriple(
+    							rs.getString(1), rs.getString(2), rs.getString(3)));
+    				}
+    			}
+			} catch (SQLException e) {
+				// Sometimes the resultset closes while we use it.
+				// What can we do about it?
 				e.printStackTrace();
-				return null;
 			}
-    	}).parallel().flatMap((row) -> {
-    			if (row != null) {
-					Passage pass = new Passage(
-						"none", row.first, row.second, row.third);
-				
-		    		for (Segment i : indexers) {
-		    			i.accept(pass);
-		    		}
-		    		int count = c.getAndIncrement();
-		    		if (count % 1000 == 0) {
-		    			System.out.println("Indexed " + count);
-		    		}
+    		return block;
+    	}).parallel().flatMap((block) -> {
+    			if (!block.isEmpty()) {
+    				for (Triple<String,String,String> row : block) {
+    					Passage pass = new Passage(
+    							"none", row.first, row.second, row.third);
+    					
+			    		for (Segment i : indexers) {
+			    			i.accept(pass);
+			    		}
+    				}
+		    		int count = c.addAndGet(block.size());
+	    			System.out.println("Indexed " + count);
     			}
     			// It's looking for the first non-empty stream
-    			if (row == null) return Stream.of("done");
+    			if (block.isEmpty()) return Stream.of("done");
     			else return Stream.empty();
 	    	}
     	).findFirst();

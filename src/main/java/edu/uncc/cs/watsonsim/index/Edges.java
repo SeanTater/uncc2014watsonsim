@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -52,7 +54,7 @@ public class Edges implements Segment {
 		Options options = new Options();
 		options.createIfMissing(true);
 		try {
-			ldb = factory.open(new File("data/edges-leveldb"), options);
+			ldb = factory.open(new File("data/edges-leveldb-depparse-lemma0"), options);
 		} catch (IOException e) {
 			// If we can't open the database we're toast.
 			e.printStackTrace();
@@ -68,12 +70,12 @@ public class Edges implements Segment {
 	 * Write the contents to disk
 	 * @throws IOException
 	 */
-	public void flush() throws IOException {
+	public synchronized void flush() throws IOException {
 		try (WriteBatch batch = ldb.createWriteBatch()) {
 			// Take a snapshot
 			ConcurrentSkipListMap<String, Integer> rels = all_edges;
 			all_edges = new ConcurrentSkipListMap<>();
-			
+			System.out.println("writing out  " + rels.size() + " edges.");
 			rels.forEach((key, value) -> {
 				byte[] bkey = bytes(key);
 				byte[] dbval = ldb.get(bkey);
@@ -86,7 +88,7 @@ public class Edges implements Segment {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public synchronized void close() throws IOException {
 		flush();
 		
 		/* Now populate the relational database using the leveldb
@@ -95,28 +97,36 @@ public class Edges implements Segment {
 		 *  2) Sqlite & Postgresql support concurrent readers
 		 *  Otherwise, I would be thrilled to use either all the way.
 		 */
-		log.info("Pushing histograms into the main database.");
+		System.out.println("Pushing histograms into the main database.");
 		try {
 			sqldb.prep("DELETE FROM semantic_graph;").execute();
+			sqldb.prep("PRAGMA synchronous=OFF;").execute();
 			// source, tag, dest, count
 			PreparedStatement graph = sqldb.prep("INSERT INTO semantic_graph VALUES (?, ?, ?, ?);");
-			AtomicInteger queue_size = new AtomicInteger();
-			ldb.forEach(entry -> {
-				String[] words = asString(entry.getKey()).split(" ");
+			DBIterator i = ldb.iterator();
+			i.seekToFirst(); // for() doesn't work
+			Map.Entry<byte[],byte[]> entry;
+			int queue=0;
+			while ((entry = i.next()) != null) {
+				String[] words = asString(entry.getKey()).split("\t");
 				try {
 					graph.setString(1, words[0]);
 					graph.setString(2, words[1]);
 					graph.setString(3, words[2]);
 					graph.setInt(4, Integer.parseInt(asString(entry.getValue())));
 					graph.addBatch();
-					if (queue_size.incrementAndGet() > 100000);
+					if (++queue % 1000000 == 0) {
+						System.out.println("Enqueued " + queue + " rows");
 						graph.executeBatch();
+						//sqldb.commit();
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			});
-			graph.executeBatch();
+			}
+			i.close();
+			System.out.println("SQL batch " + graph.executeBatch().length);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// Call it an IO exception
@@ -242,7 +252,7 @@ public class Edges implements Segment {
 					// "nn" is garbled by the concatNoun() anyway
 					
 					// Dcoref on the source and target
-					edges.addAll(generatePronounEdges(g, e.getSource(), phrase));
+					//edges.addAll(generatePronounEdges(g, e.getSource(), phrase));
 					
 					// Find the main mention and optionally concat it 
 					String source = getMainMention(phrase, g, e.getSource());
@@ -257,9 +267,9 @@ public class Edges implements Segment {
 		});
 		
 		// Also extract the types while we are at it.
-		SupportCandidateType.extract(phrase).forEach(nt -> {
+		/*SupportCandidateType.extract(phrase).forEach(nt -> {
 			edges.add(new Edge(nt.first, "_isa", nt.second));
-		});
+		});*/
 		return edges;
 	}
 	
@@ -279,7 +289,7 @@ public class Edges implements Segment {
 		});
 			
 		// Try to keep it from absorbing all available memory
-		if (all_edges.size() > 100_000)
+		if (all_edges.size() > 1_000_000)
 			try {
 				flush();
 			} catch (IOException e1) {
