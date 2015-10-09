@@ -8,7 +8,7 @@ from vstore import VStore
 import digestion
 
 
-SOURCE = "wiki2"
+SOURCE = "wiki3"
 
 ### Create the corpus out of the documents
 if os.path.exists(SOURCE+'.corpus.mm'):
