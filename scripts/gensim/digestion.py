@@ -1,10 +1,14 @@
 from gensim import corpora
+import re
+
+def filter_alnum(text):
+    return re.findall("\w+", text)
 
 def cbow_dict(source):
     return corpora.Dictionary([[w] for w in open(source).read().lower().split()])
 
 def line_dict(source):
-    return corpora.Dictionary([l.split() for l in open(source)])
+    return corpora.Dictionary([filter_alnum(l) for l in open(source)])
 
 class CBOWCorpus(object):
     def __init__(self, source, dictionary):
@@ -31,4 +35,4 @@ class LineCorpus(object):
 
     def __iter__(self):
         for line in open(self.source):
-            yield dictionary.doc2bow(line.strip().split())
+            yield self.dictionary.doc2bow(filter_alnum(line))

@@ -8,7 +8,7 @@ from vstore import VStore
 import digestion
 
 
-SOURCE = "wiki"
+SOURCE = "wiki2"
 
 ### Create the corpus out of the documents
 if os.path.exists(SOURCE+'.corpus.mm'):
@@ -34,7 +34,7 @@ else:
     #unidict = corpora.Dictionary.load("word8.dict")
 
     ### Preprocessing
-    unicorpus = LineCorpus(SOURCE, unidict)
+    unicorpus = digestion.LineCorpus(SOURCE, unidict)
 
     ### Creating the index
     tfidf = models.TfidfModel(unicorpus)
@@ -54,7 +54,7 @@ else:
 
     print "using LDA"
     unildavstore = VStore(SOURCE+"vectors.lmdb", "mini-plain-lda")
-    unilda = models.LdaMulticore(unicorpus, id2word=unidict, num_topics=300, chunksize=25000, passes=10, iterations=50, workers=8, batch=True) # Lda
+    unilda = models.LdaMulticore(unicorpus, id2word=unidict, num_topics=300, chunksize=25000, passes=10, iterations=50, workers=40, batch=True) # Lda
     unilda.save(SOURCE+'.unildamodel')
     unilda.print_topics(20)
     unildavstore.drop()
