@@ -39,9 +39,7 @@ else:
     ### Creating the index
     tfidf = models.TfidfModel(unicorpus)
     corpus_tfidf = tfidf[unicorpus]
-    import code
-    code.interact(local=vars())
-
+    '''
     print "using LSI"
     unilsivstore = VStore(SOURCE+"vectors.lmdb", "lsi")
     unilsi = models.LsiModel(corpus_tfidf, chunksize=1000000, id2word=unidict, num_topics=300) # initialize an LSI transformation
@@ -52,28 +50,39 @@ else:
         (unidict[idnum].encode(), matutils.sparse2full(unilsi[[(idnum, 1)]], 300))
         for idnum in unidict)
 
+    print "using LSI"
+    unilsivstore = VStore(SOURCE+"vectors.lmdb", "lsi-notfidf")
+    unilsi = models.LsiModel(unicorpus, chunksize=1000000, id2word=unidict, num_topics=300) # initialize an LSI transformation
+    unilsi.save(SOURCE + '.unilsi_notfidfmodel')
+    unilsi.print_topics(20)
+    unilsivstore.drop()
+    unilsivstore.load(
+        (unidict[idnum].encode(), matutils.sparse2full(unilsi[[(idnum, 1)]], 300))
+        for idnum in unidict)
+    
+    
     print "using LDA"
     unildavstore = VStore(SOURCE+"vectors.lmdb", "mini-plain-lda")
     unilda = models.LdaMulticore(unicorpus, id2word=unidict, num_topics=300, chunksize=25000, passes=10, iterations=50, workers=40, batch=True) # Lda
-    unilda.save(SOURCE+'.unildamodel')
+    unilda.save(SOURCE+'.unilda_model')
     unilda.print_topics(20)
     unildavstore.drop()
     unildavstore.load(
         (unidict[idnum].encode(), matutils.sparse2full(unilda[[(idnum, 1)]], 300))
         for idnum in unidict)
+    '''
 
-
-    '''print "using W2V"
-    uniw2vvstore = VStore(SOURCE+"vectors.lmdb", "w2v")
+    print "using W2V"
+    uniw2vvstore = VStore(SOURCE+"vectors.lmdb", "w2v-word8-lines")
     uniw2v = models.word2vec.Word2Vec([line.split() for line in open('word8-lines.short')], size=300, window=5, min_count=5, workers=8)
     uniw2v.save('word8-lines.short.uniw2vmodel')
     uniw2vvstore.drop()
     uniw2vvstore.load(
-        (unidict[idnum].encode(), matutils.sparse2full(uniw2v[[(idnum, 1)]], 300))
+        (rnidict[idnum].encode(), matutils.sparse2full(uniw2v[[(idnum, 1)]], 300))
          for idnum in unidict)
 
-    uniindex = similarities.MatrixSimilarity(unilsi[unicorpus], num_features=300)
-    uniindex.save('word8-lines.short.matsim')'''
+    #uniindex = similarities.MatrixSimilarity(unilsi[unicorpus], num_features=300)
+    #uniindex.save('word8-lines.short.matsim')
 
 ## Get a query
 import sys

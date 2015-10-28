@@ -55,7 +55,7 @@ public class ParallelStats {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String mode = br.readLine();
         String sql;
-        if (mode.equals("train")) {
+        if (mode.equals("test")) {
         	sql = String.format("cached LIMIT %d OFFSET %d", 2000, 0);
         } else if (mode.equals("train")) {
         	sql = String.format("cached LIMIT %d OFFSET %d", 5000, 2000);

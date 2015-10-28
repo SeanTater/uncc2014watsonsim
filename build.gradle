@@ -10,6 +10,7 @@ plugins {
 mainClassName = System.getProperty("mainClass")
 version = "0.4.0"
 group = "edu.uncc"
+sourceCompatibility = 1.8
 
 // Dependencies and where to get them (some are nonstandard)
 repositories {
@@ -59,10 +60,10 @@ dependencies {
     // PostgreSQL
     compile 'org.postgresql:postgresql:9.3-1101-jdbc41'
     // LMDB (for fast concurrent kv-storage)
-    compile 'org.deephacks.lmdbjni:lmdbjni:0.3.2'
-    compile 'org.deephacks.lmdbjni:lmdbjni-linux64:0.3.2'
-    compile 'org.deephacks.lmdbjni:lmdbjni-osx64:0.3.2'
-    compile 'org.deephacks.lmdbjni:lmdbjni-win64:0.3.2'
+    compile 'org.deephacks.lmdbjni:lmdbjni:0.4.4'
+    compile 'org.deephacks.lmdbjni:lmdbjni-linux64:0.4.4'
+    compile 'org.deephacks.lmdbjni:lmdbjni-osx64:0.4.4'
+    //compile 'org.deephacks.lmdbjni:lmdbjni-win64:0.4.4'
     // Leveldb for fast writes
     compile 'org.fusesource.leveldbjni:leveldbjni-all:1.8'
 

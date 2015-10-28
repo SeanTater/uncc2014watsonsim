@@ -76,7 +76,7 @@ public class DefaultPipeline {
 			new HyphenTrimmer(),
 			new StrictFilters(),
 			// This causes too much network traffic.
-			new URLExpander(env),
+			//new URLExpander(env),
 			// Often trims good parts of correct answers
 			//new AnswerTrimming(), // Overshoots
 			new MergeByText(env),
@@ -98,6 +98,7 @@ public class DefaultPipeline {
 			new CommonConstituents(),
 			new Correct(env),
 			new DateMatches(),
+			new Entropy(env),
 			new LATCheck(env),
 			new LATMentions(),
 			new LuceneEcho(),

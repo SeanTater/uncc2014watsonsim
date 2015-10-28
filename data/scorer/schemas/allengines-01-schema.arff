@@ -11,6 +11,7 @@
 @attribute CORRECT {0,1}
 @attribute COUNT numeric
 @attribute DATE_MATCHES numeric
+@attribute ENTROPY numeric
 @attribute INDRI_ANSWER_PRESENT numeric
 @attribute INDRI_ANSWER_RANK numeric
 @attribute INDRI_ANSWER_SCORE numeric

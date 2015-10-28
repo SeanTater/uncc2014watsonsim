@@ -1,38 +1,44 @@
 package edu.uncc.cs.watsonsim.scorers;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+
+import org.fusesource.lmdbjni.Transaction;
 
 import edu.uncc.cs.watsonsim.Answer;
-import edu.uncc.cs.watsonsim.Database;
 import edu.uncc.cs.watsonsim.Environment;
+import edu.uncc.cs.watsonsim.Log;
 import edu.uncc.cs.watsonsim.Question;
 
 public class WPPageViews extends AnswerScorer {
-	private final Database db;
-	private final PreparedStatement popularity_statement;
+	private static final HashMap<String, Integer> pageviews
+		= new HashMap<>(5000000);
+	
 	public WPPageViews(Environment env) {
-		db = env.db;
-		popularity_statement = db.prep(
-				"SELECT pageviews FROM sources WHERE title = ? LIMIT 1;");
+		load(env);
+	}
+	
+	private static synchronized void load(Environment env) {
+		if (pageviews.isEmpty()) {
+			try {
+				ResultSet res = env.db.prep(
+						"SELECT title, page_views FROM page_views;")
+						.executeQuery();
+				while (res.next()) {
+					pageviews.merge(res.getString(1).toLowerCase(), res.getInt(1), Integer::sum);
+				}
+			} catch (SQLException e) {
+				// at worst give 0s
+				e.printStackTrace();
+			}
+			System.out.println("Loaded " + pageviews.size() + " pageview stats");
+		}
 	}
 
 	@Override
 	public double scoreAnswer(Question q, Answer a) {
-		try {
-			popularity_statement.setString(1, a.text);
-			ResultSet rs = popularity_statement.executeQuery();
-			
-			if (rs.next()) {
-				return rs.getDouble(1);
-			} else {
-				return -1;
-			}
-		} catch (SQLException se) {
-			se.printStackTrace();
-			return -1;
-		}
+		return pageviews.getOrDefault(a.text.toLowerCase(), 0);
 	}
 	
 }

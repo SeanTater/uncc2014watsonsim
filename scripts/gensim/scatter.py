@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA, KernelPCA
-from sklearn.manifold import Isomap
+from sklearn.manifold import Isomap, TSNE
 from analogy import Analogy
 from vstore import VStore
 
@@ -18,7 +18,7 @@ labels = buf.split() \
     or "doctor nurse politician senator lawyer barrister defend accuse heal treat cure elect vote".split() 
 
 vs = [a.w(x) for x in labels if a.w(x) is not None  ]
-flatplot = Isomap(2)
+flatplot = TSNE(2)
 ps = flatplot.fit_transform(vs)
 
 plt.title("Reduced vector space model")

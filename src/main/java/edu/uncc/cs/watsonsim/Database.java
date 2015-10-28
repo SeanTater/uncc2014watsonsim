@@ -7,9 +7,33 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import org.fusesource.lmdbjni.Env;
+import org.fusesource.lmdbjni.Transaction;
+
+import static org.fusesource.lmdbjni.Constants.*;
+
 
 public class Database {
 	private static Connection conn;
+	public static Env kv = new Env();
+	
+	public String quickRead(String table, String key) {
+		return string(kv.openDatabase(table).get(bytes(key)));
+	}
+	
+	public String nonAtomicGetOrCompute(String table, String key, Function<String, String> comp) {
+		String out = string(kv.openDatabase(table).get(bytes(key)));
+		if (out == null) {
+			try (Transaction tx = kv.createWriteTransaction()){
+				out = comp.apply(key);
+				kv.openDatabase(tx, table, 0).put(bytes(key), bytes(out));
+			}
+		}
+		return out;
+	}
 	
 	public Database(Configuration env) {
 		try {
@@ -31,6 +55,7 @@ public class Database {
 					//conn.createStatement().execute("PRAGMA busy_timeout = 30000;");
 					//conn.createStatement().execute("PRAGMA synchronous = OFF;");
 				}
+				kv.open("data/lmdb", org.fusesource.lmdbjni.Constants.CREATE);
 			}
 			//conn.createStatement().execute("PRAGMA busy_timeout = 30000;");
 			//System.err.println(conn.getClass().getName());
