@@ -25,7 +25,7 @@ public class Entropy extends AnswerScorer {
 	private static synchronized void load(Environment env) {
 		if (dict.isEmpty()) {
 			try {
-				ResultSet rs = env.db.prep("SELECT word, p from entropy;").executeQuery();
+				ResultSet rs = env.db.prep("SELECT word, p FROM entropy;").executeQuery();
 				while (rs.next()) {
 					dict.put(rs.getString(1), rs.getDouble(2));
 				}
@@ -33,6 +33,7 @@ public class Entropy extends AnswerScorer {
 				// Leave the table blank and give 0's
 				e.printStackTrace();
 			}
+			System.out.println("Loaded " + dict.size() + " words' entropy");
 		}
 	}
 	
@@ -46,7 +47,7 @@ public class Entropy extends AnswerScorer {
 
 	@Override
 	public double scoreAnswer(Question q, Answer a) {
-		return entropy(a.memo(Phrase::tokens));
+		return entropy(a.memo(Phrase.tokens));
 	}
 
 }

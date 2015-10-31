@@ -20,6 +20,8 @@ public class Synonyms {
 	private final Database db;
 	private final PreparedStatement link_statement;
 	private final Environment env;
+	
+	public final Redirects redirects;
 	/**
 	 * Create a Synonyms module using shared resources. 
 	 * @param env
@@ -40,24 +42,8 @@ public class Synonyms {
 				+ " WHERE link = ?"
 				+ " GROUP BY trim_target HAVING count(*) > 1" 
 				+ " ORDER BY count(*) DESC;");
-	}
-	
-	/**
-	 * Match using Wiki redirects
-	 */
-	public boolean matchViaRedirect(String left, String right) {
-		try {
-			PreparedStatement stmt = db.prep(
-					"SELECT count(*) FROM wiki_redirects WHERE "
-					+ "(source=? AND target=?) OR (source=? AND target=?);");
-			stmt.setString(1, left);
-			stmt.setString(2, right);
-			stmt.setString(3, left);
-			stmt.setString(4, right);
-			return db.then(stmt).getInt(1) > 0;
-		} catch (SQLException e) {
-			return false;
-		}
+		
+		redirects = new Redirects(env);
 	}
 	
 	/**
@@ -123,8 +109,8 @@ public class Synonyms {
 	public boolean implies(Phrase left, Phrase right) {
 		return matchViaLevenshtein(left.text, right.text)
 				|| matchViaSearch(left.text, right.text)
-				|| matchViaRedirect(left.text, right.text)
-				|| right.memo(Phrase::lemmas).containsAll(left.memo(Phrase::lemmas))
+				|| redirects.matches(left.text, right.text)
+				|| right.memo(Phrase.lemmas).containsAll(left.memo(Phrase.lemmas))
 				|| StringUtils.containsIgnoreCase(right.text, left.text);
 	}
 	

@@ -174,7 +174,8 @@ public class Phrase {
 	 * Return CoreNLP sentences.
 	 * Never returns null, only empty collections.
 	 */
-	private static List<CoreMap> sentences(Phrase p) {
+	private static final Function<Phrase, List<CoreMap>> sentences = Phrase::_sentences;
+	private static List<CoreMap> _sentences(Phrase p) {
 	    return Optional.ofNullable(
 	    			p.memo(Phrase.coreNLP)
 	    				.get(SentencesAnnotation.class))
@@ -185,7 +186,8 @@ public class Phrase {
 	/**
 	 * Return CoreNLP constituency trees
 	 */
-	public static List<Tree> trees(Phrase p) {
+	public static final Function<Phrase, List<Tree>> trees = Phrase::_trees;
+	private static List<Tree> _trees(Phrase p) {
 		// create an empty Annotation just with the given text
 	    Annotation document = p.memo(Phrase.coreNLP);
 	    
@@ -208,7 +210,7 @@ public class Phrase {
     		 *  Neither are a big deal for the index. Forget them.
 			 */
 		}
-		return p.memo(Phrase::sentences)
+		return p.memo(Phrase.sentences)
 				.stream()
 				.map(s -> s.get(TreeAnnotation.class))
 				.filter(Objects::nonNull)
@@ -218,15 +220,17 @@ public class Phrase {
 	/**
 	 * Return Lucene tokens
 	 */
-	public static List<String> tokens(Phrase p) {
+	public static Function<Phrase, List<String>> tokens = Phrase::_tokens;
+	private static List<String> _tokens(Phrase p) {
 		return StringUtils.tokenize(p.text);
 	}
 	
 	/**
 	 * Return CoreNLP dependency trees
 	 */
-	public static List<SemanticGraph> graphs(Phrase p) {
-		return p.memo(Phrase::sentences)
+	public static final Function<Phrase, List<SemanticGraph>> graphs = Phrase::_graphs;
+	private static List<SemanticGraph> _graphs(Phrase p) {
+		return p.memo(Phrase.sentences)
 				.stream()
 				.map(s -> s.get(CollapsedCCProcessedDependenciesAnnotation.class))
 				.filter(Objects::nonNull)
@@ -236,8 +240,9 @@ public class Phrase {
 	/**
 	 * Annotation for lemmatized tokens 
 	 */
-	public static List<String> lemmas(Phrase p) {
-		return p.memo(Phrase::sentences)
+	public static final Function<Phrase, List<String>> lemmas = Phrase::_lemmas;
+	private static List<String> _lemmas(Phrase p) {
+		return p.memo(Phrase.sentences)
 				.stream()
 				.flatMap(s -> s.get(TokensAnnotation.class).stream())
 				.map( t -> t.get(LemmaAnnotation.class))
@@ -247,7 +252,8 @@ public class Phrase {
 	/**
 	 * Get a map for finding the main mention of any Coref
 	 */
-	public static Map<Integer, Pair<CorefMention, CorefMention>> unpronoun(Phrase p) {
+	public static final Function<Phrase, Map<Integer, Pair<CorefMention, CorefMention>>> unpronoun = Phrase::_unpronoun;
+	private static Map<Integer, Pair<CorefMention, CorefMention>> _unpronoun(Phrase p) {
 		Stream<Pair<CorefMention, CorefMention>> s =
 				Stream.of(p.memo(Phrase.coreNLP).get(CorefChainAnnotation.class))
 			.filter(Objects::nonNull)  // Do nothing with an empty map
@@ -270,7 +276,7 @@ public class Phrase {
 	 * @deprecated
 	 */
 	public List<String> getTokens() {
-		return memo(Phrase::tokens);
+		return memo(Phrase.tokens);
 	}
 
 	/**
@@ -278,7 +284,7 @@ public class Phrase {
 	 * @deprecated
 	 */
 	public List<Tree> getTrees() {
-		return memo(Phrase::trees);
+		return memo(Phrase.trees);
 	}
 
 	/**
@@ -286,7 +292,7 @@ public class Phrase {
 	 * @deprecated
 	 */
 	public List<SemanticGraph> getGraphs() {
-		return memo(Phrase::graphs);
+		return memo(Phrase.graphs);
 	}
 
 	/**
@@ -294,7 +300,7 @@ public class Phrase {
 	 * @deprecated
 	 */
 	public Map<Integer, Pair<CorefMention, CorefMention>> getUnpronoun() {
-		return memo(Phrase::unpronoun);
+		return memo(Phrase.unpronoun);
 	}
 	
 	@Override

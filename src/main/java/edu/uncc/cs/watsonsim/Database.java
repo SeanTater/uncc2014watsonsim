@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -18,21 +19,26 @@ import static org.fusesource.lmdbjni.Constants.*;
 
 public class Database {
 	private static Connection conn;
-	public static Env kv = new Env();
+	private static Env kv = new Env();
 	
-	public String quickRead(String table, String key) {
-		return string(kv.openDatabase(table).get(bytes(key)));
+	public Optional<String> get(String table, String key) {
+		return Optional.ofNullable(
+				string(kv.openDatabase(table).get(bytes(key))));
 	}
 	
-	public String nonAtomicGetOrCompute(String table, String key, Function<String, String> comp) {
-		String out = string(kv.openDatabase(table).get(bytes(key)));
-		if (out == null) {
+	/**
+	 * Non-atomically update an entry or return it.
+	 * This is used for cases reading is common (getting a fast path
+	 * with only a read lock) but writing is not (and might be run twice).
+	 */
+	public String quickGetOrCompute(String table, String key, Function<String, String> comp) {
+		return get(table, key).orElseGet(() -> {
 			try (Transaction tx = kv.createWriteTransaction()){
-				out = comp.apply(key);
-				kv.openDatabase(tx, table, 0).put(bytes(key), bytes(out));
+				String o = comp.apply(key);
+				kv.openDatabase(tx, table, 0).put(bytes(key), bytes(o));
+				return o;
 			}
-		}
-		return out;
+		});
 	}
 	
 	public Database(Configuration env) {

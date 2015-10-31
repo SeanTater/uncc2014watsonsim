@@ -56,13 +56,13 @@ public class ParallelStats {
         String mode = br.readLine();
         String sql;
         if (mode.equals("test")) {
-        	sql = String.format("cached LIMIT %d OFFSET %d", 2000, 0);
+        	sql = String.format("ORDER BY permute LIMIT %d OFFSET %d", 2000, 0);
         } else if (mode.equals("train")) {
-        	sql = String.format("cached LIMIT %d OFFSET %d", 5000, 2000);
+        	sql = String.format("ORDER BY permute LIMIT %d OFFSET %d", 10000, 2000);
         } else if (mode.equals("minitrain")) {
-        	sql = String.format("cached LIMIT %d OFFSET %d", 1000, 0);
+        	sql = String.format("ORDER BY permute LIMIT %d OFFSET %d", 1000, 0);
         } else {
-        	sql = String.format("cached LIMIT %d OFFSET %d", 1000, 2000);
+        	sql = String.format("ORDER BY permute LIMIT %d OFFSET %d", 1000, 2000);
         }
 		
         System.out.print("Describe the setup: ");
