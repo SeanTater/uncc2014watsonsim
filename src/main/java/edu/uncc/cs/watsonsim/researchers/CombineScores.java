@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -77,17 +78,44 @@ public class CombineScores extends Researcher {
 	}
 	
 	@Override
+	/**
+	 * Perform softmax on scores while retrieving them answer-by-answer
+	 */
 	public List<Answer> question(Question question, List<Answer> answers) {
-		for (Answer a: answers) {
-			try {
-				a.setOverallScore(score(a.scores.getEach(names)));
-			} catch (Exception e) {
-				System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
-				e.printStackTrace();
-				a.setOverallScore(0.0);
+		
+		// Collect
+		double[] scores = new double[answers.size()];
+		{
+			int i = 0;
+			for (Answer a : answers) {
+				try {
+					scores[i++] = score(a.scores.getEach(names));
+				} catch (Exception e) {
+					System.out.println("An unknown error occured while scoring with Weka. Some results may be scored wrong.");
+					e.printStackTrace();
+					a.setOverallScore(0.0);
+				}
+			}
+		}
+		
+		{
+			// Then scale (just for cleanliness)
+			double sum = 0;
+			for (int i=0; i<scores.length; i++) {
+				scores[i] = Math.exp(scores[i]);
+				sum += scores[i];
+			}
+			for (int i=0; i<scores.length; i++) {
+				scores[i] /= sum;
 			}
 		}
 
+		// Finally, apply.
+		{
+			int i = 0;
+			for (Answer a : answers) a.setOverallScore(scores[i++]);
+		}
+		
 		Collections.sort(answers);
 		Collections.reverse(answers);
 		return answers;
