@@ -2,18 +2,6 @@ package edu.uncc.cs.watsonsim.researchers;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-
-
-
-
-
-
 import com.google.gson.reflect.TypeToken;
 
 import crawlercommons.fetcher.BaseFetchException;

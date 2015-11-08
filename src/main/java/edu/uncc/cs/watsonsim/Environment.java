@@ -16,7 +16,6 @@ import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.QueryBuilder;
 

@@ -2,7 +2,6 @@ package edu.uncc.cs.watsonsim.search;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import pitt.search.semanticvectors.CloseableVectorStore;
@@ -11,7 +10,6 @@ import pitt.search.semanticvectors.LuceneUtils;
 import pitt.search.semanticvectors.SearchResult;
 import pitt.search.semanticvectors.VectorSearcher;
 import pitt.search.semanticvectors.VectorStoreReader;
-import pitt.search.semanticvectors.vectors.Vector;
 import pitt.search.semanticvectors.vectors.ZeroVectorException;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Passage;

@@ -1,7 +1,5 @@
 package edu.uncc.cs.watsonsim.scorers;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import edu.uncc.cs.watsonsim.Answer;
@@ -9,7 +7,6 @@ import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.nlp.ClueType;
 import edu.uncc.cs.watsonsim.nlp.Synonyms;
-import edu.uncc.cs.watsonsim.nlp.Weighted;
 import edu.uncc.cs.watsonsim.scorers.AnswerScorer;
 
 /**

@@ -1,7 +1,5 @@
 package edu.uncc.cs.watsonsim;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class AnswerMergeTest {

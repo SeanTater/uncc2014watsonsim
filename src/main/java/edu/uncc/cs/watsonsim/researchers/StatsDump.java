@@ -8,15 +8,9 @@ import java.nio.file.Paths;
 import static java.nio.file.StandardOpenOption.*;
 
 import java.nio.charset.Charset;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
 import edu.uncc.cs.watsonsim.Answer;
-import edu.uncc.cs.watsonsim.Database;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.Score;

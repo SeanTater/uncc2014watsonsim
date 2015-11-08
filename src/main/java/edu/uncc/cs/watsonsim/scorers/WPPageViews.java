@@ -4,11 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import org.fusesource.lmdbjni.Transaction;
-
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
-import edu.uncc.cs.watsonsim.Log;
 import edu.uncc.cs.watsonsim.Question;
 
 public class WPPageViews extends AnswerScorer {

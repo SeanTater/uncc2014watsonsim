@@ -1,18 +1,12 @@
 package edu.uncc.cs.watsonsim.scripts;
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -23,15 +17,11 @@ import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.DBQuestionSource;
 import edu.uncc.cs.watsonsim.DefaultPipeline;
 import edu.uncc.cs.watsonsim.Environment;
-import edu.uncc.cs.watsonsim.Question;
-import edu.uncc.cs.watsonsim.Score;
 import edu.uncc.cs.watsonsim.StringUtils;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.uima.internal.util.IntArrayUtils;
-
 import com.google.common.util.concurrent.AtomicDouble;
 
 /**

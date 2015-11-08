@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.apache.log4j.Logger;
-
-import edu.uncc.cs.watsonsim.nlp.ClueType;
 import edu.uncc.cs.watsonsim.researchers.*;
 import edu.uncc.cs.watsonsim.scorers.*;
 import edu.uncc.cs.watsonsim.search.*;

@@ -2,8 +2,6 @@ package edu.uncc.cs.watsonsim;
 
 import org.apache.log4j.Logger;
 
-import edu.uncc.cs.watsonsim.nlp.ClueType;
-
 /**
  * An immutable natural language phrase intended to be evaluated as a question
  * or clue.

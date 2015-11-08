@@ -2,15 +2,13 @@ package edu.uncc.cs.watsonsim;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
-import edu.uncc.cs.watsonsim.Configuration;
 import edu.uncc.cs.watsonsim.Environment;
-import edu.uncc.cs.watsonsim.nlp.ClueType;
+import edu.uncc.cs.watsonsim.nlp.DBPediaCandidateType;
 
 public class TypeDetectionTest {
 
@@ -31,9 +29,9 @@ public class TypeDetectionTest {
 	public void testHasAll(String source, String[] targets) {
 		List<String> types = new ArrayList<>();
 		try {
-			Configuration env = new Environment();
-			types = new ClueType(env).viaDBPedia(source);
-		} catch (RuntimeException | IOException e) {
+			Environment env = new Environment();
+			types = new DBPediaCandidateType(env).viaDBPedia(source);
+		} catch (RuntimeException e) {
 			// If this goes wrong, it probably just means we are disconnected
 			System.err.println("Failed to connect to SPARQL endpoint for answer "
 					+ "type detection. Perhaps you are disconnected?");

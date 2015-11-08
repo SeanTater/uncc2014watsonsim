@@ -1,6 +1,5 @@
 package edu.uncc.cs.watsonsim;
 
-import java.util.stream.Collectors;
 import org.json.simple.JSONObject;
 
 import org.apache.commons.lang3.StringEscapeUtils;

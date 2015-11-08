@@ -3,13 +3,8 @@ package edu.uncc.cs.watsonsim.scorers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.DoubleFunction;
-import java.util.function.Function;
-
 import edu.uncc.cs.watsonsim.Answer;
-import edu.uncc.cs.watsonsim.Database;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Phrase;
 import edu.uncc.cs.watsonsim.Question;
