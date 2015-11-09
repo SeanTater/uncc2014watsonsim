@@ -38,7 +38,14 @@ class VStore(object):
 		with self._txn(write=True) as txn:
 			txn.put(name, numpy.getbuffer(value))
 
+	def read(self):
+		''' Get all the vectors from the database '''
+		with self._txn(write=False) as txn:
+			for key, value in txn.cursor():
+				yield (key, numpy.frombuffer(value, dtype=numpy.float32))
+
 	def load(self, gen):
+		''' Put() into the database many (name, vector) pairs '''
 		with self._txn(write=True) as txn:
 			try:
 				for name, value in gen:

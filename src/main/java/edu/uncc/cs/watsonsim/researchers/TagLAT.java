@@ -13,16 +13,16 @@ import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.nlp.ClueType;
 import edu.uncc.cs.watsonsim.nlp.DBPediaCandidateType;
 import edu.uncc.cs.watsonsim.nlp.SupportCandidateType;
-import edu.uncc.cs.watsonsim.nlp.Synonyms;
+import edu.uncc.cs.watsonsim.nlp.Relatedness;
 
 
 public class TagLAT extends Researcher {
 	private final DBPediaCandidateType dbpedia;
-	private final Synonyms syn;
+	private final Relatedness syn;
 	
 	public TagLAT(Environment env) {
 		dbpedia = new DBPediaCandidateType(env);
-		syn = new Synonyms(env);
+		syn = new Relatedness(env);
 	}
 	
 	public List<Answer> pull(Question q, List<Answer> answers) {

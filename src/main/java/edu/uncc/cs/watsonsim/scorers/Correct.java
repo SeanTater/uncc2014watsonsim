@@ -3,12 +3,12 @@ package edu.uncc.cs.watsonsim.scorers;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
-import edu.uncc.cs.watsonsim.nlp.Synonyms;
+import edu.uncc.cs.watsonsim.nlp.Relatedness;
 
 public class Correct extends AnswerScorer {
-	private final Synonyms syn;
+	private final Relatedness syn;
 	public Correct(Environment env) {
-		syn = new Synonyms(env);
+		syn = new Relatedness(env);
 	}
 	@Override
 	/**

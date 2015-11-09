@@ -6,16 +6,16 @@ import java.util.List;
 import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
-import edu.uncc.cs.watsonsim.nlp.Synonyms;
+import edu.uncc.cs.watsonsim.nlp.Relatedness;
 
 public class MergeByText extends Researcher {
-	private final Synonyms syn;
+	private final Relatedness syn;
 	/**
 	 * Create a new merger using shared environment resources.
 	 * @param env
 	 */
 	public MergeByText(Environment env) {
-		syn = new Synonyms(env);
+		syn = new Relatedness(env);
 	}
 	
 	@Override

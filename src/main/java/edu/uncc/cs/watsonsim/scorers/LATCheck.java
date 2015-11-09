@@ -6,7 +6,7 @@ import edu.uncc.cs.watsonsim.Answer;
 import edu.uncc.cs.watsonsim.Environment;
 import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.nlp.ClueType;
-import edu.uncc.cs.watsonsim.nlp.Synonyms;
+import edu.uncc.cs.watsonsim.nlp.Relatedness;
 import edu.uncc.cs.watsonsim.scorers.AnswerScorer;
 
 /**
@@ -15,14 +15,14 @@ import edu.uncc.cs.watsonsim.scorers.AnswerScorer;
  *
  */
 public class LATCheck extends AnswerScorer {
-	private final Synonyms syn;
+	private final Relatedness syn;
 	private final Logger log = Logger.getLogger(getClass());
 	
 	/**
 	 * Create a new LATCheck using a shared environment
 	 */
 	public LATCheck(Environment env) {
-		syn = new Synonyms(env);
+		syn = new Relatedness(env);
 	}
 	
 	@Override
