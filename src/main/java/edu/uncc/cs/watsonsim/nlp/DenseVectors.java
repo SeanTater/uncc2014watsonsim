@@ -68,7 +68,7 @@ public class DenseVectors {
 			for (int i=0; i<N; i++) mean[i] += vec[i];
 			count++;
 		}
-		for (int i=0; i<N; i++) mean[i] /= count;
+		if (count>0) for (int i=0; i<N; i++) mean[i] /= count;
 		return mean;
 	}
 	

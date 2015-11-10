@@ -2,6 +2,8 @@ package edu.uncc.cs.watsonsim.nlp;
 
 import static org.junit.Assert.*;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import static edu.uncc.cs.watsonsim.nlp.DenseVectors.*;
@@ -18,6 +20,7 @@ public class DenseVectorsTest {
 		assertEquals(sim(vectorFor("diabetes"), vectorFor("diabetic")), 0.78, 0.01);
 		assertEquals(sim(vectorFor("(*&(*&^(*&^"), vectorFor("diabetic")), 0.00, 0.01);
 		assertEquals(sim(vectorFor("diabetes"), vectorFor("")), 0.00, 0.01);
+		assertEquals(sim(vectorFor("diabetes"), Optional.of(new float[300])), 0.00, 0.01);
 	}
 
 }

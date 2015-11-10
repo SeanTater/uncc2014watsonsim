@@ -24,7 +24,13 @@ public class GloveAnswerQuestionContextTest {
 				new Answer("Joe Dimaggio")), 0.26, 0.01);
 		assertEquals(scorer.scoreAnswer(
 				new Question("Who was Marilyn Monroe's second husband?"),
-				new Answer("husband")), 0.26, 0.01);
+				new Answer("husband")), 0.71, 0.01);
+		assertEquals(scorer.scoreAnswer(
+				new Question("34986 **(&)(*& uiuytiuytiuyti"),
+				new Answer("iuyoiuyoiuyhjjkhg")), 0.0, 0.01);
+		assertEquals(scorer.scoreAnswer(
+				new Question("democracy"),
+				new Answer("")), 0.0, 0.01);
 	}
 
 }
