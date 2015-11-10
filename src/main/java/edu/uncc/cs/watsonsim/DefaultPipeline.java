@@ -96,6 +96,7 @@ public class DefaultPipeline {
 			new Correct(env),
 			new DateMatches(),
 			new Entropy(env),
+			new GloveAnswerQuestionContext(),
 			new LATCheck(env),
 			new LATMentions(),
 			new LuceneEcho(),

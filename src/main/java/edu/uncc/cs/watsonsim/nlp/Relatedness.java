@@ -22,7 +22,6 @@ public class Relatedness {
 	private final Database db;
 	private final PreparedStatement link_statement;
 	private final Environment env;
-	private final KV kv = new KV();
 	
 	public final Redirects redirects;
 	/**
@@ -107,40 +106,6 @@ public class Relatedness {
 				2);
         // -1 means "uncertain, but greater than the threshold"
 		return (0 <= dist && dist < 2);
-	}
-	
-	/**
-	 * Use cosine similarity on dense vectors
-	 * @return
-	 */
-	public double viaDenseVectors(String left_key, String right_key) {
-		if (left_key == null || right_key == null || left_key.isEmpty() || right_key.isEmpty())
-			return 0.0;
-		
-		Optional<float[]> left_opfloats = kv.get("big-glove-vectors", left_key).map(KV::asVector);
-		Optional<float[]> right_opfloats = kv.get("big-glove-vectors", right_key).map(KV::asVector);
-		
-		if (left_opfloats.isPresent() && right_opfloats.isPresent()) {
-			float[] left_floats = left_opfloats.get();
-			float[] right_floats = right_opfloats.get();
-			/*
-			 *         A.T * B
-			 * -----------------------
-			 * sqrt(A.T*A) sqrt(B.T*B)
-			 */
-			double ab = 0.0, aa = 0.0, bb = 0.0;
-			for (int i=0; i<Math.min(left_floats.length, right_floats.length); i++) {
-				ab += left_floats [i] * right_floats[i];
-				aa += left_floats [i] * left_floats [i];
-				bb += right_floats[i] * right_floats[i];
-			}
-			assert left_floats.length > 0;
-			assert right_floats.length > 0;
-			if (aa == 0.0 || bb == 0.0) return 0;
-			else return ab / (Math.sqrt(aa) * Math.sqrt(bb));
-		} else {
-			return 0;
-		}
 	}
 	
 	/**

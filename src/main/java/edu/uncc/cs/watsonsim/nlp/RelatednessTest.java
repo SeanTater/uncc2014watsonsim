@@ -30,15 +30,6 @@ public class RelatednessTest {
 	}
 
 	@Test
-	public void testViaDenseVectors() {
-		assertEquals(rel.viaDenseVectors("diabetes", "retinopathy"), 0.54, 0.01);
-		assertEquals(rel.viaDenseVectors("diabetes", "diabetic"), 0.78, 0.01);
-		assertEquals(rel.viaDenseVectors("(*&(*&^(*&^", "diabetic"), 0.00, 0.01);
-		assertEquals(rel.viaDenseVectors("diabetes", ""), 0.00, 0.01);
-		assertEquals(rel.viaDenseVectors("diabetes", null), 0.00, 0.01);
-	}
-
-	@Test
 	public void testImplies() {
 		fail("Not yet implemented");
 	}

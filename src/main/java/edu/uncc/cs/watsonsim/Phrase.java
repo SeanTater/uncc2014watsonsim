@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.google.common.cache.Cache;
@@ -215,6 +217,15 @@ public class Phrase {
 	public static Function<Phrase, List<String>> tokens = Phrase::_tokens;
 	private static List<String> _tokens(Phrase p) {
 		return StringUtils.tokenize(p.text);
+	}
+	
+	/**
+	 * Return very lightly processed tokens.
+	 * TODO: Imitate the token processing in Glove
+	 */
+	public static Function<Phrase, List<String>> simpleTokens = Phrase::_simpleTokens;
+	private static List<String> _simpleTokens(Phrase p) {
+		return Arrays.asList(p.text.split("\\W+"));
 	}
 	
 	/**
