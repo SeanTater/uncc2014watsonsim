@@ -23,6 +23,9 @@ public class GloveAnswerQuestionContextTest {
 				new Question("Who was Marilyn Monroe's second husband?"),
 				new Answer("Joe Dimaggio")), 0.26, 0.01);
 		assertEquals(scorer.scoreAnswer(
+				new Question("Who was Marilyn Monroe's ^&^*()(*&$%^% 7868769987 jhgkjhgbnvbnuyr second husband?"),
+				new Answer("Joe Dimaggio")), 0.26, 0.01);
+		assertEquals(scorer.scoreAnswer(
 				new Question("Who was Marilyn Monroe's second husband?"),
 				new Answer("husband")), 0.71, 0.01);
 		assertEquals(scorer.scoreAnswer(

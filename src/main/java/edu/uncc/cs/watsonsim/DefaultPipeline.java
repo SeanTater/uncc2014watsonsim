@@ -104,6 +104,7 @@ public class DefaultPipeline {
 			new PassageTermMatch(),
 			new PassageCount(),
 			new PassageQuestionLengthRatio(),
+			new QuestionID(),
 			new QPKeywordMatch(),
 			new QAKeywordMatch(),
 			new SkipBigram(),
