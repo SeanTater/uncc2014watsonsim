@@ -11,8 +11,8 @@ X, y, q = np.delete(wout, [8, 46], axis=1), wout[:, 8], wout[:, 46]
 border = len(y) * 2/3
 
 # Spacing of the parameters we are trying to visualize (C and gamma)
-base = 10 ** (1/3.)
-exp_range = range(-12, 13)
+base = 10 ** (1/10.)
+exp_range = range(-60, 61)
 
 def svc((C, gamma)):
     s = SVC(C=C, gamma=gamma, probability=True)
@@ -49,9 +49,11 @@ import code
 
 def multi():
     from multiprocessing import Pool
-    p = Pool(8)
+    p = Pool(40)
     ins = [(base**i, base**j) for i in exp_range for j in exp_range]
-    for row in p.imap_unordered(svc, ins):
-        print '\t'.join(map(str, row))
+    with open("svmresults-largeimage-smallset.log", "w") as o:
+        for row in p.imap_unordered(svc, ins):
+            print '\t'.join(map(str, row))
+            o.write('\t'.join(map(str, row)) + '\n')
 
 code.interact(local=vars())

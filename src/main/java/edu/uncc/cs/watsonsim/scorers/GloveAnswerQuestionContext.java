@@ -27,7 +27,7 @@ public class GloveAnswerQuestionContext extends AnswerScorer {
 				.map(v -> v.get())
 				.collect(Collectors.toList());
 		
-		return DenseVectors.sim(DenseVectors.logproduct(atokens), DenseVectors.logproduct(qtokens));	
+		return DenseVectors.sim(DenseVectors.mean(atokens), DenseVectors.mean(qtokens));	
 	}
 	
 }

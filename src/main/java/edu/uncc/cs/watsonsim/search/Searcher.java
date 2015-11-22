@@ -67,12 +67,13 @@ public abstract class Searcher {
      */
     List<Passage> fillFromSources(List<Passage> passages) {
     	List<Passage> results = new ArrayList<>();
-    	PreparedStatement fetcher = db.prep("SELECT title, text FROM sources WHERE reference=?;");
+    	PreparedStatement fetcher = db.prep("SELECT title, text FROM sources WHERE reference=? or id=?;");
 
     	for (Passage p: passages) {
     		ResultSet doc_row;
     		try {
 				fetcher.setString(1, p.reference);
+				fetcher.setString(2, p.reference);
 				doc_row = fetcher.executeQuery();
 				if (doc_row.next()
 						&& doc_row.getString("title") != null
