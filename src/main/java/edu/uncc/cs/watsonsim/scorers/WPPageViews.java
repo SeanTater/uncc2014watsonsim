@@ -13,7 +13,7 @@ public class WPPageViews extends AnswerScorer {
 		= new HashMap<>(5000000);
 	
 	public WPPageViews(Environment env) {
-		load(env);
+		//load(env);
 	}
 	
 	private static synchronized void load(Environment env) {

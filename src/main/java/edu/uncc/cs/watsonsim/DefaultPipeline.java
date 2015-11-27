@@ -61,7 +61,7 @@ public class DefaultPipeline {
 		searchers = new Searcher[]{
 			new LuceneSearcher(env),
 			new IndriSearcher(env, false),
-			new MeanDVSearch(env),
+			//new MeanDVSearch(env),
 			//new SemanticVectorSearcher(env),
 			// You may want to cache Bing results
 			// new BingSearcher(config),

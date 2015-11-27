@@ -25,19 +25,17 @@ public class CommonConstituents extends PassageScorer {
 	 * @param y
 	 * @return
 	 */
-	public double scorePhrases(Phrase t1, Phrase t2) {
+	public static double getCommonSubtreeCount(Phrase t1, Phrase t2) {
 		
-		HashSet<Tree> t1_subtrees = new HashSet<>();
-		HashSet<Tree> t2_subtrees = new HashSet<>();
-		for (Tree x : t1.getTrees()) t1_subtrees.addAll(x);
-		for (Tree y : t2.getTrees()) t2_subtrees.addAll(y);
+		HashSet<String> t1_subtrees = new HashSet<>();
+		HashSet<String> t2_subtrees = new HashSet<>();
+		for (Tree x : t1.getTrees()) t1_subtrees.add(x.toString());
+		for (Tree y : t2.getTrees()) t2_subtrees.add(y.toString());
 		t1_subtrees.retainAll(t2_subtrees);
 		
-		double score = 0.0;
 		// x.getLeaves().size() may also be a good idea.
 		// I don't have any intuition for which may be better.
-		for (Tree x : t1_subtrees) score += x.size();
-		return score;
+		return t1_subtrees.size();
 	}
 		
 
@@ -45,7 +43,7 @@ public class CommonConstituents extends PassageScorer {
 	 * 
 	 */
 	public double scorePassage(Phrase q, Answer a, Passage p) {
-		return scorePhrases(p, new Phrase(a.text));
+		return getCommonSubtreeCount(p, new Phrase(a.text));
 	}
 }
 

@@ -66,6 +66,8 @@ dependencies {
     //compile 'org.deephacks.lmdbjni:lmdbjni-win64:0.4.4'
     // Leveldb for fast writes
     compile 'org.fusesource.leveldbjni:leveldbjni-all:1.8'
+    // High performance primitive collections
+    compile 'com.carrotsearch:hppc:0.6.1'
 
     ////  NLP Libraries
     // OpenNLP

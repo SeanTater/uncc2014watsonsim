@@ -42,17 +42,25 @@ public class CoreNLPSentenceSimilarityTest {
 	public void testScorePhrases() {
 		CommonConstituents scorer = new CommonConstituents();
 		
+		
 		// These are in large part to make sure that it does not accidentally change.
+		/*assertEquals(
+				1.0,
+				scorer.getCommonSubtreeCount(
+					new Phrase("this"),
+					new Phrase("this")),
+				0.01
+		);*/
 		assertEquals(
 				6.0,
-				scorer.scorePhrases(
+				scorer.getCommonSubtreeCount(
 					new Phrase("My goat knows the bowling score."),
 					new Phrase("Michael rowed the boat ashore.")),
 				0.01
 		);
 		assertEquals(
 				12.0,
-				scorer.scorePhrases(
+				scorer.getCommonSubtreeCount(
 					new Phrase("A tisket. A tasket. A green and yellow basket."),
 					new Phrase("A tisket, a tasket, what color is my basket?")),
 				0.01

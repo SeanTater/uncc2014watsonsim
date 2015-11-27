@@ -51,7 +51,7 @@ public class Phrase {
 	private static final StanfordCoreNLP pipeline;
 	private static final StanfordCoreNLP constituency_parse_pipeline;
 	static {
-		pipeline = makeCoreNLPPipeline("tokenize, cleanxml, ssplit, pos, lemma, depparse");
+		pipeline = makeCoreNLPPipeline("tokenize, cleanxml, ssplit, pos, lemma, parse");
 		constituency_parse_pipeline = makeCoreNLPPipeline("tokenize, cleanxml, ssplit, pos, lemma, parse");
 		// Save time by caching some, but not too many, recent parses.
 	    recent = CacheBuilder.newBuilder()
