@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.fusesource.lmdbjni.BufferCursor;
 import org.fusesource.lmdbjni.Database;
+import org.fusesource.lmdbjni.Entry;
 import org.fusesource.lmdbjni.Env;
 import org.fusesource.lmdbjni.Transaction;
 import static org.fusesource.lmdbjni.Constants.*;
@@ -26,7 +27,7 @@ public class MeanDVSearch extends Searcher {
 	private static final String wiki_vectors_location = "data/wiki-vectors.lmdb";
 	private static Env wiki_vectors_env = new Env();
 	static {
-		wiki_vectors_env.open(wiki_vectors_location, RDONLY);
+		wiki_vectors_env.open(wiki_vectors_location, WRITEMAP | NOSYNC);
 	}
 	
 	public MeanDVSearch(Environment env) {
@@ -44,7 +45,7 @@ public class MeanDVSearch extends Searcher {
 	 * be worse than the worst of sims, and this is both simple and has nice
 	 * best-case complexity.
 	 */
-	private static void bubble(double[] sims, byte[][] names, double this_sim, BufferCursor cursor) {
+	private static void bubble(double[] sims, byte[][] names, double this_sim, byte[] name) {
 		// Bubble up the list as far as necessary
 		// Trick: the array is one longer than necessary
 		// That way there is no special case at the end.
@@ -58,7 +59,7 @@ public class MeanDVSearch extends Searcher {
 		}
 		// We passed it.
 		sims[i+1] = this_sim;
-		names[i+1] = cursor.keyBytes();
+		names[i+1] = name;//cursor.keyBytes();
 	}
 	
 	/**
@@ -78,7 +79,7 @@ public class MeanDVSearch extends Searcher {
 		// This is a little ugly because we desperately avoid copying.
 		byte[][] winners = new byte[LEN][];
 		double[] sims = new double[LEN];
-		try (Transaction tx = wiki_vectors_env.createReadTransaction();
+		/*try (Transaction tx = wiki_vectors_env.createReadTransaction();
 				Database doc_vectors = wiki_vectors_env.openDatabase(tx, "wiki-vectors", 0);
 				BufferCursor cursor = doc_vectors.bufferCursor(tx)) {
 			cursor.first();
@@ -86,6 +87,14 @@ public class MeanDVSearch extends Searcher {
 				double this_sim = sim(query_vector, cursor);
 				bubble(sims, winners, this_sim, cursor);
 			}
+		}*/
+		try (Transaction tx = wiki_vectors_env.createReadTransaction();
+				Database doc_vectors = wiki_vectors_env.openDatabase(tx, "wiki-vectors", 0)) {
+			for (Entry e : doc_vectors.iterate(tx).iterable()) {
+				double this_sim = sim(query_vector, KV.asVector(e.getValue()));
+				bubble(sims, winners, this_sim, e.getKey());
+			}
+				
 		}
 		
 		// Now get the passages for the top entries.
@@ -112,7 +121,7 @@ public class MeanDVSearch extends Searcher {
 		return fillFromSources(passages);
 	}
 
-	private static double sim(float[] left, BufferCursor right) {
+	private static double sim(float[] left, float[] right) {
 		/*
 		 *         A.T * B
 		 * -----------------------
@@ -121,9 +130,8 @@ public class MeanDVSearch extends Searcher {
 		assert left.length == N;
 		// assert right.length == N; // You can't tell. Fingers crossed.
 		double ab = 0.0, aa = 0.0, bb = 0.0;
-		ByteBuffer buf = ByteBuffer.wrap(right.valDirectBuffer().byteArray());
 		for (int i=0; i<left.length; i++) {
-			float f = buf.getFloat(i*4);
+			float f = right[i];
 			ab += left [i] * f;
 			aa += left [i] * left [i];
 			bb += f * f;
