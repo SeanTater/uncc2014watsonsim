@@ -47,7 +47,7 @@ public class MeanDVSearch extends Searcher {
 		// Trick: the array is one longer than necessary
 		// That way there is no special case at the end.
 		int i = K-1;
-		for (; this_sim >= sims[i] && i>=0; i--) {
+		for (; i>=0 &&this_sim >= sims[i]; i--) {
 			// Still percolating upward?
 			// Shift this entry down
 			sims[i+1] = sims[i];
