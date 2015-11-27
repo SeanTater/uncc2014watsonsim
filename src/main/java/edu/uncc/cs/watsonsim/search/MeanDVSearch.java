@@ -21,7 +21,11 @@ public class MeanDVSearch extends Searcher {
 	private static final int K = 20;  // How many results to return
 	private static final int N = DenseVectors.N; // Dimensions in a dense vector
 	private static final int LEN = K+1; // How many entries in a result vector
-	KV kv = new KV();
+	private static final String wiki_vectors_location = "data/wiki-vectors.lmdb";
+	private static Env wiki_vectors_env = new Env();
+	static {
+		wiki_vectors_env.open(wiki_vectors_location);
+	}
 	
 	public MeanDVSearch(Environment env) {
 		super(env);
@@ -72,8 +76,8 @@ public class MeanDVSearch extends Searcher {
 		// This is a little ugly because we desperately avoid copying.
 		byte[][] winners = new byte[LEN][];
 		double[] sims = new double[LEN];
-		try (Transaction tx = kv.db.createReadTransaction();
-				Database doc_vectors = kv.db.openDatabase(tx, "wiki-vectors", 0);
+		try (Transaction tx = wiki_vectors_env.createReadTransaction();
+				Database doc_vectors = wiki_vectors_env.openDatabase(tx, "wiki-vectors", 0);
 				BufferCursor cursor = doc_vectors.bufferCursor(tx)) {
 			cursor.first();
 			while (cursor.next()) {
