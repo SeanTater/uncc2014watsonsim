@@ -1,5 +1,7 @@
 package edu.uncc.cs.watsonsim.search;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -119,8 +121,9 @@ public class MeanDVSearch extends Searcher {
 		assert left.length == N;
 		// assert right.length == N; // You can't tell. Fingers crossed.
 		double ab = 0.0, aa = 0.0, bb = 0.0;
+		ByteBuffer buf = ByteBuffer.wrap(right.valBytes());
 		for (int i=0; i<left.length; i++) {
-			float f = right.valFloat(i*4);
+			float f = buf.getFloat(i*4);
 			ab += left [i] * f;
 			aa += left [i] * left [i];
 			bb += f * f;
