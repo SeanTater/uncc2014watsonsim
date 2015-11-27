@@ -1,11 +1,13 @@
 package edu.uncc.cs.watsonsim.search;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.fusesource.lmdbjni.BufferCursor;
 import org.fusesource.lmdbjni.Database;
+import org.fusesource.lmdbjni.DirectBuffer;
 import org.fusesource.lmdbjni.Env;
 import org.fusesource.lmdbjni.Transaction;
 import static org.fusesource.lmdbjni.Constants.*;
@@ -118,11 +120,12 @@ public class MeanDVSearch extends Searcher {
 		 */
 		assert left.length == N;
 		// assert right.length == N; // You can't tell. Fingers crossed.
+		FloatBuffer fb = right.valBuffer().byteBuffer().asFloatBuffer();
 		double ab = 0.0, aa = 0.0, bb = 0.0;
 		for (int i=0; i<left.length; i++) {
-			ab += left [i] * right.valFloat(i*4);
+			ab += left [i] * fb.get(i);
 			aa += left [i] * left [i];
-			bb += right.valFloat(i*4) * right.valFloat(i*4);
+			bb += fb.get(i) * fb.get(i);
 		}
 		if (aa == 0.0 || bb == 0.0) return 0;
 		else return ab / (Math.sqrt(aa) * Math.sqrt(bb));
