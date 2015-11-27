@@ -121,7 +121,7 @@ public class MeanDVSearch extends Searcher {
 		assert left.length == N;
 		// assert right.length == N; // You can't tell. Fingers crossed.
 		double ab = 0.0, aa = 0.0, bb = 0.0;
-		ByteBuffer buf = ByteBuffer.wrap(right.valBytes());
+		ByteBuffer buf = ByteBuffer.wrap(right.valDirectBuffer().byteArray());
 		for (int i=0; i<left.length; i++) {
 			float f = buf.getFloat(i*4);
 			ab += left [i] * f;
