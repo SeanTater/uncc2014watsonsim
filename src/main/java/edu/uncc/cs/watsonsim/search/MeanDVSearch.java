@@ -26,7 +26,7 @@ public class MeanDVSearch extends Searcher {
 	private static final String wiki_vectors_location = "data/wiki-vectors.lmdb";
 	private static Env wiki_vectors_env = new Env();
 	static {
-		wiki_vectors_env.open(wiki_vectors_location);
+		wiki_vectors_env.open(wiki_vectors_location, RDONLY);
 	}
 	
 	public MeanDVSearch(Environment env) {
