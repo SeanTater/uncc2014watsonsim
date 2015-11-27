@@ -92,17 +92,18 @@ public class MeanDVSearch extends Searcher {
 				Database doc_vectors = wiki_vectors_env.openDatabase(tx, "wiki-vectors", 0)) {
 			for (Entry e : doc_vectors.iterate(tx).iterable()) {
 				double this_sim = sim(query_vector, KV.asVector(e.getValue()));
-				bubble(sims, winners, this_sim, e.getKey());
+				if (Double.isFinite(this_sim))
+					bubble(sims, winners, this_sim, e.getKey());
 			}
 				
 		}
 		
 		// Now get the passages for the top entries.
 		List<Passage> passages = new ArrayList<>();
-		for (byte[] id : winners) {
-			String ids = string(id);
-			passages.add(new Passage("meandv", "", "", ids));
-			System.out.println("value is : "+ids);
+		for (int i=0; i<K; i++) {
+			String id = string(winners[i]);
+			passages.add(new Passage("meandv", "", "", id));
+			System.out.println("value is : " + id + " sim: " + sims[i]);
 		}
 		
 		/*try{
