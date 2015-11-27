@@ -21,17 +21,15 @@ import edu.uncc.cs.watsonsim.Question;
 import edu.uncc.cs.watsonsim.nlp.DenseVectors;
 
 public class MeanDVSearch extends Searcher {
-	private static final int K = 20;  // How many results to return
-	private static final int N = DenseVectors.N; // Dimensions in a dense vector
-	private static final int LEN = K+1; // How many entries in a result vector
-	private static final String wiki_vectors_location = "data/wiki-vectors.lmdb";
-	private static Env wiki_vectors_env = new Env();
-	static {
-		wiki_vectors_env.open(wiki_vectors_location, WRITEMAP | NOSYNC);
-	}
+	public static final int K = 20;  // How many results to return
+	public static final int N = DenseVectors.N; // Dimensions in a dense vector
+	public static final int LEN = K+1; // How many entries in a result vector
+	private final String wiki_vectors_location = "data/wiki-vectors.lmdb";
+	private Env wiki_vectors_env = new Env();
 	
 	public MeanDVSearch(Environment env) {
 		super(env);
+		wiki_vectors_env.open(wiki_vectors_location, WRITEMAP | NOSYNC);
 	}
 	
 	/**
@@ -45,12 +43,12 @@ public class MeanDVSearch extends Searcher {
 	 * be worse than the worst of sims, and this is both simple and has nice
 	 * best-case complexity.
 	 */
-	private static void bubble(double[] sims, byte[][] names, double this_sim, byte[] name) {
+	public static void bubble(double[] sims, byte[][] names, double this_sim, byte[] name, int K) {
 		// Bubble up the list as far as necessary
 		// Trick: the array is one longer than necessary
 		// That way there is no special case at the end.
 		int i = K-1;
-		for (; i>=0 &&this_sim >= sims[i]; i--) {
+		for (; i>=0 && this_sim > sims[i]; i--) {
 			// Still percolating upward?
 			// Shift this entry down
 			sims[i+1] = sims[i];
@@ -91,9 +89,9 @@ public class MeanDVSearch extends Searcher {
 		try (Transaction tx = wiki_vectors_env.createReadTransaction();
 				Database doc_vectors = wiki_vectors_env.openDatabase(tx, "wiki-vectors", 0)) {
 			for (Entry e : doc_vectors.iterate(tx).iterable()) {
-				double this_sim = sim(query_vector, KV.asVector(e.getValue()));
+				double this_sim = DenseVectors.sim(query_vector, KV.asVector(e.getValue()));
 				if (Double.isFinite(this_sim))
-					bubble(sims, winners, this_sim, e.getKey());
+					bubble(sims, winners, this_sim, e.getKey(), K);
 			}
 				
 		}
