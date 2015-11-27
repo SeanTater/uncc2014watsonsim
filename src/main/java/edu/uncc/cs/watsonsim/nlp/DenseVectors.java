@@ -19,7 +19,7 @@ public class DenseVectors {
 		if (word == null || word.isEmpty()) {
 			return Optional.empty();
 		} else {
-			return kv.get("big-glove-vectors", word).map(KV::asVector);
+			return kv.get("big-glove", word).map(KV::asVector);
 		}
 	}
 	
