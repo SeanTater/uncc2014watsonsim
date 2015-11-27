@@ -99,9 +99,11 @@ public class MeanDVSearch extends Searcher {
 		// Now get the passages for the top entries.
 		List<Passage> passages = new ArrayList<>();
 		for (int i=0; i<K; i++) {
-			String id = string(winners[i]);
-			passages.add(new Passage("meandv", "", "", id));
-			System.out.println("value is : " + id + " sim: " + sims[i]);
+			if (winners[i] != null) {
+				String id = string(winners[i]);
+				passages.add(new Passage("meandv", "", "", id));
+				System.out.println("value is : " + id + " sim: " + sims[i]);
+			}
 		}
 		
 		/*try{
