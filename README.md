@@ -72,3 +72,17 @@ This list isn't exhaustive, but it should be a good overview
 - [Check to see if your commit broke the code](https://travis-ci.org/SeanTater/uncc2014watsonsim)
 - [Examine the reference documentation](http://seantater.github.io/uncc2014watsonsim/)
 - [Find out how much better your code works than the last commit](http://watsonsim.herokuapp.com/runs)
+
+## Giving Back
+Do you like this project? Then help make it better! We can use all kinds of help, whether you're a scientist, an engineer, or just a curious user! 
+
+Also, you may be interested to read (or to cite!) our paper:
+```bib
+@TechReport{GallagherTR2014,
+author = {Gallagher, Sean and Zadrozny, Wlodek W. and Shalaby, Walid and Avadhani, Adarsh},
+title = {Watsonsim: Overview of a Question Answering Engine},
+institution = {University of North Carolina at Charlotte},
+month = {December},
+year = {2014},
+}
+```
