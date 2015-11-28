@@ -1,9 +1,9 @@
 # This is a .properties file. There is no need for quotes but see Wikipedi
 # for a list of things that need to be escaped, and the precise syntax
 # Most of what you need in this file should be straightforward though
-lucene_index = data/v1.4/lucene_index
+lucene_index = data/v1.5/lucene_index
 jena_lucene_index = data/rdf/lucene
-indri_index = data/v1.4/indri_index
+indri_index = data/v1.5/indri_index
 indri_enabled = false
 terrier_index = OPTIONAL UNTIL TERRIER IS IMPLEMENTED
 
