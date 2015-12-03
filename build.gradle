@@ -18,6 +18,7 @@ repositories {
     maven {url "https://repo.eclipse.org/content/groups/releases/"}
 //    maven {url "https://googledrive.com/host/0B8wOEC5-v5lXak1WSF9YRkdOZGc/"}
     flatDir {dirs "lib"}
+    flatDir {dirs "data/lib"}
 }
 
 dependencies {
@@ -83,10 +84,11 @@ dependencies {
     //compile 'org.slf4j:slf4j-simple:1.6.1'
 	
     // UIMA for Java
-    compile group:'org.apache.uima',					name: 'uimaj-core',			version: '2.3.1'
+    compile group:'org.apache.uima',	name: 'uimaj-core',	version: '2.3.1'
 
     // lightweight web framework
-    compile "com.sparkjava:spark-core:2.1"
+    compile 'javax.servlet:javax.servlet-api:3.1.0' // included because of a mismatch betwen groovy and spark
+    compile "com.sparkjava:spark-core:2.3"
     compile "org.java-websocket:Java-WebSocket:1.3.0"
 
     // multimaps and many other tools

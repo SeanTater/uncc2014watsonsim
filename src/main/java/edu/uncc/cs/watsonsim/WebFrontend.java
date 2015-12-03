@@ -8,8 +8,8 @@ import spark.*;
 public class WebFrontend {
 
 	public static void main(String[] args) {
-
-		externalStaticFileLocation("public");
+		Spark.staticFileLocation("public");
+		//externalStaticFileLocation("public");
 		get("/ask", (Request request, Response response) -> {
     		Question question = new Question(request.queryParams("query"));
     		/*

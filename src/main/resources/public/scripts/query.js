@@ -45,7 +45,7 @@ angular.module('queryApp', [])
 		$("#console").slideDown();
 		
 		// Open a channel
-		var query_channel = new WebSocket("ws://watsonphd.com/asklive");
+		var query_channel = new WebSocket("ws://localhost:8887/asklive");
 		query_channel.onopen = function (event) {
 			// Ask the question
 			query_channel.send("ask:" + $("#search [name=query]").val());
