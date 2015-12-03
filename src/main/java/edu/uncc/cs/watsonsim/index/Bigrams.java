@@ -36,7 +36,7 @@ public class Bigrams implements Segment {
 					pair.getKey() + " " + pair.getValue());
 		unigrams= new ConcurrentHashMap<>(1_000_000, (float) 0.75, 50);
 		Files.write(
-				Paths.get("/media/sean/DATA", "unigrams"),
+				Paths.get("/mnt/NCDS/sean", "unigrams"),
 				new IterableIterator<String>(lines.iterator()),
 				StandardOpenOption.CREATE,
 				StandardOpenOption.WRITE,
@@ -47,7 +47,7 @@ public class Bigrams implements Segment {
 					pair.getKey() + " " + pair.getValue());
 		bigrams =new ConcurrentHashMap<>(1_000_000, (float) 0.75, 50);
 		Files.write(
-				Paths.get("/media/sean/DATA", "bigrams"),
+				Paths.get("/mnt/NCDS/sean", "bigrams"),
 				new IterableIterator<String>(lines.iterator()),
 				StandardOpenOption.CREATE,
 				StandardOpenOption.WRITE,

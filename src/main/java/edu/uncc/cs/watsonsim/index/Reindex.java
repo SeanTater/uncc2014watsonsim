@@ -34,8 +34,8 @@ public class Reindex {
 		indexers = Arrays.asList(
 				//new Lucene(Paths.get(conf.getConfOrDie("lucene_index")))
 				//new Indri(conf.getConfOrDie("indri_index")),
-				//new Bigrams(),
-				new Edges(db)
+				new Bigrams()
+				//new Edges(db)
 				);
 		
 	}
