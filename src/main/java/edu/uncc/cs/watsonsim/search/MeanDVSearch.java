@@ -29,7 +29,7 @@ public class MeanDVSearch extends Searcher {
 	
 	public MeanDVSearch(Environment env) {
 		super(env);
-		wiki_vectors_env.open(wiki_vectors_location, WRITEMAP | NOSYNC);
+		wiki_vectors_env.open(wiki_vectors_location, NOSUBDIR);
 	}
 	
 	/**

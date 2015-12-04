@@ -1,8 +1,0 @@
-@relation lucene-question-results
-
-@attribute lucenerank numeric
-@attribute lucenescore numeric
-@attribute correct numeric
-
-@data
-

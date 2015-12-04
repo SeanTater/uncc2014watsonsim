@@ -150,7 +150,7 @@ run {
     // Allow reading from stdin
     standardInput = System.in
     // Find Indri
-    systemProperty "java.library.path", file("$projectDir/lib")
+    systemProperty "java.library.path", file("$projectDir/data/lib")
     //jvmArgs "-XX:-UseCompressedOops"
     jvmArgs "-XX:hashCode=5"
     //jvmArgs "-Xns:100m"
