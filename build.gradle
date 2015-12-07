@@ -150,7 +150,7 @@ run {
     // Allow reading from stdin
     standardInput = System.in
     // Find Indri
-    systemProperty "java.library.path", file("$projectDir/data/lib")
+    systemProperty "java.library.path", file("$projectDir/lib:$projectDir/data/lib")
     //jvmArgs "-XX:-UseCompressedOops"
     jvmArgs "-XX:hashCode=5"
     //jvmArgs "-Xns:100m"
@@ -160,18 +160,18 @@ run {
 
 task(train, type:JavaExec) {
     // Find Indri
-    systemProperty "java.library.path", file("$projectDir/lib")
     main "edu.uncc.cs.watsonsim.scripts.ParallelStats"
+    systemProperty "java.library.path", file("$projectDir/lib:$projectDir/data/lib")
 }
 
 task(run_index, type: JavaExec) {
     // Find Indri
-    systemProperty "java.library.path", file("$projectDir/lib")
+    systemProperty "java.library.path", file("$projectDir/lib:$projectDir/data/lib")
     main "edu.uncc.cs.watsonsim.sources.DBIndexer"
 }
 
 test {
-    systemProperty "java.library.path", file("$projectDir/lib")
+    systemProperty "java.library.path", file("$projectDir/lib:$projectDir/data/lib")
     testLogging {
         exceptionFormat = 'full'
     }
